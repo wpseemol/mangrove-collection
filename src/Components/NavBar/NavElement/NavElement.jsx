@@ -14,14 +14,14 @@ function Logo() {
         <li className="text-white">
             <Link to="/">
                 <div className="">
-                    <figure className="w-12 h-12 mx-auto rounded-full overflow-hidden border-2 border-primaryColor ">
+                    <figure className="md:w-12 md:h-12 w-10 h-10 mx-auto rounded-full overflow-hidden border-2 border-primaryColor ">
                         <img
                             src={siteLogo}
                             alt="Site logo"
                             className="w-full object-cover hover:scale-125 duration-300"
                         />
                     </figure>
-                    <h2 className="font-bold text-primaryColor">
+                    <h2 className="font-bold text-primaryColor text-sm md:text-base">
                         Mangrove Collection
                     </h2>
                 </div>
@@ -53,7 +53,7 @@ function Offer() {
     return (
         <li className="text-white">
             {' '}
-            <Link>
+            <Link className="hover:text-primaryColor duration-300">
                 <div className="flex md:flex-row flex-col items-center sm:gap-3 gap-1">
                     <div className="text-primaryColor text-3xl">
                         <FaDollarSign />
@@ -78,7 +78,10 @@ function Card() {
             {' '}
             <NavLink
                 to="/cart-items"
-                className={({ isActive }) => (isActive ? 'active' : '')}>
+                className={`${({ isActive }) =>
+                    isActive
+                        ? 'text-primaryColor'
+                        : ''} hover:text-primaryColor duration-300`}>
                 <div className="flex md:flex-row flex-col items-center sm:gap-3 gap-1">
                     <div className="text-primaryColor text-3xl">
                         <FaCartFlatbed />
@@ -102,7 +105,10 @@ function Account() {
             {' '}
             <NavLink
                 to={user ? '/dashboard' : '/login'}
-                className={({ isActive }) => (isActive ? 'active' : '')}>
+                className={`${({ isActive }) =>
+                    isActive
+                        ? 'text-primaryColor'
+                        : ''}  hover:text-primaryColor duration-300`}>
                 <div className="flex md:flex-row flex-col items-center sm:gap-3 gap-1">
                     <div className="text-primaryColor text-3xl">
                         {user ? (
