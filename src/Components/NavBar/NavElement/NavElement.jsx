@@ -5,6 +5,7 @@ import {
     FaRegUser,
 } from 'react-icons/fa6';
 import { Link, NavLink } from 'react-router-dom';
+import siteLogo from '../../../assets/logo/mangrove-collection.png';
 
 const user = null;
 
@@ -12,12 +13,17 @@ function Logo() {
     return (
         <li className="text-white">
             <Link to="/">
-                <div className="w-20">
-                    <img
-                        src="https://i.ibb.co/pL8pdBm/best-Brand-logos-transparent.png"
-                        alt="Site logo"
-                        className="w-full object-cover hover:scale-125 duration-300"
-                    />
+                <div className="">
+                    <figure className="w-12 h-12 mx-auto rounded-full overflow-hidden border-2 border-primaryColor ">
+                        <img
+                            src={siteLogo}
+                            alt="Site logo"
+                            className="w-full object-cover hover:scale-125 duration-300"
+                        />
+                    </figure>
+                    <h2 className="font-bold text-primaryColor">
+                        Mangrove Collection
+                    </h2>
                 </div>
             </Link>
         </li>
