@@ -37,9 +37,7 @@ export default function SliderHero() {
                 </div>
             );
         },
-        slickGoTo: (a) => {
-            console.log(a);
-        },
+
         dots: true,
         infinite: true,
         slidesToShow: 1,
@@ -81,7 +79,6 @@ function CustomSlide({ slidItem }) {
 
 function SampleNextArrow(props) {
     const { className, style, onClick } = props;
-    console.log(style);
 
     return (
         <div

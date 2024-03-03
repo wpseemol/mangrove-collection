@@ -149,4 +149,32 @@ function Account() {
     );
 }
 
-export { Account, Card, Logo, Offer, Search };
+function NavMenu() {
+    const menuArray = [
+        { id: 1, link: '', name: 'brand' },
+        { id: 2, href: '/#contact', name: 'contact' },
+        { id: 3, link: '', name: 'products' },
+        { id: 4, link: '', name: 'about' },
+    ];
+    return (
+        <>
+            {menuArray?.map((items) => {
+                console.log(items?.href);
+
+                return (
+                    <li
+                        key={items.id}
+                        className="capitalize last:border-none hover:text-primaryColor duration-200 border-b border-black p-2 md:p-0 md:border-none pr-36">
+                        {items?.href ? (
+                            <a href={items?.href}>{items.name}</a>
+                        ) : (
+                            <Link to={items?.link}>{items.name}</Link>
+                        )}
+                    </li>
+                );
+            })}
+        </>
+    );
+}
+
+export { Account, Card, Logo, NavMenu, Offer, Search };

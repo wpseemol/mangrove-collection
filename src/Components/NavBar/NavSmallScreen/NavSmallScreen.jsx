@@ -1,7 +1,13 @@
 import { useState } from 'react';
 import { FaBars, FaMagnifyingGlass, FaX } from 'react-icons/fa6';
-import { Account, Card, Logo, Offer, Search } from '../NavElement/NavElement';
-import { menuArray } from '../menuArray/menuArray';
+import {
+    Account,
+    Card,
+    Logo,
+    NavMenu,
+    Offer,
+    Search,
+} from '../NavElement/NavElement';
 
 export default function NavSmallScreen() {
     const [menuShow, setMenuShow] = useState(false);
@@ -25,15 +31,7 @@ export default function NavSmallScreen() {
                                         ? '-left-[1.8rem]'
                                         : '-left-[20rem]'
                                 }`}>
-                                {menuArray?.map((items) => {
-                                    return (
-                                        <li
-                                            key={items.name}
-                                            className="last:border-none hover:text-primaryColor duration-200 border-b border-black p-2 pr-36 capitalize">
-                                            {items.name}
-                                        </li>
-                                    );
-                                })}
+                                <NavMenu />
                             </ul>
                         </li>
 

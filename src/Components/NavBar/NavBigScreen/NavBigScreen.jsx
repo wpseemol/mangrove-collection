@@ -1,5 +1,11 @@
-import { Account, Card, Logo, Offer, Search } from '../NavElement/NavElement';
-import { menuArray } from '../menuArray/menuArray';
+import {
+    Account,
+    Card,
+    Logo,
+    NavMenu,
+    Offer,
+    Search,
+} from '../NavElement/NavElement';
 
 export default function NavBigScreen() {
     return (
@@ -26,14 +32,8 @@ export default function NavBigScreen() {
                 <div className="hidden md:block h-[5.4rem] w-full"></div>
             </div>
             <div className="shadow-lg">
-                <ul className="container mx-auto text-base font-medium py-2  flex items-center gap-5">
-                    {menuArray?.map((items) => {
-                        return (
-                            <li key={items.name} className="capitalize">
-                                {items.name}
-                            </li>
-                        );
-                    })}
+                <ul className="w-fit mx-auto text-base font-medium py-2  flex items-center gap-5">
+                    <NavMenu />
                 </ul>
             </div>
         </nav>
