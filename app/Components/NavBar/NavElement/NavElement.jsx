@@ -131,7 +131,7 @@ function NavMenu() {
     console.log('this is client component');
 
     const menuArray = [
-        { id: 1, link: '', name: 'brand' },
+        { id: 1, link: '', name: 'Category' },
         { id: 2, href: '/#contact', name: 'contact' },
         { id: 3, link: '', name: 'products' },
         { id: 4, link: '', name: 'about' },
