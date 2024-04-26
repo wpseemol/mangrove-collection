@@ -15,14 +15,16 @@ export default function SearchBtn({ children }) {
             </div>
             {menuShow && (
                 <>
+                    {/* this close btn  */}
                     <div
                         onClick={() => setMenuShow(!menuShow)}
-                        className="absolute top-0 left-0 w-full h-screen  bg-black/25 flex justify-center"></div>
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2">
+                        className="absolute top-0 left-0 w-full h-screen z-[5] bg-black/25 flex justify-center"></div>
+                    {/* this close btn  */}
+                    <ul className="absolute top-0 left-1/2 -translate-x-1/2 z-10">
                         {/* search  */}
 
                         {children}
-                    </div>
+                    </ul>
                 </>
             )}
         </li>
