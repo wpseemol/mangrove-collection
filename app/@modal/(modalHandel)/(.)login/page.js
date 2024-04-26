@@ -2,7 +2,9 @@ import {
     InterceptClosBtn,
     InterceptClosBtnOutSite,
 } from '@/app/Components/Client/InterceptClosBtn/InterceptClosBtn';
+import InterceptRegister from '@/app/Components/Client/InterceptRegister/InterceptRegister';
 import LoginFrom from '@/app/Components/LoginFrom/loginFrom';
+import RegisterFrom from '@/app/Components/RegisterFrom/RegisterFrom';
 
 export default function LoginIntercept({ params }) {
     console.log(params);
@@ -12,7 +14,9 @@ export default function LoginIntercept({ params }) {
             <InterceptClosBtnOutSite />
             <div className=" relative w-fit h-fit mx-auto z-20 ">
                 <InterceptClosBtn />
-                <LoginFrom where="intercept" />
+                <InterceptRegister RegisterFrom={<RegisterFrom />}>
+                    <LoginFrom where="intercept" />
+                </InterceptRegister>
             </div>
         </section>
     );

@@ -15,7 +15,7 @@ export default function LoginFrom(where) {
             </div>
             <form noValidate="" action="" className="space-y-12">
                 <div className="space-y-4">
-                    <div>
+                    <div className="md:w-[22rem]">
                         <label htmlFor="email" className="block mb-2 text-sm">
                             Email address
                         </label>
@@ -27,7 +27,7 @@ export default function LoginFrom(where) {
                             className="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 dark:text-gray-800"
                         />
                     </div>
-                    <div>
+                    <div className="md:w-[22rem]">
                         <div className="flex justify-between mb-2">
                             <label htmlFor="password" className="text-sm">
                                 Password

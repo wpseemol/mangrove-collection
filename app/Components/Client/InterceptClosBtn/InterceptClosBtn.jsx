@@ -10,6 +10,7 @@ const handelClose = (router) => {
 
 function InterceptClosBtnOutSite() {
     const router = useRouter();
+
     const onkeydown = useCallback(
         (e) => {
             console.log(e.key);
@@ -32,6 +33,7 @@ function InterceptClosBtnOutSite() {
             className="absolute top-0 left-0 w-full h-full z-10"></div>
     );
 }
+
 function InterceptClosBtn() {
     const router = useRouter();
     return (
