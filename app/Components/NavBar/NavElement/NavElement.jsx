@@ -128,6 +128,8 @@ function Account() {
 }
 
 function NavMenu() {
+    console.log('this is client component');
+
     const menuArray = [
         { id: 1, link: '', name: 'brand' },
         { id: 2, href: '/#contact', name: 'contact' },
@@ -137,8 +139,6 @@ function NavMenu() {
     return (
         <>
             {menuArray?.map((items) => {
-                console.log(items?.href);
-
                 return (
                     <li
                         key={items.id}
