@@ -1,6 +1,8 @@
 import mangroveFish from '@/public/assets/image/mangrove Fish.png';
 import honeyCollection from '@/public/assets/image/mangrove honey.jpg';
 import Image from 'next/image';
+import { Suspense } from 'react';
+import HeroSliderLoading from '../Client/Loading/HeroSliderLoading';
 import SliderHero from '../Client/SliderHero/SliderHero';
 
 export default function HeroSection() {
@@ -9,7 +11,9 @@ export default function HeroSection() {
             <div className="grid md:grid-cols-3 grid-cols-4 gap-4 ">
                 <div className="md:col-span-2 col-span-4 md:row-span-2 ">
                     {/* slider section */}
-                    <SliderHero />
+                    <Suspense>
+                        <SliderHero fallback={<HeroSliderLoading />} />
+                    </Suspense>
                 </div>
                 <div className="md:col-span-1 col-span-2">
                     {' '}

@@ -12,15 +12,14 @@ import mangrove from '@/public/assets/image/mangrove picture.jpg';
 import Image from 'next/image';
 import { useState } from 'react';
 
+const sliderContent = [
+    { imgUrl: mangrove, id: 1, name: 'Mangrove Picture' },
+    { imgUrl: mangroveFish, id: 2, name: 'Mangrove fish' },
+    { imgUrl: mangroveFish1, id: 3, name: 'Mangrove fish 1' },
+    { imgUrl: mangroveHoney1, id: 4, name: 'Mangrove honey 1' },
+    { imgUrl: mangroveHoney, id: 5, name: 'Mangrove honey ' },
+];
 export default function SliderHero() {
-    const sliderContent = [
-        { imgUrl: mangrove, id: 1, name: 'Mangrove Picture' },
-        { imgUrl: mangroveFish, id: 2, name: 'Mangrove fish' },
-        { imgUrl: mangroveFish1, id: 3, name: 'Mangrove fish 1' },
-        { imgUrl: mangroveHoney1, id: 4, name: 'Mangrove honey 1' },
-        { imgUrl: mangroveHoney, id: 5, name: 'Mangrove honey ' },
-    ];
-
     const [currentIndex, setCurrentIndex] = useState(0);
 
     const settings = {
@@ -100,7 +99,7 @@ function SamplePrevArrow(props) {
     const { className, style, onClick } = props;
     return (
         <div
-            className={`${className}   z-10 group-hover:scale-[1.3] duration-300`}
+            className={`${className} z-10 group-hover:scale-[1.3] duration-300`}
             style={{ ...style, scale: '1.3', display: 'block', left: '3rem' }}
             onClick={onClick}>
             next
