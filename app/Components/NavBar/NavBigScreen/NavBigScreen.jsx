@@ -11,7 +11,7 @@ export default function NavBigScreen() {
     return (
         <nav className="hidden md:block">
             <div className="">
-                <div className="bg-black py-2 fixed top-0 left-0 w-full z-50">
+                <div className="bg-black py-2 fixed top-0 left-0 w-full z-10">
                     <ul className="container mx-auto flex justify-evenly items-center">
                         {/* logo  */}
                         <Logo />
