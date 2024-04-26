@@ -9,9 +9,7 @@ export default function RegisterFrom(where) {
         <div className="flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-white text-gray-800 shadow-lg">
             <div className="mb-8 text-center">
                 <h1 className="my-3 text-4xl font-bold">Sign in</h1>
-                <p className="text-sm text-gray-600">
-                    Sign in to access your account
-                </p>
+                <p className="text-sm text-gray-600">Register Account</p>
             </div>
             <form noValidate="" action="" className="space-y-12">
                 <div className="space-y-4">
@@ -77,16 +75,16 @@ export default function RegisterFrom(where) {
                         <button
                             type="button"
                             className="w-full px-8 py-3 font-semibold rounded-md bg-primaryColor text-gray-50">
-                            Sign in
+                            Sign Up
                         </button>
                     </div>
                     <p className="px-6 text-sm text-center dark:text-gray-600">
-                        {`Don't have an account yet?`}
+                        {`Already have an account?`}
                         <Link
                             rel="noopener noreferrer"
                             href="/login"
                             className="hover:underline text-primaryColor">
-                            Sign up
+                            Login
                         </Link>
                         .
                     </p>

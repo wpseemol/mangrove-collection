@@ -8,6 +8,7 @@ export default function PasswordShowHidden(children) {
     return (
         <span className="relative">
             <div
+                title={passShow ? 'Hidden Password' : 'Show Password'}
                 className="absolute top-0 right-3 cursor-pointer text-lg"
                 onClick={() => setPassShow((isTrue) => !isTrue)}>
                 {!passShow ? <PiEyeDuotone /> : <PiEyeClosedDuotone />}
