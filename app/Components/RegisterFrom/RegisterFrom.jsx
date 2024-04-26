@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import PasswordShowHidden from '../Client/PasswordShowHidden/PasswordShowHidden';
 
-export default function LoginFrom(where) {
+export default function RegisterFrom(where) {
     if (where === 'intercept') {
         console.log('inside intercept from');
     }
@@ -16,8 +16,23 @@ export default function LoginFrom(where) {
             <form noValidate="" action="" className="space-y-12">
                 <div className="space-y-4">
                     <div>
+                        <label
+                            htmlFor="fullName"
+                            className="block mb-2 text-sm">
+                            Full Name*
+                        </label>
+                        <input
+                            type="text"
+                            name="fullName"
+                            id="fullName"
+                            placeholder="Full Name"
+                            className="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 dark:text-gray-800"
+                        />
+                    </div>
+
+                    <div>
                         <label htmlFor="email" className="block mb-2 text-sm">
-                            Email address
+                            Email address*
                         </label>
                         <input
                             type="email"
@@ -28,9 +43,23 @@ export default function LoginFrom(where) {
                         />
                     </div>
                     <div>
+                        <label
+                            htmlFor="phoneNumber"
+                            className="block mb-2 text-sm">
+                            Phone*
+                        </label>
+                        <input
+                            type="text"
+                            name="phoneNumber"
+                            id="phoneNumber"
+                            placeholder="+880 17111111222"
+                            className="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 dark:text-gray-800"
+                        />
+                    </div>
+                    <div>
                         <div className="flex justify-between mb-2">
                             <label htmlFor="password" className="text-sm">
-                                Password
+                                Password*
                             </label>
                             <a
                                 rel="noopener noreferrer"
@@ -39,6 +68,7 @@ export default function LoginFrom(where) {
                                 Forgot password?
                             </a>
                         </div>
+                        {/* this is password */}
                         <PasswordShowHidden />
                     </div>
                 </div>
@@ -54,7 +84,7 @@ export default function LoginFrom(where) {
                         {`Don't have an account yet?`}
                         <Link
                             rel="noopener noreferrer"
-                            href="/register"
+                            href="/login"
                             className="hover:underline text-primaryColor">
                             Sign up
                         </Link>
