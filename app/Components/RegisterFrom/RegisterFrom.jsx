@@ -59,12 +59,12 @@ export default function RegisterFrom(where) {
                             <label htmlFor="password" className="text-sm">
                                 Password*
                             </label>
-                            <a
+                            <Link
                                 rel="noopener noreferrer"
                                 href="#"
                                 className="text-xs hover:underline text-gray-600">
                                 Forgot password?
-                            </a>
+                            </Link>
                         </div>
                         {/* this is password */}
                         <PasswordShowHidden />
