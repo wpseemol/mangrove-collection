@@ -10,13 +10,12 @@ export const metadata = {
     description: 'Mangrove Collection is shopping project ',
 };
 
-export default function RootLayout({ children, modal, registerModal }) {
+export default function RootLayout({ children, modal }) {
     return (
         <html lang="en">
             <body className={inter.className} suppressHydrationWarning={true}>
                 <Header />
                 {modal}
-                {registerModal}
                 {children}
                 <Footer />
             </body>
