@@ -83,7 +83,7 @@ function SampleNextArrow(props) {
 
     return (
         <div
-            className={`${className} z-10  group-hover:scale-[1.3] duration-300`}
+            className={`${className} z-[9]  group-hover:scale-[1.3] duration-300`}
             style={{
                 ...style,
                 scale: '1.3',
@@ -99,7 +99,7 @@ function SamplePrevArrow(props) {
     const { className, style, onClick } = props;
     return (
         <div
-            className={`${className} z-10 group-hover:scale-[1.3] duration-300`}
+            className={`${className} z-[9] group-hover:scale-[1.3] duration-300`}
             style={{ ...style, scale: '1.3', display: 'block', left: '3rem' }}
             onClick={onClick}>
             next
