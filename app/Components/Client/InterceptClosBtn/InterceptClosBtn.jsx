@@ -13,7 +13,6 @@ function InterceptClosBtnOutSite() {
 
     const onkeydown = useCallback(
         (e) => {
-            console.log(e.key);
             if (e.key === 'Escape') {
                 router.back();
             }

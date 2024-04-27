@@ -2,9 +2,6 @@ import Link from 'next/link';
 import PasswordShowHidden from '../Client/PasswordShowHidden/PasswordShowHidden';
 
 export default function LoginFrom(where) {
-    if (where === 'intercept') {
-        console.log('inside intercept from');
-    }
     return (
         <div className="flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-white text-gray-800 shadow-lg">
             <div className="mb-8 text-center">

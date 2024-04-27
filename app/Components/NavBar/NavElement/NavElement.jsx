@@ -128,8 +128,6 @@ function Account() {
 }
 
 function NavMenu() {
-    console.log('this is client component');
-
     const menuArray = [
         { id: 1, link: '', name: 'Category' },
         { id: 2, href: '/#contact', name: 'contact' },
