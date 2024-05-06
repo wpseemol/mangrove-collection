@@ -30,6 +30,7 @@ const Contact = () => {
                                     type="text"
                                     name="fName"
                                     id="fName"
+                                    required
                                 />{' '}
                             </div>
                             <div className="w-full px-2 md:px-0">
@@ -40,6 +41,7 @@ const Contact = () => {
                                     type="text"
                                     name="lName"
                                     id="lName"
+                                    required
                                 />{' '}
                             </div>
                             <div className="w-full px-2 md:px-0">
@@ -49,6 +51,7 @@ const Contact = () => {
                                     type="text"
                                     name="email"
                                     id="email"
+                                    required
                                 />{' '}
                             </div>
                         </div>
@@ -56,7 +59,7 @@ const Contact = () => {
 
                         <div className="flex flex-col sm:flex-row items-center gap-3 px-2 md:px-0">
                             <div className="sm:w-1/2">
-                                <label htmlFor="pdCod">Product Code *</label>{' '}
+                                <label htmlFor="pdCod">Product Code </label>{' '}
                                 <br />
                                 <input
                                     className="text-[#666697] md:font-normal rounded px-3 py-2 w-full"
@@ -76,6 +79,7 @@ const Contact = () => {
                                     name="massage"
                                     id="massage"
                                     placeholder="Type your Massages here."
+                                    required
                                 />{' '}
                             </div>
                         </div>
