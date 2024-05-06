@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function SomeDetails() {
     return (
-        <section className="container mx-auto my-10 px-1 sm:px-0" id="about">
+        <section className="container mx-auto my-10 px-4 md:px-0" id="about">
             <div className="mb-5">
                 <h2 className="text-3xl">
                     <samp className="text-primaryColor">
