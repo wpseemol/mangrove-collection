@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const MONGO_URI = process.env.MONGODB_CONNECT_URL;
 const cached = {};
 
-export default async function mongodbConnect() {
+async function connectMongo() {
     if (!MONGO_URI) {
         throw new Error(
             'Please define the MONGO_URI environment variable inside .env.local'
@@ -26,3 +26,4 @@ export default async function mongodbConnect() {
     }
     return cached.connection;
 }
+export default connectMongo;
