@@ -7,12 +7,12 @@ export default function PasswordShowHidden(children) {
     const [passShow, setPassShow] = useState(false);
     return (
         <span className="relative">
-            <div
+            <span
                 title={passShow ? 'Hidden Password' : 'Show Password'}
                 className="absolute top-0 right-3 cursor-pointer text-lg"
                 onClick={() => setPassShow((isTrue) => !isTrue)}>
                 {!passShow ? <PiEyeDuotone /> : <PiEyeClosedDuotone />}
-            </div>
+            </span>
             <input
                 type={passShow ? 'text' : 'password'}
                 name="password"
