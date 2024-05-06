@@ -73,7 +73,7 @@ export default function Footer() {
                     </div>
                 </div>
 
-                <div className="space-y-3 w-fit  justify-self-center ">
+                <div className="space-y-3 w-fit  justify-self-center md:text-left text-center">
                     <h3 className=" uppercase text-primaryColor font-semibold">
                         Product
                     </h3>
@@ -100,7 +100,7 @@ export default function Footer() {
                         </li>
                     </ul>
                 </div>
-                <div className="space-y-3 w-fit  justify-self-center ">
+                <div className="space-y-3 w-fit  justify-self-center md:text-left text-center ">
                     <h3 className=" uppercase text-primaryColor font-semibold">
                         Company
                     </h3>
@@ -117,7 +117,7 @@ export default function Footer() {
                         </li>
                     </ul>
                 </div>
-                <div className="space-y-3 w-fit  justify-self-center ">
+                <div className="space-y-3 w-fit  justify-self-center md:text-left text-center">
                     <h3 className="uppercase text-primaryColor font-semibold">
                         Developers
                     </h3>
