@@ -85,8 +85,6 @@ export default function useRegisterForm() {
 
                 // Determine password strength level
 
-                console.log(formData.password);
-
                 let strengthLevel;
                 let status;
                 if (strengthScore === 1) {
