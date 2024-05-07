@@ -1,9 +1,35 @@
+'use client';
+
 import Link from 'next/link';
+import { useState } from 'react';
 import PasswordShowHidden from '../PasswordShowHidden/PasswordShowHidden';
 
 export default function RegisterForm() {
+    const [formData, setFormData] = useState({
+        fullName: null,
+        email: null,
+        password: null,
+        phoneNumber: null,
+    });
+
+    const handelRegister = function (event) {
+        event.preventDefault(); // form behavior stop
+
+        const formTarget = event.target;
+
+        const fullName = formTarget.fullName.value;
+        const email = formTarget.email.value;
+        const password = formTarget.password.value;
+        const phoneNumber = formTarget.phoneNumber.value;
+
+        const formName = event.target.name.value;
+        setFormData((previous) => ({ ...previous }));
+
+        console.log('form name:', { fullName, email, password, phoneNumber });
+    };
+
     return (
-        <form noValidate="" action="" className="space-y-12">
+        <form noValidate="" onSubmit={handelRegister} className="space-y-12">
             <div className="space-y-4">
                 <div className="md:w-[22rem]">
                     <label htmlFor="fullName" className="block mb-2 text-sm">
@@ -61,7 +87,7 @@ export default function RegisterForm() {
             <div className="space-y-2">
                 <div>
                     <button
-                        type="button"
+                        type="submit"
                         className="w-full px-8 py-3 font-semibold rounded-md bg-primaryColor text-gray-50">
                         Sign Up
                     </button>
