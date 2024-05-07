@@ -3,7 +3,11 @@
 import { useState } from 'react';
 import { PiEyeClosedDuotone, PiEyeDuotone } from 'react-icons/pi';
 
-export default function PasswordShowHidden(children) {
+export default function PasswordShowHidden({
+    where,
+    handelRegister,
+    className,
+}) {
     const [passShow, setPassShow] = useState(false);
     return (
         <span className="relative">
@@ -14,11 +18,14 @@ export default function PasswordShowHidden(children) {
                 {!passShow ? <PiEyeDuotone /> : <PiEyeClosedDuotone />}
             </span>
             <input
+                onChange={(e) => {
+                    where === 'register' && handelRegister(e, 'onChange');
+                }}
                 type={passShow ? 'text' : 'password'}
                 name="password"
                 id="password"
                 placeholder={passShow ? 'password' : '********'}
-                className="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800"
+                className={where === 'register' ? className : ''}
             />
         </span>
     );
