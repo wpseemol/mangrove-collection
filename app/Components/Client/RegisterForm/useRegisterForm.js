@@ -33,10 +33,10 @@ export default function useRegisterForm() {
     // submit btn disabled
 
     const isSubmitDisable =
-        fullName.isError &&
-        email.isError &&
-        password.isError &&
-        phoneNumber.isError;
+        !fullName.isError &&
+        !email.isError &&
+        !password.isError &&
+        !phoneNumber.isError;
 
     const handelRegister = function (event, where) {
         const name = event.target.name;
@@ -53,10 +53,17 @@ export default function useRegisterForm() {
                 },
             }));
 
-            // password length 8 character validation
+            // password character validation
 
+            // Assuming this code is part of a function or event handler
             if (name === 'password') {
-                if (value.length < 6) {
+                const minLength = 6;
+                const containsUpperCase = /[A-Z]/.test(value);
+                const containsLowerCase = /[a-z]/.test(value);
+                const containsSpecial =
+                    /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(value);
+
+                if (value.length < minLength) {
                     setFormData((pre) => ({
                         ...pre,
                         password: {
@@ -64,12 +71,48 @@ export default function useRegisterForm() {
                             isError: true,
                             submitStatus: false,
                             massage:
-                                'Password must be at last 6 characters log.',
+                                'Password must be at least 6 characters long.',
                         },
                     }));
-
                     return;
                 }
+
+                // Calculate password strength score
+                const strengthScore =
+                    (containsSpecial ? 1 : 0) +
+                    (containsUpperCase ? 1 : 0) +
+                    (containsLowerCase ? 1 : 0);
+
+                // Determine password strength level
+
+                console.log(formData.password);
+
+                let strengthLevel;
+                let status;
+                if (strengthScore === 1) {
+                    strengthLevel = 'Weak';
+                    status = 'weak';
+                } else if (strengthScore === 2) {
+                    strengthLevel = 'Medium';
+                    status = 'medium';
+                } else if (strengthScore === 3) {
+                    strengthLevel = 'Strong';
+                    status = 'strong';
+                } else {
+                    strengthLevel = 'Try strong your';
+                    status = true;
+                }
+
+                setFormData((pre) => ({
+                    ...pre,
+                    password: {
+                        ...pre?.password,
+                        isError: false,
+                        submitStatus: true,
+                        status: status,
+                        massage: `${strengthLevel} password!`,
+                    },
+                }));
             }
         }
 
@@ -83,6 +126,7 @@ export default function useRegisterForm() {
                     fullName: {
                         ...pre?.fullName,
                         isError: true,
+                        submitStatus: false,
                     },
                 }));
             }
@@ -93,6 +137,7 @@ export default function useRegisterForm() {
                     email: {
                         ...pre?.email,
                         isError: true,
+                        submitStatus: false,
                     },
                 }));
             }
@@ -103,6 +148,7 @@ export default function useRegisterForm() {
                     password: {
                         ...pre?.password,
                         isError: true,
+                        submitStatus: false,
                     },
                 }));
             }
@@ -114,6 +160,7 @@ export default function useRegisterForm() {
                     phoneNumber: {
                         ...pre?.phoneNumber,
                         isError: true,
+                        submitStatus: false,
                     },
                 }));
             }
@@ -125,7 +172,15 @@ export default function useRegisterForm() {
                 phoneNumber.submitStatus;
 
             if (isSubmit) {
-                console.log(formData);
+                const submitObject = {
+                    fullName: fullName.value,
+                    email: email.value,
+                    password: password.value,
+                    phoneNumber: phoneNumber.value,
+                    userType: 'regular',
+                };
+
+                console.log('submit object:', submitObject);
             }
         }
     };

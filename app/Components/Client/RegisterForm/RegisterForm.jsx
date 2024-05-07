@@ -107,7 +107,33 @@ export default function RegisterForm() {
                             {formData?.password?.massage}
                         </p>
                     ) : (
-                        ''
+                        !!formData?.password?.status && (
+                            <p
+                                className={`
+                                ${
+                                    formData?.password?.status === 'weak'
+                                        ? ' text-orange-400 '
+                                        : ''
+                                }
+                                ${
+                                    formData?.password?.status === 'medium'
+                                        ? ' text-yellow-400 '
+                                        : ''
+                                }
+                                ${
+                                    formData?.password?.status === 'strong'
+                                        ? ' text-green-400 '
+                                        : ''
+                                }
+                                ${
+                                    formData?.password?.status
+                                        ? ' text-[#1573fd] '
+                                        : ''
+                                }
+                                `}>
+                                {formData?.password?.massage}
+                            </p>
+                        )
                     )}
 
                     {/* this is password */}
@@ -124,10 +150,10 @@ export default function RegisterForm() {
                 <div>
                     <button
                         type="submit"
-                        disabled={isSubmitDisable}
+                        disabled={!isSubmitDisable}
                         className={`w-full px-8 py-3 font-semibold rounded-md bg-primaryColor 
                         text-gray-50 disabled:bg-primaryColor/45 ${
-                            isSubmitDisable ? 'cursor-not-allowed' : ''
+                            !isSubmitDisable ? 'cursor-not-allowed' : ''
                         }`}>
                         Sign Up
                     </button>
