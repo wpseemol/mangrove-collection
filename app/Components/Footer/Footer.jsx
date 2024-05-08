@@ -1,32 +1,23 @@
-import siteLogo from '@/public/assets/logo/mangrove-collection.png';
-import Image from 'next/image';
+import FooterSiteLogo from './FooterSiteLogo/FooterSiteLogo';
 
 export default function Footer() {
     return (
         <footer className="px-4 divide-y bg-gray-800 text-gray-100 md:pb-0 pb-20">
-            <div className="w-fit lg:container grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1  justify-items-stretch md:px-16 py-10 mx-auto space-y-8 lg:space-y-0">
-                {/* site logo */}
+            <div className="w-fit lg:container grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1  justify-items-stretch md:px-16 py-10 mx-auto space-y-8 lg:space-y-0 xl:gap-0 gap-x-16">
+                {/* footer logo section for table mod */}
 
-                <div className="w-fit  justify-self-center">
-                    <div className="flex justify-center gap-4 items-center ">
-                        <div>
-                            <figure className="md:w-12 md:h-12 w-10 h-10 mx-auto rounded-full overflow-hidden border-2 border-primaryColor ">
-                                <Image
-                                    src={siteLogo}
-                                    alt="Site logo"
-                                    className="w-full object-cover hover:scale-125 duration-300"
-                                />
-                            </figure>
-                        </div>
-                        <div>
-                            <h2 className="flex-none font-bold text-primaryColor text-sm md:text-base">
-                                Mangrove Collection
-                            </h2>
-                        </div>
+                <div className="hidden md:block mx-auto lg:hidden justify-center col-span-2">
+                    <FooterSiteLogo />
+                </div>
+
+                <div className="w-fit justify-self-center">
+                    {/* site logo */}
+                    <div className=" md:hidden lg:block">
+                        <FooterSiteLogo />
                     </div>
 
                     {/* Social  */}
-                    <div className="space-y-3 w-fit mx-auto mt-8">
+                    <div className="space-y-3 w-fit mx-auto mt-3 md:mt-0">
                         <div className="uppercase text-primaryColor font-semibold">
                             Social media
                         </div>
@@ -73,7 +64,8 @@ export default function Footer() {
                     </div>
                 </div>
 
-                <div className="space-y-3 w-fit  justify-self-center ">
+                {/* product section */}
+                <div className="space-y-3 w-fit  justify-self-center xl:text-left text-center">
                     <h3 className=" uppercase text-primaryColor font-semibold">
                         Product
                     </h3>
@@ -100,7 +92,7 @@ export default function Footer() {
                         </li>
                     </ul>
                 </div>
-                <div className="space-y-3 w-fit  justify-self-center ">
+                <div className="space-y-3 w-fit  justify-self-center xl:text-left text-center ">
                     <h3 className=" uppercase text-primaryColor font-semibold">
                         Company
                     </h3>
@@ -117,7 +109,7 @@ export default function Footer() {
                         </li>
                     </ul>
                 </div>
-                <div className="space-y-3 w-fit  justify-self-center ">
+                <div className="space-y-3 w-fit  justify-self-center xl:text-left text-center">
                     <h3 className="uppercase text-primaryColor font-semibold">
                         Developers
                     </h3>
