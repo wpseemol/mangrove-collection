@@ -7,7 +7,7 @@ import { FcApproval } from 'react-icons/fc';
 export default function NotificationComponent() {
     const [notification, setNotification] = useNotification();
 
-    const [showPopup, setShowPopup] = useState(true);
+    const [showPopup, setShowPopup] = useState(notification.status);
 
     console.log('console from NotificationComponent');
     let conditionClass;
