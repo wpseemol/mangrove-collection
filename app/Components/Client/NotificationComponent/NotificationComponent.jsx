@@ -44,6 +44,7 @@ export default function NotificationComponent() {
                         <div className="flex items-center gap-2">
                             <span>
                                 <FcApproval />
+                                {/* loading icon  */}
                             </span>
 
                             <p>{notification?.message}</p>
