@@ -1,6 +1,6 @@
-import { useNotification } from '@/app/hooks';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 import { passwordValidationStrong, submitValidation } from './submitValidation';
 
 export default function useRegisterForm() {
@@ -32,8 +32,6 @@ export default function useRegisterForm() {
             massage: 'Please input your Phone Number',
         },
     });
-
-    const [notification, setNotification] = useNotification();
 
     const router = useRouter();
 
@@ -113,16 +111,11 @@ export default function useRegisterForm() {
                     if (registerSuccessful?.ok) {
                         setLoading(false);
 
-                        setNotification((pre) => ({
-                            ...pre,
-                            massage: 'Your resignation is successful ',
-                            status: true,
-                            type: 'success',
-                        }));
+                        toast.success('Hai your registration is successful', {
+                            icon: '👏',
+                        });
 
-                        if (notification?.permission) {
-                            router.push('/login');
-                        }
+                        router.push('/login');
 
                         setFormData((pre) => ({
                             ...pre,
