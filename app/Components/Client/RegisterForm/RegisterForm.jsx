@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
+import { Toaster } from 'react-hot-toast';
 import { FcSynchronize } from 'react-icons/fc';
-import NotificationComponent from '../NotificationComponent/NotificationComponent';
 import PasswordShowHidden from '../PasswordShowHidden/PasswordShowHidden';
 import useRegisterForm from './useRegisterForm';
 
@@ -189,7 +189,8 @@ export default function RegisterForm() {
                     </p>
                 </div>
             </form>
-            <NotificationComponent />
+
+            <Toaster />
         </>
     );
 }
