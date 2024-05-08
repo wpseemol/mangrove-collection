@@ -25,7 +25,7 @@ export default function PasswordShowHidden({
                 name="password"
                 id="password"
                 placeholder={passShow ? 'password' : '********'}
-                className={where === 'register' ? className : ''}
+                className={className}
             />
         </span>
     );

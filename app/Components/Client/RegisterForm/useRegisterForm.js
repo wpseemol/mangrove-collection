@@ -1,6 +1,11 @@
+import { useNotification } from '@/app/hooks';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { passwordValidationStrong, submitValidation } from './submitValidation';
 
 export default function useRegisterForm() {
+    const [loading, setLoading] = useState(false);
+
     const [formData, setFormData] = useState({
         fullName: {
             value: null,
@@ -28,17 +33,29 @@ export default function useRegisterForm() {
         },
     });
 
+    const [notification, setNotification] = useNotification();
+
+    const router = useRouter();
+
     const { fullName, email, password, phoneNumber } = formData;
 
-    // submit btn disabled
+    // submit object
+    const submitObject = {
+        fullName: fullName.value,
+        email: email.value,
+        password: password.value,
+        phoneNumber: phoneNumber.value,
+        userType: 'regular',
+    };
 
+    // submit btn disabled
     const isSubmitDisable =
         !fullName.isError &&
         !email.isError &&
         !password.isError &&
         !phoneNumber.isError;
 
-    const handelRegister = function (event, where) {
+    const handelRegister = async function (event, where) {
         const name = event.target.name;
         const value = event.target.value;
 
@@ -54,114 +71,14 @@ export default function useRegisterForm() {
             }));
 
             // password character validation
-
-            // Assuming this code is part of a function or event handler
-            if (name === 'password') {
-                const minLength = 6;
-                const containsUpperCase = /[A-Z]/.test(value);
-                const containsLowerCase = /[a-z]/.test(value);
-                const containsSpecial =
-                    /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(value);
-
-                if (value.length < minLength) {
-                    setFormData((pre) => ({
-                        ...pre,
-                        password: {
-                            ...pre?.password,
-                            isError: true,
-                            submitStatus: false,
-                            massage:
-                                'Password must be at least 6 characters long.',
-                        },
-                    }));
-                    return;
-                }
-
-                // Calculate password strength score
-                const strengthScore =
-                    (containsSpecial ? 1 : 0) +
-                    (containsUpperCase ? 1 : 0) +
-                    (containsLowerCase ? 1 : 0);
-
-                // Determine password strength level
-
-                let strengthLevel;
-                let status;
-                if (strengthScore === 1) {
-                    strengthLevel = 'Weak';
-                    status = 'weak';
-                } else if (strengthScore === 2) {
-                    strengthLevel = 'Medium';
-                    status = 'medium';
-                } else if (strengthScore === 3) {
-                    strengthLevel = 'Strong';
-                    status = 'strong';
-                } else {
-                    strengthLevel = 'Try strong your';
-                    status = true;
-                }
-
-                setFormData((pre) => ({
-                    ...pre,
-                    password: {
-                        ...pre?.password,
-                        isError: false,
-                        submitStatus: true,
-                        status: status,
-                        massage: `${strengthLevel} password!`,
-                    },
-                }));
-            }
+            passwordValidationStrong(name, value, setFormData);
         }
 
         if (where === 'onSubmit') {
             event.preventDefault(); // form behavior stop
-
-            // full name validation cake
-            if (!fullName.value) {
-                setFormData((pre) => ({
-                    ...pre,
-                    fullName: {
-                        ...pre?.fullName,
-                        isError: true,
-                        submitStatus: false,
-                    },
-                }));
-            }
-            // email validation cake
-            if (!email.value) {
-                setFormData((pre) => ({
-                    ...pre,
-                    email: {
-                        ...pre?.email,
-                        isError: true,
-                        submitStatus: false,
-                    },
-                }));
-            }
-            // password validation cake
-            if (!password.value) {
-                setFormData((pre) => ({
-                    ...pre,
-                    password: {
-                        ...pre?.password,
-                        isError: true,
-                        submitStatus: false,
-                    },
-                }));
-            }
-
-            // phoneNumber validation cake
-            if (!phoneNumber.value) {
-                setFormData((pre) => ({
-                    ...pre,
-                    phoneNumber: {
-                        ...pre?.phoneNumber,
-                        isError: true,
-                        submitStatus: false,
-                    },
-                }));
-            }
+            setLoading(true);
+            // submit form valediction and error set
+            submitValidation(formData, setFormData, setLoading);
 
             const isSubmit =
                 fullName.submitStatus &&
@@ -170,18 +87,74 @@ export default function useRegisterForm() {
                 phoneNumber.submitStatus;
 
             if (isSubmit) {
-                const submitObject = {
-                    fullName: fullName.value,
-                    email: email.value,
-                    password: password.value,
-                    phoneNumber: phoneNumber.value,
-                    userType: 'regular',
-                };
+                setFormData((pre) => ({
+                    ...pre,
+                    password: {
+                        ...pre?.password,
+                        submitStatus: false,
+                    },
+                    email: {
+                        ...pre?.email,
+                        submitStatus: false,
+                    },
+                }));
 
-                console.log('submit object:', submitObject);
+                setLoading(true);
+
+                try {
+                    const registerSuccessful = await fetch(`/api/v1/user`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(submitObject),
+                    });
+
+                    if (registerSuccessful?.ok) {
+                        setLoading(false);
+
+                        setNotification((pre) => ({
+                            ...pre,
+                            massage: 'Your resignation is successful ',
+                            status: true,
+                            type: 'success',
+                        }));
+
+                        if (notification?.permission) {
+                            router.push('/login');
+                        }
+
+                        setFormData((pre) => ({
+                            ...pre,
+                            password: {
+                                ...pre?.password,
+                                submitStatus: true,
+                            },
+                            email: {
+                                ...pre?.email,
+                                submitStatus: true,
+                            },
+                        }));
+                    }
+                } catch (error) {
+                    setLoading(false);
+                    setFormData((pre) => ({
+                        ...pre,
+                        password: {
+                            ...pre?.password,
+                            submitStatus: true,
+                        },
+                        email: {
+                            ...pre?.email,
+                            submitStatus: true,
+                        },
+                    }));
+                    console.error(error);
+                    throw error;
+                }
             }
         }
     };
 
-    return { formData, isSubmitDisable, handelRegister };
+    return { formData, isSubmitDisable, handelRegister, loading };
 }

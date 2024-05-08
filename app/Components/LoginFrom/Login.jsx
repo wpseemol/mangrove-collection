@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import PasswordShowHidden from '../Client/PasswordShowHidden/PasswordShowHidden';
 
-export default function LoginFrom(where) {
+export default function Login(where) {
     return (
         <div className="flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-white text-gray-800 shadow-lg">
             <div className="mb-8 text-center">
@@ -36,7 +36,9 @@ export default function LoginFrom(where) {
                                 Forgot password?
                             </Link>
                         </div>
-                        <PasswordShowHidden />
+                        <PasswordShowHidden
+                            className={`w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 dark:text-gray-800`}
+                        />
                     </div>
                 </div>
                 <div className="space-y-2">
