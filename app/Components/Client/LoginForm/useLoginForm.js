@@ -80,6 +80,8 @@ export default function useLoginForm() {
                     });
                     console.log(submitObject);
                     setAuth(submitObject);
+
+                    router.push('/');
                 } catch (error) {
                     setLoading(false);
                     setFormData((pre) => ({

@@ -13,8 +13,9 @@ export default function AccountPage() {
     }
 
     return (
-        <div className="text-center">
-            hello {auth?.email} welcome to our shop
+        <div className="text-center h-[calc(100vh-28.2rem)] text-xl mt-8">
+            hello <span className="font-bold">{auth?.email}</span> welcome to
+            our shop
         </div>
     );
 }
