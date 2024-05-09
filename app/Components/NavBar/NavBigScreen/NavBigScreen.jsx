@@ -1,11 +1,5 @@
-import {
-    Account,
-    Card,
-    Logo,
-    NavMenu,
-    Offer,
-    Search,
-} from '../NavElement/NavElement';
+import Account from '../../Client/Account/Account';
+import { Card, Logo, NavMenu, Offer, Search } from '../NavElement/NavElement';
 
 export default function NavBigScreen() {
     return (
