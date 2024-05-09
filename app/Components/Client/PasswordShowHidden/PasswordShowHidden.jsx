@@ -6,6 +6,7 @@ import { PiEyeClosedDuotone, PiEyeDuotone } from 'react-icons/pi';
 export default function PasswordShowHidden({
     where,
     handelRegister,
+    handelLogin,
     className,
 }) {
     const [passShow, setPassShow] = useState(false);
@@ -20,6 +21,7 @@ export default function PasswordShowHidden({
             <input
                 onChange={(e) => {
                     where === 'register' && handelRegister(e, 'onChange');
+                    where === 'login' && handelLogin(e, 'onChange');
                 }}
                 type={passShow ? 'text' : 'password'}
                 name="password"

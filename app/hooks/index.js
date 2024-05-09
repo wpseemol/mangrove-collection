@@ -1,4 +1,4 @@
-import { NotificationContext } from '@/contexts';
+import { AuthContext, NotificationContext } from '@/contexts';
 import { useContext } from 'react';
 
 const useNotification = function () {
@@ -7,4 +7,10 @@ const useNotification = function () {
     return [notification, setNotification];
 };
 
-export { useNotification };
+const useAuth = function () {
+    const [auth, setAuth] = useContext(AuthContext);
+
+    return [auth, setAuth];
+};
+
+export { useAuth, useNotification };

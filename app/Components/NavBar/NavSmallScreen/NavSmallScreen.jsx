@@ -1,13 +1,7 @@
+import Account from '../../Client/Account/Account';
 import MenuBtn from '../../Client/MenuBtn/MenuBtn';
 import SearchBtn from '../../Client/SearchBtn/SearchBtn';
-import {
-    Account,
-    Card,
-    Logo,
-    NavMenu,
-    Offer,
-    Search,
-} from '../NavElement/NavElement';
+import { Card, Logo, NavMenu, Offer, Search } from '../NavElement/NavElement';
 
 export default function NavSmallScreen() {
     return (

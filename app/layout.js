@@ -1,4 +1,5 @@
 import { Inter } from 'next/font/google';
+import AuthProvider from './Components/Client/Providers/Auth/AuthProvider';
 import NotificationProvider from './Components/Client/Providers/NotificationProvider.jsx/NotificationProvider';
 import Footer from './Components/Footer/Footer';
 import Header from './Components/Header/Header';
@@ -15,12 +16,14 @@ export default async function RootLayout({ children, modal }) {
     return (
         <html lang="en">
             <body className={inter.className} suppressHydrationWarning={true}>
-                <NotificationProvider>
-                    <Header />
-                    {modal}
-                    {children}
-                    <Footer />
-                </NotificationProvider>
+                <AuthProvider>
+                    <NotificationProvider>
+                        <Header />
+                        {modal}
+                        {children}
+                        <Footer />
+                    </NotificationProvider>
+                </AuthProvider>
             </body>
         </html>
     );

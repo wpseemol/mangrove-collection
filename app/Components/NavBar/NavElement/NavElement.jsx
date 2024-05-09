@@ -5,7 +5,6 @@ import {
     FaCartFlatbed,
     FaDollarSign,
     FaMagnifyingGlass,
-    FaRegUser,
 } from 'react-icons/fa6';
 import NavLink from '../../Client/NavLink/NavLink';
 
@@ -98,35 +97,6 @@ function Card() {
     );
 }
 
-function Account() {
-    return (
-        <li className="text-white">
-            {' '}
-            <NavLink href={'/login'}>
-                <div className="flex md:flex-row flex-col items-center sm:gap-3 gap-1">
-                    <div className="text-primaryColor text-3xl">
-                        <FaRegUser />
-                    </div>
-                    <div>
-                        <h2 className="sm:text-lg text-sm font-semibold">
-                            Account
-                        </h2>
-                        {user ? (
-                            <p className="text-sm hidden md:block">
-                                {user?.email}
-                            </p>
-                        ) : (
-                            <p className="text-sm hidden md:block">
-                                register or Login
-                            </p>
-                        )}
-                    </div>
-                </div>
-            </NavLink>{' '}
-        </li>
-    );
-}
-
 function NavMenu() {
     const menuArray = [
         { id: 1, link: '', name: 'Category' },
@@ -153,4 +123,4 @@ function NavMenu() {
     );
 }
 
-export { Account, Card, Logo, NavMenu, Offer, Search };
+export { Card, Logo, NavMenu, Offer, Search };

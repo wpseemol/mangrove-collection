@@ -2,4 +2,6 @@ const { createContext } = require('react');
 
 const NotificationContext = createContext(null);
 
-export { NotificationContext };
+const AuthContext = createContext(null);
+
+export { AuthContext, NotificationContext };
