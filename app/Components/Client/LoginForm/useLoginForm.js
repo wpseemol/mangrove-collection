@@ -1,3 +1,4 @@
+import loginAction from '@/app/actions/loginAction/loginAction';
 import { useAuth } from '@/app/hooks';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -78,10 +79,12 @@ export default function useLoginForm() {
                     toast.success('Hai your registration is successful', {
                         icon: '👏',
                     });
-                    console.log(submitObject);
+
+                    const loginUse = await loginAction(submitObject);
+
                     setAuth(submitObject);
 
-                    router.push('/');
+                    router.back();
                 } catch (error) {
                     setLoading(false);
                     setFormData((pre) => ({
