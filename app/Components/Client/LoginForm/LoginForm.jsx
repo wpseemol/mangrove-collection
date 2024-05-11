@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { Toaster } from 'react-hot-toast';
+import { FcSynchronize } from 'react-icons/fc';
 import PasswordShowHidden from '../PasswordShowHidden/PasswordShowHidden';
 import useLoginForm from './useLoginForm';
 
@@ -73,8 +74,19 @@ export default function LoginForm() {
                     <div>
                         <button
                             type="submit"
-                            className="w-full px-8 py-3 font-semibold rounded-md bg-primaryColor text-gray-50">
-                            Sign in
+                            disabled={!isSubmitDisable}
+                            className={`w-full px-8 py-3 font-semibold rounded-md bg-primaryColor 
+                        text-gray-50 disabled:bg-primaryColor/45 ${
+                            !isSubmitDisable ? 'cursor-not-allowed' : ''
+                        }`}>
+                            {loading ? (
+                                <p className="flex justify-center items-center gap-3 cursor-wait">
+                                    <span>Loading </span>
+                                    <FcSynchronize className="animate-spin text-2xl" />{' '}
+                                </p>
+                            ) : (
+                                <span>Sign in</span>
+                            )}
                         </button>
                     </div>
                     <p className="px-6 text-sm text-center dark:text-gray-600">
