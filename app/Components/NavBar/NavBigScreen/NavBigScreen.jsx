@@ -1,7 +1,11 @@
+import afterLogin from '@/app/actions/afterLogin/afterLogin';
+import { Suspense } from 'react';
 import Account from '../../Client/Account/Account';
 import { Card, Logo, NavMenu, Offer, Search } from '../NavElement/NavElement';
 
-export default function NavBigScreen() {
+export default async function NavBigScreen() {
+    const loginUser = await afterLogin();
+
     return (
         <nav className="hidden md:block">
             <div className="">
@@ -20,7 +24,9 @@ export default function NavBigScreen() {
                         <Card />
 
                         {/* account */}
-                        <Account />
+                        <Suspense fallback={<p>loading...</p>}>
+                            <Account loginUser={loginUser} />
+                        </Suspense>
                     </ul>
                 </div>
                 <div className="hidden md:block h-[5.4rem] w-full"></div>
