@@ -87,6 +87,7 @@ export default function useLoginForm() {
                         router.back();
                         setCookie('email', submitObject.email, 30);
                         setCookie('pass', submitObject.password, 30);
+                        setLoading(false);
                     }
                 } catch (error) {
                     setLoading(false);
