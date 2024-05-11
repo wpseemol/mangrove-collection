@@ -20,12 +20,12 @@ export default function Account({ loginUser }) {
         <li className="text-white">
             {' '}
             <NavLink href={auth ? '/account' : '/login'}>
-                <div className="flex md:flex-row flex-col items-center sm:gap-3 gap-1">
-                    <div className="text-primaryColor text-3xl">
+                <div className="flex md:flex-row flex-col items-center xl:gap-3 md:gap-2 gap-1">
+                    <div className="text-primaryColor lg:text-3xl text-xl">
                         <FaRegUser />
                     </div>
                     <div>
-                        <h2 className="sm:text-lg text-sm font-semibold">
+                        <h2 className="lg:2xl md:text-xl text-sm font-semibold">
                             Account
                         </h2>
                         {auth ? (
