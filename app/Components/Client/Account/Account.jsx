@@ -7,6 +7,8 @@ import NavLink from '../NavLink/NavLink';
 export default function Account() {
     const [auth, setAuth] = useAuth();
 
+    const firstName = auth?.fullName.split(' ')[0];
+
     return (
         <li className="text-white">
             {' '}
@@ -21,7 +23,7 @@ export default function Account() {
                         </h2>
                         {auth ? (
                             <p className="text-sm hidden md:block">
-                                {auth?.email}
+                                {firstName}
                             </p>
                         ) : (
                             <p className="text-sm hidden md:block">

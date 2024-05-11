@@ -1,4 +1,6 @@
+import loginAction from '@/app/actions/loginAction/loginAction';
 import { useAuth } from '@/app/hooks';
+import setCookie from '@/utils/setCookie';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -78,10 +80,14 @@ export default function useLoginForm() {
                     toast.success('Hai your registration is successful', {
                         icon: '👏',
                     });
-                    console.log(submitObject);
-                    setAuth(submitObject);
 
-                    router.push('/');
+                    const loginUse = await loginAction(submitObject);
+                    if (loginUse) {
+                        setAuth(loginUse);
+                        router.back();
+                        setCookie('email', submitObject.email, 30);
+                        setCookie('pass', submitObject.password, 30);
+                    }
                 } catch (error) {
                     setLoading(false);
                     setFormData((pre) => ({
