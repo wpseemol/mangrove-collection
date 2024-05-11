@@ -1,6 +1,8 @@
 'use client';
 
+import { useAuth } from '@/app/hooks';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Toaster } from 'react-hot-toast';
 import { FcSynchronize } from 'react-icons/fc';
 import PasswordShowHidden from '../PasswordShowHidden/PasswordShowHidden';
@@ -10,6 +12,13 @@ export default function RegisterForm() {
     const { formData, isSubmitDisable, loading, handelRegister } =
         useRegisterForm();
 
+    const router = useRouter();
+
+    const [auth] = useAuth();
+
+    if (!!auth) {
+        router.push('/');
+    }
     return (
         <>
             <form
