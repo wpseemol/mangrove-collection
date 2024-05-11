@@ -1,9 +1,12 @@
+import afterLogin from '@/app/actions/afterLogin/afterLogin';
+import { Suspense } from 'react';
 import Account from '../../Client/Account/Account';
 import MenuBtn from '../../Client/MenuBtn/MenuBtn';
 import SearchBtn from '../../Client/SearchBtn/SearchBtn';
 import { Card, Logo, NavMenu, Offer, Search } from '../NavElement/NavElement';
 
-export default function NavSmallScreen() {
+export default async function NavSmallScreen() {
+    const loginUser = await afterLogin();
     return (
         <div>
             <nav className="md:hidden">
@@ -36,7 +39,9 @@ export default function NavSmallScreen() {
                         <Card />
 
                         {/* account */}
-                        <Account />
+                        <Suspense fallback={<p>loading...</p>}>
+                            <Account loginUser={loginUser} />
+                        </Suspense>
                     </ul>
                 </div>
             </nav>

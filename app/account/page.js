@@ -1,23 +1,22 @@
-'use client';
+import { notFound } from 'next/navigation';
+import LogOut from '../Components/Client/LogOut/LogOut';
+import afterLogin from '../actions/afterLogin/afterLogin';
 
-import { notFound, useRouter } from 'next/navigation';
-import { useAuth } from '../hooks';
+export default async function AccountPage() {
+    const loginUser = await afterLogin();
 
-export default function AccountPage() {
-    const [auth] = useAuth();
-
-    const route = useRouter();
-
-    if (!auth) {
+    if (!loginUser) {
         notFound();
     }
 
     return (
         <>
-            {!!auth && (
+            {!!loginUser && (
                 <div className="text-center h-[calc(100vh-28.2rem)] text-xl mt-8">
-                    hello <span className="font-bold">{auth?.fullName}</span>{' '}
+                    hello{' '}
+                    <span className="font-bold">{loginUser?.fullName}</span>{' '}
                     welcome to our shop
+                    <LogOut />
                 </div>
             )}
         </>
