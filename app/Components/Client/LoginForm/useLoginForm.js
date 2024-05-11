@@ -1,5 +1,6 @@
 import loginAction from '@/app/actions/loginAction/loginAction';
 import { useAuth } from '@/app/hooks';
+import setCookie from '@/utils/setCookie';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -81,10 +82,12 @@ export default function useLoginForm() {
                     });
 
                     const loginUse = await loginAction(submitObject);
-
-                    setAuth(submitObject);
-
-                    router.back();
+                    if (loginUse) {
+                        setAuth(loginUse);
+                        router.back();
+                        setCookie('email', submitObject.email, 30);
+                        setCookie('pass', submitObject.password, 30);
+                    }
                 } catch (error) {
                     setLoading(false);
                     setFormData((pre) => ({
