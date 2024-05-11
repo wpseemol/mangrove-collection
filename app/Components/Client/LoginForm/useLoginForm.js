@@ -77,16 +77,21 @@ export default function useLoginForm() {
                 setLoading(true);
 
                 try {
-                    toast.success('Hai your registration is successful', {
-                        icon: '👏',
-                    });
-
                     const loginUse = await loginAction(submitObject);
                     if (loginUse) {
+                        toast.success(
+                            `Hai ${loading?.fullName} login is successful`,
+                            {
+                                icon: '👏',
+                            }
+                        );
                         setAuth(loginUse);
                         router.back();
                         setCookie('email', submitObject.email, 30);
                         setCookie('pass', submitObject.password, 30);
+                        setLoading(false);
+                    } else {
+                        toast.error('Your email and password is not match');
                         setLoading(false);
                     }
                 } catch (error) {
