@@ -1,9 +1,9 @@
 import { Inter } from 'next/font/google';
-import AuthProvider from './Components/Client/Providers/Auth/AuthProvider';
-import NotificationProvider from './Components/Client/Providers/NotificationProvider.jsx/NotificationProvider';
-import Footer from './Components/Footer/Footer';
-import Header from './Components/Header/Header';
-import afterLogin from './actions/afterLogin/afterLogin';
+import AuthProvider from '../Components/Client/Providers/Auth/AuthProvider';
+import NotificationProvider from '../Components/Client/Providers/NotificationProvider.jsx/NotificationProvider';
+import Footer from '../Components/Footer/Footer';
+import Header from '../Components/Header/Header';
+import afterLogin from '../actions/afterLogin/afterLogin';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });

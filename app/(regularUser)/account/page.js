@@ -1,7 +1,7 @@
 import userType from '@/utils/userType';
 import { notFound } from 'next/navigation';
-import LogOut from '../Components/Client/LogOut/LogOut';
-import afterLogin from '../actions/afterLogin/afterLogin';
+import LogOut from '../../Components/Client/LogOut/LogOut';
+import afterLogin from '../../actions/afterLogin/afterLogin';
 
 export default async function AccountPage() {
     const loginUser = await afterLogin();
