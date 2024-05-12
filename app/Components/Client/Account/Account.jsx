@@ -6,40 +6,48 @@ import { FaRegUser } from 'react-icons/fa6';
 import NavLink from '../NavLink/NavLink';
 
 export default function Account({ loginUser }) {
-    const [auth, setAuth] = useAuth();
+    const [auth, setAuth, authLoading, setAuthLoading] = useAuth();
 
     const firstName = loginUser?.fullName.split(' ')[0];
 
     useEffect(() => {
         if (loginUser) {
+            setAuthLoading(false);
             setAuth(loginUser);
+        } else {
+            setAuthLoading(false);
         }
-    }, [setAuth, loginUser]);
+    }, [setAuth, loginUser, setAuthLoading]);
+
+    console.log('loading:', authLoading);
 
     return (
         <li className="text-white">
-            {' '}
-            <NavLink href={auth ? '/account' : '/login'}>
-                <div className="flex md:flex-row flex-col items-center xl:gap-3 md:gap-2 gap-1">
-                    <div className="text-primaryColor lg:text-3xl text-xl">
-                        <FaRegUser />
+            {authLoading ? (
+                <p>loading...</p>
+            ) : (
+                <NavLink href={auth ? '/account' : '/login'}>
+                    <div className="flex md:flex-row flex-col items-center xl:gap-3 md:gap-2 gap-1">
+                        <div className="text-primaryColor lg:text-3xl text-xl">
+                            <FaRegUser />
+                        </div>
+                        <div>
+                            <h2 className="lg:2xl md:text-xl text-sm font-semibold">
+                                Account
+                            </h2>
+                            {auth ? (
+                                <p className="text-sm hidden md:block">
+                                    {firstName}
+                                </p>
+                            ) : (
+                                <p className="text-sm hidden md:block">
+                                    register or Login
+                                </p>
+                            )}
+                        </div>
                     </div>
-                    <div>
-                        <h2 className="lg:2xl md:text-xl text-sm font-semibold">
-                            Account
-                        </h2>
-                        {auth ? (
-                            <p className="text-sm hidden md:block">
-                                {firstName}
-                            </p>
-                        ) : (
-                            <p className="text-sm hidden md:block">
-                                register or Login
-                            </p>
-                        )}
-                    </div>
-                </div>
-            </NavLink>{' '}
+                </NavLink>
+            )}
         </li>
     );
 }
