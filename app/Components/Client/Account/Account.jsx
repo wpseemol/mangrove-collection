@@ -1,7 +1,6 @@
 'use client';
 
 import { useAuth } from '@/app/hooks';
-import { useEffect } from 'react';
 import { FaRegUser } from 'react-icons/fa6';
 import NavLink from '../NavLink/NavLink';
 
@@ -9,17 +8,6 @@ export default function Account({ loginUser }) {
     const [auth, setAuth, authLoading, setAuthLoading] = useAuth();
 
     const firstName = loginUser?.fullName.split(' ')[0];
-
-    useEffect(() => {
-        if (loginUser) {
-            setAuthLoading(false);
-            setAuth(loginUser);
-        } else {
-            setAuthLoading(false);
-        }
-    }, [setAuth, loginUser, setAuthLoading]);
-
-    console.log('loading:', authLoading);
 
     return (
         <li className="text-white">

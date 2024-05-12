@@ -3,9 +3,9 @@
 import { AuthContext } from '@/contexts';
 import { useState } from 'react';
 
-export default function AuthProvider({ children }) {
-    const [auth, setAuth] = useState(null);
-    const [authLoading, setAuthLoading] = useState(true);
+export default function AuthProvider({ children, loginUser }) {
+    const [auth, setAuth] = useState(loginUser ? loginUser : null);
+    const [authLoading, setAuthLoading] = useState(false);
 
     return (
         <>

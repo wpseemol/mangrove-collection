@@ -3,6 +3,7 @@ import AuthProvider from './Components/Client/Providers/Auth/AuthProvider';
 import NotificationProvider from './Components/Client/Providers/NotificationProvider.jsx/NotificationProvider';
 import Footer from './Components/Footer/Footer';
 import Header from './Components/Header/Header';
+import afterLogin from './actions/afterLogin/afterLogin';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -13,10 +14,14 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children, modal }) {
+    const loginUser = await afterLogin();
+
+    console.log('try to fatch layout:', loginUser);
+
     return (
         <html lang="en">
             <body className={inter.className} suppressHydrationWarning={true}>
-                <AuthProvider>
+                <AuthProvider loginUser={loginUser}>
                     <NotificationProvider>
                         <Header />
                         {modal}
