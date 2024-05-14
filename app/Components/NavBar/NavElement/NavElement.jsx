@@ -14,7 +14,7 @@ function Logo() {
     return (
         <li className="text-white">
             <Link href="/">
-                <div className="">
+                <div className={``}>
                     <figure className="md:w-12 md:h-12 w-10 h-10 mx-auto rounded-full overflow-hidden border-2 border-primaryColor ">
                         <Image
                             src={siteLogo}

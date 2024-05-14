@@ -10,12 +10,12 @@ export default function Account({ loginUser }) {
 
     const firstName = loginUser?.fullName.split(' ')[0];
 
-    const { type } = userType(auth);
+    const userTypeCake = userType(auth);
 
     let linkUrl;
-    if (type === 'admin') {
+    if (userTypeCake?.type === 'admin') {
         linkUrl = '/dashboard';
-    } else if (type === 'contentCreator') {
+    } else if (userTypeCake?.type === 'contentCreator') {
         linkUrl = '/dashboard';
     } else {
         linkUrl = '/account';

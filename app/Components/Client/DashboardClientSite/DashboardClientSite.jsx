@@ -1,13 +1,14 @@
 'use client';
 
-import Link from 'next/link';
 import { useState } from 'react';
 import { ImSpinner9 } from 'react-icons/im';
 import { IoCloseOutline } from 'react-icons/io5';
 import { RiMenu2Line } from 'react-icons/ri';
 import DarkModeToggle from '../DarkModeToggle/DarkModeToggle';
+import DashboardLogout from '../DashboardLogout/DashboardLogout';
+import DashboardSiteLogo from '../DashboardSiteLogo/DashboardSiteLogo';
 
-export default function DashboardClientSite({ children }) {
+export default function DashboardClientSite({ children, loginUser }) {
     const [isDryerClose, setIsDryerClose] = useState(false);
 
     return (
@@ -20,47 +21,35 @@ export default function DashboardClientSite({ children }) {
                             ? 'md:w-20 sm:w-64 w-screen origin-left'
                             : 'md:w-64 w-0 origin-left'
                     } fixed top-0 left-0  z-20 min-h-screen
-            bg-[#111c43] dark:bg-neutral-800 dark:border-[#313335] sm:border-r duration-300 overflow-x-hidden overflow-y-auto text-neutral-300`}>
-                    <div className="h-16 border-b dark:border-[#313335] border-[#2c3658] items-center justify-center md:flex hidden">
-                        <Link href="/">
-                            <h2>site logo here</h2>
-                        </Link>
+            bg-[#111c43] dark:bg-neutral-800 dark:border-[#313335] 
+            sm:border-r duration-300 overflow-x-hidden overflow-y-auto 
+            text-neutral-300`}>
+                    <div
+                        className="h-16 border-b dark:border-[#313335] border-[#2c3658]
+                     items-center justify-center md:flex hidden">
+                        {/* site logo here */}
+                        <DashboardSiteLogo isDryerClose={isDryerClose} />
                     </div>
 
-                    {/* Dryer menu section  */}
-                    <div className="">
-                        <div className="md:hidden relative h-16 dark:border-[#313335] border-[#2c3658] border-b flex items-center justify-center text-neutral-300 text-xl font-bold">
-                            <span>MAIN</span>
-                            <div
-                                onClick={() =>
-                                    setIsDryerClose((isTrue) => !isTrue)
-                                }
-                                className="absolute text-3xl top-0 right-0 bg-primaryColor/5 p-4">
-                                <IoCloseOutline />
-                            </div>
-                        </div>
+                    {/* Dryer menu section mobile screen */}
 
-                        <div className="p-4  h-[calc(100vh-8rem)] overflow-x-hidden overflow-y-auto">
-                            <div className="">dashboard menu here</div>
-                        </div>
-                        <div className="flex justify-center">
-                            <button
-                                onClick={() =>
-                                    setIsDryerClose((isTrue) => !isTrue)
-                                }
-                                className="flex items-center justify-center gap-2 bg-slate-800/60 hover:bg-slate-800/80 p-3 rounded font-bold">
-                                log out btn
-                                <span
-                                    className={
-                                        isDryerClose
-                                            ? 'md:hidden block'
-                                            : 'block'
-                                    }>
-                                    Log out
-                                </span>
-                            </button>
+                    <div
+                        className="md:hidden relative h-16 dark:border-[#313335] border-[#2c3658]
+                     border-b flex items-center justify-center text-neutral-300 text-xl font-bold">
+                        {/* site logo here mobile view*/}
+                        <DashboardSiteLogo isDryerClose={isDryerClose} />
+                        <div
+                            onClick={() => setIsDryerClose((isTrue) => !isTrue)}
+                            className="absolute text-3xl top-0 right-0 bg-primaryColor/5 p-4">
+                            <IoCloseOutline />
                         </div>
                     </div>
+
+                    <div className="p-4  h-[calc(100vh-8rem)] overflow-x-hidden overflow-y-auto">
+                        <div className="">dashboard menu here</div>
+                    </div>
+                    {/* log out btn */}
+                    <DashboardLogout isDryerClose={isDryerClose} />
                 </div>
                 {/* top navbar Dashboard */}
                 <div
@@ -91,18 +80,20 @@ export default function DashboardClientSite({ children }) {
                             </button>
                         </div>
 
-                        <div className="flex items-center gap-5">
+                        <div className="flex items-center gap-3 mr-2">
                             <div className=" ">
                                 <DarkModeToggle />
                             </div>
 
                             {/* user detels  */}
 
-                            <>
+                            {loginUser ? (
+                                loginUser
+                            ) : (
                                 <span className="px-10">
                                     <ImSpinner9 className="animate-spin text-2xl" />
                                 </span>
-                            </>
+                            )}
                         </div>
                     </div>
                 </div>
