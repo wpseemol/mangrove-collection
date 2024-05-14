@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ImSpinner9 } from 'react-icons/im';
 import { IoCloseOutline } from 'react-icons/io5';
 import { RiMenu2Line } from 'react-icons/ri';
+import DashboardMenu from '../../DashboardMenu/DashboardMenu';
 import DarkModeToggle from '../DarkModeToggle/DarkModeToggle';
 import DashboardLogout from '../DashboardLogout/DashboardLogout';
 import DashboardSiteLogo from '../DashboardSiteLogo/DashboardSiteLogo';
@@ -46,7 +47,8 @@ export default function DashboardClientSite({ children, loginUser }) {
                     </div>
 
                     <div className="p-4  h-[calc(100vh-8rem)] overflow-x-hidden overflow-y-auto">
-                        <div className="">dashboard menu here</div>
+                        {/* dashboard menu here */}
+                        <DashboardMenu isDryerClose={isDryerClose} />
                     </div>
                     {/* log out btn */}
                     <DashboardLogout isDryerClose={isDryerClose} />

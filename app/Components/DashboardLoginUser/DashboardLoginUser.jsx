@@ -1,5 +1,6 @@
 import afterLogin from '@/app/actions/afterLogin/afterLogin';
 import userType from '@/utils/userType';
+import Link from 'next/link';
 
 export default async function DashboardLoginUser() {
     const loginUser = await afterLogin();
@@ -18,7 +19,11 @@ export default async function DashboardLoginUser() {
                 <div
                     className="w-8 h-8 border bg-primaryColor/30
                  rounded-full flex items-center justify-center">
-                    <span className="text-xl">{loginUser?.fullName[0]}</span>
+                    <Link href="/dashboard">
+                        <span className="text-xl">
+                            {loginUser?.fullName[0]}
+                        </span>
+                    </Link>
                 </div>
                 <div>
                     <h2 className="text-sm">{loginUser?.fullName}</h2>

@@ -11,7 +11,7 @@ export default async function DashboardPage() {
     let userTypeCake;
     if (type === 'admin') {
         userTypeCake = 'Admin';
-    } else if (type === 'admin') {
+    } else if (type === 'contentCreator') {
         userTypeCake = 'Content Creator';
     }
     return (

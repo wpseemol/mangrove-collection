@@ -16,7 +16,7 @@ export default function DarkModeToggle() {
             setDarkMode(true);
         }
 
-        document.body.classList.toggle('dark', !darkMode);
+        document.body.classList.toggle('dark', darkMode);
     }, [darkMode]);
 
     const toggleDarkBode = () => {
@@ -31,7 +31,7 @@ export default function DarkModeToggle() {
 
     return (
         <button onClick={toggleDarkBode}>
-            {!darkMode ? (
+            {darkMode ? (
                 <div className="p-3 text-xl rounded-full hover:shadow-2xl text-[#9a9b9b] duration-300 hover:scale-110 ">
                     <MdOutlineLightMode />
                 </div>
