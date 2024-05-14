@@ -9,12 +9,23 @@ export default function Account({ loginUser }) {
 
     const firstName = loginUser?.fullName.split(' ')[0];
 
+    const type = userType(auth);
+
+    let linkUrl;
+    if (type === '/dashboard') {
+        linkUrl = 'Admin';
+    } else if (type === 'admin') {
+        linkUrl = '/dashboard';
+    } else {
+        linkUrl = '/account';
+    }
+
     return (
         <li className="text-white">
             {authLoading ? (
                 <p>loading...</p>
             ) : (
-                <NavLink href={auth ? '/account' : '/login'}>
+                <NavLink href={auth ? linkUrl : '/login'}>
                     <div className="flex md:flex-row flex-col items-center xl:gap-3 md:gap-2 gap-1">
                         <div className="text-primaryColor lg:text-3xl text-xl">
                             <FaRegUser />

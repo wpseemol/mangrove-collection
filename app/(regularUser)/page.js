@@ -1,7 +1,7 @@
-import Category from '../Components/Category/Category';
-import Contact from '../Components/Contact/Contact';
-import HeroSection from '../Components/HeroSection/HeroSection';
-import SomeDetails from '../Components/SomeDetails/SomeDetails';
+import Category from '@/app/Components/Category/Category';
+import Contact from '@/app/Components/Contact/Contact';
+import HeroSection from '@/app/Components/HeroSection/HeroSection';
+import SomeDetails from '@/app/Components/SomeDetails/SomeDetails';
 
 export default function Home() {
     return (

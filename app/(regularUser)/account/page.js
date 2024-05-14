@@ -1,4 +1,5 @@
 import userType from '@/utils/userType';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import LogOut from '../../Components/Client/LogOut/LogOut';
 import afterLogin from '../../actions/afterLogin/afterLogin';
@@ -50,6 +51,13 @@ export default async function AccountPage() {
                 hello <span className="font-bold">{loginUser?.fullName}</span>{' '}
                 welcome to our shop
                 <LogOut />
+            </div>
+        );
+    } else {
+        return (
+            <div>
+                please go to login
+                <Link href={'/login'}>login</Link>
             </div>
         );
     }
