@@ -1,22 +1,27 @@
+import DashboardClientSite from '@/app/Components/Client/DashboardClientSite/DashboardClientSite';
 import afterLogin from '@/app/actions/afterLogin/afterLogin';
+import userType from '@/utils/userType';
 
 export default async function DashboardPage() {
     const loginUser = await afterLogin();
 
-    const type = userType(loginUser);
+    const { type } = userType(loginUser);
 
-    let userType;
+    let userTypeCake;
     if (type === 'admin') {
-        userType = 'Admin';
+        userTypeCake = 'Admin';
     } else if (type === 'admin') {
-        userType = 'Content Creator';
+        userTypeCake = 'Content Creator';
     }
     return (
         <main>
-            <div>
-                <p>login user type {userType} </p>
-                <p> dashboard</p>
-            </div>
+            <DashboardClientSite>
+                <div>
+                    <p className="text-center">
+                        login user type {userTypeCake}{' '}
+                    </p>
+                </div>
+            </DashboardClientSite>
         </main>
     );
 }

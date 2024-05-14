@@ -1,6 +1,7 @@
 'use client';
 
 import { useAuth } from '@/app/hooks';
+import userType from '@/utils/userType';
 import { FaRegUser } from 'react-icons/fa6';
 import NavLink from '../NavLink/NavLink';
 
@@ -9,12 +10,12 @@ export default function Account({ loginUser }) {
 
     const firstName = loginUser?.fullName.split(' ')[0];
 
-    const type = userType(auth);
+    const { type } = userType(auth);
 
     let linkUrl;
-    if (type === '/dashboard') {
-        linkUrl = 'Admin';
-    } else if (type === 'admin') {
+    if (type === 'admin') {
+        linkUrl = '/dashboard';
+    } else if (type === 'contentCreator') {
         linkUrl = '/dashboard';
     } else {
         linkUrl = '/account';
