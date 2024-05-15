@@ -9,7 +9,7 @@ export default async function DashboardLoginUser() {
     let userTypeCake;
     if (type === 'admin') {
         userTypeCake = 'Admin';
-    } else if (type === 'admin') {
+    } else if (type === 'contentCreator') {
         userTypeCake = 'Content Creator';
     }
 

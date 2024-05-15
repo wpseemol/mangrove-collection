@@ -1,5 +1,3 @@
-import DashboardClientSite from '@/app/Components/Client/DashboardClientSite/DashboardClientSite';
-import DashboardLoginUser from '@/app/Components/DashboardLoginUser/DashboardLoginUser';
 import afterLogin from '@/app/actions/afterLogin/afterLogin';
 import userType from '@/utils/userType';
 
@@ -16,13 +14,9 @@ export default async function DashboardPage() {
     }
     return (
         <main>
-            <DashboardClientSite loginUser={<DashboardLoginUser />}>
-                <div>
-                    <p className="text-center">
-                        login user type {userTypeCake}{' '}
-                    </p>
-                </div>
-            </DashboardClientSite>
+            <div>
+                <p className="text-center">login user type {userTypeCake} </p>
+            </div>
         </main>
     );
 }

@@ -16,7 +16,7 @@ export default function DashboardClientSite({ children, loginUser }) {
         <>
             <div>
                 {/* site Dryer */}
-                <div
+                <nav
                     className={`${
                         isDryerClose
                             ? 'md:w-20 sm:w-64 w-screen origin-left'
@@ -52,15 +52,15 @@ export default function DashboardClientSite({ children, loginUser }) {
                     </div>
                     {/* log out btn */}
                     <DashboardLogout isDryerClose={isDryerClose} />
-                </div>
+                </nav>
                 {/* top navbar Dashboard */}
-                <div
+                <header
                     className={`${
                         isDryerClose
                             ? 'md:w-[calc(100%-5rem)] w-full origin-right'
                             : 'md:w-[calc(100%-16rem)] w-full origin-left'
                     } fixed top-0 right-0 z-10  h-16 dark:bg-neutral-800 bg-white dark:border-[#313335] dark:border-b dark:border-l shadow-lg dark:shadow-none duration-300`}>
-                    <div className="flex items-center justify-between h-full dark:text-[#9c9d9e]">
+                    <nav className="flex items-center justify-between h-full dark:text-[#9c9d9e]">
                         <div className="text-2xl ml-2 dark:text-[#a3a4a5]">
                             <button
                                 onClick={() => {
@@ -97,8 +97,8 @@ export default function DashboardClientSite({ children, loginUser }) {
                                 </span>
                             )}
                         </div>
-                    </div>
-                </div>
+                    </nav>
+                </header>
                 <div
                     className={`${
                         isDryerClose
