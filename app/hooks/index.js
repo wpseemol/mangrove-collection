@@ -8,9 +8,10 @@ const useNotification = function () {
 };
 
 const useAuth = function () {
-    const [auth, setAuth] = useContext(AuthContext);
+    const [auth, setAuth, authLoading, setAuthLoading] =
+        useContext(AuthContext);
 
-    return [auth, setAuth];
+    return [auth, setAuth, authLoading, setAuthLoading];
 };
 
 export { useAuth, useNotification };

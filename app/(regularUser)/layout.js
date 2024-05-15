@@ -1,9 +1,10 @@
+import AuthProvider from '@/app/Components/Client/Providers/Auth/AuthProvider';
+import NotificationProvider from '@/app/Components/Client/Providers/NotificationProvider.jsx/NotificationProvider';
+import Footer from '@/app/Components/Footer/Footer';
+import Header from '@/app/Components/Header/Header';
+import afterLogin from '@/app/actions/afterLogin/afterLogin';
+import '@/app/globals.css';
 import { Inter } from 'next/font/google';
-import AuthProvider from './Components/Client/Providers/Auth/AuthProvider';
-import NotificationProvider from './Components/Client/Providers/NotificationProvider.jsx/NotificationProvider';
-import Footer from './Components/Footer/Footer';
-import Header from './Components/Header/Header';
-import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -13,10 +14,12 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children, modal }) {
+    const loginUser = await afterLogin();
+
     return (
         <html lang="en">
             <body className={inter.className} suppressHydrationWarning={true}>
-                <AuthProvider>
+                <AuthProvider loginUser={loginUser}>
                     <NotificationProvider>
                         <Header />
                         {modal}
