@@ -10,7 +10,7 @@ export async function POST(request) {
 
         const createUser = await User.create({ ...body });
 
-        return NextResponse.json({
+        return new NextResponse({
             status: 201,
             message: 'User created successfully',
             user: createUser,

@@ -1,3 +1,9 @@
+import UploadComponent from '@/app/Components/upload/UploadComponent';
+
 export default function UploadProductPage() {
-    return <div>Upload page</div>;
+    return (
+        <main>
+            <UploadComponent />
+        </main>
+    );
 }
