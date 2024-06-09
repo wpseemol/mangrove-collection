@@ -23,5 +23,4 @@ const firebaseApp = getApp();
 export const storage = getStorage(
     firebaseApp,
     process.env.STORAGE_BUCKET_URL
-    
 );
