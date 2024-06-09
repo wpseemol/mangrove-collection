@@ -8,13 +8,12 @@ import { initializeApp } from 'firebase/app';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: 'AIzaSyB3owVOhJJ7AP3frHvIwofnPJxZ-6v14Gk',
-    authDomain: 'mangrove-collection.firebaseapp.com',
-    projectId: 'mangrove-collection',
-
-    storageBucket: 'mangrove-collection.appspot.com',
-    messagingSenderId: '61693115052',
-    appId: '1:61693115052:web:876ff5db40bc781a05bd09',
+    apiKey: process.env.APIKEY,
+    authDomain: process.env.AUTH_DOMAIN,
+    projectId: process.env.PROJECT_ID,
+    storageBucket: process.env.STORAGE_BUCKET,
+    messagingSenderId: process.env.MESSAGING_SENDER_ID,
+    appId: process.env.APP_ID,
 };
 
 // Initialize Firebase
@@ -23,5 +22,6 @@ const app = initializeApp(firebaseConfig);
 const firebaseApp = getApp();
 export const storage = getStorage(
     firebaseApp,
-    'gs://mangrove-collection.appspot.com'
+    process.env.STORAGE_BUCKET_URL
+    
 );
