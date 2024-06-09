@@ -14,7 +14,7 @@ export default function UploadForm() {
         event.preventDefault();
         const productData = new FormData(event.target);
        productData.forEach((value,key)=>{
-        console.log(value);
+        console.log(key);
         
        })
     }
@@ -34,7 +34,7 @@ export default function UploadForm() {
         }
 
 
-        console.log(uploadImage);
+        // console.log(uploadImage);
     }
 
 
