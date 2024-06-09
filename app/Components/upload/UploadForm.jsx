@@ -1,12 +1,27 @@
 'use client';
 
+import imageUploadAction from '@/app/actions/imageUploadAction/ImageUploadAction';
+
 export default function UploadForm() {
     async function uploadFileAction(formData) {
         console.log(formData);
     }
 
-    function handelFileUpload(event) {
-        console.log(event.target.files);
+    async function handelFileUpload(event, where) {
+        const fileData = new FormData();
+
+        if ('thumbnail' === where) {
+            fileData.append('imageFile', event.target.files[0]);
+        } else if ('images' === where) {
+            const files = event.target.files;
+            for (let i = 0; i < files.length; i++) {
+                fileData.append('imageFile', files[i]);
+            }
+        }
+
+        const uploadImage = await imageUploadAction(fileData);
+
+        console.log(uploadImage);
     }
 
     return (
@@ -97,7 +112,7 @@ export default function UploadForm() {
                     Images
                 </label>
                 <input
-                    onChange={(event) => handelFileUpload(event, 'thumbnail')}
+                    onChange={(event) => handelFileUpload(event, 'images')}
                     className="shadow dark:bg-slate-700 appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-neutral-200 leading-tight focus:outline-none focus:shadow-outline"
                     id="productImages"
                     type="file"
