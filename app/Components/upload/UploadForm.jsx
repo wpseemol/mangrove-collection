@@ -4,19 +4,16 @@ import imageUploadAction from '@/app/actions/imageUploadAction/ImageUploadAction
 import { useState } from 'react';
 
 export default function UploadForm() {
-
-    const [thumbnailImage,setThumbnailImage] = useState("");
-    const [imageArr,setImageArr]= useState([]);
-    const [productSlug,setProductSlug]= useState("");
-
+    const [thumbnailImage, setThumbnailImage] = useState('');
+    const [imageArr, setImageArr] = useState([]);
+    const [productSlug, setProductSlug] = useState('');
 
     async function uploadFileAction(event) {
         event.preventDefault();
         const productData = new FormData(event.target);
-       productData.forEach((value,key)=>{
-        console.log(key);
-        
-       })
+        productData.forEach((value, key) => {
+            console.log(key);
+        });
     }
 
     async function handelFileUpload(event, where) {
@@ -24,25 +21,23 @@ export default function UploadForm() {
 
         if ('thumbnail' === where) {
             fileData.append('imageFile', event.target.files[0]);
-        const uploadImage = await imageUploadAction(fileData);
+            const uploadImage = await imageUploadAction(fileData);
         } else if ('images' === where) {
             const files = event.target.files;
             for (let i = 0; i < files.length; i++) {
                 fileData.append('imageFile', files[i]);
-                }
+            }
             const uploadImage = await imageUploadAction(fileData);
         }
-
 
         // console.log(uploadImage);
     }
 
-
-    function handelProductName (event){
+    function handelProductName(event) {
         const productNameValue = event.target.value;
-        const slagValue = productNameValue.toLowerCase().replace(/\s+/g, "-");
+        const slagValue = productNameValue.toLowerCase().replace(/\s+/g, '-');
         setProductSlug(slagValue);
-   }
+    }
 
     return (
         <form
@@ -59,7 +54,7 @@ export default function UploadForm() {
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-neutral-200 dark:bg-slate-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="productName"
                     type="text"
-                    name='productName'
+                    name="productName"
                     placeholder="Product Name"
                     required
                 />
@@ -74,7 +69,7 @@ export default function UploadForm() {
                     className="shadow appearance-none dark:bg-slate-700 border rounded w-full py-2 px-3 text-gray-700 dark:text-neutral-200 leading-tight focus:outline-none focus:shadow-outline"
                     id="productSlug"
                     defaultValue={productSlug}
-                    name='slug'
+                    name="slug"
                     type="text"
                     placeholder="Slug"
                     required
@@ -89,8 +84,8 @@ export default function UploadForm() {
                 <input
                     className="shadow appearance-none border dark:bg-slate-700 rounded w-full py-2 px-3 text-gray-700 dark:text-neutral-200 leading-tight focus:outline-none focus:shadow-outline"
                     id="productPrice"
-                    name='price'
-                    type='number'
+                    name="price"
+                    type="number"
                     placeholder="Price"
                     required
                 />
@@ -104,11 +99,9 @@ export default function UploadForm() {
                 <textarea
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-neutral-200 dark:bg-slate-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="shortDescription"
-                    name='shortDescription'
+                    name="shortDescription"
                     rows="4"
-                    placeholder="Short Description"
-                    
-                    ></textarea>
+                    placeholder="Short Description"></textarea>
             </div>
             <div className="mb-4">
                 <label
@@ -134,11 +127,10 @@ export default function UploadForm() {
                 <textarea
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-neutral-200 dark:bg-slate-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="productDescription"
-                    name='description'
+                    name="description"
                     rows="8"
                     placeholder="Product Description"
-                    required
-                    ></textarea>
+                    required></textarea>
             </div>
             <div className="mb-4">
                 <label
@@ -153,7 +145,6 @@ export default function UploadForm() {
                     type="file"
                     accept="image/*"
                     multiple
-
                 />
             </div>
             <div className="flex items-center justify-between">
