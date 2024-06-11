@@ -3,7 +3,7 @@
 import imageUploadAction from '@/app/actions/imageUploadAction/ImageUploadAction';
 import { useState } from 'react';
 
-export default function UploadForm() {
+export default function UploadForm({ allCategory }) {
     const [thumbnailImage, setThumbnailImage] = useState('');
     const [imageArr, setImageArr] = useState([]);
     const [productSlug, setProductSlug] = useState('');
@@ -71,9 +71,14 @@ export default function UploadForm() {
                     id="category"
                     name="category"
                     required>
-                    <option value="wait">category 1</option>
-                    <option value="wait2">category 2</option>
-                    <option value="wait3">category 3</option>
+                    {allCategory?.map((category) => (
+                        <option
+                            key={category?.id}
+                            value={category?.categorySlag}
+                            className="border">
+                            {category?.categoryName}
+                        </option>
+                    ))}
                 </select>
             </div>
 

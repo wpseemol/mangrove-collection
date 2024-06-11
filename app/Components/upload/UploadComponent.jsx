@@ -4,7 +4,7 @@ import { Toaster } from 'react-hot-toast';
 import AddCategory from './AddCategory';
 import UploadForm from './UploadForm';
 
-export default function UploadComponent() {
+export default function UploadComponent({ allCategory }) {
     const [tabViewValue, setTabViewValue] = useState('addProduct');
 
     return (
@@ -37,7 +37,7 @@ export default function UploadComponent() {
                         <h1 className="text-3xl text-center font-semibold mb-6">
                             Product Upload
                         </h1>
-                        <UploadForm />
+                        <UploadForm allCategory={allCategory} />
                     </>
                 )}
 

@@ -28,9 +28,15 @@ export default function AddCategory() {
             const isCreate = await createCategoryAction(formData);
 
             if ('created' === isCreate) {
-                toast('Category successfully created');
+                toast.success('Category successfully created');
                 event.target.reset();
                 setCategoryImageUrl('');
+                setCategorySlug('');
+            } else {
+                toast.error('Some thing is wrong');
+                event.target.reset();
+                setCategoryImageUrl('');
+                setCategorySlug('');
             }
         }
     }
