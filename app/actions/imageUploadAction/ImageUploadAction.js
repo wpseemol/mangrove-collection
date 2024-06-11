@@ -1,9 +1,9 @@
 'use server';
 
-// import { storage } from '@/firebase/firebase-config';
-// import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { storage } from '@/firebase/firebase-config';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
-export default async function imageUploadAction(fileData) {
+export default async function imageUploadAction(fileData, where) {
     const file = fileData.getAll('imageFile');
 
     // fileData.forEach((element) => {
@@ -11,7 +11,19 @@ export default async function imageUploadAction(fileData) {
     //     console.log(allFile);
     // });
 
-    console.log(file);
+    try {
+        if ('category-image' === where) {
+            const uploadImage = file[0];
+
+            const imageRef = ref(storage, `/category/${uploadImage?.name}`);
+
+            await uploadBytes(imageRef, uploadImage);
+            const imgUrl = await getDownloadURL(ref(storage, imageRef));
+            return imgUrl;
+        }
+    } catch (error) {
+        throw error;
+    }
 
     // try {
     //     const imageRef = ref(storage, `/products/${file.name}`);
