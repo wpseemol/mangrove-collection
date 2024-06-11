@@ -7,6 +7,7 @@ import { useAuth } from '@/app/hooks';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
+import toast from 'react-hot-toast';
 
 export default function AddCategory() {
     const [categoryImageUrl, setCategoryImageUrl] = useState('');
@@ -24,7 +25,13 @@ export default function AddCategory() {
             formData.append('categoryImage', categoryImageUrl);
             formData.append('createBy', auth?.id);
             // category created action.
-            await createCategoryAction(formData);
+            const isCreate = await createCategoryAction(formData);
+
+            if ('created' === isCreate) {
+                toast('Category successfully created');
+                event.target.reset();
+                setCategoryImageUrl('');
+            }
         }
     }
 
