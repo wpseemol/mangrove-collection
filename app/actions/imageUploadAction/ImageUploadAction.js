@@ -16,7 +16,12 @@ export default async function imageUploadAction(fileData, where) {
             const uploadImage = file[0];
 
             const imageRef = ref(storage, `/category/${uploadImage?.name}`);
-
+            await uploadBytes(imageRef, uploadImage);
+            const imgUrl = await getDownloadURL(ref(storage, imageRef));
+            return imgUrl;
+        } else if ('thumbnail' === where) {
+            const uploadImage = file[0];
+            const imageRef = ref(storage, `/product/${uploadImage?.name}`);
             await uploadBytes(imageRef, uploadImage);
             const imgUrl = await getDownloadURL(ref(storage, imageRef));
             return imgUrl;

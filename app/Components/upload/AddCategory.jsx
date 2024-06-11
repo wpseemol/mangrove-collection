@@ -1,19 +1,18 @@
 'use client';
 
 import createCategoryAction from '@/app/actions/createCategoryAction/createCategoryAction';
-import imageDeleteAction from '@/app/actions/imageDeleteAction/imageDeleteAction';
 import imageUploadAction from '@/app/actions/imageUploadAction/ImageUploadAction';
 import { useAuth } from '@/app/hooks';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
+import { IoReload } from 'react-icons/io5';
+import ImagesShow from './ImagesShow';
 
 export default function AddCategory() {
     const [categoryImageUrl, setCategoryImageUrl] = useState('');
     const [categorySlug, setCategorySlug] = useState('');
+    const [loading, setLoading] = useState(false);
     const categoryImageRef = useRef(null);
-    const router = useRouter();
     const [auth] = useAuth();
 
     // form submit function here.
@@ -52,29 +51,16 @@ export default function AddCategory() {
     }
 
     async function handelCategoryImage(event) {
+        setLoading(true);
         const file = event.target.files[0];
         const formData = new FormData();
         formData.append('imageFile', file);
         const imgUlr = await imageUploadAction(formData, 'category-image');
-        setCategoryImageUrl(imgUlr);
-    }
-
-    async function handelDeleteImage() {
-        const path = new URL(categoryImageUrl).pathname;
-        // Remove query parameters (if any)
-        const pathWithoutQuery = path.split('?')[0];
-        // Split by percent-encoded slash to get the file name
-        const fileName = decodeURIComponent(pathWithoutQuery)
-            .split('%2F')
-            .pop();
-        const fileArray = fileName.split('/');
-        const imageName = fileArray[fileArray.length - 1];
-
-        const isDeleted = await imageDeleteAction('category', imageName);
-        if ('deleted' === isDeleted) {
-            setCategoryImageUrl('');
-            categoryImageRef.current.value = '';
-            router.refresh();
+        if (!!imgUlr) {
+            setCategoryImageUrl(imgUlr);
+            setLoading(false);
+        } else {
+            setLoading(false);
         }
     }
 
@@ -129,34 +115,23 @@ export default function AddCategory() {
                     accept="image/*"
                     required
                 />
-
-                {categoryImageUrl && (
-                    <div className="mt-4 ">
-                        <figure className="relative w-fit h-fit group">
-                            <span
-                                onClick={handelDeleteImage}
-                                className="absolute right-1 -top-1 text-xl text-red-600 group-hover:opacity-100 group-hover:scale-100 scale-0 opacity-0 duration-150 cursor-pointer">
-                                &#215;
-                            </span>
-                            <Image
-                                src={categoryImageUrl}
-                                width={100}
-                                height={100}
-                                alt="category image"
-                                className="w-auto h-auto"
-                            />
-                        </figure>
-                    </div>
-                )}
+                {/* image preview */}
+                <ImagesShow
+                    imageUrl={categoryImageUrl}
+                    setImageUrl={setCategoryImageUrl}
+                    imageRef={categoryImageRef}
+                    type="single"
+                />
             </div>
 
             <div className="flex items-center justify-between">
                 <button
                     title={!categoryImageUrl ? 'please input filed' : ''}
-                    disabled={!categoryImageUrl}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none disabled:cursor-not-allowed disabled:bg-blue-300"
+                    disabled={loading}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none disabled:cursor-not-allowed disabled:bg-blue-300 flex items-center gap-2"
                     type="submit">
-                    Upload Category
+                    Upload Category{' '}
+                    {loading && <IoReload className="animate-spin text-xl" />}
                 </button>
             </div>
         </form>

@@ -2,26 +2,35 @@
 
 import imageUploadAction from '@/app/actions/imageUploadAction/ImageUploadAction';
 import { useState } from 'react';
+import { IoReload } from 'react-icons/io5';
 
-export default function UploadForm({ allCategory }) {
+export default function AddProduct({ allCategory }) {
     const [thumbnailImage, setThumbnailImage] = useState('');
     const [imageArr, setImageArr] = useState([]);
     const [productSlug, setProductSlug] = useState('');
+    const [loading, setLoading] = useState(false);
 
     async function uploadFileAction(event) {
         event.preventDefault();
         const productData = new FormData(event.target);
         productData.forEach((value, key) => {
-            console.log(value);
+            console.log(key, value);
         });
     }
 
     async function handelFileUpload(event, where) {
+        setLoading(true);
         const fileData = new FormData();
 
         if ('thumbnail' === where) {
             fileData.append('imageFile', event.target.files[0]);
-            const uploadImage = await imageUploadAction(fileData);
+            const uploadImage = await imageUploadAction(fileData, 'thumbnail');
+            if (!!uploadImage) {
+                setThumbnailImage(uploadImage);
+                setLoading(false);
+            } else {
+                setLoading(false);
+            }
         } else if ('images' === where) {
             const files = event.target.files;
             for (let i = 0; i < files.length; i++) {
@@ -192,9 +201,11 @@ export default function UploadForm({ allCategory }) {
             </div>
             <div className="flex items-center justify-between">
                 <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    disabled={loading}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:cursor-not-allowed flex items-center gap-2"
                     type="submit">
-                    Upload Product
+                    Upload Product{' '}
+                    {loading && <IoReload className="animate-spin text-xl" />}
                 </button>
             </div>
         </form>
