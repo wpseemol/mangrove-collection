@@ -13,5 +13,15 @@ module.exports = {
             },
         },
     },
-    plugins: [],
+     plugins: [
+    function ({ addUtilities }) {
+      addUtilities({
+        '.appearance-none': {
+          '-webkit-appearance': 'none',
+          '-moz-appearance': 'none',
+          'appearance': 'none',
+        },
+      })
+    },
+  ],
 };
