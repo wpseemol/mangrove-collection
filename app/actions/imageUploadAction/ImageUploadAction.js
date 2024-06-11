@@ -6,11 +6,6 @@ import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 export default async function imageUploadAction(fileData, where) {
     const file = fileData.getAll('imageFile');
 
-    // fileData.forEach((element) => {
-    //     const allFile = element.get('imageFile');
-    //     console.log(allFile);
-    // });
-
     try {
         if ('category-image' === where) {
             const uploadImage = file[0];
@@ -25,6 +20,17 @@ export default async function imageUploadAction(fileData, where) {
             await uploadBytes(imageRef, uploadImage);
             const imgUrl = await getDownloadURL(ref(storage, imageRef));
             return imgUrl;
+        } else if ('images' === where) {
+            const response = file?.map(async (img) => {
+                const imageRef = ref(storage, `/product/${img?.name}`);
+                await uploadBytes(imageRef, img);
+                const imgUrl = await getDownloadURL(ref(storage, imageRef));
+                return imgUrl;
+            });
+
+            const allImageUrl = await Promise.all(response);
+
+            return allImageUrl;
         }
     } catch (error) {
         throw error;

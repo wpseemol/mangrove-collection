@@ -120,6 +120,7 @@ export default function AddCategory() {
                     imageUrl={categoryImageUrl}
                     setImageUrl={setCategoryImageUrl}
                     imageRef={categoryImageRef}
+                    basketPathName="category"
                     type="single"
                 />
             </div>

@@ -26,10 +26,8 @@ export default async function createCategoryAction(categoryObj) {
             error.keyPattern.categorySlug
         ) {
             return 'slug-massed';
-        } else {
-            console.log('some this is problem', error);
-
-            throw error;
         }
+
+        throw error;
     }
 }

@@ -50,6 +50,22 @@ const productSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    rating: {
+        type: Number,
+        require: false,
+    },
+    ratingCollection: {
+        type: mongoose.Schema.ObjectId,
+        require: false,
+    },
+    comment: {
+        type: mongoose.Schema.ObjectId,
+        require: false,
+    },
+    popularity: {
+        type: Number,
+        require: false,
+    },
 });
 
 const Product =

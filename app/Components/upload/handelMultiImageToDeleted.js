@@ -1,13 +1,16 @@
+'use client';
+
 import imageDeleteAction from '@/app/actions/imageDeleteAction/imageDeleteAction';
 
-export default async function handelDeleteImage(
-    imageUrl,
+export default async function handelMultiImageToDeleted(
+    deleteImgUrl,
     setImageUrl,
-    imageRef,
     router,
-    basketPathName
+    imageRef,
+    basketPathName,
+    imageLength
 ) {
-    const path = new URL(imageUrl).pathname;
+    const path = new URL(deleteImgUrl).pathname;
     // Remove query parameters (if any)
     const pathWithoutQuery = path.split('?')[0];
     // Split by percent-encoded slash to get the file name
@@ -17,8 +20,14 @@ export default async function handelDeleteImage(
 
     const isDeleted = await imageDeleteAction(basketPathName, imageName);
     if ('deleted' === isDeleted) {
-        setImageUrl('');
-        imageRef.current.value = '';
+        setImageUrl((pre) => {
+            const afterRemove = pre?.filter((img) => img !== deleteImgUrl);
+            if (afterRemove.length < 1) {
+                imageRef.current.value = null;
+            }
+            return afterRemove;
+        });
+
         router.refresh();
     }
 }

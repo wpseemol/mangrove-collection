@@ -22,6 +22,10 @@ const categorySchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    popularity: {
+        type: Number,
+        require: false,
+    },
 });
 
 const Category =

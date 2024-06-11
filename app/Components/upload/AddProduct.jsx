@@ -1,8 +1,12 @@
 'use client';
 
+import addProductAction from '@/app/actions/addProductAction/addProductAction';
 import imageUploadAction from '@/app/actions/imageUploadAction/ImageUploadAction';
-import { useState } from 'react';
+import { useAuth } from '@/app/hooks';
+import { useRef, useState } from 'react';
+import toast from 'react-hot-toast';
 import { IoReload } from 'react-icons/io5';
+import ImagesShow from './ImagesShow';
 
 export default function AddProduct({ allCategory }) {
     const [thumbnailImage, setThumbnailImage] = useState('');
@@ -10,12 +14,44 @@ export default function AddProduct({ allCategory }) {
     const [productSlug, setProductSlug] = useState('');
     const [loading, setLoading] = useState(false);
 
+    const thumbnailImageRef = useRef(null);
+    const imagesRef = useRef(null);
+
+    const [auth] = useAuth();
+
     async function uploadFileAction(event) {
         event.preventDefault();
+        setLoading(true);
+        let productObj = {
+            thumbnail: thumbnailImage,
+            images: imageArr,
+            user: auth?.id,
+            offer: 0,
+        };
         const productData = new FormData(event.target);
         productData.forEach((value, key) => {
-            console.log(key, value);
+            productObj[key] = value;
         });
+
+        const afterAdd = await addProductAction(productObj);
+        if ('created' === afterAdd) {
+            toast.success('Successfully product created');
+            setThumbnailImage('');
+            setImageArr([]);
+            setProductSlug('');
+            event.target.reset();
+            setLoading(false);
+        } else if ('slug-massed' === afterAdd) {
+            toast.error('Product Slug must be Unique!');
+            setLoading(false);
+        } else {
+            toast.error('Something is wrong please check');
+            setThumbnailImage('');
+            setImageArr([]);
+            setProductSlug('');
+            event.target.reset();
+            setLoading(false);
+        }
     }
 
     async function handelFileUpload(event, where) {
@@ -36,10 +72,14 @@ export default function AddProduct({ allCategory }) {
             for (let i = 0; i < files.length; i++) {
                 fileData.append('imageFile', files[i]);
             }
-            const uploadImage = await imageUploadAction(fileData);
+            const uploadImage = await imageUploadAction(fileData, 'images');
+            if (!!uploadImage) {
+                setImageArr(uploadImage);
+                setLoading(false);
+            } else {
+                setLoading(false);
+            }
         }
-
-        // console.log(uploadImage);
     }
 
     function handelProductName(event) {
@@ -162,12 +202,22 @@ export default function AddProduct({ allCategory }) {
                     Thumbnail
                 </label>
                 <input
+                    ref={thumbnailImageRef}
                     onChange={(event) => handelFileUpload(event, 'thumbnail')}
                     className="shadow appearance-none border dark:bg-slate-700 rounded w-full py-2 px-3 text-gray-700 dark:text-neutral-200 leading-tight focus:outline-none focus:shadow-outline"
                     id="productThumbnail"
                     type="file"
                     accept="image/*"
                     required
+                />
+
+                {/* preview image */}
+                <ImagesShow
+                    imageUrl={thumbnailImage}
+                    setImageUrl={setThumbnailImage}
+                    imageRef={thumbnailImageRef}
+                    basketPathName="product"
+                    type="single"
                 />
             </div>
             <div className="mb-4">
@@ -191,12 +241,21 @@ export default function AddProduct({ allCategory }) {
                     Images
                 </label>
                 <input
+                    ref={imagesRef}
                     onChange={(event) => handelFileUpload(event, 'images')}
                     className="shadow dark:bg-slate-700 appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-neutral-200 leading-tight focus:outline-none focus:shadow-outline"
                     id="productImages"
                     type="file"
                     accept="image/*"
                     multiple
+                />
+
+                <ImagesShow
+                    imageUrl={imageArr}
+                    setImageUrl={setImageArr}
+                    imageRef={imagesRef}
+                    basketPathName="product"
+                    type="multi"
                 />
             </div>
             <div className="flex items-center justify-between">
