@@ -12,7 +12,7 @@ export default function UploadForm() {
         event.preventDefault();
         const productData = new FormData(event.target);
         productData.forEach((value, key) => {
-            console.log(key);
+            console.log(value);
         });
     }
 
@@ -59,6 +59,24 @@ export default function UploadForm() {
                     required
                 />
             </div>
+
+            <div className="mb-4">
+                <label
+                    className="block text-gray-700 dark:text-neutral-200 text-sm font-bold mb-2"
+                    htmlFor="category">
+                    Category
+                </label>
+                <select
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-neutral-200 dark:bg-slate-800 leading-tight focus:outline-none focus:shadow-outline cursor-pointer"
+                    id="category"
+                    name="category"
+                    required>
+                    <option value="wait">category 1</option>
+                    <option value="wait2">category 2</option>
+                    <option value="wait3">category 3</option>
+                </select>
+            </div>
+
             <div className="mb-4">
                 <label
                     className="block text-gray-700 dark:text-neutral-200 text-sm font-bold mb-2"
@@ -75,20 +93,40 @@ export default function UploadForm() {
                     required
                 />
             </div>
-            <div className="mb-4">
-                <label
-                    className="block text-gray-700 dark:text-neutral-200  text-sm font-bold mb-2"
-                    htmlFor="productPrice">
-                    Price
-                </label>
-                <input
-                    className="shadow appearance-none border dark:bg-slate-700 rounded w-full py-2 px-3 text-gray-700 dark:text-neutral-200 leading-tight focus:outline-none focus:shadow-outline"
-                    id="productPrice"
-                    name="price"
-                    type="number"
-                    placeholder="Price"
-                    required
-                />
+            <div className="mb-4 flex items-center gap-2 ">
+                <div className="w-2/3">
+                    <label
+                        className="block text-gray-700 dark:text-neutral-200  text-sm font-bold mb-2"
+                        htmlFor="productPrice">
+                        Price
+                    </label>
+                    <input
+                        className="shadow appearance-none border dark:bg-slate-700 rounded w-full py-2 px-3 text-gray-700 dark:text-neutral-200 leading-tight focus:outline-none focus:shadow-outline"
+                        id="productPrice"
+                        name="price"
+                        type="number"
+                        placeholder="Price"
+                        required
+                    />
+                </div>
+
+                {/*----------------------------*/}
+
+                <div className="w-1/3">
+                    <label
+                        className="block text-gray-700 dark:text-neutral-200  text-sm font-bold mb-2"
+                        htmlFor="currency">
+                        Currency:
+                    </label>
+                    <select
+                        className="shadow appearance-none border dark:bg-slate-800 rounded w-full py-2 px-3 text-gray-700 dark:text-neutral-200 leading-tight focus:outline-none focus:shadow-outline text-center cursor-pointer"
+                        id="currency"
+                        defaultValue="taka"
+                        name="currency">
+                        <option value="taka">&#2547;</option>
+                        <option value="dollar">$</option>
+                    </select>
+                </div>
             </div>
             <div className="mb-4">
                 <label

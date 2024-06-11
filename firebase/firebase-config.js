@@ -8,7 +8,7 @@ import { initializeApp } from 'firebase/app';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: process.env.APIKEY,
+    apiKey: process.env.API_KEY,
     authDomain: process.env.AUTH_DOMAIN,
     projectId: process.env.PROJECT_ID,
     storageBucket: process.env.STORAGE_BUCKET,
@@ -20,7 +20,4 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const firebaseApp = getApp();
-export const storage = getStorage(
-    firebaseApp,
-    process.env.STORAGE_BUCKET_URL
-);
+export const storage = getStorage(firebaseApp, process.env.STORAGE_BUCKET_URL);
