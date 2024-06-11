@@ -9,7 +9,7 @@ export default async function getCategory() {
         await connectMongo();
         const allCategory = await Category.find(
             {},
-            'categoryImage categorySlag categoryName'
+            'categoryImage categorySlug categoryName'
         ).lean();
         return replaceMongoId(allCategory);
     } catch (error) {

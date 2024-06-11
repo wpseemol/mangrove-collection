@@ -27,11 +27,15 @@ export default function AddCategory() {
             // category created action.
             const isCreate = await createCategoryAction(formData);
 
+            console.log(isCreate);
+
             if ('created' === isCreate) {
                 toast.success('Category successfully created');
                 event.target.reset();
                 setCategoryImageUrl('');
                 setCategorySlug('');
+            } else if ('slug-massed' === isCreate) {
+                toast.error('Slug must be unique');
             } else {
                 toast.error('Some thing is wrong');
                 event.target.reset();
@@ -43,8 +47,8 @@ export default function AddCategory() {
 
     function handelCategoryName(event) {
         const categoryNameValue = event.target.value;
-        const slagValue = categoryNameValue.toLowerCase().replace(/\s+/g, '-');
-        setCategorySlug(slagValue);
+        const slugValue = categoryNameValue.toLowerCase().replace(/\s+/g, '-');
+        setCategorySlug(slugValue);
     }
 
     async function handelCategoryImage(event) {
@@ -97,15 +101,15 @@ export default function AddCategory() {
             <div className="mb-4">
                 <label
                     className="block text-gray-700 dark:text-neutral-200 text-sm font-bold mb-2"
-                    htmlFor="categorySlag">
-                    Slag
+                    htmlFor="categorySlug">
+                    Slug
                 </label>
                 <input
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-neutral-200 dark:bg-slate-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="categorySlag"
+                    id="categorySlug"
                     type="text"
-                    name="categorySlag"
-                    placeholder="Slag"
+                    name="categorySlug"
+                    placeholder="Slug"
                     defaultValue={categorySlug}
                     required
                 />

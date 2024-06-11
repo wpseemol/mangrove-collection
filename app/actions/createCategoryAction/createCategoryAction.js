@@ -20,6 +20,16 @@ export default async function createCategoryAction(categoryObj) {
             return 'created';
         }
     } catch (error) {
-        throw error;
+        if (
+            error.code === 11000 &&
+            error.keyPattern &&
+            error.keyPattern.categorySlug
+        ) {
+            return 'slug-massed';
+        } else {
+            console.log('some this is problem', error);
+
+            throw error;
+        }
     }
 }

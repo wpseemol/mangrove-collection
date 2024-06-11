@@ -74,7 +74,7 @@ export default function UploadForm({ allCategory }) {
                     {allCategory?.map((category) => (
                         <option
                             key={category?.id}
-                            value={category?.categorySlag}
+                            value={category?.categorySlug}
                             className="border">
                             {category?.categoryName}
                         </option>

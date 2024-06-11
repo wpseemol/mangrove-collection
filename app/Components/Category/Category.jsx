@@ -19,7 +19,7 @@ export default async function Category() {
                             key={category?.id}
                             className="flex flex-col items-center justify-center bg-[#f6f8fa] px-2 py-3
                             hover:text-primaryColor hover:scale-105 duration-300 rounded-md overflow-hidden">
-                            <Link href={category?.categorySlag}>
+                            <Link href={category?.categorySlug}>
                                 <figure className="flex items-center justify-start w-full h-20">
                                     <Image
                                         src={category?.categoryImage}
