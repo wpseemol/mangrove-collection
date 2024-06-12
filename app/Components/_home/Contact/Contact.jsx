@@ -1,4 +1,4 @@
-import HomeTitle from '../HomeTitle/HomeTitle';
+import HomeTitle from '@/app/Components/HomeTitle/HomeTitle';
 
 const Contact = () => {
     return (

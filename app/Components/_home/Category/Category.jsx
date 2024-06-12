@@ -1,7 +1,7 @@
+import HomeTitle from '@/app/Components/HomeTitle/HomeTitle';
 import getCategory from '@/app/bd/mongoosQuery/getCategory';
 import Image from 'next/image';
 import Link from 'next/link';
-import HomeTitle from '../HomeTitle/HomeTitle';
 
 export default async function Category() {
     const allCategory = await getCategory();
