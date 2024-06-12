@@ -72,7 +72,7 @@ export default function AddCategory() {
                 <label
                     className="block text-gray-700 dark:text-neutral-200 text-sm font-bold mb-2"
                     htmlFor="categoryName">
-                    Category Name
+                    Category Name*
                 </label>
                 <input
                     onChange={handelCategoryName}
@@ -88,7 +88,7 @@ export default function AddCategory() {
                 <label
                     className="block text-gray-700 dark:text-neutral-200 text-sm font-bold mb-2"
                     htmlFor="categorySlug">
-                    Slug
+                    Slug*
                 </label>
                 <input
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-neutral-200 dark:bg-slate-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -104,7 +104,7 @@ export default function AddCategory() {
                 <label
                     className="block text-gray-700 dark:text-neutral-200 text-sm font-bold mb-2"
                     htmlFor="categoryImage">
-                    Category Image
+                    Category Image*
                 </label>
                 <input
                     ref={categoryImageRef}
