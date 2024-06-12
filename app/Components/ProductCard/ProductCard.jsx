@@ -4,15 +4,15 @@ import Link from 'next/link';
 
 export default function ProductCard({ productDetails }) {
     return (
-        <div className="border border-neutral-300/30 group hover:shadow-lg duration-300 sm:w-64 relative overflow-hidden">
+        <div className="border border-neutral-300/30 group hover:shadow-lg duration-300 sm:w-64 relative overflow-hidden h-[23rem]">
             <Link href={'#'}>
-                <figure className="overflow-hidden px-2 pt-4">
+                <figure className="mx-auto w-full h-[14rem] overflow-hidden flex justify-center items-center px-2 pt-4">
                     <Image
                         src={productDetails?.thumbnail}
-                        width={300}
-                        height={300}
+                        width={250}
+                        height={250}
                         alt="Product Name"
-                        className="w-[17rem] h-[17rem] object-cover group-hover:scale-105 duration-500"
+                        className="w-auto h-auto object-cover group-hover:scale-105 duration-500"
                     />
                 </figure>
 
