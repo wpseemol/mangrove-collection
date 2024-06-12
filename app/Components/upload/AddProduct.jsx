@@ -27,6 +27,7 @@ export default function AddProduct({ allCategory }) {
             images: imageArr,
             user: auth?.id,
             offer: 0,
+            popularity: 0,
         };
         const productData = new FormData(event.target);
         productData.forEach((value, key) => {
@@ -96,7 +97,7 @@ export default function AddProduct({ allCategory }) {
                 <label
                     className="block text-gray-700 dark:text-neutral-200 text-sm font-bold mb-2"
                     htmlFor="productName">
-                    Product Name
+                    Product Name*
                 </label>
                 <input
                     onChange={handelProductName}
@@ -113,7 +114,7 @@ export default function AddProduct({ allCategory }) {
                 <label
                     className="block text-gray-700 dark:text-neutral-200 text-sm font-bold mb-2"
                     htmlFor="category">
-                    Category
+                    Category*
                 </label>
                 <select
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-neutral-200 dark:bg-slate-800 leading-tight focus:outline-none focus:shadow-outline cursor-pointer"
@@ -135,7 +136,7 @@ export default function AddProduct({ allCategory }) {
                 <label
                     className="block text-gray-700 dark:text-neutral-200 text-sm font-bold mb-2"
                     htmlFor="productSlug">
-                    Slug
+                    Slug*
                 </label>
                 <input
                     className="shadow appearance-none dark:bg-slate-700 border rounded w-full py-2 px-3 text-gray-700 dark:text-neutral-200 leading-tight focus:outline-none focus:shadow-outline"
@@ -148,11 +149,32 @@ export default function AddProduct({ allCategory }) {
                 />
             </div>
             <div className="mb-4 flex items-center gap-2 ">
-                <div className="w-2/3">
+                <div className="w-1/5">
+                    <label
+                        className="block text-gray-700 dark:text-neutral-200  text-sm font-bold mb-2"
+                        htmlFor="unit">
+                        Unit:
+                    </label>
+                    <select
+                        className="shadow appearance-none border dark:bg-slate-800 rounded w-full py-2 px-3 text-gray-700 dark:text-neutral-200 leading-tight focus:outline-none focus:shadow-outline text-center cursor-pointer"
+                        id="unit"
+                        defaultValue="kg"
+                        name="unit">
+                        <option value="kg" className="text-xl">
+                            KG
+                        </option>
+                        <option value="pc" className="text-xl">
+                            PC
+                        </option>
+                    </select>
+                </div>
+
+                {/* -------------- */}
+                <div className="w-3/5">
                     <label
                         className="block text-gray-700 dark:text-neutral-200  text-sm font-bold mb-2"
                         htmlFor="productPrice">
-                        Price
+                        Price*
                     </label>
                     <input
                         className="shadow appearance-none border dark:bg-slate-700 rounded w-full py-2 px-3 text-gray-700 dark:text-neutral-200 leading-tight focus:outline-none focus:shadow-outline"
@@ -166,7 +188,7 @@ export default function AddProduct({ allCategory }) {
 
                 {/*----------------------------*/}
 
-                <div className="w-1/3">
+                <div className="w-1/5">
                     <label
                         className="block text-gray-700 dark:text-neutral-200  text-sm font-bold mb-2"
                         htmlFor="currency">
@@ -177,8 +199,12 @@ export default function AddProduct({ allCategory }) {
                         id="currency"
                         defaultValue="taka"
                         name="currency">
-                        <option value="taka">&#2547;</option>
-                        <option value="dollar">$</option>
+                        <option value="taka" className="text-xl">
+                            &#2547;
+                        </option>
+                        <option value="dollar" className="text-xl">
+                            &#36;
+                        </option>
                     </select>
                 </div>
             </div>
@@ -197,10 +223,11 @@ export default function AddProduct({ allCategory }) {
             </div>
             <div className="mb-4">
                 <label
-                    className="block text-gray-700 dark:text-neutral-200 text-sm font-bold mb-2"
+                    className="block text-gray-700 dark:text-neutral-200 text-sm font-bold"
                     htmlFor="productThumbnail">
-                    Thumbnail
+                    Thumbnail*
                 </label>
+                <p>Image width and height 300x300 Preferable</p>
                 <input
                     ref={thumbnailImageRef}
                     onChange={(event) => handelFileUpload(event, 'thumbnail')}
@@ -224,7 +251,7 @@ export default function AddProduct({ allCategory }) {
                 <label
                     className="block text-gray-700 dark:text-neutral-200 text-sm font-bold mb-2"
                     htmlFor="productDescription">
-                    Description
+                    Description*
                 </label>
                 <textarea
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-neutral-200 dark:bg-slate-700 leading-tight focus:outline-none focus:shadow-outline"

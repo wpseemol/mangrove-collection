@@ -2,9 +2,13 @@ import AuthProvider from '@/app/Components/Client/Providers/Auth/AuthProvider';
 import NotificationProvider from '@/app/Components/Client/Providers/NotificationProvider.jsx/NotificationProvider';
 import afterLogin from '@/app/actions/afterLogin/afterLogin';
 import '@/app/globals.css';
-import { Inter } from 'next/font/google';
+import { Poppins, Roboto } from 'next/font/google';
 
-const inter = Inter({ subsets: ['latin'] });
+const poppins = Poppins({
+    subsets: ['latin'],
+    weight: ['400', '500', '600', '700'],
+});
+const roboto = Roboto({ subsets: ['latin'], weight: ['400', '500', '700'] });
 
 export const metadata = {
     title: 'Mangrove Collection | Home',
@@ -16,7 +20,9 @@ export default async function RootLayout({ children }) {
 
     return (
         <html lang="en">
-            <body className={inter.className} suppressHydrationWarning={true}>
+            <body
+                className={poppins.className + ' ' + roboto.className}
+                suppressHydrationWarning={true}>
                 <AuthProvider loginUser={loginUser}>
                     <NotificationProvider>{children}</NotificationProvider>
                 </AuthProvider>
