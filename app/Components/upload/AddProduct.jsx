@@ -27,6 +27,7 @@ export default function AddProduct({ allCategory }) {
             images: imageArr,
             user: auth?.id,
             offer: 0,
+            popularity: 0,
         };
         const productData = new FormData(event.target);
         productData.forEach((value, key) => {

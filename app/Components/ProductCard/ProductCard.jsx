@@ -1,28 +1,35 @@
+import currencyIcon from '@/utils/currencyIcon';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function ProductCard() {
+export default function ProductCard({ productDetails }) {
     return (
         <div className="border border-neutral-300/30 group hover:shadow-lg duration-300 sm:w-64 relative overflow-hidden">
             <Link href={'#'}>
                 <figure className="overflow-hidden px-2 pt-4">
                     <Image
-                        src={
-                            'https://firebasestorage.googleapis.com/v0/b/mangrove-collection.appspot.com/o/product%2FBoal-Fish-1.5kg-2kg-600tk-per-kg-1-600x656.jpg?alt=media&token=fadd84c8-640b-44fc-9705-0c0ba5827e06'
-                        }
+                        src={productDetails?.thumbnail}
                         width={300}
                         height={300}
                         alt="Product Name"
-                        className="w-[17rem] h-fit object-cover group-hover:scale-105 duration-500"
+                        className="w-[17rem] h-[17rem] object-cover group-hover:scale-105 duration-500"
                     />
                 </figure>
 
-                <div className="text-center px-3 py-4">
-                    <h3 className="font-bold text-sm">Bagda Chingri</h3>
-                    <h2>Bagda Chingri Natrual calda chire lorem</h2>
+                <div className="text-center px-3 py-4 ">
+                    <h3 className="font-bold text-sm">
+                        {productDetails?.category}
+                    </h3>
+                    <h2>{productDetails?.productName}</h2>
 
                     <p>
-                        Tk 100.00 <span className="font-semibold">(1kg)</span>
+                        <span className="">
+                            {currencyIcon(productDetails?.currency)}
+                        </span>{' '}
+                        {productDetails?.price}{' '}
+                        <span className="font-semibold">
+                            (1{productDetails?.unit})
+                        </span>
                     </p>
                 </div>
             </Link>
