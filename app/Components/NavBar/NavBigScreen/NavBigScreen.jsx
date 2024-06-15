@@ -32,7 +32,7 @@ export default async function NavBigScreen() {
                 <div className="hidden md:block h-[5.4rem] w-full"></div>
             </div>
             <div className="shadow-lg">
-                <ul className="w-fit mx-auto text-base font-medium py-2  flex items-center gap-5">
+                <ul className="w-fit text-base font-medium flex items-center mx-auto gap-5">
                     <NavMenu />
                 </ul>
             </div>

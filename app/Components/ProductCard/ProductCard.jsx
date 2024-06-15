@@ -6,7 +6,7 @@ export default function ProductCard({ productDetails }) {
     const slugUrl = `/products?category=${'slug'}`;
 
     return (
-        <div className="border border-neutral-300/30 group hover:shadow-lg duration-300 sm:w-64 mx-3 max-w-72 relative h-[23rem] overflow-hidden">
+        <div className="border border-neutral-300/30 group hover:shadow-lg duration-300 sm:w-64 mx-3 max-w-72 relative h-[23rem] overflow-hidden animate-jump-in">
             <Link href={slugUrl}>
                 <figure className="mx-auto w-full h-[14rem] overflow-hidden flex justify-center items-center px-2 pt-4">
                     <Image

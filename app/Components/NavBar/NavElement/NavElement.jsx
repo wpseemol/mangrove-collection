@@ -1,3 +1,5 @@
+import CategoryMenus from '@/app/Components/CategoryMenus/CategoryMenus';
+import NavLink from '@/app/Components/Client/NavLink/NavLink';
 import siteLogo from '@/public/assets/logo/mangrove-collection.png';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -6,23 +8,22 @@ import {
     FaDollarSign,
     FaMagnifyingGlass,
 } from 'react-icons/fa6';
-import NavLink from '../../Client/NavLink/NavLink';
 
 const user = null;
 
 function Logo() {
     return (
-        <li className="text-white">
+        <li className="text-white ">
             <Link href="/">
                 <div className={``}>
-                    <figure className="md:w-12 md:h-12 w-10 h-10 mx-auto rounded-full overflow-hidden border-2 border-primaryColor ">
+                    <figure className="md:w-12 md:h-12 w-10 h-10 mx-auto rounded-full overflow-hidden border-2 border-primaryColor animate-jump">
                         <Image
                             src={siteLogo}
                             alt="Site logo"
                             className="w-full object-cover hover:scale-125 duration-300"
                         />
                     </figure>
-                    <h2 className="font-bold text-primaryColor text-sm md:text-base">
+                    <h2 className="font-bold text-primaryColor text-sm md:text-base animate-fade-right">
                         Mangrove Collection
                     </h2>
                 </div>
@@ -99,10 +100,10 @@ function Card() {
 
 function NavMenu() {
     const menuArray = [
-        { id: 1, link: '', name: 'Category' },
-        { id: 2, href: '/#contact', name: 'contact' },
-        { id: 3, link: '', name: 'products' },
-        { id: 4, link: '', name: 'about' },
+        { id: 'category', link: '/', name: 'Category' },
+        { id: 'products', link: '/products', name: 'products' },
+        { id: 'contact', link: '/#contact', name: 'contact' },
+        { id: 'about', link: '/#about', name: 'about' },
     ];
     return (
         <>
@@ -110,12 +111,20 @@ function NavMenu() {
                 return (
                     <li
                         key={items.id}
-                        className="capitalize last:border-none hover:text-primaryColor duration-200 border-b border-black p-2 md:p-0 md:border-none pr-36">
-                        {items?.href ? (
-                            <a href={items?.href}>{items.name}</a>
-                        ) : (
-                            <Link href={items?.link}>{items.name}</Link>
-                        )}
+                        className={`capitalize hover:text-primaryColor duration-200 border-b border-black md:py-3 md:border-none p-2 group/menu  ${
+                            items.id === 'category'
+                                ? 'group/category relative duration-500 origin-top'
+                                : ''
+                        }`}>
+                        {
+                            <Link
+                                href={items?.link}
+                                className="group-hover/menu:md:pl-0 group-hover/menu:pl-2  duration-150">
+                                {items.name}
+                            </Link>
+                        }
+
+                        {items.id === 'category' && <CategoryMenus />}
                     </li>
                 );
             })}

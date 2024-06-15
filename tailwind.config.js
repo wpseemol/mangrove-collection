@@ -13,15 +13,16 @@ module.exports = {
             },
         },
     },
-     plugins: [
-    function ({ addUtilities }) {
-      addUtilities({
-        '.appearance-none': {
-          '-webkit-appearance': 'none',
-          '-moz-appearance': 'none',
-          'appearance': 'none',
+    plugins: [
+        require('tailwindcss-animated'),
+        function ({ addUtilities }) {
+            addUtilities({
+                '.appearance-none': {
+                    '-webkit-appearance': 'none',
+                    '-moz-appearance': 'none',
+                    appearance: 'none',
+                },
+            });
         },
-      })
-    },
-  ],
+    ],
 };
