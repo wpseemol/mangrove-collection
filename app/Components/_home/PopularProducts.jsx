@@ -10,7 +10,7 @@ export default async function PopularProducts() {
             <HomeTitle>
                 <samp className="uppercase">POPULAR PRODUCTS🔥</samp>
             </HomeTitle>
-            <div className="mx-auto my-8 flex justify-center gap-3  items-center w-fit flex-wrap">
+            <div className="mx-auto my-8 flex justify-center gap-3  items-center w-fit flex-wrap ">
                 {popularProductsArr?.map((product) => (
                     <ProductCard key={product?.id} productDetails={product} />
                 ))}

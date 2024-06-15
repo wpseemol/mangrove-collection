@@ -10,7 +10,7 @@ export default async function NewArrivalProducts() {
             <HomeTitle>
                 <samp className="uppercase">TOP NEW ARRIVAL</samp>
             </HomeTitle>
-            <div className="mx-auto my-8 flex justify-center gap-3  items-center w-fit flex-wrap">
+            <div className="mx-auto my-8 flex justify-center gap-3  items-center sm:w-fit flex-wrap ">
                 {newArrivalProductsArr?.map((product) => (
                     <ProductCard key={product?.id} productDetails={product} />
                 ))}
