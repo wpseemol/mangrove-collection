@@ -14,6 +14,7 @@ module.exports = {
         },
     },
     plugins: [
+        require('tailwindcss-intersect'),
         require('tailwindcss-animated'),
         function ({ addUtilities }) {
             addUtilities({
