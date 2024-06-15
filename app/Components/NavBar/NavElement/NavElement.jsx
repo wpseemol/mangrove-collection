@@ -111,7 +111,7 @@ function NavMenu() {
                 return (
                     <li
                         key={items.id}
-                        className={`capitalize hover:text-primaryColor duration-200 border-b border-black md:py-3 md:border-none p-2 group/menu  ${
+                        className={`capitalize hover:text-primaryColor duration-200 border-b border-black md:py-3 md:border-none p-2 group/menu ${
                             items.id === 'category'
                                 ? 'group/category relative duration-500 origin-top'
                                 : ''
