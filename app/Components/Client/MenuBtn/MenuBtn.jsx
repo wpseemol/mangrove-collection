@@ -13,8 +13,8 @@ export default function MenuBtn({ children }) {
                 {menuShow ? <FaX /> : <FaBars />}
             </div>
             <ul
-                className={`absolute top-[3.25rem] border rounded-sm h-52 bg-gray-100 duration-500 ${
-                    menuShow ? '-left-[1.8rem]' : '-left-[20rem]'
+                className={`absolute top-[3.25rem] border rounded-sm h-fit text-xl font-semibold text-neutral-700 bg-gray-100 duration-500 w-screen ${
+                    menuShow ? '-left-[2rem]' : 'sm:-left-[50rem] -left-[40rem]'
                 }`}>
                 {children}
             </ul>
