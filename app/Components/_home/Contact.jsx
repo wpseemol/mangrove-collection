@@ -1,4 +1,5 @@
 import HomeTitle from '@/app/Components/HomeTitle/HomeTitle';
+import ForAnimate from '../Client/ForAnimate/ForAnimate';
 
 const Contact = () => {
     return (
@@ -9,7 +10,10 @@ const Contact = () => {
                     backgroundImage: `url(https://i.ibb.co/nkk3Qg1/contact-bg.jpg)`,
                 }}>
                 <div className="container mx-auto py-16">
-                    <div className="mx-auto">
+                    <ForAnimate
+                        tagName="div"
+                        className="mx-auto"
+                        animateClassName="animate-fade-left">
                         <HomeTitle>
                             <samp className="uppercase">Contact Us</samp>
                         </HomeTitle>
@@ -19,7 +23,7 @@ const Contact = () => {
                             <span className="text-primaryColor">Question</span>{' '}
                             you can contact with us.
                         </p>
-                    </div>
+                    </ForAnimate>
                     <div className="w-fit mx-auto md:text-base text-base">
                         <div className="flex flex-col md:flex-row items-center gap-3">
                             <div className="w-full px-2 md:px-0">

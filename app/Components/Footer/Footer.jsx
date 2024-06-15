@@ -1,3 +1,5 @@
+import Link from 'next/link';
+import ForAnimate from '../Client/ForAnimate/ForAnimate';
 import FooterSiteLogo from './FooterSiteLogo/FooterSiteLogo';
 
 export default function Footer() {
@@ -70,26 +72,39 @@ export default function Footer() {
                         Product
                     </h3>
                     <ul className="space-y-1">
-                        <li>
-                            <a rel="noopener noreferrer" href="#">
+                        <ForAnimate
+                            tagName="li"
+                            animateClassName="animate-fade-right"
+                            className="animate-delay-100">
+                            <Link rel="noopener noreferrer" href="#">
                                 Features
-                            </a>
-                        </li>
-                        <li>
-                            <a rel="noopener noreferrer" href="#">
+                            </Link>
+                        </ForAnimate>
+
+                        <ForAnimate
+                            tagName="li"
+                            animateClassName="animate-fade-right"
+                            className="animate-delay-200">
+                            <Link rel="noopener noreferrer" href="#">
                                 Integrations
-                            </a>
-                        </li>
-                        <li>
-                            <a rel="noopener noreferrer" href="#">
+                            </Link>
+                        </ForAnimate>
+                        <ForAnimate
+                            tagName="li"
+                            animateClassName="animate-fade-right"
+                            className="animate-delay-300">
+                            <Link rel="noopener noreferrer" href="#">
                                 Pricing
-                            </a>
-                        </li>
-                        <li>
-                            <a rel="noopener noreferrer" href="#">
+                            </Link>
+                        </ForAnimate>
+                        <ForAnimate
+                            tagName="li"
+                            animateClassName="animate-fade-right"
+                            className="animate-delay-[400ms]">
+                            <Link rel="noopener noreferrer" href="#">
                                 FAQ
-                            </a>
-                        </li>
+                            </Link>
+                        </ForAnimate>
                     </ul>
                 </div>
                 <div className="space-y-3 w-fit  justify-self-center xl:text-left text-center ">
@@ -97,16 +112,22 @@ export default function Footer() {
                         Company
                     </h3>
                     <ul className="space-y-1">
-                        <li>
-                            <a rel="noopener noreferrer" href="#">
+                        <ForAnimate
+                            tagName="li"
+                            animateClassName="animate-shake"
+                            className="animate-delay-100">
+                            <Link rel="noopener noreferrer" href="#">
                                 Privacy
-                            </a>
-                        </li>
-                        <li>
-                            <a rel="noopener noreferrer" href="#">
+                            </Link>
+                        </ForAnimate>
+                        <ForAnimate
+                            tagName="li"
+                            animateClassName="animate-shake"
+                            className="animate-delay-200">
+                            <Link rel="noopener noreferrer" href="#">
                                 Terms of Service
-                            </a>
-                        </li>
+                            </Link>
+                        </ForAnimate>
                     </ul>
                 </div>
                 <div className="space-y-3 w-fit  justify-self-center xl:text-left text-center">
@@ -114,21 +135,30 @@ export default function Footer() {
                         Developers
                     </h3>
                     <ul className="space-y-1">
-                        <li>
-                            <a rel="noopener noreferrer" href="#">
+                        <ForAnimate
+                            tagName="li"
+                            animateClassName="animate-fade-left"
+                            className="animate-delay-100">
+                            <Link rel="noopener noreferrer" href="#">
                                 Public API
-                            </a>
-                        </li>
-                        <li>
-                            <a rel="noopener noreferrer" href="#">
+                            </Link>
+                        </ForAnimate>
+                        <ForAnimate
+                            tagName="li"
+                            animateClassName="animate-fade-left"
+                            className="animate-delay-200">
+                            <Link rel="noopener noreferrer" href="#">
                                 Documentation
-                            </a>
-                        </li>
-                        <li>
-                            <a rel="noopener noreferrer" href="#">
+                            </Link>
+                        </ForAnimate>
+                        <ForAnimate
+                            tagName="li"
+                            animateClassName="animate-fade-left"
+                            className="animate-delay-300">
+                            <Link rel="noopener noreferrer" href="#">
                                 Guides
-                            </a>
-                        </li>
+                            </Link>
+                        </ForAnimate>
                     </ul>
                 </div>
             </div>

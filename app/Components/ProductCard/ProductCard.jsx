@@ -1,14 +1,15 @@
 import currencyIcon from '@/utils/currencyIcon';
 import Image from 'next/image';
 import Link from 'next/link';
+import ForAnimate from '../Client/ForAnimate/ForAnimate';
 
 export default function ProductCard({ productDetails }) {
     const slugUrl = `/products?category=${'slug'}`;
 
-    // Observer.start();
-
     return (
-        <div className="border border-neutral-300/30 group hover:shadow-lg duration-300 sm:w-64 mx-3 max-w-72 relative h-[23rem] overflow-hidden intersect:animate-jump-in animate-fill-both">
+        <ForAnimate
+            className="border border-neutral-300/30 group hover:shadow-lg duration-300 sm:w-64 mx-3 max-w-72 relative h-[23rem] overflow-hidden"
+            animateClassName={'animate-fade-up'}>
             <Link href={slugUrl}>
                 <figure className="mx-auto w-full h-[14rem] overflow-hidden flex justify-center items-center px-2 pt-4">
                     <Image
@@ -65,6 +66,6 @@ export default function ProductCard({ productDetails }) {
                     Add to Cart
                 </button>
             </div>
-        </div>
+        </ForAnimate>
     );
 }
