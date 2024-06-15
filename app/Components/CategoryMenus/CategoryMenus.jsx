@@ -7,7 +7,7 @@ export default async function CategoryMenus() {
 
     return (
         <ul
-            className=" group-hover/category:h-fit h-0 md:absolute top-9 md:rounded-b rounded-r border-t-0 md:w-60 w-screen duration-150 overflow-hidden  origin-top text-xl 
+            className=" group-hover/category:md:h-fit group-hover/category:block md:block md:h-0 hidden md:absolute top-9 md:rounded-b rounded-r border-t-0 md:w-60 w-screen duration-150 overflow-hidden  origin-top text-xl 
             md:shadow-lg mt-2 -ml-2 text-neutral-800 z-20 ">
             {allCategory?.map((category) => (
                 <li
