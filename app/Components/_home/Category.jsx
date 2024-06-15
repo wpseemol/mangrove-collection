@@ -2,15 +2,18 @@ import HomeTitle from '@/app/Components/HomeTitle/HomeTitle';
 import getCategory from '@/app/bd/mongoosQuery/getCategory';
 import Image from 'next/image';
 import Link from 'next/link';
+import ForAnimate from '../Client/ForAnimate/ForAnimate';
 
 export default async function Category() {
     const allCategory = await getCategory();
 
     return (
         <section className="container mx-auto mb-10">
-            <HomeTitle>
-                <samp className="uppercase">Our Product Category</samp>
-            </HomeTitle>
+            <ForAnimate tagName="div" animateClassName="animate-fade-right">
+                <HomeTitle>
+                    <samp className="uppercase">Our Product Category</samp>
+                </HomeTitle>
+            </ForAnimate>
 
             <div className="w-fit mx-auto grid xl:grid-cols-6 lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-4 grid-cols-2 gap-2">
                 {allCategory.map((category) => {

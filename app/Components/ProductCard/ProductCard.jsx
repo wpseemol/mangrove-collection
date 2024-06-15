@@ -6,12 +6,10 @@ import ForAnimate from '../Client/ForAnimate/ForAnimate';
 export default function ProductCard({ productDetails }) {
     const slugUrl = `/products?category=${'slug'}`;
 
-    // Observer.start();
-
     return (
         <ForAnimate
             className="border border-neutral-300/30 group hover:shadow-lg duration-300 sm:w-64 mx-3 max-w-72 relative h-[23rem] overflow-hidden"
-            animateClassName={'animate-jump-in'}>
+            animateClassName={'animate-fade-up'}>
             <Link href={slugUrl}>
                 <figure className="mx-auto w-full h-[14rem] overflow-hidden flex justify-center items-center px-2 pt-4">
                     <Image

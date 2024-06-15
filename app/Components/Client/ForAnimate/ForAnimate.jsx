@@ -12,21 +12,37 @@ export default function ForAnimate({
 
     useEffect(() => {
         const elementRef = animatedElementRef.current;
+        const sanitizeAnimateClassName = animateClassName?.trim();
 
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
                         // Add animation class when element is in view
-                        entry.target.classList.add(animateClassName);
+
+                        if (
+                            entry.target.className.includes(
+                                sanitizeAnimateClassName
+                            )
+                        ) {
+                            setTimeout(() => {
+                                entry.target.classList.toggle(
+                                    sanitizeAnimateClassName
+                                );
+                            }, 5000);
+                        } else {
+                            entry.target.classList.add(
+                                sanitizeAnimateClassName
+                            );
+                        }
                     } else {
                         // Remove animation class when element is out of view
-                        entry.target.classList.remove(animateClassName);
+                        entry.target.classList.remove(sanitizeAnimateClassName);
                     }
                 });
             },
             {
-                threshold: 0.5, // Adjust as needed
+                threshold: 0.3, // Adjust as needed
             }
         );
 
@@ -55,6 +71,12 @@ export default function ForAnimate({
                 </p>
             );
         case 'section':
+            return (
+                <section className={className} ref={animatedElementRef}>
+                    {children}
+                </section>
+            );
+        case 'li':
             return (
                 <section className={className} ref={animatedElementRef}>
                     {children}
