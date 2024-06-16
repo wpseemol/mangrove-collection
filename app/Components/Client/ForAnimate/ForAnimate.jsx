@@ -14,46 +14,40 @@ export default function ForAnimate({
         const elementRef = animatedElementRef.current;
         const sanitizeAnimateClassName = animateClassName?.trim();
 
+        if (!elementRef || !sanitizeAnimateClassName) return;
+
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
-                        // Add animation class when element is in view
-
+                        // Add animation class when element is in view if not already added
                         if (
-                            entry.target.className.includes(
+                            !entry.target.classList.contains(
                                 sanitizeAnimateClassName
                             )
                         ) {
-                            setTimeout(() => {
-                                entry.target.classList.toggle(
-                                    sanitizeAnimateClassName
-                                );
-                            }, 5000);
-                        } else {
                             entry.target.classList.add(
                                 sanitizeAnimateClassName
                             );
                         }
                     } else {
-                        // Remove animation class when element is out of view
-                        entry.target.classList.remove(sanitizeAnimateClassName);
+                        setTimeout(() => {
+                            entry.target.classList.remove(
+                                sanitizeAnimateClassName
+                            );
+                        }, 1500);
                     }
                 });
             },
             {
-                threshold: 0.3, // Adjust as needed
+                threshold: 0.8, // Adjust as needed
             }
         );
 
-        if (elementRef) {
-            observer.observe(elementRef);
-        }
+        observer.observe(elementRef);
 
         return () => {
-            if (elementRef) {
-                observer.unobserve(elementRef);
-            }
+            observer.disconnect();
         };
     }, [animateClassName]);
 
