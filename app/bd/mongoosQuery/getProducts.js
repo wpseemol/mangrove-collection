@@ -57,7 +57,10 @@ export default async function getProducts(type) {
                 price: 1,
                 currency: 1,
                 offer: 1,
-                category: '$categoryDetails.categoryName', // Rename categoryDetails.name to category
+                category: {
+                    name: '$categoryDetails.categoryName',
+                    slug: '$categoryDetails.categorySlug',
+                }, // Rename categoryDetails.name to category
             },
         });
 
