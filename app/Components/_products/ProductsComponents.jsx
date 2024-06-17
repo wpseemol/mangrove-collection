@@ -11,7 +11,7 @@ export default async function ProductsComponents() {
             <Breadcrumb pageName="Products" />
             <section className="grid md:grid-cols-5 grid-cols-2 gap-6 pt-4 pb-16 items-start">
                 <FilterSection allCategory={allCategory} />
-                <div className="col-span-3">
+                <div className="col-span-4">
                     <ProductsSection />
                 </div>
             </section>

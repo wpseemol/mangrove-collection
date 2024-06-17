@@ -24,15 +24,15 @@ export default function ProductCard({ productDetails }) {
 
             <Link href={slugUrl} className="hidden md:inline">
                 <div className="text-center px-3 py-4">
-                    <h3 className="font-bold text-sm">
+                    <h3 className="font-bold text-sm animate-fade-up animate-duration-[800ms]">
                         {productDetails?.category?.name}
                     </h3>
-                    <h2>{productDetails?.productName}</h2>
+                    <h2 className="animate-fade-up animate-duration-[900ms]">
+                        {productDetails?.productName}
+                    </h2>
 
-                    <p>
-                        <span className="">
-                            {currencyIcon(productDetails?.currency)}
-                        </span>{' '}
+                    <p className="animate-fade-up animate-duration-1000">
+                        <span>{currencyIcon(productDetails?.currency)}</span>{' '}
                         {productDetails?.price}{' '}
                         <span className="font-semibold">
                             (1{productDetails?.unit})
@@ -42,12 +42,14 @@ export default function ProductCard({ productDetails }) {
             </Link>
             {/* mobile view */}
             <div className="text-center px-3 py-4 md:hidden block">
-                <h3 className="font-bold text-sm">
+                <h3 className="font-bold text-sm animate-fade-up animate-duration-100">
                     {productDetails?.category?.name}
                 </h3>
-                <h2>{productDetails?.productName}</h2>
+                <h2 className="animate-fade-up animate-duration-200">
+                    {productDetails?.productName}
+                </h2>
 
-                <p>
+                <p className="animate-fade-up animate-duration-300">
                     <span className="">
                         {currencyIcon(productDetails?.currency)}
                     </span>{' '}
