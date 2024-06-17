@@ -4,7 +4,7 @@ import Link from 'next/link';
 import ForAnimate from '../Client/ForAnimate/ForAnimate';
 
 export default function ProductCard({ productDetails }) {
-    const slugUrl = `/products/${productDetails?.category?.slug}`;
+    const slugUrl = `/products/${productDetails?.slug}`;
 
     return (
         <ForAnimate
