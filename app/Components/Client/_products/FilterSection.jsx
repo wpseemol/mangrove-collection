@@ -4,7 +4,8 @@ import useFilterSection from './useFilterSection';
 const sizeArray = ['xs', 's', 'm', 'l', 'xl'];
 
 export default function FilterSection({ allCategory }) {
-    const { handelChange, selectCategory, selectPrice } = useFilterSection();
+    const { handelChange, selectCategory, selectPrice, selectSize } =
+        useFilterSection();
 
     return (
         <div className="col-span-1 bg-white px-4 pb-6 shadow rounded overflow-hidden hidden md:block">
@@ -89,7 +90,7 @@ export default function FilterSection({ allCategory }) {
                                         handelChange(event, 'size')
                                     }
                                     type="radio"
-                                    // checked={defaultSize === name}
+                                    checked={selectSize === name}
                                     name="size"
                                     id={`size-${name}`}
                                     value={name}
@@ -97,7 +98,7 @@ export default function FilterSection({ allCategory }) {
                                 />
                                 <label
                                     htmlFor={`size-${name}`}
-                                    className="text-xs border border-gray-200 rounded-sm h-6 w-6 flex items-center justify-center cursor-pointer shadow-sm text-gray-600 uppercase">
+                                    className="text-xs border border-gray-200 rounded-sm h-6 w-6 flex items-center justify-center cursor-pointer shadow-sm text-gray-600 uppercase checked:bg-primaryColor">
                                     {name}
                                 </label>
                             </div>

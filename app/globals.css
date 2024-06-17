@@ -2,14 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
-   /* Custom CSS to hide number input spinners */
-input[type=number]::-webkit-outer-spin-button,
-input[type=number]::-webkit-inner-spin-button {
+/* Custom CSS to hide number input spinners */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
 
+@layer components {
+    .size-selector input:checked + label {
+        @apply bg-primaryColor text-white;
+    }
+    .color-selector input:checked + label {
+        @apply ring-2 ring-primaryColor;
+    }
 
-
+    .input-box {
+        @apply block w-full border border-gray-300 px-4 py-3 text-gray-600 text-sm rounded placeholder-gray-400 focus:border-primaryColor focus:ring-0;
+    }
+}

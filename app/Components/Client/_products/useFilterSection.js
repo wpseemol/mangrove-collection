@@ -9,7 +9,7 @@ export default function useFilterSection() {
     const searchParams = new URLSearchParams(searchParamsInstance);
     const category = searchParams.get('category');
     const price = searchParams.get('price');
-    const size = searchParams.get('size');
+    const selectSize = searchParams.get('size');
     const router = useRouter();
     const pathName = usePathname();
 
@@ -68,10 +68,14 @@ export default function useFilterSection() {
             } else {
                 searchParams.delete('price');
             }
+        } else if (type === 'size') {
+            const value = event.target.value;
+
+            searchParams.set('size', value);
         }
 
         router.replace(`${pathName}?${searchParams.toString()}`);
     }
 
-    return { handelChange, selectCategory, selectPrice };
+    return { handelChange, selectCategory, selectPrice, selectSize };
 }
