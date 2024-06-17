@@ -11,7 +11,7 @@ export default async function NavSmallScreen() {
         <div>
             <nav className="md:hidden">
                 <div>
-                    <ul className="  flex justify-between items-center py-2 bg-black w-full fixed z-10 top-0 px-8">
+                    <ul className=" flex justify-between items-center py-2 bg-black w-full fixed z-10 top-0 px-8">
                         {/* small screen menu button  */}
 
                         <MenuBtn>

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import ForAnimate from '../Client/ForAnimate/ForAnimate';
 
 export default function ProductCard({ productDetails }) {
-    const slugUrl = `/products?category=${'slug'}`;
+    const slugUrl = `/products/${productDetails?.category?.slug}`;
 
     return (
         <ForAnimate
@@ -25,7 +25,7 @@ export default function ProductCard({ productDetails }) {
             <Link href={slugUrl} className="hidden md:inline">
                 <div className="text-center px-3 py-4">
                     <h3 className="font-bold text-sm">
-                        {productDetails?.category}
+                        {productDetails?.category?.name}
                     </h3>
                     <h2>{productDetails?.productName}</h2>
 
@@ -40,10 +40,10 @@ export default function ProductCard({ productDetails }) {
                     </p>
                 </div>
             </Link>
-
+            {/* mobile view */}
             <div className="text-center px-3 py-4 md:hidden block">
                 <h3 className="font-bold text-sm">
-                    {productDetails?.category}
+                    {productDetails?.category?.name}
                 </h3>
                 <h2>{productDetails?.productName}</h2>
 
