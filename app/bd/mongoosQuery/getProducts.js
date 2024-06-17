@@ -56,6 +56,7 @@ export default async function getProducts(type) {
                 unit: 1,
                 price: 1,
                 currency: 1,
+                shortDescription: 1,
                 offer: 1,
                 category: {
                     name: '$categoryDetails.categoryName',

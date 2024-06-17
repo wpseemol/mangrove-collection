@@ -2,6 +2,7 @@ import ForAnimate from '@/app/Components/Client/ForAnimate/ForAnimate';
 import currencyIcon from '@/utils/currencyIcon';
 import Image from 'next/image';
 import Link from 'next/link';
+import CardBtn from './cardBtn';
 
 export default function ProductCard({ productDetails }) {
     const slugUrl = `/products/${productDetails?.slug}`;
@@ -61,12 +62,7 @@ export default function ProductCard({ productDetails }) {
             </div>
 
             <div className="absolute bg-slate-500/60 flex w-full justify-center items-center gap-3 h-32 -bottom-36 group-hover:bottom-0 left-0 duration-300">
-                <button className="text-sm px-4 py-2 bg-green-600 border border-green-600 rounded text-neutral-200 font-bold hover:text-white hover:bg-green-500 origin-top duration-500">
-                    Buy Now
-                </button>
-                <button className=" text-sm px-3 py-2 bg-neutral-200 border border-neutral-200 rounded text-green-700 font-bold hover:text-green-600 hover:bg-white origin-center duration-300">
-                    Add to Cart
-                </button>
+                <CardBtn />
             </div>
         </ForAnimate>
     );
