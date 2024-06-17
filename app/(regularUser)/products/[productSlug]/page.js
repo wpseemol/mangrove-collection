@@ -1,10 +1,12 @@
 export default function ProductDetailsPage({ params: { productSlug } }) {
     return (
-        <div>
-            <p>
-                single Product slug now
-                <span>{productSlug}</span>
-            </p>
-        </div>
+        <main>
+            <section>
+                <p>
+                    single Product slug now
+                    <span>{productSlug}</span>
+                </p>
+            </section>
+        </main>
     );
 }
