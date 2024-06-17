@@ -7,10 +7,26 @@ import replaceMongoId from '@/utils/replaceMongoId';
 export default async function getCategory() {
     try {
         await connectMongo();
-        const allCategory = await Category.find(
-            {},
-            'categoryImage categorySlug categoryName'
-        ).lean();
+
+        const allCategory = await Category.aggregate([
+            {
+                $lookup: {
+                    from: 'products',
+                    localField: 'categorySlug',
+                    foreignField: 'category',
+                    as: 'products',
+                },
+            },
+            {
+                $project: {
+                    categoryName: 1,
+                    categorySlug: 1,
+                    categoryImage: 1,
+                    productCount: { $size: '$products' },
+                },
+            },
+        ]).exec();
+
         return replaceMongoId(allCategory);
     } catch (error) {
         throw error;
