@@ -1,5 +1,5 @@
 import HomeTitle from '@/app/Components/HomeTitle/HomeTitle';
-import ProductCard from '@/app/Components/ProductCard/ProductCard';
+import ProductCard from '@/app/Components/_card/ProductCard';
 import getProducts from '@/app/bd/mongoosQuery/getProducts';
 import ForAnimate from '../Client/ForAnimate/ForAnimate';
 

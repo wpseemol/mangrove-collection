@@ -58,6 +58,12 @@ export default function ForAnimate({
                     {children}
                 </h2>
             );
+        case 'h3':
+            return (
+                <h3 className={className} ref={animatedElementRef}>
+                    {children}
+                </h3>
+            );
         case 'p':
             return (
                 <p className={className} ref={animatedElementRef}>

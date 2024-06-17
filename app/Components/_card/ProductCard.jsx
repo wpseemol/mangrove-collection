@@ -1,7 +1,7 @@
+import ForAnimate from '@/app/Components/Client/ForAnimate/ForAnimate';
 import currencyIcon from '@/utils/currencyIcon';
 import Image from 'next/image';
 import Link from 'next/link';
-import ForAnimate from '../Client/ForAnimate/ForAnimate';
 
 export default function ProductCard({ productDetails }) {
     const slugUrl = `/products/${productDetails?.slug}`;
@@ -24,7 +24,7 @@ export default function ProductCard({ productDetails }) {
 
             <Link href={slugUrl} className="hidden md:inline">
                 <div className="text-center px-3 py-4">
-                    <h3 className="font-bold text-sm animate-fade-up animate-duration-[800ms]">
+                    <h3 className="font-bold animate-fade-up text-sm animate-duration-[800ms]">
                         {productDetails?.category?.name}
                     </h3>
                     <h2 className="animate-fade-up animate-duration-[900ms]">

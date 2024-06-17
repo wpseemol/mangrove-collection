@@ -11,11 +11,13 @@ export default function ProductViewChange({ children, ListViewCard }) {
         <div className="">
             <div className="border-b w-full flex gap-2 items-center pb-3">
                 <button
+                    title="Grid view"
                     onClick={() => setIsGridView('gird')}
                     className="border p-2 text-nowrap rounded-sm">
                     <SlGrid />
                 </button>
                 <button
+                    title="List view"
                     onClick={() => setIsGridView('list')}
                     className="border p-2 text-nowrap rounded-sm">
                     <FaListUl />

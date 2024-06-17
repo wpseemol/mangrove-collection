@@ -1,6 +1,6 @@
 import getProducts from '@/app/bd/mongoosQuery/getProducts';
 import ProductViewChange from '../Client/_products/ProductViewChange';
-import ProductCard from '../ProductCard/ProductCard';
+import ProductCard from '../_card/ProductCard';
 
 export default async function ProductsSection() {
     const allProduct = await getProducts();
