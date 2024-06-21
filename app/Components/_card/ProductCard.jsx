@@ -1,10 +1,11 @@
+import ForAnimate from '@/app/Components/Client/ForAnimate/ForAnimate';
 import currencyIcon from '@/utils/currencyIcon';
 import Image from 'next/image';
 import Link from 'next/link';
-import ForAnimate from '../Client/ForAnimate/ForAnimate';
+import CardBtn from './cardBtn';
 
 export default function ProductCard({ productDetails }) {
-    const slugUrl = `/products/${productDetails?.category?.slug}`;
+    const slugUrl = `/products/${productDetails?.slug}`;
 
     return (
         <ForAnimate
@@ -24,15 +25,15 @@ export default function ProductCard({ productDetails }) {
 
             <Link href={slugUrl} className="hidden md:inline">
                 <div className="text-center px-3 py-4">
-                    <h3 className="font-bold text-sm">
+                    <h3 className="font-bold animate-fade-up text-sm animate-duration-[800ms]">
                         {productDetails?.category?.name}
                     </h3>
-                    <h2>{productDetails?.productName}</h2>
+                    <h2 className="animate-fade-up animate-duration-[900ms]">
+                        {productDetails?.productName}
+                    </h2>
 
-                    <p>
-                        <span className="">
-                            {currencyIcon(productDetails?.currency)}
-                        </span>{' '}
+                    <p className="animate-fade-up animate-duration-1000">
+                        <span>{currencyIcon(productDetails?.currency)}</span>{' '}
                         {productDetails?.price}{' '}
                         <span className="font-semibold">
                             (1{productDetails?.unit})
@@ -42,12 +43,14 @@ export default function ProductCard({ productDetails }) {
             </Link>
             {/* mobile view */}
             <div className="text-center px-3 py-4 md:hidden block">
-                <h3 className="font-bold text-sm">
+                <h3 className="font-bold text-sm animate-fade-up animate-duration-100">
                     {productDetails?.category?.name}
                 </h3>
-                <h2>{productDetails?.productName}</h2>
+                <h2 className="animate-fade-up animate-duration-200">
+                    {productDetails?.productName}
+                </h2>
 
-                <p>
+                <p className="animate-fade-up animate-duration-300">
                     <span className="">
                         {currencyIcon(productDetails?.currency)}
                     </span>{' '}
@@ -59,12 +62,7 @@ export default function ProductCard({ productDetails }) {
             </div>
 
             <div className="absolute bg-slate-500/60 flex w-full justify-center items-center gap-3 h-32 -bottom-36 group-hover:bottom-0 left-0 duration-300">
-                <button className="text-sm px-4 py-2 bg-green-600 border border-green-600 rounded text-neutral-200 font-bold hover:text-white hover:bg-green-500 origin-top duration-500">
-                    Buy Now
-                </button>
-                <button className=" text-sm px-3 py-2 bg-neutral-200 border border-neutral-200 rounded text-green-700 font-bold hover:text-green-600 hover:bg-white origin-center duration-300">
-                    Add to Cart
-                </button>
+                <CardBtn />
             </div>
         </ForAnimate>
     );
