@@ -2,7 +2,7 @@ import ForAnimate from '@/app/Components/Client/ForAnimate/ForAnimate';
 import currencyIcon from '@/utils/currencyIcon';
 import Image from 'next/image';
 import Link from 'next/link';
-import CardBtn from './cardBtn';
+import CardBtn from './CardBtn';
 
 export default function ProductCard({ productDetails }) {
     const slugUrl = `/products/${productDetails?.slug}`;
