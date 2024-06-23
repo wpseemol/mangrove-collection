@@ -38,9 +38,9 @@ export default function ProductViewChange({ children, ListViewCard }) {
                 </button>
             </div>
             <div
-                className={`flex gap-3 flex-wrap mt-3 ${
-                    isGridView === 'gird' ? ' items-center ' : ''
-                } ${isGridView === 'list' ? ' flex-col' : ''}`}>
+                className={`flex flex-wrap mt-4 ${
+                    isGridView === 'gird' ? ' items-center gap-3' : ''
+                } ${isGridView === 'list' ? ' flex-col gap-y-5' : ''}`}>
                 {isGridView === 'gird' && children}
                 {isGridView === 'list' && ListViewCard}
             </div>
