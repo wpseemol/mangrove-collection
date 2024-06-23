@@ -1,12 +1,9 @@
+import Details from '@/app/Components/_productDetails/Details';
+
 export default function ProductDetailsPage({ params: { productSlug } }) {
     return (
         <main>
-            <section>
-                <p>
-                    single Product slug now
-                    <span>{productSlug}</span>
-                </p>
-            </section>
+            <Details />
         </main>
     );
 }
