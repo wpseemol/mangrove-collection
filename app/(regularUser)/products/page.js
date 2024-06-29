@@ -1,9 +1,9 @@
 import ProductsComponents from '@/app/Components/_products/ProductsComponents';
 
-export default function ProductsPage() {
+export default function ProductsPage({ searchParams }) {
     return (
         <main className="container mx-auto">
-            <ProductsComponents />
+            <ProductsComponents searchParams={searchParams} />
         </main>
     );
 }

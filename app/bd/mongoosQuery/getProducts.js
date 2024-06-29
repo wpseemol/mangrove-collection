@@ -4,7 +4,7 @@ import connectMongo from '@/mongodb/connection/mongodb-connect';
 import { Product } from '@/mongodb/models/products';
 import replaceMongoId from '@/utils/replaceMongoId';
 
-export default async function getProducts(type) {
+export default async function getProducts(type, category = [], price, size) {
     try {
         await connectMongo();
 
