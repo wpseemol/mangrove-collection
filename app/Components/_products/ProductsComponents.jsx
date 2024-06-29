@@ -9,9 +9,9 @@ export default async function ProductsComponents() {
     return (
         <>
             <Breadcrumb pageName="Products" />
-            <section className="grid md:grid-cols-5 grid-cols-1 gap-6 pt-4 pb-16 items-start justify-center sm:mx-auto mx-2">
+            <section className="grid lg:grid-cols-5 md:grid-cols-4 grid-cols-1 gap-6 pt-4 pb-16 items-start justify-center sm:mx-auto mx-2 ">
                 <FilterSection allCategory={allCategory} />
-                <div className="  md:col-span-3 col-span-1 ">
+                <div className=" lg:col-span-4 md:col-span-3 col-span-1 ">
                     <ProductsSection />
                 </div>
             </section>

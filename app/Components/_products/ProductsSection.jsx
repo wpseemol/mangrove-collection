@@ -5,6 +5,7 @@ import ProductViewChange from '../Client/_products/ProductViewChange';
 
 export default async function ProductsSection() {
     const allProduct = await getProducts();
+
     return (
         <ProductViewChange
             ListViewCard={allProduct?.map((product) => (
