@@ -6,7 +6,7 @@ export default function RelatedProduct({ relatedProducts }) {
             <h2 className="text-2xl font-medium text-gray-800 uppercase mb-6">
                 Related products
             </h2>
-            <div className="grid grid-cols-4 gap-6">
+            <div className="flex items-center flex-wrap gap-6">
                 {relatedProducts?.map((product) => (
                     <ProductCard key={product?.id} productDetails={product} />
                 ))}

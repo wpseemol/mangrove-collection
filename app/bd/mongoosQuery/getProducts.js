@@ -72,7 +72,6 @@ export default async function getProducts(
 
                 return replaceMongoId(products);
 
-                break;
             case 'filter':
                 if (categoryIds.length > 0) {
                     findOption = {
