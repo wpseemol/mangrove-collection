@@ -1,105 +1,166 @@
-import Image from 'next/image';
+import capitalizeWord from '@/utils/capitalizeWords';
+import Link from 'next/link';
+import ImagePreview from './ImagePreview';
 
-export default function Details() {
+export default function Details({ productDetails }) {
+    const {
+        id,
+        thumbnail,
+        productName,
+        images,
+        unit,
+        size,
+        price,
+        category,
+        shortDescription,
+        description,
+        offer,
+    } = productDetails;
+
     return (
-        <div class="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg my-10">
-            {/* <!-- Product Image and Information --> */}
-            <div class="md:flex">
-                {/* <!-- Product Image --> */}
-                <div class="md:flex-shrink-0">
-                    <Image
-                        class="w-full h-64 object-cover md:w-80"
-                        src="/assets/image/mangrove picture.jpg"
-                        alt="Product Image"
-                        width="350"
-                        height="400"
+        <>
+            <div
+                key={id}
+                className="container grid grid-cols-2 gap-6 group relative">
+                {/* <ProductNextPreviousButton
+                    productsIdArray={trendingProductIdArray}
+                    local={local}
+                    productId={productId}
+                /> */}
+
+                {/* image preview component */}
+                <ImagePreview
+                    images={images}
+                    thumbnail={thumbnail}
+                    productName={productName}
+                />
+
+                <div>
+                    <h2 className="text-3xl font-medium uppercase mb-2">
+                        {productName}
+                    </h2>
+                    {/* 
+                    
+                    <div className="flex items-center mb-4">
+                        <div
+                            className="flex gap-1 text-sm text-yellow-400"
+                            title={`rating Number ${productDetails?.rating}`}>
+                            {ratingArrayGenerate(productDetails?.rating)?.map(
+                                (item) => (
+                                    <FaStar key={item} />
+                                )
+                            )}
+                        </div>
+                         <div className="text-xs text-gray-500 ml-3">
+                            (150 Reviews)
+                        </div> 
+                    </div>
+                    */}
+
+                    <div className="space-y-2">
+                        <p className="text-gray-800 font-semibold space-x-2">
+                            <span>Unit:</span>
+                            <span className="text-green-600">{unit} </span>
+                        </p>
+                        <p className="space-x-2">
+                            <span className="text-gray-800 font-semibold">
+                                Size:
+                            </span>
+                            <span className="text-gray-600 uppercase">
+                                {size}
+                            </span>
+                        </p>
+                        <p className="space-x-2">
+                            <span className="text-gray-800 font-semibold">
+                                Category :
+                            </span>
+                            <Link
+                                href={`/products?category=${category?.categorySlug}`}>
+                                <span className="text-gray-600 capitalize">
+                                    {capitalizeWord(
+                                        category?.categoryName?.toLowerCase()
+                                    )}
+                                </span>
+                            </Link>
+                        </p>
+                        {/* <p className="space-x-2">
+                            <span className="text-gray-800 font-semibold">
+                                {dictionary?.singleProduct?.sku}:
+                            </span>
+                            <span className="text-gray-600">
+                                {productDetails?.modal}
+                            </span>
+                        </p> */}
+                    </div>
+                    <div className="flex items-baseline mb-1 space-x-2 font-roboto mt-4">
+                        <p className="text-xl text-primary font-semibold">
+                            {price.toFixed(2)}
+                        </p>
+
+                        {/*
+                            offer price
+                        <p className="text-base text-gray-400 line-through">
+                            ${productDetails?.price?.toFixed(2)}
+                        </p> */}
+                    </div>
+
+                    <p
+                        className="mt-4 text-gray-600"
+                        dangerouslySetInnerHTML={{
+                            __html: shortDescription,
+                        }}
+                    />
+
+                    {/* btn click site */}
+
+                    {/* <div className="mt-4">
+                        <h3 className="text-sm text-gray-800 uppercase mb-1">
+                            {dictionary?.singleProduct?.quantity}
+                        </h3>
+                        <SinglePageQuantity
+                            availableQuantity={productDetails?.quantity}
+                        />
+                    </div> */}
+
+                    {/* <div className="mt-6 flex gap-3 border-b border-gray-200 pb-5 pt-5"> */}
+                    {/* single page add to cart btn */}
+                    {/* <SinglePageAddToCart
+                            availableQuantity={productDetails?.quantity}
+                            loginUserId={loginUserId?.loginUserId}
+                            productId={productId}
+                        /> */}
+                    {/* wish list btn */}
+                    {/* <WishlistBtnDetailsPage
+                            wishlistProductIdArray={WishlistProductArray}
+                            loginUserId={loginUserId}
+                            productId={productId}
+                        /> */}
+                    {/* </div> */}
+                    {/* btn click site */}
+
+                    {/* <SocialShareBtn
+                        title={productDetails?.name}
+                        description={productDetails?.description}
+                    /> */}
+                </div>
+            </div>
+            {/* ./product-detail */}
+
+            {/*  description  */}
+            <div className="container pb-16 mt-2">
+                <h3 className="border-b border-gray-200 font-roboto text-gray-800 pb-3 font-medium">
+                    Description
+                </h3>
+                <div className="w-3/5 pt-6">
+                    <div
+                        className="text-gray-600"
+                        dangerouslySetInnerHTML={{
+                            __html: description,
+                        }}
                     />
                 </div>
-                {/* <!-- Product Information --> */}
-                <div class="mt-4 md:mt-0 md:ml-6">
-                    {/* <!-- Product Title --> */}
-                    <div class="flex justify-between items-center">
-                        <h1 class="text-2xl font-bold text-gray-900">
-                            Product Title
-                        </h1>
-                        <p class="text-xl font-semibold text-gray-900">
-                            $99.99
-                        </p>
-                    </div>
-                    {/* <!-- Product Rating --> */}
-                    <div class="mt-2 flex items-center">
-                        <div class="flex items-center">
-                            {/* <!-- Star Icons --> */}
-                            <svg
-                                class="w-5 h-5 text-yellow-500"
-                                fill="currentColor"
-                                viewBox="0 0 20 20">
-                                <path d="M10 15l-5.88 3.09L5.76 11 1 7.18l6.12-.61L10 1l2.88 5.57 6.12.61L14.24 11l1.64 7.09z" />
-                            </svg>
-                            <svg
-                                class="w-5 h-5 text-yellow-500"
-                                fill="currentColor"
-                                viewBox="0 0 20 20">
-                                <path d="M10 15l-5.88 3.09L5.76 11 1 7.18l6.12-.61L10 1l2.88 5.57 6.12.61L14.24 11l1.64 7.09z" />
-                            </svg>
-                            <svg
-                                class="w-5 h-5 text-yellow-500"
-                                fill="currentColor"
-                                viewBox="0 0 20 20">
-                                <path d="M10 15l-5.88 3.09L5.76 11 1 7.18l6.12-.61L10 1l2.88 5.57 6.12.61L14.24 11l1.64 7.09z" />
-                            </svg>
-                            <svg
-                                class="w-5 h-5 text-yellow-500"
-                                fill="currentColor"
-                                viewBox="0 0 20 20">
-                                <path d="M10 15l-5.88 3.09L5.76 11 1 7.18l6.12-.61L10 1l2.88 5.57 6.12.61L14.24 11l1.64 7.09z" />
-                            </svg>
-                            <svg
-                                class="w-5 h-5 text-gray-300"
-                                fill="currentColor"
-                                viewBox="0 0 20 20">
-                                <path d="M10 15l-5.88 3.09L5.76 11 1 7.18l6.12-.61L10 1l2.88 5.57 6.12.61L14.24 11l1.64 7.09z" />
-                            </svg>
-                        </div>
-                        <span class="ml-2 text-gray-600">(4.0)</span>
-                    </div>
-                    {/* <!-- Product Description --> */}
-                    <p class="mt-4 text-gray-700">
-                        This is a detailed description of the product. It
-                        provides all the necessary information about the
-                        product, including features, benefits, and usage
-                        instructions.
-                    </p>
-                    {/* <!-- Add to Cart Button --> */}
-                    <div class="mt-6">
-                        <button class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-500">
-                            Add to Cart
-                        </button>
-                    </div>
-                </div>
             </div>
-            {/* <!-- Product Specifications --> */}
-            <div class="mt-10">
-                <h2 class="text-xl font-bold text-gray-900">Specifications</h2>
-                <ul class="mt-4 space-y-2">
-                    <li class="flex justify-between text-gray-700">
-                        <span>Specification 1:</span>
-                        <span>Detail</span>
-                    </li>
-                    <li class="flex justify-between text-gray-700">
-                        <span>Specification 2:</span>
-                        <span>Detail</span>
-                    </li>
-                    <li class="flex justify-between text-gray-700">
-                        <span>Specification 3:</span>
-                        <span>Detail</span>
-                    </li>
-                    <li class="flex justify-between text-gray-700">
-                        <span>Specification 4:</span>
-                        <span>Detail</span>
-                    </li>
-                </ul>
-            </div>
-        </div>
+            {/* ./description */}
+        </>
     );
 }
