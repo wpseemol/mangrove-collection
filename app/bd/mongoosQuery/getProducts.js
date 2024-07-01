@@ -1,78 +1,113 @@
 'use server';
 
 import connectMongo from '@/mongodb/connection/mongodb-connect';
+import { Category } from '@/mongodb/models/category';
 import { Product } from '@/mongodb/models/products';
 import replaceMongoId from '@/utils/replaceMongoId';
 
-export default async function getProducts(type) {
+export default async function getProducts(
+    type,
+    categoryIds = [],
+    price,
+    size,
+    excludeProductId
+) {
+    const showField =
+        'productName category slug offer shortDescription currency price unit thumbnail';
     try {
         await connectMongo();
 
-        let sortStage = {};
-        let limit = 20; // Default limit for other types
+        let sortOption = {};
+        let limitOption = 0;
+        let findOption = {};
 
-        if (type === 'popular-product') {
-            sortStage = {
-                $sort: {
-                    popularity: -1,
-                },
-            };
-            limit = 10;
-        } else if (type === 'new-arrival') {
-            sortStage = {
-                $sort: {
-                    createdAt: -1,
-                },
-            };
-            limit = 5;
+        switch (type) {
+            case 'popular-product':
+                sortOption = { popularity: -1 };
+                limitOption = 10;
+                break;
+            case 'new-arrival':
+                sortOption = { createdAt: -1 };
+                limitOption = 5;
+                break;
+            case 'related-product':
+                if (categoryIds[0]) {
+                    findOption = {
+                        category: categoryIds[0],
+                        _id: { $ne: excludeProductId },
+                    };
+                } else {
+                    sortOption = { popularity: -1 };
+                }
+                limitOption = 5;
+
+                const products = await Product.find(findOption, showField)
+                    .populate({
+                        path: 'category',
+                        model: Category,
+                        select: 'categoryName categorySlug categoryImage',
+                    })
+                    .sort(sortOption)
+                    .limit(limitOption)
+                    .lean();
+
+                if (products?.length < 1) {
+                    const popularProducts = await Product.find(
+                        { _id: { $ne: excludeProductId } },
+                        showField
+                    )
+                        .populate({
+                            path: 'category',
+                            model: Category,
+                            select: 'categoryName categorySlug categoryImage',
+                        })
+                        .sort({ popularity: -1 })
+                        .limit(limitOption)
+                        .lean();
+
+                    console.log(popularProducts);
+
+                    return replaceMongoId(popularProducts);
+                }
+
+                return replaceMongoId(products);
+
+            case 'filter':
+                if (categoryIds.length > 0) {
+                    findOption = {
+                        ...findOption,
+                        category: { $in: categoryIds },
+                    };
+                }
+
+                if (price.minPrice && price.maxPrice) {
+                    findOption = {
+                        ...findOption,
+                        price: { $gte: price.minPrice, $lte: price.maxPrice },
+                    };
+                }
+
+                if (size) {
+                    findOption = {
+                        ...findOption,
+                        size: size,
+                    };
+                }
+
+                break;
         }
 
-        // Build the aggregation pipeline
-        const pipeline = [
-            {
-                $lookup: {
-                    from: 'categories',
-                    localField: 'category',
-                    foreignField: 'categorySlug', // Ensure this matches your actual field name in categories collection
-                    as: 'categoryDetails',
-                },
-            },
-            {
-                $unwind: '$categoryDetails', // Unwind the array to get object data
-            },
-        ];
+        const products = await Product.find(findOption, showField)
+            .populate({
+                path: 'category',
+                model: Category,
+                select: 'categoryName categorySlug categoryImage',
+            })
+            .sort(sortOption)
+            .limit(limitOption)
+            .lean();
 
-        // Add the sort stage conditionally
-        if (Object.keys(sortStage).length !== 0) {
-            pipeline.push(sortStage);
-        }
-
-        // Add the project stage
-        pipeline.push({
-            $project: {
-                productName: 1,
-                thumbnail: 1,
-                slug: 1,
-                unit: 1,
-                price: 1,
-                currency: 1,
-                shortDescription: 1,
-                offer: 1,
-                category: {
-                    name: '$categoryDetails.categoryName',
-                    slug: '$categoryDetails.categorySlug',
-                }, // Rename categoryDetails.name to category
-            },
-        });
-
-        // Add the limit stage
-        pipeline.push({
-            $limit: limit,
-        });
-
-        const allProduct = await Product.aggregate(pipeline).exec();
-
-        return replaceMongoId(allProduct);
+        return replaceMongoId(products);
     } catch (error) {
         throw error;
     }
