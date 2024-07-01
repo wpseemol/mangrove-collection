@@ -124,7 +124,7 @@ export default function AddProduct({ allCategory }) {
                     {allCategory?.map((category) => (
                         <option
                             key={category?.id}
-                            value={category?.categorySlug}
+                            value={category?.id}
                             className="border">
                             {category?.categoryName}
                         </option>
