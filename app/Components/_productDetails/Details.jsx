@@ -1,5 +1,6 @@
 import capitalizeWord from '@/utils/capitalizeWords';
 import Link from 'next/link';
+import CardBtn from '../_card/CardBtn';
 import ImagePreview from './ImagePreview';
 
 export default function Details({ productDetails }) {
@@ -112,6 +113,10 @@ export default function Details({ productDetails }) {
                     />
 
                     {/* btn click site */}
+
+                    <div className="flex items-center gap-4 mt-4">
+                        <CardBtn />
+                    </div>
 
                     {/* <div className="mt-4">
                         <h3 className="text-sm text-gray-800 uppercase mb-1">
