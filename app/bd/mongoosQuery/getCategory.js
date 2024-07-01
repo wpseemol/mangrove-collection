@@ -12,7 +12,7 @@ export default async function getCategory() {
             {
                 $lookup: {
                     from: 'products',
-                    localField: 'categorySlug',
+                    localField: '_id',
                     foreignField: 'category',
                     as: 'products',
                 },
@@ -26,6 +26,8 @@ export default async function getCategory() {
                 },
             },
         ]).exec();
+
+        console.log(allCategory);
 
         return replaceMongoId(allCategory);
     } catch (error) {

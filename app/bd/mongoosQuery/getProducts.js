@@ -11,34 +11,32 @@ export default async function getProducts(type) {
     try {
         await connectMongo();
 
-        let products = [];
+        let sortOption = {};
+        let limitOption = 0;
+        let findOption = {};
 
-        if ('popular-product' === type) {
-            products = await Product.find({}, showField)
-                .populate({
-                    path: 'category',
-                    model: Category,
-                })
-                .sort({ popularity: -1 })
-                .limit(10)
-                .lean();
-        } else if ('new-arrival' === type) {
-            products = await Product.find({}, showField)
-                .populate({
-                    path: 'category',
-                    model: Category,
-                })
-                .sort({ createdAt: -1 })
-                .limit(5)
-                .lean();
-        } else {
-            products = await Product.find({}, showField)
-                .populate({
-                    path: 'category',
-                    model: Category,
-                })
-                .lean();
+        switch (type) {
+            case 'popular-product':
+                sortOption = { popularity: -1 };
+                limitOption = 10;
+                break;
+            case 'new-arrival':
+                sortOption = { createdAt: -1 };
+                limitOption = 5;
+                break;
         }
+
+        const products = await Product.find(findOption, showField)
+            .populate({
+                path: 'category',
+                model: Category,
+                select: 'categoryName categorySlug categoryImage',
+            })
+            .sort(sortOption)
+            .limit(limitOption)
+            .lean();
+
+        console.log(products);
 
         return replaceMongoId(products);
     } catch (error) {
