@@ -8,6 +8,7 @@ const productSchema = new mongoose.Schema({
     category: {
         type: mongoose.Schema.ObjectId,
         require: true,
+        ref: 'Category',
     },
     slug: {
         type: String,

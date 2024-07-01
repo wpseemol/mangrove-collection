@@ -7,6 +7,8 @@ import CardBtn from './CardBtn';
 export default function ProductCard({ productDetails }) {
     const slugUrl = `/products/${productDetails?.slug}`;
 
+    console.log(productDetails);
+
     return (
         <ForAnimate
             className="border border-neutral-300/30 group hover:shadow-lg duration-300 sm:w-64 max-w-72 relative h-[23rem] overflow-hidden"
@@ -26,7 +28,7 @@ export default function ProductCard({ productDetails }) {
             <Link href={slugUrl} className="hidden md:inline">
                 <div className="text-center px-3 py-4">
                     <h3 className="font-bold animate-fade-up text-sm animate-duration-[800ms]">
-                        {productDetails?.category?.name}
+                        {productDetails?.category?.categoryName}
                     </h3>
                     <h2 className="animate-fade-up animate-duration-[900ms]">
                         {productDetails?.productName}
@@ -44,7 +46,7 @@ export default function ProductCard({ productDetails }) {
             {/* mobile view */}
             <div className="text-center px-3 py-4 md:hidden block">
                 <h3 className="font-bold text-sm animate-fade-up animate-duration-100">
-                    {productDetails?.category?.name}
+                    {productDetails?.category?.categoryName}
                 </h3>
                 <h2 className="animate-fade-up animate-duration-200">
                     {productDetails?.productName}
