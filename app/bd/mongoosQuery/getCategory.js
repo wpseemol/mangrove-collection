@@ -27,9 +27,28 @@ export default async function getCategory() {
             },
         ]).exec();
 
-        console.log(allCategory);
-
         return replaceMongoId(allCategory);
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function getCategoryMongoId(slugArray) {
+    try {
+        await connectMongo();
+
+        const response = await Category.find(
+            {
+                categorySlug: { $in: slugArray },
+            },
+            '_id'
+        ).lean();
+
+        const categoryIds = response?.map((category) =>
+            category?._id?.toString()
+        );
+
+        return categoryIds;
     } catch (error) {
         throw error;
     }

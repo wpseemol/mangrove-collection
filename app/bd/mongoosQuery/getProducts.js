@@ -5,7 +5,7 @@ import { Category } from '@/mongodb/models/category';
 import { Product } from '@/mongodb/models/products';
 import replaceMongoId from '@/utils/replaceMongoId';
 
-export default async function getProducts(type) {
+export default async function getProducts(type, categoryIds = [], price, size) {
     const showField =
         'productName category slug offer shortDescription currency price unit thumbnail';
     try {
@@ -24,6 +24,29 @@ export default async function getProducts(type) {
                 sortOption = { createdAt: -1 };
                 limitOption = 5;
                 break;
+            case 'filter':
+                if (categoryIds.length > 0) {
+                    findOption = {
+                        ...findOption,
+                        category: { $in: categoryIds },
+                    };
+                }
+
+                if (price.minPrice && price.maxPrice) {
+                    findOption = {
+                        ...findOption,
+                        price: { $gte: price.minPrice, $lte: price.maxPrice },
+                    };
+                }
+
+                if (size) {
+                    findOption = {
+                        ...findOption,
+                        size: size,
+                    };
+                }
+
+                break;
         }
 
         const products = await Product.find(findOption, showField)
@@ -35,8 +58,6 @@ export default async function getProducts(type) {
             .sort(sortOption)
             .limit(limitOption)
             .lean();
-
-        console.log(products);
 
         return replaceMongoId(products);
     } catch (error) {

@@ -8,6 +8,8 @@ import toast from 'react-hot-toast';
 import { IoReload } from 'react-icons/io5';
 import ImagesShow from './ImagesShow';
 
+const sizeArray = ['xs', 's', 'm', 'l', 'xl'];
+
 export default function AddProduct({ allCategory }) {
     const [thumbnailImage, setThumbnailImage] = useState('');
     const [imageArr, setImageArr] = useState([]);
@@ -132,21 +134,45 @@ export default function AddProduct({ allCategory }) {
                 </select>
             </div>
 
-            <div className="mb-4">
-                <label
-                    className="block text-gray-700 dark:text-neutral-200 text-sm font-bold mb-2"
-                    htmlFor="productSlug">
-                    Slug*
-                </label>
-                <input
-                    className="shadow appearance-none dark:bg-slate-700 border rounded w-full py-2 px-3 text-gray-700 dark:text-neutral-200 leading-tight focus:outline-none focus:shadow-outline"
-                    id="productSlug"
-                    defaultValue={productSlug}
-                    name="slug"
-                    type="text"
-                    placeholder="Slug"
-                    required
-                />
+            <div className="mb-4 flex items-center gap-2">
+                <div className="w-4/5">
+                    <label
+                        className="block text-gray-700 dark:text-neutral-200 text-sm font-bold mb-2"
+                        htmlFor="productSlug">
+                        Slug*
+                    </label>
+                    <input
+                        className="shadow appearance-none dark:bg-slate-700 border rounded w-full py-2 px-3 text-gray-700 dark:text-neutral-200 leading-tight focus:outline-none focus:shadow-outline"
+                        id="productSlug"
+                        defaultValue={productSlug}
+                        name="slug"
+                        type="text"
+                        placeholder="Slug"
+                        required
+                    />
+                </div>
+                {/* --------------------------size---------------------- */}
+                <div className="w-1/5">
+                    <label
+                        className="block text-gray-700 dark:text-neutral-200  text-sm font-bold mb-2"
+                        htmlFor="size">
+                        Size:
+                    </label>
+                    <select
+                        className="shadow appearance-none border dark:bg-slate-800 rounded w-full py-2 px-3 text-gray-700 dark:text-neutral-200 leading-tight focus:outline-none focus:shadow-outline text-center cursor-pointer capitalize"
+                        id="size"
+                        defaultValue="m"
+                        name="size">
+                        {sizeArray?.map((size) => (
+                            <option
+                                key={size}
+                                value={size}
+                                className="text-xl uppercase">
+                                {size}
+                            </option>
+                        ))}
+                    </select>
+                </div>
             </div>
             <div className="mb-4 flex items-center gap-2 ">
                 <div className="w-1/5">

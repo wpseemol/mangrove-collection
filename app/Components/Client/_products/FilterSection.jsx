@@ -23,7 +23,9 @@ export default function FilterSection({ allCategory }) {
                                 productCount,
                             } = category;
                             return (
-                                <div key={id} className="flex items-center">
+                                <div
+                                    key={id}
+                                    className="flex items-center capitalize">
                                     <input
                                         onChange={(event) =>
                                             handelChange(event, 'categories')
@@ -31,15 +33,19 @@ export default function FilterSection({ allCategory }) {
                                         checked={selectCategory?.includes(
                                             categorySlug
                                         )}
+                                        htmlFor={categorySlug}
                                         type="checkbox"
                                         name={categorySlug}
                                         id={categorySlug}
                                         className="text-primary focus:ring-0 rounded-sm cursor-pointer"
                                     />
                                     <label
-                                        htmlFor="cat-1"
+                                        id={categorySlug}
+                                        htmlFor={categorySlug}
                                         className="text-gray-600 ml-3 cursor-pointer">
-                                        {categoryName}
+                                        <span className="capitalize">
+                                            {categoryName?.toLowerCase()}
+                                        </span>
                                     </label>
                                     <div className="ml-auto text-gray-600 text-sm">
                                         ({productCount})
