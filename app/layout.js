@@ -3,8 +3,8 @@ import NotificationProvider from '@/app/Components/Client/Providers/Notification
 import Footer from '@/app/Components/Footer/Footer';
 import Header from '@/app/Components/Header/Header';
 import afterLogin from '@/app/actions/afterLogin/afterLogin';
-import '@/app/globals.css';
 import { Poppins, Roboto } from 'next/font/google';
+import './globals.css';
 
 const poppins = Poppins({
     subsets: ['latin'],
