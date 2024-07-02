@@ -1,9 +1,9 @@
-import LoadingComponent from '../Components/LoadingComponent/LoadingComponent';
-
 export default function RootLoading() {
     return (
-        <main className="w-full h-[calc(100vh-22rem)]">
-            <LoadingComponent type={'fullPage'} />
-        </main>
+        <section className="w-full h-[calc(100vh-22rem)]">
+            <div className="h-full flex items-center justify-center text-4xl font-bold">
+                loading <span className="animate-bounce">...</span>{' '}
+            </div>
+        </section>
     );
 }

@@ -37,9 +37,6 @@ export default async function getProducts(
                         _id: { $ne: excludeProductId },
                     };
                 } else {
-                    findOption = {
-                        _id: { $ne: excludeProductId },
-                    };
                     sortOption = { popularity: -1 };
                 }
                 limitOption = 5;
