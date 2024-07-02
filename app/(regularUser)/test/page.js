@@ -1,7 +1,9 @@
+import LoadingComponent from '@/app/Components/LoadingComponent/LoadingComponent';
+
 export default function TestPage() {
     return (
-        <main>
-            <p className="text-center">this page for desigiane parpase</p>
+        <main className="bg-loadingBgColor">
+            <LoadingComponent type="full-screen" />
         </main>
     );
 }

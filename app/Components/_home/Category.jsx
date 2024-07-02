@@ -1,5 +1,6 @@
 import HomeTitle from '@/app/Components/HomeTitle/HomeTitle';
 import getCategory from '@/app/bd/mongoosQuery/getCategory';
+import capitalizeWord from '@/utils/capitalizeWords';
 import Image from 'next/image';
 import Link from 'next/link';
 import ForAnimate from '../Client/ForAnimate/ForAnimate';
@@ -35,7 +36,9 @@ export default async function Category() {
                                 </figure>
                                 <div>
                                     <h2 className="text-base font-medium text-center mt-3">
-                                        {category?.categoryName}
+                                        {capitalizeWord(
+                                            category?.categoryName?.toLowerCase()
+                                        )}
                                     </h2>
                                 </div>
                             </Link>
