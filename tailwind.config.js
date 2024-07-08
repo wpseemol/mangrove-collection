@@ -10,6 +10,7 @@ module.exports = {
         extend: {
             colors: {
                 primaryColor: '#74E291',
+                loadingBgColor: '#f4f5f6',
             },
         },
     },

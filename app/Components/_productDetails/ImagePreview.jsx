@@ -1,39 +1,61 @@
-import Image from 'next/image';
+'use client';
 
-export default function ImagePreview({ images, thumbnail, productName }) {
+import debounce from '@/utils/debounce';
+import { motion } from 'framer-motion';
+import Image from 'next/image';
+import { useState } from 'react';
+
+export default function ImagePreview({ allImage, productName }) {
+    const [previewImage, setPreviewImage] = useState(allImage[0]);
+
+    function handelImagePreviewHover(img) {
+        setPreviewImage(img);
+    }
+
+    const debouncedHandleImageHover = debounce(handelImagePreviewHover, 350);
+
     return (
-        <div className="border h-fit">
-            <figure>
-                <Image
-                    src={thumbnail}
-                    alt={productName}
-                    width={750}
-                    height={550}
-                    className="w-full"
-                />
-            </figure>
-            <div className="flex flex-wrap items-center justify-center gap-4 mt-4">
-                <figure className="h-[3.3rem] w-20 overflow-hidden border border-primary flex items-center justify-start">
+        <div className=" h-fit">
+            {/* preview image */}
+
+            <figure className="h-[34.4rem]  border border-neutral-500/10 bg-slate-200/10 rounded overflow-hidden object-cover flex justify-center items-center">
+                <motion.div
+                    key={previewImage?.id}
+                    initial={{ y: 30, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -30, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="w-auto h-auto">
                     <Image
-                        src={thumbnail}
+                        src={previewImage?.imgUrl}
                         alt={productName}
-                        width={135}
-                        height={100}
-                        className="w-full cursor-pointer "
+                        width={750}
+                        height={550}
+                        className="w-auto h-auto"
                     />
-                </figure>
-                {images?.map((img, inx) => (
-                    <figure
-                        key={img}
-                        className="h-[3.3rem] w-20 overflow-hidden border border-neutral-500 flex items-center justify-start">
+                </motion.div>
+            </figure>
+
+            <div className="flex items-center justify-center gap-4 mt-4">
+                {allImage?.map((img, inx) => (
+                    <div
+                        onMouseOver={() => {
+                            debouncedHandleImageHover(img);
+                        }}
+                        key={img?.id}
+                        className={`${
+                            previewImage?.id === img?.id
+                                ? 'border-2 border-green-400'
+                                : 'border-neutral-500'
+                        } h-[3.3rem] w-20 overflow-hidden border rounded flex items-center justify-start duration-150`}>
                         <Image
-                            src={img}
+                            src={img?.imgUrl}
                             alt={`${productName} - ${inx + 1}`}
                             width={135}
                             height={100}
                             className="w-full cursor-pointer border "
                         />
-                    </figure>
+                    </div>
                 ))}
             </div>
         </div>

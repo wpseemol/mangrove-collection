@@ -4,6 +4,7 @@ import Details from '@/app/Components/_productDetails/Details';
 import RelatedProduct from '@/app/Components/_productDetails/RelatedProduct';
 import Breadcrumb from '@/app/Components/Breadcrumb/Breadcrumb';
 import capitalizeWord from '@/utils/capitalizeWords';
+import titleWordClops from '@/utils/titleWordClops';
 import Link from 'next/link';
 import { FaChevronRight } from 'react-icons/fa6';
 
@@ -42,8 +43,11 @@ export default async function ProductDetailsPage({ params: { productSlug } }) {
                         <FaChevronRight className="text-sm text-gray-400" />
                         <Link href="#">
                             <p className="text-primary text-base hover:text-primaryColor text-primaryColor duration-150 capitalize">
-                                {capitalizeWord(
-                                    productDetails?.productName?.toLowerCase()
+                                {titleWordClops(
+                                    capitalizeWord(
+                                        productDetails?.productName?.toLowerCase()
+                                    ),
+                                    5
                                 )}
                             </p>
                         </Link>
