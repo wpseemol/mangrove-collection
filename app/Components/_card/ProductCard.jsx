@@ -1,5 +1,6 @@
 import ForAnimate from '@/app/Components/Client/ForAnimate/ForAnimate';
 import currencyIcon from '@/utils/currencyIcon';
+import titleWordClops from '@/utils/titleWordClops';
 import Image from 'next/image';
 import Link from 'next/link';
 import CardBtn from './CardBtn';
@@ -34,7 +35,7 @@ export default function ProductCard({ productDetails }) {
                         {categoryName ? categoryName : 'Uncategorized product'}
                     </h3>
                     <h2 className="animate-fade-up animate-duration-[900ms]">
-                        {productName}
+                        {titleWordClops(productName)}
                     </h2>
 
                     <p className="animate-fade-up animate-duration-1000">
@@ -50,7 +51,7 @@ export default function ProductCard({ productDetails }) {
                     {categoryName ? categoryName : 'Uncategorized product'}
                 </h3>
                 <h2 className="animate-fade-up animate-duration-200">
-                    {productName}
+                    {titleWordClops(productName)}
                 </h2>
 
                 <p className="animate-fade-up animate-duration-300">

@@ -1,3 +1,4 @@
+import allImageArray from '@/utils/allImageArray';
 import capitalizeWord from '@/utils/capitalizeWords';
 import Link from 'next/link';
 import CardBtn from '../_card/CardBtn';
@@ -30,9 +31,9 @@ export default function Details({ productDetails }) {
                 /> */}
 
                 {/* image preview component */}
+                {/* allImage function return array and input a single image url and images array */}
                 <ImagePreview
-                    images={images}
-                    thumbnail={thumbnail}
+                    allImage={allImageArray(thumbnail, images)}
                     productName={productName}
                 />
 
