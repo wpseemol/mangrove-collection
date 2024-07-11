@@ -1,9 +1,9 @@
 'use client';
 
 import debounce from '@/utils/debounce';
-import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useState } from 'react';
+import ZoomPreviewImage from './ZoomPreviewImage';
 
 export default function ImagePreview({ allImage, productName }) {
     const [previewImage, setPreviewImage] = useState(allImage[0]);
@@ -15,26 +15,13 @@ export default function ImagePreview({ allImage, productName }) {
     const debouncedHandleImageHover = debounce(handelImagePreviewHover, 350);
 
     return (
-        <div className=" h-fit">
+        <div className="h-fit">
             {/* preview image */}
 
-            <figure className="h-[34.4rem]  border border-neutral-500/10 bg-slate-200/10 rounded overflow-hidden object-cover flex justify-center items-center">
-                <motion.div
-                    key={previewImage?.id}
-                    initial={{ y: 30, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -30, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="w-auto h-auto">
-                    <Image
-                        src={previewImage?.imgUrl}
-                        alt={productName}
-                        width={750}
-                        height={550}
-                        className="w-auto h-auto"
-                    />
-                </motion.div>
-            </figure>
+            <ZoomPreviewImage
+                previewImage={previewImage}
+                productName={productName}
+            />
 
             <div className="flex items-center justify-center gap-4 mt-4">
                 {allImage?.map((img, inx) => (

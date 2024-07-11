@@ -21,7 +21,7 @@ export default function Details({ productDetails }) {
 
     return (
         <>
-            <div
+            <section
                 key={id}
                 className="container grid grid-cols-2 gap-6 group relative">
                 {/* <ProductNextPreviousButton
@@ -149,7 +149,7 @@ export default function Details({ productDetails }) {
                         description={productDetails?.description}
                     /> */}
                 </div>
-            </div>
+            </section>
             {/* ./product-detail */}
 
             {/*  description  */}
