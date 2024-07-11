@@ -7,7 +7,7 @@ export default function allImageArray(thumbnail, images = []) {
         return [];
     }
 
-    const allImage = [thumbnail, ...images].map((element) => ({
+    const allImage = [...images, thumbnail].map((element) => ({
         id: crypto.randomUUID(),
         imgUrl: element,
     }));

@@ -23,7 +23,7 @@ export default function Details({ productDetails }) {
         <>
             <section
                 key={id}
-                className="container grid grid-cols-2 gap-6 group relative">
+                className="container md:grid md:grid-cols-2 gap-6 group relative">
                 {/* <ProductNextPreviousButton
                     productsIdArray={trendingProductIdArray}
                     local={local}

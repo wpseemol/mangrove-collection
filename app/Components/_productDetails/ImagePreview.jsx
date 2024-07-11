@@ -15,7 +15,7 @@ export default function ImagePreview({ allImage, productName }) {
     const debouncedHandleImageHover = debounce(handelImagePreviewHover, 350);
 
     return (
-        <div className="h-fit">
+        <div className="h-fit ">
             {/* preview image */}
 
             <ZoomPreviewImage
