@@ -33,7 +33,7 @@ export default async function ProductDetailsPage({ params: { productSlug } }) {
     );
 
     return (
-        <main className="container mx-auto">
+        <main className=" sm:container w-screen mx-auto md:px-0 px-2 ">
             {/* page Breadcrumb */}
             <Breadcrumb
                 pageName="Products"

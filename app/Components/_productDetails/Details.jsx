@@ -23,7 +23,7 @@ export default function Details({ productDetails }) {
         <>
             <section
                 key={id}
-                className="container md:grid md:grid-cols-2 gap-6 group relative">
+                className=" flex md:flex-nowrap flex-wrap gap-6 group relative ">
                 {/* <ProductNextPreviousButton
                     productsIdArray={trendingProductIdArray}
                     local={local}
@@ -38,7 +38,7 @@ export default function Details({ productDetails }) {
                 />
 
                 <div>
-                    <h2 className="text-3xl font-medium uppercase mb-2">
+                    <h2 className="md:text-3xl text-xl font-medium uppercase mb-2">
                         {productName}
                     </h2>
                     {/* 
@@ -115,7 +115,7 @@ export default function Details({ productDetails }) {
 
                     {/* btn click site */}
 
-                    <div className="flex items-center gap-4 mt-4">
+                    <div className="flex items-center justify-center md:justify-start gap-4 mt-4">
                         <CardBtn />
                     </div>
 
@@ -154,7 +154,7 @@ export default function Details({ productDetails }) {
 
             {/*  description  */}
             <div className="container pb-16 mt-2">
-                <h3 className="border-b border-gray-200 font-roboto text-gray-800 pb-3 font-medium">
+                <h3 className="border-b border-gray-200 font-roboto text-gray-800 pb-3 font-medium text-center md:text-left">
                     Description
                 </h3>
                 <div className="w-3/5 pt-6">
