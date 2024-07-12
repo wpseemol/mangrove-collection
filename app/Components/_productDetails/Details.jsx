@@ -153,7 +153,7 @@ export default function Details({ productDetails }) {
             {/* ./product-detail */}
 
             {/*  description  */}
-            <div className="container pb-16 mt-2">
+            <div className="pb-16 mt-2">
                 <h3 className="border-b border-gray-200 font-roboto text-gray-800 pb-3 font-medium text-center md:text-left">
                     Description
                 </h3>
