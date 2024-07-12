@@ -1,5 +1,5 @@
-import Breadcrumb from '@/app/Components/Breadcrumb/Breadcrumb';
 import getCategory from '@/app/bd/mongoosQuery/getCategory';
+import Breadcrumb from '@/components/Breadcrumb/Breadcrumb';
 import FilterSection from '../Client/_products/FilterSection';
 import ProductsSection from './ProductsSection';
 

@@ -1,7 +1,7 @@
-import ListViewCard from '@/app/Components/_card/ListViewCard';
-import ProductCard from '@/app/Components/_card/ProductCard';
 import { getCategoryMongoId } from '@/app/bd/mongoosQuery/getCategory';
 import getProducts from '@/app/bd/mongoosQuery/getProducts';
+import ListViewCard from '@/components/_card/ListViewCard';
+import ProductCard from '@/components/_card/ProductCard';
 import ProductViewChange from '../Client/_products/ProductViewChange';
 
 export default async function ProductsSection({ searchParams }) {
