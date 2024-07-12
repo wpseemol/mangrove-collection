@@ -1,4 +1,4 @@
-import HomeTitle from '@/app/Components/HomeTitle/HomeTitle';
+import HomeTitle from '@/components/HomeTitle/HomeTitle';
 import ForAnimate from '../Client/ForAnimate/ForAnimate';
 
 const Contact = () => {

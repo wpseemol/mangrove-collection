@@ -1,7 +1,7 @@
 import userType from '@/utils/userType';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import LogOut from '../../Components/Client/LogOut/LogOut';
+import LogOut from '../../../components/Client/LogOut/LogOut';
 import afterLogin from '../../actions/afterLogin/afterLogin';
 
 export default async function AccountPage() {

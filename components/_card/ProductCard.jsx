@@ -1,4 +1,4 @@
-import ForAnimate from '@/app/Components/Client/ForAnimate/ForAnimate';
+import ForAnimate from '@/components/Client/ForAnimate/ForAnimate';
 import currencyIcon from '@/utils/currencyIcon';
 import titleWordClops from '@/utils/titleWordClops';
 import Image from 'next/image';

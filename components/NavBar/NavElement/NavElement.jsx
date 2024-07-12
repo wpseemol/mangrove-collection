@@ -1,5 +1,5 @@
-import CategoryMenus from '@/app/Components/CategoryMenus/CategoryMenus';
-import NavLink from '@/app/Components/Client/NavLink/NavLink';
+import CategoryMenus from '@/components/CategoryMenus/CategoryMenus';
+import NavLink from '@/components/Client/NavLink/NavLink';
 import siteLogo from '@/public/assets/logo/mangrove-collection.png';
 import Image from 'next/image';
 import Link from 'next/link';
