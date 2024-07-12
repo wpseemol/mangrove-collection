@@ -1,4 +1,4 @@
-import ProductsComponents from '@/app/Components/_products/ProductsComponents';
+import ProductsComponents from '@/components/_products/ProductsComponents';
 
 export const metadata = {
     title: 'Mangrove Collection | Products',

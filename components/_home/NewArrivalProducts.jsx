@@ -1,6 +1,6 @@
-import HomeTitle from '@/app/Components/HomeTitle/HomeTitle';
-import ProductCard from '@/app/Components/_card/ProductCard';
 import getProducts from '@/app/bd/mongoosQuery/getProducts';
+import ProductCard from '@/components/_card/ProductCard';
+import HomeTitle from '@/components/HomeTitle/HomeTitle';
 import ForAnimate from '../Client/ForAnimate/ForAnimate';
 
 export default async function NewArrivalProducts() {

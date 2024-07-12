@@ -25,8 +25,9 @@ export default function ZoomPreviewImage({
                 zoomImageSource: previewImage?.imgUrl,
                 customZoom: { width: 720, height: 500 },
                 zoomTarget,
-                scale: 5.3,
-                zoomTargetClass: 'shadow-md',
+                scale: 3.3,
+                zoomTargetClass: 'shadow-md bg-slate-200/80',
+                zoomLensClass: 'bg-primaryColor/60 cursor-zoom-in',
             });
         }
 

@@ -1,7 +1,7 @@
-import AuthProvider from '@/app/Components/Client/Providers/Auth/AuthProvider';
-import NotificationProvider from '@/app/Components/Client/Providers/NotificationProvider.jsx/NotificationProvider';
 import afterLogin from '@/app/actions/afterLogin/afterLogin';
 import '@/app/globals.css';
+import AuthProvider from '@/components/Client/Providers/Auth/AuthProvider';
+import NotificationProvider from '@/components/Client/Providers/NotificationProvider.jsx/NotificationProvider';
 import { Poppins, Roboto } from 'next/font/google';
 
 const poppins = Poppins({

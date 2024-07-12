@@ -16,12 +16,15 @@ export default function MobileViewSlider({ allImage, productName }) {
                         <CarouselItem
                             key={img?.id}
                             className="w-fit mx-auto flex justify-center items-center">
-                            <Image
-                                src={img?.imgUrl}
-                                alt={productName + `-${inx + 1}`}
-                                width={500}
-                                height={500}
-                            />
+                            <figure className="max-w-80 max-h-80">
+                                <Image
+                                    src={img?.imgUrl}
+                                    alt={productName + `-${inx + 1}`}
+                                    width={500}
+                                    height={500}
+                                    className="w-auto h-auto"
+                                />
+                            </figure>
                         </CarouselItem>
                     ))}
                 </CarouselContent>

@@ -1,5 +1,5 @@
-import HeroSliderLoading from '@/app/Components/Client/Loading/HeroSliderLoading';
-import SliderHero from '@/app/Components/Client/SliderHero/SliderHero';
+import HeroSliderLoading from '@/components/Client/Loading/HeroSliderLoading';
+import SliderHero from '@/components/Client/SliderHero/SliderHero';
 import mangroveFish from '@/public/assets/image/mangrove Fish.png';
 import honeyCollection from '@/public/assets/image/mangrove honey.jpg';
 import Image from 'next/image';

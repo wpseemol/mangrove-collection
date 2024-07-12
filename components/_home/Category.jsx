@@ -1,5 +1,5 @@
-import HomeTitle from '@/app/Components/HomeTitle/HomeTitle';
 import getCategory from '@/app/bd/mongoosQuery/getCategory';
+import HomeTitle from '@/components/HomeTitle/HomeTitle';
 import capitalizeWord from '@/utils/capitalizeWords';
 import Image from 'next/image';
 import Link from 'next/link';

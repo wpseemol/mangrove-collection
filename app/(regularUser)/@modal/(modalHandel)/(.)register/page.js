@@ -1,10 +1,10 @@
 import {
     InterceptClosBtn,
     InterceptClosBtnOutSite,
-} from '@/app/Components/Client/InterceptClosBtn/InterceptClosBtn';
-import InterceptRegister from '@/app/Components/Client/InterceptRegister/InterceptRegister';
-import Login from '@/app/Components/LoginFrom/Login';
-import Register from '@/app/Components/Register/Register';
+} from '@/components/Client/InterceptClosBtn/InterceptClosBtn';
+import InterceptRegister from '@/components/Client/InterceptRegister/InterceptRegister';
+import Login from '@/components/LoginFrom/Login';
+import Register from '@/components/Register/Register';
 
 export default function RegisterIntercept() {
     return (
