@@ -30,22 +30,28 @@ export default function DashboardMenu({ isDryerClose }) {
                 id: 2,
             },
             {
+                href: '/dashboard/add-product',
+                icon: <FaUpload />,
+                name: 'Add Product',
+                id: 3,
+            },
+            {
                 href: '/dashboard/profile',
                 icon: <ImProfile />,
                 name: 'Profile',
-                id: 3,
+                id: 4,
             },
             {
                 href: '/dashboard/setting',
                 icon: <IoSettings />,
                 name: 'Setting',
-                id: 4,
+                id: 5,
             },
             {
                 href: '/dashboard/help',
                 icon: <TbHelpHexagonFilled />,
                 name: 'Help',
-                id: 5,
+                id: 6,
             },
         ];
     } else if (userTypeCake?.type === 'contentCreator') {
@@ -63,12 +69,18 @@ export default function DashboardMenu({ isDryerClose }) {
                 name: 'Profile',
                 id: 2,
             },
+            {
+                href: '/dashboard/add-product',
+                icon: <FaUpload />,
+                name: 'Add Product',
+                id: 3,
+            },
 
             {
                 href: '/dashboard/help',
                 icon: <TbHelpHexagonFilled />,
                 name: 'Help',
-                id: 3,
+                id: 4,
             },
         ];
     }
