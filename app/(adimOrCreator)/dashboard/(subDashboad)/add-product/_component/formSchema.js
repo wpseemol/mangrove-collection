@@ -8,9 +8,7 @@ const formSchema = z.object({
         message: 'Must be input product slug.',
     }),
     unit: z.string(),
-    price: z.number().min(0, {
-        message: 'Must be input product regular price.',
-    }),
+    price: z.coerce.number(),
 });
 
 export { formSchema };

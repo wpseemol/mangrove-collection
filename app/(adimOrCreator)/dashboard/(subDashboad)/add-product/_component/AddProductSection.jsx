@@ -33,6 +33,7 @@ export default function AddProductSection() {
             name: '',
             slug: '',
             unit: 'pc',
+            price: '',
         },
     });
 
@@ -56,6 +57,7 @@ export default function AddProductSection() {
 
     function onSubmit(values) {
         console.log(values);
+        form.reset();
     }
 
     return (
@@ -174,6 +176,7 @@ export default function AddProductSection() {
                             <FormField
                                 control={form.control}
                                 name="price"
+                                type="number"
                                 render={({ field, fieldState }) => (
                                     <FormItem>
                                         <FormLabel className="mb-1">
