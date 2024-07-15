@@ -21,11 +21,15 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import 'react-quill/dist/quill.snow.css';
+import Description from './Description';
 import { formSchema } from './formSchema';
 
 export default function AddProductSection() {
     const router = useRouter();
+
+    const [descriptionValue, setDescriptionValue] = useState('');
 
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -34,6 +38,7 @@ export default function AddProductSection() {
             slug: '',
             unit: 'pc',
             price: '',
+            description: '',
         },
     });
 
@@ -52,12 +57,17 @@ export default function AddProductSection() {
         } else {
             form.setValue('slug', '');
         }
-    }, [form, name]);
+
+        if (descriptionValue) {
+            form.setValue('description', descriptionValue);
+        }
+    }, [form, name, descriptionValue]);
     // slug create
 
     function onSubmit(values) {
         console.log(values);
         form.reset();
+        setDescriptionValue('');
     }
 
     return (
@@ -164,10 +174,18 @@ export default function AddProductSection() {
                                 />
                             </div>
                         </div>
+                        <div className="h-[25rem]">
+                            <FormLabel className="mb-1">Description*</FormLabel>
+
+                            <Description
+                                descriptionValue={descriptionValue}
+                                setDescriptionValue={setDescriptionValue}
+                            />
+                        </div>
                     </section>
                 </section>
 
-                <section className="md:col-span-1 shadow border border-neutral-500/30 rounded">
+                <section className="md:col-span-1 h-fit shadow border border-neutral-500/30 rounded">
                     <header className="border-b border-neutral-500/30">
                         <h2 className="font-semibold text-lg p-3">Pricing</h2>
                     </header>

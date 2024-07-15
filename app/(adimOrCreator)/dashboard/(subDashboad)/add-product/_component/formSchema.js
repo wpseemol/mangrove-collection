@@ -9,6 +9,7 @@ const formSchema = z.object({
     }),
     unit: z.string(),
     price: z.coerce.number(),
+    description: z.string(),
 });
 
 export { formSchema };
