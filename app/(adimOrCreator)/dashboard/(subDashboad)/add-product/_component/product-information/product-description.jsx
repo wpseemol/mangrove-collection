@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/form';
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
-import Loading from './form-loading';
+import Loading from '../form-loading';
 
 const ReactQuill = dynamic(() => import('react-quill'), {
     ssr: false,
