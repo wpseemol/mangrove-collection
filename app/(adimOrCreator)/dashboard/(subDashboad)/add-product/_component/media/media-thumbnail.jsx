@@ -166,10 +166,14 @@ export default function Thumbnail({ form }) {
                                                 value={uploadProgress}
                                             />
 
-                                            <div className="h-10 w-fit">
-                                                {uploadProgress === 100 && (
-                                                    <FcCheckmark className="text-4xl" />
-                                                )}
+                                            <div className="h-6 w-fit mt-1">
+                                                <FcCheckmark
+                                                    className={`${
+                                                        uploadProgress === 100
+                                                            ? 'animate-jump-in'
+                                                            : 'hidden'
+                                                    } text-2xl `}
+                                                />
                                             </div>
                                             {/* image Cancel button */}
                                             <span
