@@ -177,8 +177,23 @@ export default function Thumbnail({ form }) {
                                             </div>
                                             {/* image Cancel button */}
                                             <span
-                                                onClick={handelImageDeleted}
-                                                className="absolute right-4 top-4 cursor-pointer text-lg">
+                                                title={
+                                                    uploadProgress === 100
+                                                        ? ''
+                                                        : 'You not deleted now'
+                                                }
+                                                onClick={() => {
+                                                    if (
+                                                        uploadProgress === 100
+                                                    ) {
+                                                        handelImageDeleted();
+                                                    }
+                                                }}
+                                                className={`${
+                                                    uploadProgress === 100
+                                                        ? 'cursor-pointer'
+                                                        : 'cursor-wait'
+                                                } absolute right-4 top-4 text-lg`}>
                                                 <IoCloseOutline />
                                             </span>
                                             {/* image Cancel button */}
