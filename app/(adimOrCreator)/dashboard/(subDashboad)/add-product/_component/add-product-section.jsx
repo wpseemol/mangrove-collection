@@ -8,6 +8,7 @@ import { Form } from '@/components/ui/form';
 import { useRouter } from 'next/navigation';
 import 'react-quill/dist/quill.snow.css';
 import { formSchema } from './form-schema';
+import Media from './media';
 import Pricing from './pricing';
 import ProductInformation from './product-information';
 
@@ -22,6 +23,7 @@ export default function AddProductSection() {
             unit: 'pc',
             price: '',
             description: '',
+            thumbnail: '',
         },
     });
 
@@ -46,6 +48,10 @@ export default function AddProductSection() {
                     <Pricing form={form} />
                 </section>
                 {/* product pricing */}
+
+                <section className="md:col-span-2 h-fit shadow border border-neutral-500/30 rounded">
+                    <Media form={form} />
+                </section>
 
                 <section className="md:col-span-3">
                     <Button type="submit">Submit</Button>

@@ -10,7 +10,10 @@ const formSchema = z.object({
     unit: z.string(),
     price: z.coerce.number(),
     description: z.string().nonempty({
-        message: 'Must be input product Description',
+        message: 'Must be input product description',
+    }),
+    thumbnail: z.string().nonempty({
+        message: 'Must be product thumbnail image',
     }),
 });
 
