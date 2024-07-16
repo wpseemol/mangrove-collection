@@ -46,7 +46,7 @@ export default function DashboardClientSite({ children, loginUser }) {
                         </div>
                     </div>
 
-                    <div className="p-4 flex flex-col items-center h-[calc(100vh-8rem)] overflow-x-hidden overflow-y-auto">
+                    <div className="px-2 py-4 flex flex-col items-center h-[calc(100vh-8rem)] overflow-x-hidden overflow-y-auto">
                         {/* dashboard menu here */}
                         <DashboardMenu isDryerClose={isDryerClose} />
                     </div>

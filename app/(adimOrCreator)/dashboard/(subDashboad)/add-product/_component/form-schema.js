@@ -9,7 +9,9 @@ const formSchema = z.object({
     }),
     unit: z.string(),
     price: z.coerce.number(),
-    description: z.string(),
+    description: z.string().nonempty({
+        message: 'Must be input product Description',
+    }),
 });
 
 export { formSchema };

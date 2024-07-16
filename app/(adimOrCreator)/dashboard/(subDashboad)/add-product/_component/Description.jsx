@@ -1,45 +1,71 @@
 'use client';
 
 import '@/app/react-quill-style.css';
+import {
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from '@/components/ui/form';
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+import Loading from './form-loading';
 
-export default function Description({ descriptionValue, setDescriptionValue }) {
-    const formats = [
-        'bold',
-        'italic',
-        'underline',
-        'strike',
-        'blockquote',
-        'list',
-        'bullet',
-        'indent',
-        'link',
-        'image',
-        'video',
-        'header',
-    ];
+const ReactQuill = dynamic(() => import('react-quill'), {
+    ssr: false,
+    loading: () => <Loading />,
+});
 
-    const modules = {
-        toolbar: [
-            [{ header: [] }, { font: [] }],
-            [{ list: 'ordered' }, { list: 'bullet' }],
-            ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-            [{ align: [] }],
-            ['link', 'image', 'video'],
-            ['clean'], // remove formatting button
-        ],
-    };
-
+export default function Description({ form }) {
     return (
-        <ReactQuill
-            className="h-[20rem] mt-2 
-               "
-            theme="snow"
-            value={descriptionValue}
-            onChange={setDescriptionValue}
-            formats={formats}
-            modules={modules}></ReactQuill>
+        <>
+            <FormField
+                control={form.control}
+                name="description"
+                render={({ field, fieldState }) => (
+                    <FormItem>
+                        <FormLabel className="mb-1">Description*</FormLabel>
+
+                        <FormControl>
+                            <ReactQuill
+                                theme="snow"
+                                value={field.value}
+                                onChange={field.onChange}
+                                formats={formats}
+                                modules={modules}
+                            />
+                        </FormControl>
+                        <FormMessage>{fieldState.error?.message}</FormMessage>
+                    </FormItem>
+                )}
+            />
+        </>
     );
 }
+
+const formats = [
+    'bold',
+    'italic',
+    'underline',
+    'strike',
+    'blockquote',
+    'list',
+    'bullet',
+    'indent',
+    'link',
+    'image',
+    'video',
+    'header',
+];
+
+const modules = {
+    toolbar: [
+        [{ header: [] }, { font: [] }],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+        [{ align: [] }],
+        ['link', 'image', 'video'],
+        ['clean'], // remove formatting button
+    ],
+};
