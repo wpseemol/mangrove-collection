@@ -45,6 +45,8 @@ export default function Description({ form }) {
 }
 
 const formats = [
+    'header',
+    'font',
     'bold',
     'italic',
     'underline',
@@ -56,12 +58,12 @@ const formats = [
     'link',
     'image',
     'video',
-    'header',
+    'align',
 ];
 
 const modules = {
     toolbar: [
-        [{ header: [] }, { font: [] }],
+        [{ header: [1, 2, 3, 4, 5, 6, false] }, { font: [] }],
         [{ list: 'ordered' }, { list: 'bullet' }],
         ['bold', 'italic', 'underline', 'strike', 'blockquote'],
         [{ align: [] }],

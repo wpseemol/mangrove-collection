@@ -15,13 +15,10 @@ export default function Images({ form }) {
             ...pre,
             {
                 id: crypto.randomUUID(),
-                order: pre[pre.length - 1].order + 1,
                 imgUrl: null,
             },
         ]);
     }
-
-    console.log(imageUpload);
 
     return (
         <>
