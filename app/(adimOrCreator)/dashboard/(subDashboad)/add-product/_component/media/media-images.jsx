@@ -129,6 +129,8 @@ function InputOrImage({ element, setImageUpload, form }) {
         }
     }, [element, form]);
 
+    console.log(uploadProgress);
+
     return (
         <>
             {element?.imgUrl ? (
@@ -146,7 +148,7 @@ function InputOrImage({ element, setImageUpload, form }) {
                                 className="absolute top-0 left-0 w-full h-full flex justify-center items-center
                             backdrop-blur-[1px] bg-green-900/35 text-neutral-100 z-10 cursor-wait">
                                 <p className="text-lg font-medium">
-                                    {uploadProgress}
+                                    {Math.round(uploadProgress)}
                                 </p>
                             </div>
                             <Progress
