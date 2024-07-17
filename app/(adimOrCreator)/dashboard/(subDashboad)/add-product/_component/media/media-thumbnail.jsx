@@ -135,7 +135,7 @@ export default function Thumbnail({ form }) {
                         <FormControl>
                             <>
                                 {previewImage ? (
-                                    <div className="border-dashed border-2 border-neutral-500/20 bg-neutral-400/10 w-full flex justify-center items-center h-72  ">
+                                    <div className="border-dashed border-2 border-neutral-500/20 bg-neutral-400/10 w-full flex justify-center items-center h-72">
                                         <div className="w-[calc(100%-10rem)] border p-4 bg-white rounded relative">
                                             <div className="flex items-center gap-4">
                                                 <figure className="w-24 min-h-24 ">

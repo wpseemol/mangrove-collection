@@ -24,6 +24,7 @@ export default function AddProductSection() {
             price: '',
             description: '',
             thumbnail: '',
+            images: [],
         },
     });
 

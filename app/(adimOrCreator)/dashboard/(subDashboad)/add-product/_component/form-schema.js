@@ -15,6 +15,7 @@ const formSchema = z.object({
     thumbnail: z.string().nonempty({
         message: 'Must be product thumbnail image',
     }),
+    images: z.array(z.string()),
 });
 
 export { formSchema };
