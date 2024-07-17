@@ -1,4 +1,4 @@
-const imageUrl64bit = (selectedId, file, setStateFun) => {
+const imageUrlBase64 = (selectedId, file, setStateFun) => {
     const render = new FileReader();
     render.readAsDataURL(file);
     render.onloadend = () => {
@@ -7,6 +7,7 @@ const imageUrl64bit = (selectedId, file, setStateFun) => {
                 if (element.id === selectedId) {
                     return {
                         ...element,
+                        file,
                         imgUrl: render.result,
                     };
                 } else {
@@ -19,4 +20,19 @@ const imageUrl64bit = (selectedId, file, setStateFun) => {
     };
 };
 
-export { imageUrl64bit };
+const convertFileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+            resolve({
+                id: crypto.randomUUID(),
+                file,
+                imgUrl: reader.result,
+            });
+        };
+        reader.onerror = reject;
+    });
+};
+
+export { convertFileToBase64, imageUrlBase64 };
