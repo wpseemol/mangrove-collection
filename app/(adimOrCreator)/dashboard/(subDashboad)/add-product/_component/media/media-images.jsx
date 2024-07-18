@@ -1,4 +1,5 @@
 'use client';
+import imageDeleteAction from '@/app/actions/imageDeleteAction/imageDeleteAction';
 import { FormLabel } from '@/components/ui/form';
 import { Progress } from '@/components/ui/progress';
 import { storage } from '@/firebase/firebase-config';
@@ -7,6 +8,7 @@ import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { FcAddImage, FcMultipleInputs, FcUpload } from 'react-icons/fc';
+import { MdDelete } from 'react-icons/md';
 import { convertFileToBase64, imageUrlBase64 } from './utility';
 import dragAndDrop from '/public/assets/logo/drag and drop icon.png';
 
@@ -19,7 +21,7 @@ let initialUpdatedImageValue = [
 ];
 export default function Images({ form }) {
     const [imageUpload, setImageUpload] = useState(initialUpdatedImageValue);
-    const [dragDorpImages, setDragDropImages] = useState([]);
+    const [firebaseUrls, setFirebaseUrls] = useState([]);
 
     function handelAddElement() {
         setImageUpload((pre) => [
@@ -52,6 +54,7 @@ export default function Images({ form }) {
                             element={element}
                             setImageUpload={setImageUpload}
                             form={form}
+                            setFirebaseUrls={setFirebaseUrls}
                         />
                     ))}
 
@@ -63,21 +66,16 @@ export default function Images({ form }) {
                 </div>
                 {/* image upload add */}
 
-                <DrugAndDrop
-                    setDragDropImages={setDragDropImages}
-                    setImageUpload={setImageUpload}
-                    form={form}
-                />
+                <DrugAndDrop setImageUpload={setImageUpload} form={form} />
             </div>
         </>
     );
 }
 
 let selectedId = '';
-// image or input box here
-function InputOrImage({ element, setImageUpload, form }) {
+// image preview or input box here
+function InputOrImage({ element, setImageUpload, form, setFirebaseUrls }) {
     const [uploadProgress, setUploadProgress] = useState(0);
-    const [firebaseUrls, setFirebaseUrls] = useState([]);
 
     const handelClick = (id) => {
         selectedId = id;
@@ -87,6 +85,14 @@ function InputOrImage({ element, setImageUpload, form }) {
         const file = event.target.files[0];
         imageUrlBase64(selectedId, file, setImageUpload); // image util
         form.clearErrors('images');
+    }
+
+    async function handelDelete(id, imageName) {
+        const pathName = 'product';
+        const isDeleted = await imageDeleteAction(pathName, imageName);
+        setImageUpload((pre) => pre?.filter((item) => item.id !== id));
+        setFirebaseUrls((pre) => pre?.filter((item) => item.id !== id));
+        console.log(isDeleted);
     }
 
     useEffect(() => {
@@ -113,10 +119,20 @@ function InputOrImage({ element, setImageUpload, form }) {
                         const firebaseUrl = await getDownloadURL(
                             ref(storage, imageRef)
                         );
-                        setFirebaseUrls((pre) => [
-                            ...pre,
-                            { id: uploadImageId, firebaseUrl },
-                        ]);
+
+                        setFirebaseUrls((prevUrls) => {
+                            // Check if the URL with the same ID already exists
+                            const urlExists = prevUrls.some(
+                                (url) => url.id === uploadImageId
+                            );
+                            if (!urlExists) {
+                                return [
+                                    ...prevUrls,
+                                    { id: uploadImageId, firebaseUrl },
+                                ];
+                            }
+                            return prevUrls;
+                        });
                     }
                 );
             } catch (error) {
@@ -124,12 +140,10 @@ function InputOrImage({ element, setImageUpload, form }) {
             }
         }
 
-        if (element?.imgUrl) {
+        if (element?.imgUrl && element?.file) {
             firebaseImageUpload(element?.file, element?.id);
         }
-    }, [element, form]);
-
-    console.log(uploadProgress);
+    }, [element, form, setFirebaseUrls]);
 
     return (
         <>
@@ -142,7 +156,7 @@ function InputOrImage({ element, setImageUpload, form }) {
                         height={100}
                         className="w-auto h-auto"
                     />
-                    {uploadProgress !== 100 && (
+                    {uploadProgress !== 100 ? (
                         <>
                             <div
                                 className="absolute top-0 left-0 w-full h-full flex justify-center items-center
@@ -156,6 +170,19 @@ function InputOrImage({ element, setImageUpload, form }) {
                                 value={uploadProgress}
                             />
                         </>
+                    ) : (
+                        <div
+                            className="absolute top-0 left-0 w-full h-full flex justify-center items-center hover:backdrop-blur-[1px] hover:bg-green-900/35 text-neutral-100 z-10 duration-200
+                        group">
+                            <span
+                                onClick={() =>
+                                    handelDelete(element.id, element.file?.name)
+                                }
+                                className="group-hover:scale-100 scale-0 duration-200 text-2xl text-red-500 
+                            cursor-pointer p-2">
+                                <MdDelete />
+                            </span>
+                        </div>
                     )}
                 </figure>
             ) : (
@@ -185,12 +212,13 @@ function InputOrImage({ element, setImageUpload, form }) {
 const uploadImageBtn =
     'w-24 h-24 border border-neutral-500/20 flex flex-col justify-center items-center rounded relative';
 
-function DrugAndDrop({ setDragDropImages, setImageUpload, form }) {
+// image preview or input box here
+
+//  image drag and drop function start
+function DrugAndDrop({ setImageUpload, form }) {
     const onDrop = useCallback(
         (acceptedFiles) => {
             if (acceptedFiles?.length > 0) {
-                setDragDropImages(acceptedFiles);
-
                 async function base64Urls() {
                     try {
                         const response = await Promise.all(
@@ -214,7 +242,7 @@ function DrugAndDrop({ setDragDropImages, setImageUpload, form }) {
 
             form.clearErrors('images');
         },
-        [setDragDropImages, setImageUpload, form]
+        [setImageUpload, form]
     );
 
     const {
@@ -256,3 +284,5 @@ function DrugAndDrop({ setDragDropImages, setImageUpload, form }) {
         </>
     );
 }
+
+//  image drag and drop function end
