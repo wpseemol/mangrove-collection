@@ -15,7 +15,12 @@ const formSchema = z.object({
     thumbnail: z.string().nonempty({
         message: 'Must be product thumbnail image',
     }),
-    images: z.array(z.string()),
+    images: z.array(
+        z.object({
+            id: z.string(),
+            firebaseUrl: z.string(),
+        })
+    ),
 });
 
 export { formSchema };

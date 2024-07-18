@@ -1,6 +1,11 @@
 'use client';
 import imageDeleteAction from '@/app/actions/imageDeleteAction/imageDeleteAction';
-import { FormLabel } from '@/components/ui/form';
+import {
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from '@/components/ui/form';
 import { Progress } from '@/components/ui/progress';
 import { storage } from '@/firebase/firebase-config';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
@@ -35,6 +40,25 @@ export default function Images({ form }) {
         form.clearErrors('images');
     }
 
+    useEffect(() => {
+        if (firebaseUrls.length > 0) {
+            form.setValue('images', firebaseUrls);
+        }
+    }, [firebaseUrls, form]);
+
+    // when form rest state also reset
+    useEffect(() => {
+        // Listen for reset event from the form
+        const subscription = form.watch((value, { name }) => {
+            if (name === undefined) {
+                setFirebaseUrls([]);
+                setImageUpload(initialUpdatedImageValue);
+            }
+        });
+        return () => subscription.unsubscribe(); // clan up function
+    }, [form]);
+    // when form rest state also reset
+
     return (
         <>
             <div className="mb-1">
@@ -68,6 +92,7 @@ export default function Images({ form }) {
 
                 <DrugAndDrop setImageUpload={setImageUpload} form={form} />
             </div>
+            <ImageErrorMessage form={form} />
         </>
     );
 }
@@ -136,7 +161,10 @@ function InputOrImage({ element, setImageUpload, form, setFirebaseUrls }) {
                     }
                 );
             } catch (error) {
-                throw error;
+                form.setError('images', {
+                    type: 'manual',
+                    message: error?.message,
+                });
             }
         }
 
@@ -163,6 +191,7 @@ function InputOrImage({ element, setImageUpload, form, setFirebaseUrls }) {
                             backdrop-blur-[1px] bg-green-900/35 text-neutral-100 z-10 cursor-wait">
                                 <p className="text-lg font-medium">
                                     {Math.round(uploadProgress)}
+                                    <span>%</span>
                                 </p>
                             </div>
                             <Progress
@@ -233,7 +262,10 @@ function DrugAndDrop({ setImageUpload, form }) {
                             return [...filterArray, ...response];
                         });
                     } catch (error) {
-                        throw error;
+                        form.setError('images', {
+                            type: 'manual',
+                            message: error?.message,
+                        });
                     }
                 }
 
@@ -286,3 +318,21 @@ function DrugAndDrop({ setImageUpload, form }) {
 }
 
 //  image drag and drop function end
+
+// images err massage show here start
+
+function ImageErrorMessage({ form }) {
+    return (
+        <FormField
+            control={form.control}
+            name="images"
+            render={({ field, fieldState }) => (
+                <FormItem>
+                    <FormMessage>{fieldState.error?.message}</FormMessage>
+                </FormItem>
+            )}
+        />
+    );
+}
+
+// images err massage show here end

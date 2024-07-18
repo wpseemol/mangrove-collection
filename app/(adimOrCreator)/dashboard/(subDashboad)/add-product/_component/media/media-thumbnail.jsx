@@ -102,12 +102,25 @@ export default function Thumbnail({ form }) {
         if (fileRejectionItems > 0) {
             form.setError('thumbnail', {
                 type: 'manual',
-                message: `You selected ${fileRejectionItems} images`,
+                message: `You selected ${fileRejectionItems} images. A single image can thumbnail.`,
             });
         }
-
         // image upload unction
     }, [form, fileRejectionItems, acceptedFiles]);
+
+    // when form rest state also reset
+    useEffect(() => {
+        // Listen for reset event from the form
+        const subscription = form.watch((value, { name }) => {
+            if (name === undefined) {
+                setPreviewImage(null);
+                setUploadProgress(0);
+            }
+        });
+
+        return () => subscription.unsubscribe();
+    }, [form]);
+    // when form rest state also reset
 
     async function handelImageDeleted() {
         const imageName = acceptedFiles[0]?.name;
@@ -162,7 +175,7 @@ export default function Thumbnail({ form }) {
                                             </div>
 
                                             <Progress
-                                                className="bg-slate-400 h-3 mt-2"
+                                                className="bg-slate-400 h-2 mt-2"
                                                 value={uploadProgress}
                                             />
 
