@@ -22,11 +22,13 @@ export default function AddProductSection() {
             name: '',
             slug: '',
             unit: 'pc',
-            price: '',
             description: '',
             thumbnail: '',
+
             images: [],
             variants: [],
+            currency: '',
+            price: [{ variantId: 'regular', price: 0, select: true }],
         },
     });
 

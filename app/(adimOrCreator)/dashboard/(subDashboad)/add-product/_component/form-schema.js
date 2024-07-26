@@ -8,7 +8,6 @@ const formSchema = z.object({
         message: 'Must be input product slug.',
     }),
     unit: z.string(),
-    price: z.coerce.number(),
     description: z.string().nonempty({
         message: 'Must be input product description',
     }),
@@ -23,6 +22,16 @@ const formSchema = z.object({
     ),
     variants: z.array(
         z.object({ id: z.string(), type: z.string(), title: z.string() })
+    ),
+    currency: z.string().nonempty({
+        message: 'Please select price currency.',
+    }),
+    price: z.array(
+        z.object({
+            variantId: z.string(),
+            price: z.coerce.number(),
+            select: z.boolean(),
+        })
     ),
 });
 

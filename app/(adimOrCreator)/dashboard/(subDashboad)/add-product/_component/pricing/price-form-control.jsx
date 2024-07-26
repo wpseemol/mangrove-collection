@@ -1,25 +1,22 @@
 import { FormLabel } from '@/components/ui/form';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PriceInput from './price-input';
-import PriceUnitSelect from './price-unit-select';
 
 export default function PriceFormControl({ form }) {
     const router = useRouter();
 
-    const [variantPrice, setVariantPrice] = useState([
-        { variantId: 'regular', price: 0, select: false },
-    ]);
+    const [variantPrice, setVariantPrice] = useState([]);
 
     const variants = form.watch('variants') || [];
 
-    console.log(variants);
+    console.log('variant price:', variantPrice);
 
     function handelAddVariant() {
         router.push('#variant-section');
     }
     return (
-        <div className="w-full flex flex-col items-center">
+        <div className="">
             <>
                 <PriceVariant
                     title="regular"
@@ -44,28 +41,60 @@ export default function PriceFormControl({ form }) {
                     <span className="font-thin">+</span> Add variant
                 </p>
             </div>
-
-            <PriceUnitSelect />
         </div>
     );
 }
 
 function PriceVariant({ title, variant, setVariantPrice }) {
-    const [selectedValue, setSelectedValue] = useState('show');
+    useEffect(() => {
+        const obj = { variantId: variant?.id, price: 0, select: true };
 
-    console.log(variant);
+        setVariantPrice((prev) => {
+            const isVariantIdUnique = !prev.some(
+                (item) => item.variantId === variant?.id
+            );
+            if (isVariantIdUnique) {
+                return [...prev, obj];
+            }
+            return prev;
+        });
+    }, [variant?.id, setVariantPrice]);
 
     const handleRadioChange = (event) => {
-        console.log(setVariantPrice, event.target.checked);
-
-        setVariantPrice((pre) => []);
+        setVariantPrice((prev) => {
+            const updateValue = prev.map((item) => {
+                if (item?.variantId === variant?.id) {
+                    return { ...item, select: event.target.checked };
+                } else {
+                    return { ...item, select: false };
+                }
+            });
+            return updateValue;
+        });
     };
+
+    function handelPriceChange(price) {
+        setVariantPrice((prev) => {
+            const updateValue = prev.map((item) => {
+                if (item?.variantId === variant?.id) {
+                    return { ...item, price };
+                } else {
+                    return item;
+                }
+            });
+            return updateValue;
+        });
+    }
+
     return (
         <div className="w-full flex items-center gap-4 mt-2">
-            <FormLabel className="mb-1 w-2/5 capitalize">{title} :</FormLabel>
-            <PriceInput />
-            <div className="w-fit border">
+            <FormLabel className="mb-1 capitalize text-nowrap">
+                {title} :
+            </FormLabel>
+            <PriceInput onChangeValue={(value) => handelPriceChange(value)} />
+            <div className="w-fit border flex justify-center items-center">
                 <input
+                    defaultChecked={variant?.id === 'regular'}
                     onChange={handleRadioChange}
                     type="radio"
                     name="price"

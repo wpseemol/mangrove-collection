@@ -22,6 +22,22 @@ export default function Variants({ form }) {
         }
     }, [finalSelectVariants, form]);
 
+    const productUnit = form.watch('unit');
+    useEffect(() => {
+        switch (productUnit) {
+            case 'pc':
+                setVariants([{ id: crypto.randomUUID() }]);
+                form.setValue('variants', []);
+                selectedValue = '';
+                break;
+            case 'kg':
+                setVariants([{ id: crypto.randomUUID() }]);
+                form.setValue('variants', []);
+                selectedValue = '';
+                break;
+        }
+    }, [productUnit, form]);
+
     // when form rest state also reset
     useEffect(() => {
         // Listen for reset event from the form
@@ -47,9 +63,7 @@ export default function Variants({ form }) {
             </header>
             <section className="p-3">
                 <div className="mb-4">
-                    <FormLabel className="mb-1">
-                        Variants <span></span>
-                    </FormLabel>
+                    <FormLabel className="mb-1">Variants</FormLabel>
                     {variants.map((item) => (
                         <VariantsInput
                             key={item.id}
@@ -79,23 +93,25 @@ export default function Variants({ form }) {
 }
 
 let selectedValue = '';
-
 function VariantsInput({ form, id, setFinalSelectVariants }) {
     const [variantsTypes, setVariantsTypes] = useState([]);
     const [isDisable, setIsDisable] = useState(!selectedValue);
     const [type, setType] = useState(selectedValue);
+
     const productUnit = form.watch('unit');
 
     useEffect(() => {
         switch (productUnit) {
             case 'pc':
                 setVariantsTypes(pcVariantsType);
+
                 break;
             case 'kg':
                 setVariantsTypes(kgVariantsType);
+
                 break;
         }
-    }, [productUnit]);
+    }, [productUnit, form]);
 
     function handelSelectChange(value) {
         selectedValue = value;
