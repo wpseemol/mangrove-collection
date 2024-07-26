@@ -21,6 +21,9 @@ const formSchema = z.object({
             firebaseUrl: z.string(),
         })
     ),
+    variants: z.array(
+        z.object({ id: z.string(), type: z.string(), title: z.string() })
+    ),
 });
 
 export { formSchema };

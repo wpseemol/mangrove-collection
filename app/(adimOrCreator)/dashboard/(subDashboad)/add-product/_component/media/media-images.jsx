@@ -1,11 +1,6 @@
 'use client';
 import imageDeleteAction from '@/app/actions/imageDeleteAction/imageDeleteAction';
-import {
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from '@/components/ui/form';
+import { FormLabel } from '@/components/ui/form';
 import { Progress } from '@/components/ui/progress';
 import { storage } from '@/firebase/firebase-config';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
@@ -14,6 +9,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { FcAddImage, FcMultipleInputs, FcUpload } from 'react-icons/fc';
 import { MdDelete } from 'react-icons/md';
+import ErrorMassage from '../error-message';
 import { convertFileToBase64, imageUrlBase64 } from './utility';
 import dragAndDrop from '/public/assets/logo/drag and drop icon.png';
 
@@ -92,7 +88,7 @@ export default function Images({ form }) {
 
                 <DrugAndDrop setImageUpload={setImageUpload} form={form} />
             </div>
-            <ImageErrorMessage form={form} />
+            <ErrorMassage form={form} type="images" />
         </>
     );
 }
@@ -318,21 +314,3 @@ function DrugAndDrop({ setImageUpload, form }) {
 }
 
 //  image drag and drop function end
-
-// images err massage show here start
-
-function ImageErrorMessage({ form }) {
-    return (
-        <FormField
-            control={form.control}
-            name="images"
-            render={({ field, fieldState }) => (
-                <FormItem>
-                    <FormMessage>{fieldState.error?.message}</FormMessage>
-                </FormItem>
-            )}
-        />
-    );
-}
-
-// images err massage show here end
