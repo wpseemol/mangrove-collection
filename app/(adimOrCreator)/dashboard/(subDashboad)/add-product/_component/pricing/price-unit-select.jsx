@@ -4,6 +4,7 @@ import {
     FormField,
     FormItem,
     FormLabel,
+    FormMessage,
 } from '@/components/ui/form';
 import {
     Select,
@@ -21,9 +22,7 @@ export default function PriceUnitSelect({ form }) {
             render={({ field, fieldState }) => (
                 <FormItem>
                     <FormLabel className="mb-1">Currency*</FormLabel>
-                    <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
                             <SelectTrigger
                                 className="bg-transparent border border-neutral-500/20
@@ -42,6 +41,7 @@ export default function PriceUnitSelect({ form }) {
                             <SelectItem value="dollar">&#36; Dollar</SelectItem>
                         </SelectContent>
                     </Select>
+                    <FormMessage>{fieldState.error?.message}</FormMessage>
                 </FormItem>
             )}
         />

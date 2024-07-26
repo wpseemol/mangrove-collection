@@ -24,7 +24,6 @@ export default function AddProductSection() {
             unit: 'pc',
             description: '',
             thumbnail: '',
-
             images: [],
             variants: [],
             currency: '',

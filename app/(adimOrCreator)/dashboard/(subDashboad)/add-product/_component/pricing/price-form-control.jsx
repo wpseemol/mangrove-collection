@@ -10,7 +10,28 @@ export default function PriceFormControl({ form }) {
 
     const variants = form.watch('variants') || [];
 
-    console.log('variant price:', variantPrice);
+    useEffect(() => {
+        if (variantPrice.length > 0) {
+            form.setValue('price', variantPrice);
+        }
+    }, [variantPrice, form]);
+
+    // when form rest state also reset
+    useEffect(() => {
+        // Listen for reset event from the form
+        const subscription = form.watch((value, { name }) => {
+            if (name === undefined) {
+                const obj = {
+                    variantId: variantDefault.id,
+                    price: 0,
+                    select: true,
+                };
+                setVariantPrice([obj]);
+            }
+        });
+        return () => subscription.unsubscribe(); // clan up function
+    }, [form]);
+    // when form rest state also reset
 
     function handelAddVariant() {
         router.push('#variant-section');
@@ -22,6 +43,7 @@ export default function PriceFormControl({ form }) {
                     title="regular"
                     variant={variantDefault}
                     setVariantPrice={setVariantPrice}
+                    form={form}
                 />
                 {variants?.length > 0 &&
                     variants?.map((variant) => (
@@ -30,6 +52,7 @@ export default function PriceFormControl({ form }) {
                             title={variant?.title}
                             variant={variant}
                             setVariantPrice={setVariantPrice}
+                            form={form}
                         />
                     ))}
             </>
@@ -45,9 +68,13 @@ export default function PriceFormControl({ form }) {
     );
 }
 
-function PriceVariant({ title, variant, setVariantPrice }) {
+function PriceVariant({ form, title, variant, setVariantPrice }) {
     useEffect(() => {
-        const obj = { variantId: variant?.id, price: 0, select: true };
+        const obj = {
+            variantId: variant?.id,
+            price: 0,
+            select: variant?.id === 'regular',
+        };
 
         setVariantPrice((prev) => {
             const isVariantIdUnique = !prev.some(
@@ -88,10 +115,13 @@ function PriceVariant({ title, variant, setVariantPrice }) {
 
     return (
         <div className="w-full flex items-center gap-4 mt-2">
-            <FormLabel className="mb-1 capitalize text-nowrap">
+            <FormLabel className="mb-1 capitalize text-nowrap font-thin">
                 {title} :
             </FormLabel>
-            <PriceInput onChangeValue={(value) => handelPriceChange(value)} />
+            <PriceInput
+                form={form}
+                onChangeValue={(value) => handelPriceChange(value)}
+            />
             <div className="w-fit border flex justify-center items-center">
                 <input
                     defaultChecked={variant?.id === 'regular'}

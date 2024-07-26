@@ -21,7 +21,7 @@ export default async function RootLayout({ children, modal }) {
     const loginUser = await afterLogin();
 
     return (
-        <html lang="en">
+        <html lang="en" className="scroll-smooth">
             <body
                 className={poppins.className + ' ' + roboto.className}
                 suppressHydrationWarning={true}>
