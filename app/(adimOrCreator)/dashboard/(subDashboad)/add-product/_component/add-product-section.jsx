@@ -54,7 +54,9 @@ export default function AddProductSection() {
                     <Media form={form} />
                 </section>
                 {/* product Variants */}
-                <section className="md:col-span-2 h-fit shadow border border-neutral-500/30 rounded">
+                <section
+                    id="variant-section"
+                    className="md:col-span-2 h-fit shadow border border-neutral-500/30 rounded">
                     <Variants form={form} />
                 </section>
                 {/* product variants */}

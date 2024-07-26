@@ -1,11 +1,5 @@
-import {
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { FormField, FormItem, FormMessage } from '@/components/ui/form';
+import PriceFormControl from './pricing/price-form-control';
 
 export default function Pricing({ form }) {
     return (
@@ -22,19 +16,8 @@ export default function Pricing({ form }) {
                         type="number"
                         render={({ field, fieldState }) => (
                             <FormItem>
-                                <FormLabel className="mb-1">
-                                    Regular price*
-                                </FormLabel>
-
-                                <FormControl>
-                                    <Input
-                                        type="number"
-                                        {...field}
-                                        className="w-full bg-transparent border border-neutral-500/20
-                                            p-2 focus:outline-none  focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] rounded"
-                                        placeholder="Product price"
-                                    />
-                                </FormControl>
+                                <PriceFormControl form={form} />
+                                {/* price err message here */}
                                 <FormMessage>
                                     {fieldState.error?.message}
                                 </FormMessage>
