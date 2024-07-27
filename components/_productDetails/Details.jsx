@@ -4,6 +4,7 @@ import currencyIcon from '@/utils/currencyIcon';
 import Link from 'next/link';
 import CardBtn from '../_card/CardBtn';
 import ImagePreview from './ImagePreview';
+import PriceSection from './price-section';
 import SelectedVariant from './selected-variant';
 
 export default function Details({ productDetails }) {
@@ -55,7 +56,10 @@ export default function Details({ productDetails }) {
                     {/* price section */}
                     <div className="flex items-baseline font-roboto">
                         <p className="text-xl text-primary font-semibold">
-                            {displayPrice.toFixed(2)}{' '}
+                            <PriceSection
+                                displayPrice={displayPrice}
+                                priceVariants={price}
+                            />{' '}
                             <span>{currencyIcon(currency)}</span>
                         </p>
 

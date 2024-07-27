@@ -3,6 +3,7 @@ import getProducts from '@/app/bd/mongoosQuery/getProducts';
 import Details from '@/components/_productDetails/Details';
 import RelatedProduct from '@/components/_productDetails/RelatedProduct';
 import Breadcrumb from '@/components/Breadcrumb/Breadcrumb';
+import VariantContentUpdateProvider from '@/components/Client/Providers/variant-content-update/variant-content-update';
 import capitalizeWord from '@/utils/capitalizeWords';
 import titleWordClops from '@/utils/titleWordClops';
 import Link from 'next/link';
@@ -52,8 +53,9 @@ export default async function ProductDetailsPage({ params: { productSlug } }) {
                     </>
                 }
             />
-            <Details productDetails={productDetails} />
-
+            <VariantContentUpdateProvider>
+                <Details productDetails={productDetails} />
+            </VariantContentUpdateProvider>
             {/* related Product  */}
             <RelatedProduct relatedProducts={relatedProducts} />
         </main>
