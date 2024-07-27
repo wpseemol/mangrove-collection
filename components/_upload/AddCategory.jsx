@@ -26,8 +26,6 @@ export default function AddCategory() {
             // category created action.
             const isCreate = await createCategoryAction(formData);
 
-            console.log(isCreate);
-
             if ('created' === isCreate) {
                 toast.success('Category successfully created');
                 event.target.reset();

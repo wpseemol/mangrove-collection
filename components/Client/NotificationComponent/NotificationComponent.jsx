@@ -9,7 +9,6 @@ export default function NotificationComponent() {
 
     const [showPopup, setShowPopup] = useState(notification.status);
 
-    console.log('console from NotificationComponent');
     let conditionClass;
     if (notification.type === 'success') {
         conditionClass = 'bg-green-400 text-white';

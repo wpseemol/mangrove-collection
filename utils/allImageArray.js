@@ -7,8 +7,6 @@ export default function allImageArray(thumbnail, images = []) {
         return [];
     }
 
-    console.log(thumbnail);
-
     const allImage = [
         ...images,
         { id: crypto.randomUUID(), firebaseUrl: thumbnail },

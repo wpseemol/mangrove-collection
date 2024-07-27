@@ -65,8 +65,6 @@ export default async function getProducts(
                         .limit(limitOption)
                         .lean();
 
-                    console.log(popularProducts);
-
                     return replaceMongoId(popularProducts);
                 }
 

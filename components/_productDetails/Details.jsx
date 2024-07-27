@@ -3,6 +3,7 @@ import capitalizeWord from '@/utils/capitalizeWords';
 import currencyIcon from '@/utils/currencyIcon';
 import Link from 'next/link';
 import CardBtn from '../_card/CardBtn';
+import DescriptionComponent from './description-component';
 import ImagePreview from './ImagePreview';
 import PriceSection from './price-section';
 import SelectedVariant from './selected-variant';
@@ -180,13 +181,8 @@ export default function Details({ productDetails }) {
                 <h3 className="border-b border-gray-200 font-roboto text-gray-800 pb-3 font-medium text-center md:text-left">
                     Description
                 </h3>
-                <div className="w-3/5 pt-6">
-                    <div
-                        className="text-gray-600"
-                        dangerouslySetInnerHTML={{
-                            __html: description,
-                        }}
-                    />
+                <div className="w-3/5 pt-6 text-gray-600">
+                    <DescriptionComponent description={description} />
                 </div>
             </div>
             {/* ./description */}

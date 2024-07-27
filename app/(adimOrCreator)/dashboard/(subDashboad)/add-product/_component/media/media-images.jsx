@@ -113,7 +113,6 @@ function InputOrImage({ element, setImageUpload, form, setFirebaseUrls }) {
         const isDeleted = await imageDeleteAction(pathName, imageName);
         setImageUpload((pre) => pre?.filter((item) => item.id !== id));
         setFirebaseUrls((pre) => pre?.filter((item) => item.id !== id));
-        console.log(isDeleted);
     }
 
     useEffect(() => {

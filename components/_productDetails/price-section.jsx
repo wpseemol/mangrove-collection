@@ -6,9 +6,8 @@ import { useEffect, useState } from 'react';
 export default function PriceSection({ priceVariants, displayPrice }) {
     const [price, setPrice] = useState(displayPrice);
 
-    const { variantSelectId } = useVariantUpdate();
+    const { variantSelectId, setVariantSelectId } = useVariantUpdate();
 
-    console.log('price variant:', priceVariants);
     useEffect(() => {
         if (variantSelectId) {
             const selectedPrice = priceVariants?.find(
@@ -17,6 +16,15 @@ export default function PriceSection({ priceVariants, displayPrice }) {
             setPrice(selectedPrice);
         }
     }, [variantSelectId, priceVariants]);
+
+    useEffect(() => {
+        const findDefaultPrice = priceVariants?.find(
+            (item) => item?.select
+        ).variantId;
+        setVariantSelectId(findDefaultPrice);
+
+        console.log('test for runtime');
+    }, [priceVariants, setVariantSelectId]);
 
     return <>{price.toFixed(2)}</>;
 }
