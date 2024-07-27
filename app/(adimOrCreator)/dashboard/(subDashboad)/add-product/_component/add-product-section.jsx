@@ -32,6 +32,7 @@ export default function AddProductSection({ allCategory }) {
             price: [{ variantId: 'regular', price: 0, select: true }],
             category: '',
             shortDescription: '',
+            tags: [],
         },
     });
 
