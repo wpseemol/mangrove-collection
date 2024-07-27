@@ -13,7 +13,7 @@ export default async function getProducts(
     excludeProductId
 ) {
     const showField =
-        'productName category slug offer shortDescription currency price unit thumbnail';
+        'name category slug offer shortDescription currency price unit thumbnail';
     try {
         await connectMongo();
 

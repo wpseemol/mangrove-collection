@@ -8,7 +8,7 @@ export default function Details({ productDetails }) {
     const {
         id,
         thumbnail,
-        productName,
+        name,
         images,
         unit,
         size,
@@ -18,6 +18,8 @@ export default function Details({ productDetails }) {
         description,
         offer,
     } = productDetails;
+
+    const displayPrice = price?.find((item) => item?.select)['price'];
 
     return (
         <>
@@ -34,12 +36,12 @@ export default function Details({ productDetails }) {
                 {/* allImage function return array and input a single image url and images array */}
                 <ImagePreview
                     allImage={allImageArray(thumbnail, images)}
-                    productName={productName}
+                    productName={name}
                 />
 
                 <div>
                     <h2 className="md:text-3xl text-xl font-medium uppercase mb-2">
-                        {productName}
+                        {name}
                     </h2>
                     {/* 
                     
@@ -96,7 +98,7 @@ export default function Details({ productDetails }) {
                     </div>
                     <div className="flex items-baseline mb-1 space-x-2 font-roboto mt-4">
                         <p className="text-xl text-primary font-semibold">
-                            {price.toFixed(2)}
+                            {displayPrice.toFixed(2)}
                         </p>
 
                         {/*
