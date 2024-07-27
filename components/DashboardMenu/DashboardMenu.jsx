@@ -18,9 +18,9 @@ export default function DashboardMenu({ isDryerClose }) {
     if (userTypeCake?.type === 'admin') {
         menuArrays = [
             {
-                href: '/dashboard/upload-product',
+                href: '/dashboard/add-product',
                 icon: <FaUpload />,
-                name: 'Upload Product',
+                name: 'Add Product',
                 id: 1,
             },
             {
@@ -29,29 +29,24 @@ export default function DashboardMenu({ isDryerClose }) {
                 name: 'Manage All User',
                 id: 2,
             },
-            {
-                href: '/dashboard/add-product',
-                icon: <FaUpload />,
-                name: 'Add Product',
-                id: 3,
-            },
+
             {
                 href: '/dashboard/profile',
                 icon: <ImProfile />,
                 name: 'Profile',
-                id: 4,
+                id: 3,
             },
             {
                 href: '/dashboard/setting',
                 icon: <IoSettings />,
                 name: 'Setting',
-                id: 5,
+                id: 4,
             },
             {
                 href: '/dashboard/help',
                 icon: <TbHelpHexagonFilled />,
                 name: 'Help',
-                id: 6,
+                id: 5,
             },
         ];
     } else if (userTypeCake?.type === 'contentCreator') {
