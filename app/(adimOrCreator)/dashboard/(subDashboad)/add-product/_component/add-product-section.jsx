@@ -3,6 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
+import addProductAction from '@/app/actions/addProductAction/addProductAction';
 import ProductCategoryContainer from '@/components/dashboard-container/product-category-container';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
@@ -36,8 +37,14 @@ export default function AddProductSection({ allCategory }) {
         },
     });
 
-    function onSubmit(values) {
-        console.log(values);
+    async function onSubmit(values) {
+        try {
+            const isProductAdd = await addProductAction(values);
+            console.log(isProductAdd);
+        } catch (error) {
+            throw error;
+        }
+
         form.reset();
     }
 
