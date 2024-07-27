@@ -8,14 +8,14 @@ export default function ProductCategoryContainer({
     return (
         <section
             className={cn(
-                'md:col-span-2 shadow border border-neutral-500/30 rounded',
+                'w-full shadow border border-neutral-500/30 rounded mb-4',
                 className
             )}>
             <header className="border-b border-neutral-500/30">
-                <h2 className="font-semibold text-lg p-3">{title}</h2>
+                <h2 className="font-semibold text-lg md:p-3 p-2">{title}</h2>
             </header>
 
-            <section className="p-3">{children}</section>
+            <section className="md:p-3 p-2">{children}</section>
         </section>
     );
 }

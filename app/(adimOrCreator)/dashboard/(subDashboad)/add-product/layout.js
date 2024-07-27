@@ -4,7 +4,7 @@ export default function AddProductOrCategoryLayout({ children }) {
     return (
         <>
             <>
-                <header className="mb-4 border-b dark:border-b-slate-50/20">
+                <header className="md:mb-4 mb-2 border-b dark:border-b-slate-50/20">
                     <nav className="flex ml-4 items-center gap-2 border-b-0">
                         <TabBtn
                             href="/dashboard/add-product"

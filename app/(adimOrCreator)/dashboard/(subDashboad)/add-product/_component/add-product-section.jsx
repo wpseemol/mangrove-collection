@@ -42,30 +42,41 @@ export default function AddProductSection() {
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="grid md:grid-cols-3 grid-cols-1 gap-4">
-                {/* product information */}
-                <ProductCategoryContainer title="Product information">
-                    <ProductInformation form={form} />
-                </ProductCategoryContainer>
+                <div className="md:col-span-2">
+                    {/* product information */}
+                    <ProductCategoryContainer title="Product information">
+                        <ProductInformation form={form} />
+                    </ProductCategoryContainer>
+                    {/* product information */}
 
-                {/* product information */}
-                {/* product pricing */}
-                <ProductCategoryContainer
-                    className="md:col-span-1 h-fit"
-                    title="Pricing">
-                    <Pricing form={form} />
-                </ProductCategoryContainer>
-                {/* product pricing */}
+                    {/* product Media section */}
+                    <ProductCategoryContainer title="Media">
+                        <Media form={form} />
+                    </ProductCategoryContainer>
+                    {/* product Media section */}
 
-                <ProductCategoryContainer title="Media">
-                    <Media form={form} />
-                </ProductCategoryContainer>
+                    {/* product Variants */}
+                    <ProductCategoryContainer title="Variants">
+                        <Variants form={form} />
+                    </ProductCategoryContainer>
+                    {/* product variants */}
+                </div>
+                <div className="md:col-span-1">
+                    {/* product pricing */}
+                    <ProductCategoryContainer className="h-fit" title="Pricing">
+                        <Pricing form={form} />
+                    </ProductCategoryContainer>
+                    {/* product pricing */}
+                    {/* product pricing */}
+                    <ProductCategoryContainer
+                        className="h-fit"
+                        title="Organization">
+                        <Pricing form={form} />
+                    </ProductCategoryContainer>
+                    {/* product pricing */}
+                </div>
 
-                {/* product Variants */}
-                <ProductCategoryContainer title="Variants">
-                    <Variants form={form} />
-                </ProductCategoryContainer>
-                {/* product variants */}
-                <section className="md:col-span-3">
+                <section className="md:col-span-3 -mt-4">
                     <Button type="submit">Submit</Button>
                 </section>
             </form>
