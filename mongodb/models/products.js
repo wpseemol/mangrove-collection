@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { array } from 'zod';
 
 const productSchema = new mongoose.Schema({
     name: {
@@ -25,7 +24,7 @@ const productSchema = new mongoose.Schema({
         require: false,
     },
     price: {
-        type: array,
+        type: Array,
         require: true,
     },
     currency: {
@@ -81,7 +80,7 @@ const productSchema = new mongoose.Schema({
         require: false,
         default: 0,
     },
-    tags: { type: array, require: false },
+    tags: { type: Array, require: false },
 });
 
 const Product =
