@@ -1,0 +1,9 @@
+/* styles.css */
+
+.ql-snow .ql-tooltip {
+    left: 10px !important;
+}
+
+.ql-container {
+    height: 15.5rem;
+}

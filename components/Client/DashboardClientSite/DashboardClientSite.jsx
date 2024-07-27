@@ -46,7 +46,7 @@ export default function DashboardClientSite({ children, loginUser }) {
                         </div>
                     </div>
 
-                    <div className="p-4 flex flex-col items-center h-[calc(100vh-8rem)] overflow-x-hidden overflow-y-auto">
+                    <div className="px-2 py-4 flex flex-col items-center h-[calc(100vh-8rem)] overflow-x-hidden overflow-y-auto">
                         {/* dashboard menu here */}
                         <DashboardMenu isDryerClose={isDryerClose} />
                     </div>
@@ -113,7 +113,7 @@ export default function DashboardClientSite({ children, loginUser }) {
                             ? 'md:w-[calc(100%-5rem)] w-full origin-right'
                             : 'md:w-[calc(100%-16rem)] w-full origin-left'
                     }  dark:bg-[#252729] bg-[#f0f1f7] min-h-[calc(100vh-4rem)] ml-auto duration-300
-                 dark:text-neutral-300 text-neutral-700 p-4
+                 dark:text-neutral-300 text-neutral-700 md:p-4 p-2
                 `}>
                     {children}
                 </div>

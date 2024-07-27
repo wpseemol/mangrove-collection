@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const productSchema = new mongoose.Schema({
-    productName: {
+    name: {
         type: String,
         require: true,
     },
@@ -24,7 +24,7 @@ const productSchema = new mongoose.Schema({
         require: false,
     },
     price: {
-        type: Number,
+        type: Array,
         require: true,
     },
     currency: {
@@ -51,6 +51,10 @@ const productSchema = new mongoose.Schema({
         type: Array,
         require: false,
     },
+    variants: {
+        type: Array,
+        require: false,
+    },
     user: {
         type: mongoose.Schema.ObjectId,
         require: true,
@@ -74,7 +78,9 @@ const productSchema = new mongoose.Schema({
     popularity: {
         type: Number,
         require: false,
+        default: 0,
     },
+    tags: { type: Array, require: false },
 });
 
 const Product =

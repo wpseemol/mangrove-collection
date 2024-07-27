@@ -4,4 +4,6 @@ const NotificationContext = createContext(null);
 
 const AuthContext = createContext(null);
 
-export { AuthContext, NotificationContext };
+const VariantUpdateContext = createContext(null);
+
+export { AuthContext, NotificationContext, VariantUpdateContext };

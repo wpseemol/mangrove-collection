@@ -6,12 +6,14 @@ import Link from 'next/link';
 import CardBtn from './CardBtn';
 
 export default function ProductCard({ productDetails }) {
-    const { thumbnail, productName, slug, price, currency, unit, category } =
+    const { thumbnail, name, slug, price, currency, unit, category } =
         productDetails;
 
     const categoryName = category?.categoryName;
 
     const slugUrl = `/products/${slug}`;
+
+    const displayPrice = price?.find((item) => item?.select)['price'];
 
     return (
         <ForAnimate
@@ -35,12 +37,11 @@ export default function ProductCard({ productDetails }) {
                         {categoryName ? categoryName : 'Uncategorized product'}
                     </h3>
                     <h2 className="animate-fade-up animate-duration-[900ms]">
-                        {titleWordClops(productName)}
+                        {titleWordClops(name)}
                     </h2>
 
                     <p className="animate-fade-up animate-duration-1000">
-                        <span>{currencyIcon(currency)}</span>{' '}
-                        {productDetails?.price}{' '}
+                        <span>{currencyIcon(currency)}</span> {displayPrice}{' '}
                         <span className="font-semibold">(1{unit})</span>
                     </p>
                 </div>
@@ -51,11 +52,12 @@ export default function ProductCard({ productDetails }) {
                     {categoryName ? categoryName : 'Uncategorized product'}
                 </h3>
                 <h2 className="animate-fade-up animate-duration-200">
-                    {titleWordClops(productName)}
+                    {titleWordClops(name)}
                 </h2>
 
                 <p className="animate-fade-up animate-duration-300">
-                    <span className="">{currencyIcon(currency)}</span> {price}{' '}
+                    <span className="">{currencyIcon(currency)}</span>
+                    {displayPrice}{' '}
                     <span className="font-semibold">(1{unit})</span>
                 </p>
             </div>

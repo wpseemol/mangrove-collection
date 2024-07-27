@@ -1,23 +1,35 @@
 import allImageArray from '@/utils/allImageArray';
 import capitalizeWord from '@/utils/capitalizeWords';
+import currencyIcon from '@/utils/currencyIcon';
 import Link from 'next/link';
 import CardBtn from '../_card/CardBtn';
+import DescriptionComponent from './description-component';
 import ImagePreview from './ImagePreview';
+import PriceSection from './price-section';
+import SelectedVariant from './selected-variant';
 
 export default function Details({ productDetails }) {
     const {
         id,
         thumbnail,
-        productName,
+        name,
         images,
         unit,
         size,
         price,
+        currency,
         category,
         shortDescription,
         description,
         offer,
+        variants,
     } = productDetails;
+
+    const displayPrice = price?.find((item) => item?.select)['price'];
+
+    const displayVariant = Array.from(
+        new Set(variants.map((item) => item.type))
+    );
 
     return (
         <>
@@ -34,15 +46,47 @@ export default function Details({ productDetails }) {
                 {/* allImage function return array and input a single image url and images array */}
                 <ImagePreview
                     allImage={allImageArray(thumbnail, images)}
-                    productName={productName}
+                    productName={name}
                 />
 
-                <div>
-                    <h2 className="md:text-3xl text-xl font-medium uppercase mb-2">
-                        {productName}
+                <div className="flex flex-col gap-y-3">
+                    <h2 className="md:text-3xl text-xl font-medium capitalize">
+                        {name}
                     </h2>
+
+                    {/* price section */}
+                    <div className="flex items-baseline font-roboto">
+                        <p className="text-xl text-primary font-semibold">
+                            <PriceSection
+                                displayPrice={displayPrice}
+                                priceVariants={price}
+                            />{' '}
+                            <span>{currencyIcon(currency)}</span>
+                        </p>
+
+                        {/*
+                            offer price
+                        <p className="text-base text-gray-400 line-through">
+                            ${productDetails?.price?.toFixed(2)}
+                        </p> */}
+                    </div>
+                    {/* price section */}
+
+                    {/* category section */}
+                    <p className="">
+                        <span className="text-gray-800 font-semibold">
+                            Category :
+                        </span>
+                        <Link
+                            href={`/products?category=${category?.categorySlug}`}>
+                            <span className="text-gray-600 capitalize">
+                                {capitalizeWord(category?.categoryName)}
+                            </span>
+                        </Link>
+                    </p>
+                    {/* category section */}
+
                     {/* 
-                    
                     <div className="flex items-center mb-4">
                         <div
                             className="flex gap-1 text-sm text-yellow-400"
@@ -59,33 +103,25 @@ export default function Details({ productDetails }) {
                     </div>
                     */}
 
-                    <div className="space-y-2">
-                        <p className="text-gray-800 font-semibold space-x-2">
-                            <span>Unit:</span>
-                            <span className="text-green-600">{unit} </span>
-                        </p>
-                        <p className="space-x-2">
-                            <span className="text-gray-800 font-semibold">
-                                Size:
-                            </span>
-                            <span className="text-gray-600 uppercase">
-                                {size}
-                            </span>
-                        </p>
-                        <p className="space-x-2">
-                            <span className="text-gray-800 font-semibold">
-                                Category :
-                            </span>
-                            <Link
-                                href={`/products?category=${category?.categorySlug}`}>
-                                <span className="text-gray-600 capitalize">
-                                    {capitalizeWord(
-                                        category?.categoryName?.toLowerCase()
-                                    )}
+                    <p className="text-gray-800 font-semibold space-x-2">
+                        <span>Unit:</span>
+                        <span className="text-green-600">{unit} </span>
+                    </p>
+
+                    {displayVariant?.length > 0 &&
+                        displayVariant?.map((variant) => (
+                            <p key={variant} className="space-x-2">
+                                <span className="text-gray-800 font-semibold capitalize">
+                                    {variant}:
                                 </span>
-                            </Link>
-                        </p>
-                        {/* <p className="space-x-2">
+                                <SelectedVariant
+                                    type={variant}
+                                    variants={variants}
+                                />
+                            </p>
+                        ))}
+
+                    {/* <p className="space-x-2">
                             <span className="text-gray-800 font-semibold">
                                 {dictionary?.singleProduct?.sku}:
                             </span>
@@ -93,18 +129,6 @@ export default function Details({ productDetails }) {
                                 {productDetails?.modal}
                             </span>
                         </p> */}
-                    </div>
-                    <div className="flex items-baseline mb-1 space-x-2 font-roboto mt-4">
-                        <p className="text-xl text-primary font-semibold">
-                            {price.toFixed(2)}
-                        </p>
-
-                        {/*
-                            offer price
-                        <p className="text-base text-gray-400 line-through">
-                            ${productDetails?.price?.toFixed(2)}
-                        </p> */}
-                    </div>
 
                     <p
                         className="mt-4 text-gray-600"
@@ -157,13 +181,8 @@ export default function Details({ productDetails }) {
                 <h3 className="border-b border-gray-200 font-roboto text-gray-800 pb-3 font-medium text-center md:text-left">
                     Description
                 </h3>
-                <div className="w-3/5 pt-6">
-                    <div
-                        className="text-gray-600"
-                        dangerouslySetInnerHTML={{
-                            __html: description,
-                        }}
-                    />
+                <div className="w-3/5 pt-6 text-gray-600">
+                    <DescriptionComponent description={description} />
                 </div>
             </div>
             {/* ./description */}

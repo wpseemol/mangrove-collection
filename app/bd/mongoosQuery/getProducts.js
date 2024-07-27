@@ -13,7 +13,7 @@ export default async function getProducts(
     excludeProductId
 ) {
     const showField =
-        'productName category slug offer shortDescription currency price unit thumbnail';
+        'name category slug offer shortDescription currency price unit thumbnail';
     try {
         await connectMongo();
 
@@ -64,8 +64,6 @@ export default async function getProducts(
                         .sort({ popularity: -1 })
                         .limit(limitOption)
                         .lean();
-
-                    console.log(popularProducts);
 
                     return replaceMongoId(popularProducts);
                 }

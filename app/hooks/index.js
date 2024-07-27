@@ -1,4 +1,8 @@
-import { AuthContext, NotificationContext } from '@/contexts';
+import {
+    AuthContext,
+    NotificationContext,
+    VariantUpdateContext,
+} from '@/contexts';
 import { useContext } from 'react';
 
 const useNotification = function () {
@@ -14,4 +18,11 @@ const useAuth = function () {
     return [auth, setAuth, authLoading, setAuthLoading];
 };
 
-export { useAuth, useNotification };
+const useVariantUpdate = function () {
+    const { variantSelectId, setVariantSelectId } =
+        useContext(VariantUpdateContext);
+
+    return { variantSelectId, setVariantSelectId };
+};
+
+export { useAuth, useNotification, useVariantUpdate };

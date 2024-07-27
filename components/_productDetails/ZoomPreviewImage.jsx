@@ -59,14 +59,16 @@ export default function ZoomPreviewImage({
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -30, opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className=" lg:w-[500px] lg:h-[500px] md:h-[350px] h-[300px] md:w-[350px] w-[300px] border border-neutral-500/10 bg-slate-200/10 rounded overflow-hidden object-cover hidden md:block"
+                className=" lg:w-[500px] lg:h-[500px] md:h-[350px] h-[300px] md:w-[350px] w-[300px] border border-neutral-500/10 bg-slate-200/10 rounded overflow-hidden hidden md:block
+                 
+                "
                 ref={imageHoverContainerRef}>
                 <Image
                     src={previewImage?.imgUrl}
                     alt={productName}
                     width={500}
                     height={500}
-                    className="w-auto h-auto"
+                    className="object-none object-center"
                 />
             </motion.figure>
 

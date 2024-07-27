@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const MONGO_URI = process.env.MONGODB_CONNECT_URL;
+const MONGO_URI = process.env.NEXT_PUBLIC_MONGODB_CONNECT_URL;
 const cached = {};
 
 async function connectMongo() {
