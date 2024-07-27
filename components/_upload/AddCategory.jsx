@@ -65,9 +65,7 @@ export default function AddCategory() {
     }
 
     return (
-        <form
-            onSubmit={handelAddCategory}
-            className="bg-white dark:bg-slate-700 shadow-md rounded sm:px-8 px-3 pt-6 pb-8 mb-4 sm:w-2/5  mx-auto">
+        <form onSubmit={handelAddCategory} className=" w-full  ">
             <div className="mb-4">
                 <label
                     className="block text-gray-700 dark:text-neutral-200 text-sm font-bold mb-2"

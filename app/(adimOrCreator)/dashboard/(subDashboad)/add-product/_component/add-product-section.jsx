@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import 'react-quill/dist/quill.snow.css';
 import { formSchema } from './form-schema';
 import Media from './media';
+import OtherInformation from './other-information';
 import Pricing from './pricing';
 import ProductInformation from './product-information';
 import Variants from './variants';
@@ -70,8 +71,8 @@ export default function AddProductSection() {
                     {/* product pricing */}
                     <ProductCategoryContainer
                         className="h-fit"
-                        title="Organization">
-                        <Pricing form={form} />
+                        title="Other information">
+                        <OtherInformation form={form} />
                     </ProductCategoryContainer>
                     {/* product pricing */}
                 </div>
