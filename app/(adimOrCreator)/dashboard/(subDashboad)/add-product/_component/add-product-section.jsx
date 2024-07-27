@@ -15,7 +15,7 @@ import Pricing from './pricing';
 import ProductInformation from './product-information';
 import Variants from './variants';
 
-export default function AddProductSection() {
+export default function AddProductSection({ allCategory }) {
     const router = useRouter();
 
     const form = useForm({
@@ -72,7 +72,10 @@ export default function AddProductSection() {
                     <ProductCategoryContainer
                         className="h-fit"
                         title="Other information">
-                        <OtherInformation form={form} />
+                        <OtherInformation
+                            form={form}
+                            allCategory={allCategory}
+                        />
                     </ProductCategoryContainer>
                     {/* product pricing */}
                 </div>
