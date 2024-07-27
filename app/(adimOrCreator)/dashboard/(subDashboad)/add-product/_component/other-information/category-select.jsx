@@ -4,6 +4,7 @@ import {
     FormField,
     FormItem,
     FormLabel,
+    FormMessage,
 } from '@/components/ui/form';
 import {
     Select,
@@ -13,9 +14,32 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import capitalizeWord from '@/utils/capitalizeWords';
+import { useEffect, useState } from 'react';
 
 export default function CategorySelect({ form, allCategory }) {
-    console.log(allCategory);
+    const [selectedCategory, setSelectedCategory] = useState('');
+
+    // when form rest state also reset
+    useEffect(() => {
+        // Listen for reset event from the form
+        const subscription = form.watch((value, { name }) => {
+            if (name === undefined) {
+                setSelectedCategory('');
+            }
+        });
+        return () => subscription.unsubscribe(); // clan up function
+    }, [form]);
+    // when form rest state also reset
+
+    function handelCategory(value) {
+        setSelectedCategory(value);
+        const selectedValue = allCategory?.find(
+            (category) => category.categorySlug === value
+        );
+
+        form.setValue('category', selectedValue?.id);
+        form.clearErrors('category');
+    }
 
     return (
         <FormField
@@ -24,7 +48,9 @@ export default function CategorySelect({ form, allCategory }) {
             render={({ field, fieldState }) => (
                 <FormItem>
                     <FormLabel className="mb-1">Category*</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select
+                        onValueChange={handelCategory}
+                        value={selectedCategory}>
                         <FormControl>
                             <SelectTrigger
                                 className="bg-transparent border border-neutral-500/20
@@ -49,6 +75,7 @@ export default function CategorySelect({ form, allCategory }) {
                                 ))}
                         </SelectContent>
                     </Select>
+                    <FormMessage>{fieldState.error?.message}</FormMessage>
                 </FormItem>
             )}
         />

@@ -20,8 +20,11 @@ export default function ProductSlug({ form }) {
                     .replace(/[^\w\s-]/g, '-')
                     .replace(/\s+/g, '-')
             );
+
+            form.clearErrors('slug');
         } else {
             form.setValue('slug', '');
+            form.clearErrors('slug');
         }
     }, [form, name]);
     // slug create

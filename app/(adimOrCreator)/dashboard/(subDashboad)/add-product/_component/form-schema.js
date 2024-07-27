@@ -33,6 +33,9 @@ const formSchema = z.object({
             select: z.boolean(),
         })
     ),
+    category: z.string().nonempty({
+        message: 'Please select category, then submit agin.',
+    }),
 });
 
 export { formSchema };
