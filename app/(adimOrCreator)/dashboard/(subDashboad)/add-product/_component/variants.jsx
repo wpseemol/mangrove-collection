@@ -58,36 +58,29 @@ export default function Variants({ form }) {
 
     return (
         <>
-            <header className="border-b border-neutral-500/30">
-                <h2 className="font-semibold text-lg p-3">Variants</h2>
-            </header>
-            <section className="p-3">
-                <div className="mb-4">
-                    <FormLabel className="mb-1">Variants</FormLabel>
-                    {variants.map((item) => (
-                        <VariantsInput
-                            key={item.id}
-                            form={form}
-                            id={item.id}
-                            setFinalSelectVariants={setFinalSelectVariants}
-                        />
-                    ))}
+            <div className="mb-4">
+                <FormLabel className="mb-1">Variants</FormLabel>
+                {variants.map((item) => (
+                    <VariantsInput
+                        key={item.id}
+                        form={form}
+                        id={item.id}
+                        setFinalSelectVariants={setFinalSelectVariants}
+                    />
+                ))}
 
-                    {/* option add btn */}
-                    <div
-                        onClick={handelAddOption}
-                        className="w-fit text-sm mt-8 cursor-pointer ">
-                        <p className="text-green-600 hover:text-green-700 duration-100">
-                            +{' '}
-                            <span className="font-medium">
-                                Add another option
-                            </span>
-                        </p>
-                    </div>
-                    {/* option add btn */}
-                    <ErrorMassage form={form} type="variants" />
+                {/* option add btn */}
+                <div
+                    onClick={handelAddOption}
+                    className="w-fit text-sm mt-8 cursor-pointer ">
+                    <p className="text-green-600 hover:text-green-700 duration-100">
+                        +{' '}
+                        <span className="font-medium">Add another option</span>
+                    </p>
                 </div>
-            </section>
+                {/* option add btn */}
+                <ErrorMassage form={form} type="variants" />
+            </div>
         </>
     );
 }

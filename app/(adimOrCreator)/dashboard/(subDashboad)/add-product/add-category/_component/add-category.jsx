@@ -1,4 +1,4 @@
-import ProductCategoryContainer from '@/components/dashbord-contaiiner/product-category-container';
+import ProductCategoryContainer from '@/components/dashboard-container/product-category-container';
 
 export default function AddCategory() {
     return (

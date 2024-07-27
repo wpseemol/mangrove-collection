@@ -3,6 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
+import ProductCategoryContainer from '@/components/dashboard-container/product-category-container';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { useRouter } from 'next/navigation';
@@ -42,24 +43,27 @@ export default function AddProductSection() {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="grid md:grid-cols-3 grid-cols-1 gap-4">
                 {/* product information */}
-                <section className="md:col-span-2 shadow border border-neutral-500/30 rounded">
+                <ProductCategoryContainer title="Product information">
                     <ProductInformation form={form} />
-                </section>
+                </ProductCategoryContainer>
+
                 {/* product information */}
                 {/* product pricing */}
-                <section className="md:col-span-1 h-fit shadow border border-neutral-500/30 rounded">
+                <ProductCategoryContainer
+                    className="md:col-span-1 h-fit"
+                    title="Pricing">
                     <Pricing form={form} />
-                </section>
+                </ProductCategoryContainer>
                 {/* product pricing */}
-                <section className="md:col-span-2 h-fit shadow border border-neutral-500/30 rounded">
+
+                <ProductCategoryContainer title="Media">
                     <Media form={form} />
-                </section>
+                </ProductCategoryContainer>
+
                 {/* product Variants */}
-                <section
-                    id="variant-section"
-                    className="md:col-span-2 h-fit shadow border border-neutral-500/30 rounded">
+                <ProductCategoryContainer title="Variants">
                     <Variants form={form} />
-                </section>
+                </ProductCategoryContainer>
                 {/* product variants */}
                 <section className="md:col-span-3">
                     <Button type="submit">Submit</Button>
