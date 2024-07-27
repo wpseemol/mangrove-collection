@@ -2,6 +2,7 @@
 import imageDeleteAction from '@/app/actions/imageDeleteAction/imageDeleteAction';
 import {
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -142,9 +143,10 @@ export default function Thumbnail({ form }) {
                         <FormLabel className="-mb-2">
                             Thumbnail image*
                         </FormLabel>
-                        <p className="text-xs mb-1">
-                            Image width and height 300x300 preferable
-                        </p>
+                        <FormDescription>
+                            Image width and height 300x300 preferable.
+                        </FormDescription>
+
                         <FormControl>
                             <>
                                 {previewImage ? (

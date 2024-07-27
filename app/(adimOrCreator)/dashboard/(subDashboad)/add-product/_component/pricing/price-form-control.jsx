@@ -124,6 +124,7 @@ function PriceVariant({ form, title, variant, setVariantPrice }) {
             />
             <div className="w-fit border flex justify-center items-center">
                 <input
+                    title="This price show is product card."
                     defaultChecked={variant?.id === 'regular'}
                     onChange={handleRadioChange}
                     type="radio"

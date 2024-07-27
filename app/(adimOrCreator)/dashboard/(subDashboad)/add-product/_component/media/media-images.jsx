@@ -1,6 +1,6 @@
 'use client';
 import imageDeleteAction from '@/app/actions/imageDeleteAction/imageDeleteAction';
-import { FormLabel } from '@/components/ui/form';
+import { FormDescription, FormLabel } from '@/components/ui/form';
 import { Progress } from '@/components/ui/progress';
 import { storage } from '@/firebase/firebase-config';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
@@ -58,10 +58,10 @@ export default function Images({ form }) {
     return (
         <>
             <div className="mb-1">
-                <FormLabel>Images</FormLabel>
-                <p className="text-xs">
+                <FormLabel>Pictures</FormLabel>
+                <FormDescription className="mt-1">
                     Product Images width and height 500x500 preferable
-                </p>
+                </FormDescription>
             </div>
             <div
                 className="border-dashed border-2 border-neutral-500/20 bg-neutral-400/10 w-full flex 

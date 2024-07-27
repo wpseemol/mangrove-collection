@@ -1,4 +1,5 @@
 import {
+    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -23,6 +24,9 @@ export default function Pricing({ form }) {
                             <FormLabel className="mb-1">
                                 Price variants
                             </FormLabel>
+                            <FormDescription>
+                                You can add different variant price.
+                            </FormDescription>
                             <PriceFormControl form={form} />
                             {/* price err message here */}
                             <FormMessage>

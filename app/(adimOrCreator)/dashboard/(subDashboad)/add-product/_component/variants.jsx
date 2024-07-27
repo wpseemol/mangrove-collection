@@ -58,7 +58,7 @@ export default function Variants({ form }) {
 
     return (
         <>
-            <div className="mb-4">
+            <div className="mb-4" id="variant-section">
                 <FormLabel className="mb-1">Variants</FormLabel>
                 {variants.map((item) => (
                     <VariantsInput

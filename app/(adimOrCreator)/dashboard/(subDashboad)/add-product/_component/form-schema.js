@@ -36,6 +36,7 @@ const formSchema = z.object({
     category: z.string().nonempty({
         message: 'Please select category, then submit agin.',
     }),
+    shortDescription: z.string(),
 });
 
 export { formSchema };

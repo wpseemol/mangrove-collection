@@ -31,6 +31,7 @@ export default function AddProductSection({ allCategory }) {
             currency: '',
             price: [{ variantId: 'regular', price: 0, select: true }],
             category: '',
+            shortDescription: '',
         },
     });
 
