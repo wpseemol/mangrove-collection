@@ -1,8 +1,10 @@
 import allImageArray from '@/utils/allImageArray';
 import capitalizeWord from '@/utils/capitalizeWords';
+import currencyIcon from '@/utils/currencyIcon';
 import Link from 'next/link';
 import CardBtn from '../_card/CardBtn';
 import ImagePreview from './ImagePreview';
+import SelectedVariant from './selected-variant';
 
 export default function Details({ productDetails }) {
     const {
@@ -13,13 +15,19 @@ export default function Details({ productDetails }) {
         unit,
         size,
         price,
+        currency,
         category,
         shortDescription,
         description,
         offer,
+        variants,
     } = productDetails;
 
     const displayPrice = price?.find((item) => item?.select)['price'];
+
+    const displayVariant = Array.from(
+        new Set(variants.map((item) => item.type))
+    );
 
     return (
         <>
@@ -39,12 +47,41 @@ export default function Details({ productDetails }) {
                     productName={name}
                 />
 
-                <div>
-                    <h2 className="md:text-3xl text-xl font-medium uppercase mb-2">
+                <div className="flex flex-col gap-y-3">
+                    <h2 className="md:text-3xl text-xl font-medium capitalize">
                         {name}
                     </h2>
+
+                    {/* price section */}
+                    <div className="flex items-baseline font-roboto">
+                        <p className="text-xl text-primary font-semibold">
+                            {displayPrice.toFixed(2)}{' '}
+                            <span>{currencyIcon(currency)}</span>
+                        </p>
+
+                        {/*
+                            offer price
+                        <p className="text-base text-gray-400 line-through">
+                            ${productDetails?.price?.toFixed(2)}
+                        </p> */}
+                    </div>
+                    {/* price section */}
+
+                    {/* category section */}
+                    <p className="">
+                        <span className="text-gray-800 font-semibold">
+                            Category :
+                        </span>
+                        <Link
+                            href={`/products?category=${category?.categorySlug}`}>
+                            <span className="text-gray-600 capitalize">
+                                {capitalizeWord(category?.categoryName)}
+                            </span>
+                        </Link>
+                    </p>
+                    {/* category section */}
+
                     {/* 
-                    
                     <div className="flex items-center mb-4">
                         <div
                             className="flex gap-1 text-sm text-yellow-400"
@@ -61,33 +98,25 @@ export default function Details({ productDetails }) {
                     </div>
                     */}
 
-                    <div className="space-y-2">
-                        <p className="text-gray-800 font-semibold space-x-2">
-                            <span>Unit:</span>
-                            <span className="text-green-600">{unit} </span>
-                        </p>
-                        <p className="space-x-2">
-                            <span className="text-gray-800 font-semibold">
-                                Size:
-                            </span>
-                            <span className="text-gray-600 uppercase">
-                                {size}
-                            </span>
-                        </p>
-                        <p className="space-x-2">
-                            <span className="text-gray-800 font-semibold">
-                                Category :
-                            </span>
-                            <Link
-                                href={`/products?category=${category?.categorySlug}`}>
-                                <span className="text-gray-600 capitalize">
-                                    {capitalizeWord(
-                                        category?.categoryName?.toLowerCase()
-                                    )}
+                    <p className="text-gray-800 font-semibold space-x-2">
+                        <span>Unit:</span>
+                        <span className="text-green-600">{unit} </span>
+                    </p>
+
+                    {displayVariant?.length > 0 &&
+                        displayVariant?.map((variant) => (
+                            <p key={variant} className="space-x-2">
+                                <span className="text-gray-800 font-semibold capitalize">
+                                    {variant}:
                                 </span>
-                            </Link>
-                        </p>
-                        {/* <p className="space-x-2">
+                                <SelectedVariant
+                                    type={variant}
+                                    variants={variants}
+                                />
+                            </p>
+                        ))}
+
+                    {/* <p className="space-x-2">
                             <span className="text-gray-800 font-semibold">
                                 {dictionary?.singleProduct?.sku}:
                             </span>
@@ -95,18 +124,6 @@ export default function Details({ productDetails }) {
                                 {productDetails?.modal}
                             </span>
                         </p> */}
-                    </div>
-                    <div className="flex items-baseline mb-1 space-x-2 font-roboto mt-4">
-                        <p className="text-xl text-primary font-semibold">
-                            {displayPrice.toFixed(2)}
-                        </p>
-
-                        {/*
-                            offer price
-                        <p className="text-base text-gray-400 line-through">
-                            ${productDetails?.price?.toFixed(2)}
-                        </p> */}
-                    </div>
 
                     <p
                         className="mt-4 text-gray-600"

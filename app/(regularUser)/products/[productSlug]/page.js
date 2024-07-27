@@ -11,9 +11,7 @@ import { FaChevronRight } from 'react-icons/fa6';
 export async function generateMetadata({ params: { productSlug } }) {
     const productDetails = await getProductDetails(productSlug);
 
-    const productName = capitalizeWord(
-        productDetails?.productName?.toLowerCase()
-    );
+    const productName = capitalizeWord(productDetails?.name?.toLowerCase());
 
     return {
         title: productName,
