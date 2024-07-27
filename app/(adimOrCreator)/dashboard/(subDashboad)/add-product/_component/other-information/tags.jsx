@@ -14,6 +14,7 @@ import { IoMdCloseCircle } from 'react-icons/io';
 export default function TagsComponent({ form }) {
     const [tagArray, setTagArray] = useState([]);
     const [tagInput, setTagInput] = useState('');
+    const [isFocus, setIsFocus] = useState(false);
 
     useEffect(() => {
         if (tagArray.length > 0) {
@@ -45,6 +46,7 @@ export default function TagsComponent({ form }) {
                 setTagArray((prev) => [...prev, newTag]);
                 setTagInput('');
             } else {
+                setTagInput(newTag);
                 form.setError('tags', {
                     type: 'manual',
                     message: 'Tag muse be unique',
@@ -65,8 +67,12 @@ export default function TagsComponent({ form }) {
                         <FormLabel className="mb-1">Tags</FormLabel>
                         <FormControl>
                             <div
-                                className="w-full bg-transparent border border-neutral-500/20
-                                            p-2 focus:outline-none  focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] rounded flex items-center gap-x-1 flex-wrap">
+                                className={`${
+                                    isFocus
+                                        ? 'shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px]'
+                                        : ''
+                                } w-full bg-transparent border border-neutral-500/20
+                                p-2 rounded flex items-center gap-x-1 flex-wrap duration-150`}>
                                 {tagArray.length > 0 &&
                                     tagArray.map((tag) => (
                                         <TagElement
@@ -78,7 +84,11 @@ export default function TagsComponent({ form }) {
                                 <Input
                                     value={tagInput}
                                     onChange={handelInputChange}
-                                    className=" bg-transparent border-none"
+                                    onFocus={() => setIsFocus(true)}
+                                    onBlur={() => setIsFocus(false)}
+                                    className={`${
+                                        tagArray.length > 0 ? 'w-fit' : ''
+                                    } bg-transparent border-none`}
                                     placeholder="example; tag;"
                                 />
                             </div>
