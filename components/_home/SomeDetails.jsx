@@ -6,57 +6,85 @@ export default function SomeDetails() {
             <div className="mb-5">
                 <h2 className="text-3xl">
                     <samp className="text-primaryColor">
-                        Top Sundarban Natural Product Shop in country.
+                        Experience the Finest{' '}
+                        <Link href="https://en.wikipedia.org/wiki/Sundarbans">
+                            Sundarbans
+                        </Link>{' '}
+                        Delights at <Link href="/">Mangrove Collection</Link> .
                     </samp>
                 </h2>
             </div>
             <div>
                 <p className="text-base">
-                    We are now going through a period when technology brings the
-                    revolution. From dawn to dusk every moment in our life is
-                    connected to technology. Various kinds of smart gadgets
-                    become inseparable parts of our daily life. Consistent with
-                    the demand there is a huge gadget-selling market globally
-                    including Bangladesh. In Bangladesh, Apple Gadgets is a
-                    top-tier gadget-selling shop. They provide consumers a huge
-                    compilation of gadgets:{' '}
-                    <Link className="underline" href="/Phones&Tablets">
-                        Phones & Tablets
+                    We are living in a time where natural products and
+                    sustainability are gaining immense popularity. From dawn to
+                    dusk, every moment of our lives is influenced by our choices
+                    regarding natural and sustainable products. In Bangladesh,
+                    Mangrove Collection stands out as a top-tier shop
+                    specializing in natural products sourced from the{' '}
+                    <Link
+                        className="underline"
+                        href="https://en.wikipedia.org/wiki/Sundarbans">
+                        Sundarbans
+                    </Link>
+                    . Mangrove Collection offers consumers a diverse range of
+                    items including honey, fish, and other natural products from
+                    the{' '}
+                    <Link
+                        className="underline"
+                        href="https://en.wikipedia.org/wiki/Sundarbans">
+                        Sundarbans
+                    </Link>
+                    . Mangrove Collection has become a trustworthy name in
+                    Dhaka, Bangladesh, serving both online and offline
+                    customers, with multiple outlets across the city. Their
+                    commitment to quality and excellent customer service makes
+                    them a favorite among those seeking authentic{' '}
+                    <Link
+                        className="underline"
+                        href="https://en.wikipedia.org/wiki/Sundarbans">
+                        Sundarbans
                     </Link>{' '}
-                    ,{' '}
-                    <Link className="underline" href="/Phones&Tablets">
-                        Laptops & Desktops
-                    </Link>{' '}
-                    , Accessories, Smart Home Appliances etc. Apple Gadgets
-                    satisfies its huge customer base both online and offline.
-                    Currently, serve customers with four outlets around Dhaka
-                    city at four different locations. Best customer service
-                    makes Apple Gadgets a trustworthy retail gadgets shop in
-                    Dhaka, Bangladesh.
+                    products.
                 </p>
             </div>
             <div className="my-5">
                 <h2 className="text-3xl">
                     <samp className="text-primaryColor">
-                        Best Phones & Tablets Online Shop in Bangladesh
+                        Discover the Best{' '}
+                        <Link href="https://en.wikipedia.org/wiki/Sundarbans">
+                            Sundarbans
+                        </Link>{' '}
+                        Products at <Link href="/">Mangrove Collection</Link> in
+                        Bangladesh
                     </samp>
                 </h2>
             </div>
             <div>
                 <p className="text-base">
-                    From early morning alarm to watching a movie at late night
-                    laying on your bed. Literally, we do half of our daily tasks
-                    with our smartphones. Phones are now a 24/7 component in our
-                    life. Alike phones the demand for tablets is also uplifting
-                    rapidly. But, the problem is to find a reliable shop to buy
-                    phones and tablets. In terms of buying phones and tablets,
-                    Apple Gadgets is a name of trust here in Bangladesh. They
-                    furnish their outlets with a large number of smartphones
-                    from top-notch brands. Such as iPhone, Samsung, Google,
-                    Xiaomi, OnePlus, Oppo, Vivo, Motorola, Infinix, Huawei,
-                    Honor, Nokia, and many more. Whether you want a smartphone,
-                    feature phone, or tablet for your official work, get it from
-                    Apple Gadgets through online or offline.
+                    From morning tea with honey to a delicious fish dinner,
+                    natural products from the{' '}
+                    <Link
+                        className="underline"
+                        href="https://en.wikipedia.org/wiki/Sundarbans">
+                        Sundarbans
+                    </Link>{' '}
+                    play a vital role in our daily lives. The challenge,
+                    however, lies in finding a reliable source for these
+                    authentic items. Mangrove Collection has established itself
+                    as a trusted name in Bangladesh when it comes to natural
+                    products from the{' '}
+                    <Link
+                        className="underline"
+                        href="https://en.wikipedia.org/wiki/Sundarbans">
+                        Sundarbans
+                    </Link>{' '}
+                    . Their outlets are well-stocked with a wide variety of
+                    items including honey, various types of fish, and other
+                    natural treasures from the mangroves. Whether you need honey
+                    for your tea, fresh fish for your meals or other natural
+                    products, Mangrove Collection ensures you get the best, both
+                    online and offline.
                 </p>
             </div>
         </section>
