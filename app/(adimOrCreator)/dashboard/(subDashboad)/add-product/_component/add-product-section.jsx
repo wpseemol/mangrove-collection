@@ -46,6 +46,7 @@ export default function AddProductSection({ allCategory }) {
             const isProductAdd = await addProductAction(values);
             if (isProductAdd === 'created') {
                 toast({
+                    variant: 'success',
                     description: 'The product has been created successfully',
                 });
                 form.reset();
