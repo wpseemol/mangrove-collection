@@ -40,7 +40,7 @@ export default function AddProductSection({ allCategory }) {
     async function onSubmit(values) {
         try {
             const isProductAdd = await addProductAction(values);
-            console.log(isProductAdd);
+            console.log('chake product upload :', isProductAdd);
         } catch (error) {
             throw error;
         }

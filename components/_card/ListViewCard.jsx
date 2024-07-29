@@ -5,7 +5,7 @@ import CardBtn from './CardBtn';
 
 export default function ListViewCard({ productDetails }) {
     const {
-        productName,
+        name,
         category,
         offer,
         shortDescription,
@@ -17,6 +17,8 @@ export default function ListViewCard({ productDetails }) {
     } = productDetails;
 
     const hrefLink = `/products/${slug}`;
+
+    const displayPrice = price?.find((item) => item?.select)['price'];
 
     return (
         <div
@@ -32,7 +34,7 @@ export default function ListViewCard({ productDetails }) {
                         width={300}
                         height={300}
                         className="w-auto"
-                        alt={productName}
+                        alt={name}
                     />
                 </figure>
             </Link>
@@ -43,13 +45,12 @@ export default function ListViewCard({ productDetails }) {
                     </p>
                 </Link>
                 <Link href={hrefLink}>
-                    <h2 className="text-[28px] font-medium my-2">
-                        {productName}
-                    </h2>
+                    <h2 className="text-[28px] font-medium my-2">{name}</h2>
                 </Link>
                 <p className=" text-green-800 mb-2">
-                    <span>{currencyIcon(currency)}</span> {price}{' '}
-                    <span className="font-semibold">(1{unit})</span>
+                    <span>{currencyIcon(currency)}</span>{' '}
+                    {displayPrice?.toFixed(2)}{' '}
+                    <span className="font-semibold">({unit})</span>
                 </p>
                 <Link href={hrefLink}>
                     <p className="text-[#585858] text-base mb-2">

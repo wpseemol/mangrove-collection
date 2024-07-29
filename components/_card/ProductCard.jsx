@@ -41,8 +41,9 @@ export default function ProductCard({ productDetails }) {
                     </h2>
 
                     <p className="animate-fade-up animate-duration-1000">
-                        <span>{currencyIcon(currency)}</span> {displayPrice}{' '}
-                        <span className="font-semibold">(1{unit})</span>
+                        <span>{currencyIcon(currency)}</span>{' '}
+                        {displayPrice?.toFixed(2)}{' '}
+                        <span className="font-semibold">({unit})</span>
                     </p>
                 </div>
             </Link>
@@ -57,7 +58,7 @@ export default function ProductCard({ productDetails }) {
 
                 <p className="animate-fade-up animate-duration-300">
                     <span className="">{currencyIcon(currency)}</span>
-                    {displayPrice}{' '}
+                    {displayPrice?.toFixed(2)}{' '}
                     <span className="font-semibold">(1{unit})</span>
                 </p>
             </div>
