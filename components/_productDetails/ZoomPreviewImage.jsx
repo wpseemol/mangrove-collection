@@ -68,7 +68,7 @@ export default function ZoomPreviewImage({
                     alt={productName}
                     width={500}
                     height={500}
-                    className="object-none object-center"
+                    className="object-cover object-center"
                 />
             </motion.figure>
 

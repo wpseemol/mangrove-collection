@@ -6,7 +6,7 @@ export default function SomeDetails() {
             <div className="mb-5">
                 <h2 className="text-3xl">
                     <samp className="text-primaryColor">
-                        Top Gadget Shop in Bangladesh
+                        Top Sundarban Natural Product Shop in country.
                     </samp>
                 </h2>
             </div>
