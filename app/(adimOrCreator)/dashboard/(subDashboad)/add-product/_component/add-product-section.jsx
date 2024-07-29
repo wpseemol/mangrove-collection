@@ -44,8 +44,6 @@ export default function AddProductSection({ allCategory }) {
     async function onSubmit(values) {
         try {
             const isProductAdd = await addProductAction(values);
-            console.log('chake product upload :', isProductAdd);
-
             if (isProductAdd === 'created') {
                 toast({
                     description: 'The product has been created successfully',
