@@ -15,7 +15,7 @@ export async function generateMetadata({ params: { productSlug } }) {
     const productName = capitalizeWord(productDetails?.name?.toLowerCase());
 
     return {
-        title: productName,
+        title: productName || 'loading...',
     };
 }
 
