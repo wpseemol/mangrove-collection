@@ -83,6 +83,8 @@ export default async function getProducts(
                         ...findOption,
                         price: { $gte: price.minPrice, $lte: price.maxPrice },
                     };
+
+                    console.log(findOption);
                 }
 
                 if (size) {

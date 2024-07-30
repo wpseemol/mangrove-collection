@@ -1,8 +1,8 @@
 import allImageArray from '@/utils/allImageArray';
 import capitalizeWord from '@/utils/capitalizeWords';
 import currencyIcon from '@/utils/currencyIcon';
-import Link from 'next/link';
 import CardBtn from '../_card/CardBtn';
+import AnimationLink from '../page-change-animation/animation-link';
 import DescriptionComponent from './description-component';
 import ImagePreview from './ImagePreview';
 import PriceSection from './price-section';
@@ -77,12 +77,12 @@ export default function Details({ productDetails }) {
                         <span className="text-gray-800 font-semibold">
                             Category :
                         </span>
-                        <Link
+                        <AnimationLink
                             href={`/products?category=${category?.categorySlug}`}>
                             <span className="text-gray-600 capitalize">
                                 {capitalizeWord(category?.categoryName)}
                             </span>
-                        </Link>
+                        </AnimationLink>
                     </p>
                     {/* category section */}
 

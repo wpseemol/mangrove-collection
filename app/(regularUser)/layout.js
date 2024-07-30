@@ -4,6 +4,7 @@ import AuthProvider from '@/components/Client/Providers/Auth/AuthProvider';
 import NotificationProvider from '@/components/Client/Providers/NotificationProvider.jsx/NotificationProvider';
 import Footer from '@/components/Footer/Footer';
 import Header from '@/components/Header/Header';
+import PageChangeAnimation from '@/components/page-change-animation/page-change-animation';
 import { Poppins, Roboto } from 'next/font/google';
 
 const poppins = Poppins({
@@ -25,14 +26,16 @@ export default async function RootLayout({ children, modal }) {
             <body
                 className={poppins.className + ' ' + roboto.className}
                 suppressHydrationWarning={true}>
-                <AuthProvider loginUser={loginUser}>
-                    <NotificationProvider>
-                        <Header />
-                        {modal}
-                        {children}
-                        <Footer />
-                    </NotificationProvider>
-                </AuthProvider>
+                <PageChangeAnimation>
+                    <AuthProvider loginUser={loginUser}>
+                        <NotificationProvider>
+                            <Header />
+                            {modal}
+                            {children}
+                            <Footer />
+                        </NotificationProvider>
+                    </AuthProvider>
+                </PageChangeAnimation>
             </body>
         </html>
     );

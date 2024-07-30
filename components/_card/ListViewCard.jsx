@@ -1,6 +1,7 @@
 import currencyIcon from '@/utils/currencyIcon';
 import Image from 'next/image';
 import Link from 'next/link';
+import AnimationLink from '../page-change-animation/animation-link';
 import CardBtn from './CardBtn';
 
 export default function ListViewCard({ productDetails }) {
@@ -25,7 +26,8 @@ export default function ListViewCard({ productDetails }) {
             className="w-full shadow hover:shadow-lg grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-3 grid-cols-1 items-center gap-4 lg:h-[17.5rem] md:h-[12rem] h-[17.5rem]
         duration-200 border border-neutral-700/10
         ">
-            <Link
+            <AnimationLink
+                isActive={false}
                 href={hrefLink}
                 className="animate-fade animate-duration-1000 col-span-1 w-full h-full overflow-hidden flex justify-center items-center border-r">
                 <figure className="">
@@ -37,7 +39,7 @@ export default function ListViewCard({ productDetails }) {
                         alt={name}
                     />
                 </figure>
-            </Link>
+            </AnimationLink>
             <div className=" animate-fade-left animate-duration-1000 md:col-span-3 sm:col-span-2  w-full">
                 <Link href={`/products?category=${category?.slug}`}>
                     <p className="text-xs font-extralight hover:text-primaryColor duration-200 text-[#999]">

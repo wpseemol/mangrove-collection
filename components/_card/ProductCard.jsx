@@ -2,7 +2,7 @@ import ForAnimate from '@/components/Client/ForAnimate/ForAnimate';
 import currencyIcon from '@/utils/currencyIcon';
 import titleWordClops from '@/utils/titleWordClops';
 import Image from 'next/image';
-import Link from 'next/link';
+import AnimationLink from '../page-change-animation/animation-link';
 import CardBtn from './CardBtn';
 
 export default function ProductCard({ productDetails }) {
@@ -19,7 +19,7 @@ export default function ProductCard({ productDetails }) {
         <ForAnimate
             className="border border-neutral-300/30 group hover:shadow-lg duration-300 sm:w-64 max-w-72 relative h-[23rem] overflow-hidden"
             animateClassName={'animate-fade-up'}>
-            <Link href={slugUrl}>
+            <AnimationLink href={slugUrl} isActive={false}>
                 <figure className="mx-auto w-full h-[14rem] overflow-hidden flex justify-center items-center px-2 pt-4">
                     <Image
                         src={thumbnail}
@@ -29,9 +29,12 @@ export default function ProductCard({ productDetails }) {
                         className="w-auto h-auto object-cover group-hover:scale-105 duration-500"
                     />
                 </figure>
-            </Link>
+            </AnimationLink>
 
-            <Link href={slugUrl} className="hidden md:inline">
+            <AnimationLink
+                href={slugUrl}
+                isActive={false}
+                className="hidden md:inline">
                 <div className="text-center px-3 py-4">
                     <h3 className="font-bold animate-fade-up text-sm animate-duration-[800ms]">
                         {categoryName ? categoryName : 'Uncategorized product'}
@@ -46,7 +49,7 @@ export default function ProductCard({ productDetails }) {
                         <span className="font-semibold">({unit})</span>
                     </p>
                 </div>
-            </Link>
+            </AnimationLink>
             {/* mobile view */}
             <div className="text-center px-3 py-4 md:hidden block">
                 <h3 className="font-bold text-sm animate-fade-up animate-duration-100">

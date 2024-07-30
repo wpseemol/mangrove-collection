@@ -1,5 +1,5 @@
 import CategoryMenus from '@/components/CategoryMenus/CategoryMenus';
-import NavLink from '@/components/Client/NavLink/NavLink';
+import AnimationLink from '@/components/page-change-animation/animation-link';
 import siteLogo from '@/public/assets/logo/mangrove-collection.png';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -80,7 +80,7 @@ function Card() {
     return (
         <li className="text-white">
             {' '}
-            <NavLink href="/cart-items">
+            <AnimationLink href="/cart-items">
                 <div className="flex md:flex-row flex-col items-center xl:gap-3 md:gap-2 gap-1">
                     <div className="text-primaryColor xl:text-3xl md:text-2xl text-xl">
                         <FaCartFlatbed />
@@ -93,14 +93,14 @@ function Card() {
                         <p className="text-sm hidden md:block">Add items</p>
                     </div>
                 </div>
-            </NavLink>{' '}
+            </AnimationLink>{' '}
         </li>
     );
 }
 
 function NavMenu() {
     const menuArray = [
-        { id: 'category', link: '/', name: 'Category' },
+        { id: 'category', link: '/category', name: 'Category' },
         { id: 'products', link: '/products', name: 'products' },
         { id: 'contact', link: '/#contact', name: 'contact' },
         { id: 'about', link: '/#about', name: 'about' },
@@ -117,11 +117,12 @@ function NavMenu() {
                                 : ''
                         }`}>
                         {
-                            <Link
+                            <AnimationLink
+                                isActive={items.id !== 'category'}
                                 href={items?.link}
                                 className="group-hover/menu:md:pl-0 group-hover/menu:pl-2  duration-150">
                                 {items.name}
-                            </Link>
+                            </AnimationLink>
                         }
 
                         {items.id === 'category' && <CategoryMenus />}
