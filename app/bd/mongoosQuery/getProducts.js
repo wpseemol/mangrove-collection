@@ -81,13 +81,10 @@ export default async function getProducts(
                 if (price.minPrice && price.maxPrice) {
                     findOption = {
                         ...findOption,
-                        price: {
-                            $gte: price?.find((item) => item?.select)['price']
-                                .minPrice,
-                            $lte: price?.find((item) => item?.select)['price']
-                                .maxPrice,
-                        },
+                        price: { $gte: price.minPrice, $lte: price.maxPrice },
                     };
+
+                    console.log(findOption);
                 }
 
                 if (size) {
