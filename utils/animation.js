@@ -13,7 +13,7 @@ export function animationPageIn() {
             yPercent: 0,
         }).to([bannerOne, bannerTwo, bannerThree, bannerFour], {
             yPercent: 100,
-            stagger: 0.15,
+            stagger: 0.2,
             onComplete: () => {
                 bannerOne.remove();
                 bannerTwo.remove();
@@ -42,7 +42,7 @@ export function animatePageOut(href, router) {
         yPercent: -100,
     }).to(banners, {
         yPercent: 0,
-        stagger: 0.15,
+        stagger: 0.2,
         onComplete: () => {
             router.push(href);
             animationPageIn();
