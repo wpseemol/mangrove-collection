@@ -34,6 +34,7 @@ export function animatePageOut(href, router) {
             stagger: 0.15,
             onComplete: () => {
                 router.push(href);
+                animationPageIn();
             },
         });
     }

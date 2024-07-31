@@ -1,14 +1,12 @@
 'use client';
 
 import { animationPageIn } from '@/utils/animation';
-import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 
 export default function PageChangeAnimation({ children }) {
-    const pathname = usePathname();
     useEffect(() => {
         animationPageIn();
-    }, [pathname]);
+    }, []);
     return (
         <>
             {children}
