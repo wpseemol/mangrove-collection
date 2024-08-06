@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const formSchema = z.object({
+const addProductSchema = z.object({
     name: z.string().nonempty({
         message: 'Must be input the product.',
     }),
@@ -40,4 +40,4 @@ const formSchema = z.object({
     tags: z.array(z.string()),
 });
 
-export { formSchema };
+export { addProductSchema };

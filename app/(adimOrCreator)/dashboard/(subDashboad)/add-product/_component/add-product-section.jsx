@@ -12,7 +12,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
 import 'react-quill/dist/quill.snow.css';
-import { formSchema } from './form-schema';
+import { addProductSchema } from './add-product-schema';
 import Media from './media';
 import OtherInformation from './other-information';
 import Pricing from './pricing';
@@ -24,7 +24,7 @@ export default function AddProductSection({ allCategory }) {
     const { toast } = useToast();
 
     const form = useForm({
-        resolver: zodResolver(formSchema),
+        resolver: zodResolver(addProductSchema),
         defaultValues: {
             name: '',
             slug: '',
