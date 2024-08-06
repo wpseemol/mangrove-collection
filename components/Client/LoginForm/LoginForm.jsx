@@ -6,8 +6,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { Toaster } from 'react-hot-toast';
-import InputField from './input-fild';
+import InputField from './input-field';
 import { loginSchema } from './login-schema';
+import PasswordField from './password-field';
 
 export default function LoginForm() {
     const form = useForm({
@@ -20,6 +21,7 @@ export default function LoginForm() {
 
     async function onSubmit(values) {
         console.log('login page:', values);
+        form.reset();
     }
 
     return (
@@ -27,7 +29,7 @@ export default function LoginForm() {
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}
-                    className="flex flex-col justify-center items-center  gap-5 md:w-96">
+                    className="flex flex-col justify-center items-center  gap-y-5 md:w-96">
                     {/* input email */}
 
                     <div className="w-full">
@@ -43,14 +45,8 @@ export default function LoginForm() {
                     {/* input email */}
 
                     {/* input password */}
-                    <div className="w-full">
-                        <InputField
-                            form={form}
-                            name="password"
-                            type="password"
-                            label="Password"
-                            placeholder="password"
-                        />
+                    <div className="w-full relative">
+                        <PasswordField form={form} />
                     </div>
 
                     {/* input  password */}

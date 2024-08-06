@@ -18,15 +18,17 @@ export default function LoadingComponent({ type }) {
 
         default:
             return (
-                <section className="w-full h-screen flex items-center overflow-hidden  justify-center">
-                    <figure className="">
-                        <Image
-                            src={loadingImage}
-                            alt="loading-image"
-                            className=""
-                        />
-                    </figure>
-                </section>
+                <>
+                    <section className="w-full h-screen flex items-center overflow-hidden fixed justify-center top-0 left-0 z-[100] bg-[#f4f5f6] ">
+                        <figure className="">
+                            <Image
+                                src={loadingImage}
+                                alt="loading-image"
+                                className=""
+                            />
+                        </figure>
+                    </section>
+                </>
             );
     }
 }

@@ -21,7 +21,7 @@ export default function InputField({
             name={name}
             render={({ field, fieldState }) => (
                 <FormItem>
-                    <FormLabel className="">Email address*</FormLabel>
+                    <FormLabel className="">{label}</FormLabel>
 
                     <FormControl>
                         <Input

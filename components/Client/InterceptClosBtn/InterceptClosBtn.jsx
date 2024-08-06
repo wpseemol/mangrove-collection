@@ -38,8 +38,8 @@ function InterceptClosBtn() {
     return (
         <button
             onClick={() => handelClose(router)}
-            className="absolute top-3 right-3 bg-red-500 text-neutral-200 rounded hover:scale-125 duration-300">
-            <IoClose className="text-4xl" />
+            className="absolute top-1 right-1 text-neutral-600 rounded hover:scale-125 duration-300 ">
+            <IoClose className="md:text-3xl text-xl" />
         </button>
     );
 }
