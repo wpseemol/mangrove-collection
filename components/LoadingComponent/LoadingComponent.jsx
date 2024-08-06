@@ -18,7 +18,7 @@ export default function LoadingComponent({ type }) {
 
         default:
             return (
-                <section className="w-full h-[calc(100vh-22rem)] flex items-center overflow-hidden  justify-center">
+                <section className="w-full h-screen flex items-center overflow-hidden  justify-center">
                     <figure className="">
                         <Image
                             src={loadingImage}

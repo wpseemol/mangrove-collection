@@ -27,32 +27,35 @@ export default function LoginForm() {
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}
-                    className="space-y-6 md:w-96">
+                    className="flex flex-col justify-center items-center  gap-5 md:w-96">
                     {/* input email */}
 
-                    <InputField
-                        form={form}
-                        name="email"
-                        type="email"
-                        label="Email address"
-                        placeholder="leroy@jenkins.com"
-                    />
+                    <div className="w-full">
+                        <InputField
+                            form={form}
+                            name="email"
+                            type="email"
+                            label="Email address"
+                            placeholder="leroy@jenkins.com"
+                        />
+                    </div>
 
                     {/* input email */}
 
                     {/* input password */}
-
-                    <InputField
-                        form={form}
-                        name="password"
-                        type="password"
-                        label="Password"
-                        placeholder="password"
-                    />
+                    <div className="w-full">
+                        <InputField
+                            form={form}
+                            name="password"
+                            type="password"
+                            label="Password"
+                            placeholder="password"
+                        />
+                    </div>
 
                     {/* input  password */}
 
-                    <div className="space-y-2">
+                    <div className="space-y-2 w-full">
                         <Button
                             variant=""
                             className="w-full bg-primaryColor hover:bg-green-700 duration-100">

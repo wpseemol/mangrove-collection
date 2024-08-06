@@ -16,6 +16,7 @@ export default function InputField({
 }) {
     return (
         <FormField
+            className="w-full"
             control={form.control}
             name={name}
             render={({ field, fieldState }) => (
@@ -27,7 +28,7 @@ export default function InputField({
                             type={type}
                             {...field}
                             className="w-full bg-transparent border border-neutral-500/20
-                                            p-3 focus:outline-none  focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] rounded h-12"
+                                            p-3 focus:outline-none  focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] rounded h-12 "
                             placeholder={placeholder}
                         />
                     </FormControl>
