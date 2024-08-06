@@ -13,13 +13,14 @@ const UsersSchema = new mongoose.Schema({
         type: String,
         require: true,
     },
-    phoneNumber: {
+    phone: {
         type: String,
         require: true,
     },
-    userType: {
+    role: {
         type: String,
         require: true,
+        default: 'user',
     },
 });
 
