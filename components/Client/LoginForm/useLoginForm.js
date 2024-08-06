@@ -1,4 +1,4 @@
-import loginAction from '@/app/actions/loginAction/loginAction';
+import loginAction from '@/app/actions/login-action';
 import { useAuth } from '@/app/hooks';
 import setCookie from '@/utils/setCookie';
 import { useRouter } from 'next/navigation';

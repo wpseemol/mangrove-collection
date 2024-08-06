@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import loginAction from '../loginAction/loginAction';
+import loginAction from '../login-action';
 
 export default async function afterLogin() {
     const email = cookies().has('email');

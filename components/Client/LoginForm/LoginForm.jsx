@@ -1,5 +1,6 @@
 'use client';
 
+import loginAction from '@/app/actions/login-action';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -20,8 +21,14 @@ export default function LoginForm() {
     });
 
     async function onSubmit(values) {
-        console.log('login page:', values);
-        form.reset();
+        try {
+            const isLogin = loginAction(values);
+            console.log('is login :', await isLogin);
+
+            form.reset();
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return (
