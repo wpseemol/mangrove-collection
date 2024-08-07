@@ -1,6 +1,6 @@
+import InputField from '@/components/Client/input/input-field';
 import { useState } from 'react';
 import { PiEyeClosedDuotone, PiEyeDuotone } from 'react-icons/pi';
-import InputField from './input-field';
 
 export default function PasswordField({ form }) {
     const [isHidden, setIsHidden] = useState(false);

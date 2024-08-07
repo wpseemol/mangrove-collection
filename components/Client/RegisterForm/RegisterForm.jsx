@@ -1,203 +1,106 @@
 'use client';
 
-import { useAuth } from '@/app/hooks';
+import InputField from '@/components/client/input/input-field';
+import { Button } from '@/components/ui/button';
+import { Form } from '@/components/ui/form';
+import { Toaster } from '@/components/ui/toaster';
+import { toast } from '@/components/ui/use-toast';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { Toaster } from 'react-hot-toast';
-import { FcSynchronize } from 'react-icons/fc';
-import PasswordShowHidden from '../PasswordShowHidden/PasswordShowHidden';
-import useRegisterForm from './useRegisterForm';
+import { useForm } from 'react-hook-form';
+import PasswordOrConfirmPassField from './password-or-confirm-fild';
+import { registerSchema } from './register-schema';
 
 export default function RegisterForm() {
-    const { formData, isSubmitDisable, loading, handelRegister } =
-        useRegisterForm();
+    const form = useForm({
+        resolver: zodResolver(registerSchema),
+        defaultValues: {
+            fullName: '',
+            email: '',
+            phone: '',
+            password: '',
+            conformPass: '',
+        },
+    });
 
-    const router = useRouter();
+    async function onSubmit(values) {
+        const { conformPass, ...regForm } = values;
 
-    const [auth] = useAuth();
+        if (conformPass !== values.password) {
+            toast({
+                variant: 'destructive',
+                description: 'Your message has been sent.',
+            });
+            return;
+        }
 
-    if (!!auth) {
-        router.push('/');
+        console.log(regForm);
+        form.reset();
     }
     return (
         <>
-            <form
-                noValidate=""
-                onSubmit={(e) => handelRegister(e, 'onSubmit')}
-                className="space-y-12">
-                <div className="space-y-4">
-                    <div className="md:w-[22rem]">
-                        <label
-                            htmlFor="fullName"
-                            className="block mb-2 text-sm">
-                            Full Name*
-                        </label>
-                        {/* error massage show here */}
-                        {formData?.fullName?.isError && (
-                            <p className="text-red-400">
-                                {formData?.fullName?.massage}
-                            </p>
-                        )}
+            <Form {...form}>
+                <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="flex flex-col justify-center items-center  gap-y-5 md:w-96">
+                    {/* input email */}
 
-                        <input
-                            onChange={(e) => handelRegister(e, 'onChange')}
-                            type="text"
+                    <div className="w-full">
+                        <InputField
+                            form={form}
                             name="fullName"
-                            id="fullName"
-                            placeholder="Full Name"
-                            className={`w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 dark:text-gray-800 ${
-                                formData?.fullName?.isError
-                                    ? 'border-red-400'
-                                    : ''
-                            }`}
-                        />
-                    </div>
-
-                    <div className="md:w-[22rem]">
-                        <label htmlFor="email" className="block mb-2 text-sm">
-                            Email address*
-                        </label>
-
-                        {formData?.email?.isError ? (
-                            <p className="text-red-400">
-                                {formData?.email?.massage}
-                            </p>
-                        ) : (
-                            ''
-                        )}
-
-                        <input
-                            onChange={(e) => handelRegister(e, 'onChange')}
-                            type="email"
-                            name="email"
-                            id="email"
-                            placeholder="leroy@jenkins.com"
-                            className={`w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 dark:text-gray-800 ${
-                                formData?.email?.isError ? 'border-red-400' : ''
-                            }`}
-                        />
-                    </div>
-
-                    <div className="md:w-[22rem]">
-                        <label
-                            htmlFor="phoneNumber"
-                            className="block mb-2 text-sm">
-                            Phone*
-                        </label>
-
-                        {formData?.phoneNumber?.isError ? (
-                            <p className="text-red-400">
-                                {formData?.phoneNumber?.massage}
-                            </p>
-                        ) : (
-                            ''
-                        )}
-
-                        <input
-                            onChange={(e) => handelRegister(e, 'onChange')}
                             type="text"
-                            name="phoneNumber"
-                            id="phoneNumber"
-                            placeholder="+880 17111111222"
-                            className={`w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 dark:text-gray-800 ${
-                                formData?.phoneNumber?.isError
-                                    ? 'border-red-400'
-                                    : ''
-                            }`}
+                            label="Full name*"
+                            placeholder="Full name"
+                        />
+                    </div>
+                    <div className="w-full">
+                        <InputField
+                            form={form}
+                            name="email"
+                            type="email"
+                            label="Email address*"
+                            placeholder="leroy@jenkins.com"
+                        />
+                    </div>
+                    <div className="w-full">
+                        <InputField
+                            form={form}
+                            name="phone"
+                            type="text"
+                            label="Phone*"
+                            placeholder="+8801711111122"
                         />
                     </div>
 
-                    <div className="md:w-[22rem]">
-                        <div className="flex justify-between mb-2">
-                            <label htmlFor="password" className="text-sm">
-                                Password*
-                            </label>
+                    {/* input email */}
 
+                    {/* input password */}
+
+                    <PasswordOrConfirmPassField form={form} />
+
+                    {/* input  password */}
+
+                    <div className="space-y-2 w-full">
+                        <Button
+                            variant=""
+                            className="w-full bg-primaryColor hover:bg-green-700 duration-100">
+                            Login
+                        </Button>
+
+                        <p className="px-4 text-sm text-center dark:text-gray-600">
+                            {`Don't have an account yet?`}
                             <Link
                                 rel="noopener noreferrer"
-                                href="#"
-                                className="text-xs hover:underline text-gray-600">
-                                Forgot password?
+                                href="/register"
+                                className="hover:underline text-primaryColor">
+                                Sign up
                             </Link>
-                        </div>
-
-                        {formData?.password?.isError ? (
-                            <p className="text-red-400">
-                                {formData?.password?.massage}
-                            </p>
-                        ) : (
-                            !!formData?.password?.status && (
-                                <p
-                                    className={`
-                                ${
-                                    formData?.password?.status === 'weak'
-                                        ? ' text-orange-400 '
-                                        : ''
-                                }
-                                ${
-                                    formData?.password?.status === 'medium'
-                                        ? ' text-yellow-400 '
-                                        : ''
-                                }
-                                ${
-                                    formData?.password?.status === 'strong'
-                                        ? ' text-green-400 '
-                                        : ''
-                                }
-                                ${
-                                    formData?.password?.status
-                                        ? ' text-[#1573fd] '
-                                        : ''
-                                }
-                                `}>
-                                    {formData?.password?.massage}
-                                </p>
-                            )
-                        )}
-
-                        {/* this is password */}
-                        <PasswordShowHidden
-                            handelRegister={handelRegister}
-                            where="register"
-                            className={`w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 dark:text-gray-800 ${
-                                formData?.password?.isError
-                                    ? 'border-red-400'
-                                    : ''
-                            }`}
-                        />
+                            .
+                        </p>
                     </div>
-                </div>
-                <div className="space-y-2">
-                    <div>
-                        <button
-                            type="submit"
-                            disabled={!isSubmitDisable}
-                            className={`w-full px-8 py-3 font-semibold rounded-md bg-primaryColor 
-                        text-gray-50 disabled:bg-primaryColor/45 ${
-                            !isSubmitDisable ? 'cursor-not-allowed' : ''
-                        }`}>
-                            {loading ? (
-                                <p className="flex justify-center items-center gap-3 cursor-wait">
-                                    <span>Loading </span>
-                                    <FcSynchronize className="animate-spin text-2xl" />{' '}
-                                </p>
-                            ) : (
-                                <span>Sign Up</span>
-                            )}
-                        </button>
-                    </div>
-                    <p className="px-6 text-sm text-center dark:text-gray-600">
-                        {`Already have an account?`}
-                        <Link
-                            rel="noopener noreferrer"
-                            href="/login"
-                            className="hover:underline text-primaryColor">
-                            Login
-                        </Link>
-                        .
-                    </p>
-                </div>
-            </form>
+                </form>
+            </Form>
 
             <Toaster />
         </>

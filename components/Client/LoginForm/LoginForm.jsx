@@ -1,13 +1,13 @@
 'use client';
 
 import loginAction from '@/app/actions/login-action';
+import InputField from '@/components/client/input/input-field';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { Toaster } from 'react-hot-toast';
-import InputField from './input-field';
 import { loginSchema } from './login-schema';
 import PasswordField from './password-field';
 
