@@ -120,12 +120,12 @@ export default function RegisterForm() {
                         </Button>
 
                         <p className="px-4 text-sm text-center dark:text-gray-600">
-                            {`Don't have an account yet?`}
+                            {`Already have an account?`}
                             <Link
                                 rel="noopener noreferrer"
-                                href="/register"
+                                href="/login"
                                 className="hover:underline text-primaryColor">
-                                Sign up
+                                Login
                             </Link>
                             .
                         </p>
