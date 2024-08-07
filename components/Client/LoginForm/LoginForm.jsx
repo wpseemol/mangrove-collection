@@ -1,9 +1,16 @@
 'use client';
 
 import loginAction from '@/app/actions/login-action';
-import InputField from '@/components/client/input/input-field';
 import { Button } from '@/components/ui/button';
-import { Form } from '@/components/ui/form';
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
@@ -40,12 +47,30 @@ export default function LoginForm() {
                     {/* input email */}
 
                     <div className="w-full">
-                        <InputField
-                            form={form}
+                        <FormField
+                            className="w-full"
+                            control={form.control}
                             name="email"
-                            type="email"
-                            label="Email address"
-                            placeholder="leroy@jenkins.com"
+                            render={({ field, fieldState }) => (
+                                <FormItem>
+                                    <FormLabel className="">
+                                        Email address
+                                    </FormLabel>
+
+                                    <FormControl>
+                                        <Input
+                                            type="email"
+                                            {...field}
+                                            className="w-full bg-transparent border border-neutral-500/20
+                                            p-3 focus:outline-none  focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] rounded h-12 "
+                                            placeholder="leroy@jenkins.com"
+                                        />
+                                    </FormControl>
+                                    <FormMessage>
+                                        {fieldState.error?.message}
+                                    </FormMessage>
+                                </FormItem>
+                            )}
                         />
                     </div>
 
