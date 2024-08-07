@@ -18,6 +18,9 @@ export async function POST(request) {
     } catch (error) {
         console.error('Error creating user:', error);
 
-        return NextResponse.error('Error creating user', { status: 500 });
+        return NextResponse.error(
+            { message: 'Error creating user' },
+            { status: 500 }
+        );
     }
 }
