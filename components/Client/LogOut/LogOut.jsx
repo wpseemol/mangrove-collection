@@ -1,10 +1,17 @@
 'use client';
 
 import { userLogout } from '@/app/actions/logout-action';
+import { useRouter } from 'next/navigation';
 
 export default function LogOut() {
+    const router = useRouter();
     async function handelLogout() {
-        await userLogout();
+        try {
+            await userLogout('/');
+            router.refresh();
+        } catch (error) {
+            throw error;
+        }
     }
 
     return (

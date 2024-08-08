@@ -1,13 +1,11 @@
 import { auth } from '@/auth/auth';
-import { notFound } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import LogOut from '../../../components/Client/LogOut/LogOut';
 
 export default async function AccountPage() {
     const { user } = await auth();
 
-    if (!user) {
-        notFound();
-    }
+    if (!user) redirect('/');
 
     return (
         <>

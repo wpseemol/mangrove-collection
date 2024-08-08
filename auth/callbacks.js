@@ -9,8 +9,8 @@ export const authCallbacks = {
     async session({ session, token }) {
         if (token && token?.role) session.user.role = token.role;
 
-        console.log('from authCallback session session:', session.user);
-        console.log('from authCallback session token:', token);
+        // console.log('from authCallback session session:', session.user);
+        // console.log('from authCallback session token:', token);
 
         return session;
     },

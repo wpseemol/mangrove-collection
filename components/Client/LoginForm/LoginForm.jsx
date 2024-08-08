@@ -16,12 +16,16 @@ import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { FcSynchronize } from 'react-icons/fc';
 import { loginSchema } from './login-schema';
 import PasswordField from './password-field';
 
 export default function LoginForm() {
     const { toast } = useToast();
+
+    const [loading, setLoading] = useState(false);
 
     const form = useForm({
         resolver: zodResolver(loginSchema),
@@ -32,13 +36,14 @@ export default function LoginForm() {
     });
 
     async function onSubmit(values) {
+        setLoading(true);
         try {
             const response = await loginAction(values);
 
-            console.log(response);
-
-            // form.reset();
+            setLoading(false);
+            form.reset();
         } catch (error) {
+            setLoading(false);
             toast({
                 variant: 'destructive',
                 title: 'Uh oh! Something went wrong.',
@@ -98,8 +103,18 @@ export default function LoginForm() {
                     <div className="space-y-2 w-full">
                         <Button
                             variant=""
-                            className="w-full bg-primaryColor hover:bg-green-700 duration-100">
+                            className={`${
+                                loading ? 'cursor-wait' : ''
+                            } w-full bg-primaryColor hover:bg-green-700 duration-100`}>
                             Login
+                            {loading && (
+                                <>
+                                    ...
+                                    <span className="ml-2">
+                                        <FcSynchronize className="text-xl animate-spin" />
+                                    </span>
+                                </>
+                            )}
                         </Button>
 
                         <p className="px-4 text-sm text-center dark:text-gray-600">

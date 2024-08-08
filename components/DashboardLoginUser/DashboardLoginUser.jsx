@@ -1,16 +1,18 @@
-import afterLogin from '@/app/actions/afterLogin/afterLogin';
-import userType from '@/utils/userType';
+import { auth } from '@/auth/auth';
+import { ADMIN, CREATOR } from '@/constant-value';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
 export default async function DashboardLoginUser() {
-    const loginUser = await afterLogin();
+    const session = await auth();
 
-    const { type } = userType(loginUser);
     let userTypeCake;
-    if (type === 'admin') {
+    if (session?.user?.role === ADMIN) {
         userTypeCake = 'Admin';
-    } else if (type === 'contentCreator') {
+    } else if (session?.user?.role === CREATOR) {
         userTypeCake = 'Content Creator';
+    } else {
+        redirect('/account');
     }
 
     return (

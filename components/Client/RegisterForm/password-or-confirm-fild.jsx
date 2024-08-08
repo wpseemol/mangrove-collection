@@ -19,26 +19,33 @@ export default function PasswordOrConfirmPassField({ form }) {
 
     const containsUpperCase = /[A-Z]/.test(passwordValue);
     const containsLowerCase = /[a-z]/.test(passwordValue);
+    const containsNumber = /[0-9]/.test(passwordValue);
     const containsSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(
         passwordValue
     );
     const strengthScore =
         (containsSpecial ? 1 : 0) +
         (containsUpperCase ? 1 : 0) +
-        (containsLowerCase ? 1 : 0);
+        (containsLowerCase ? 1 : 0) +
+        (containsNumber ? 1 : 0);
 
     let strengthLevel;
     let style;
     if (passwordValue.length > 5) {
-        if (strengthScore === 1) {
-            strengthLevel = 'Weak';
-            style = 'text-[#ff2323]';
-        } else if (strengthScore === 2) {
-            strengthLevel = 'Medium';
-            style = 'text-[#fecf02]';
-        } else if (strengthScore === 3) {
-            strengthLevel = 'Strong';
-            style = 'text-[#0dc547]';
+        switch (strengthScore) {
+            case 1:
+            case 2:
+                strengthLevel = 'Weak';
+                style = 'text-[#ff2323]';
+                break;
+            case 3:
+                strengthLevel = 'Medium';
+                style = 'text-[#fecf02]';
+                break;
+            case 4:
+                strengthLevel = 'Strong';
+                style = 'text-[#0dc547]';
+                break;
         }
     }
     // password strong Check

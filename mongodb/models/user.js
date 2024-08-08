@@ -1,3 +1,4 @@
+import { USER } from '@/constant-value';
 import mongoose from 'mongoose';
 
 const UsersSchema = new mongoose.Schema({
@@ -20,7 +21,7 @@ const UsersSchema = new mongoose.Schema({
     role: {
         type: String,
         require: true,
-        default: 'user',
+        default: USER,
     },
 });
 

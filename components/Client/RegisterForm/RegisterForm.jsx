@@ -15,11 +15,14 @@ import { toast } from '@/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { FcSynchronize } from 'react-icons/fc';
 import PasswordOrConfirmPassField from './password-or-confirm-fild';
 import { registerSchema } from './register-schema';
 
 export default function RegisterForm() {
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
 
     const form = useForm({
@@ -34,13 +37,15 @@ export default function RegisterForm() {
     });
 
     async function onSubmit(values) {
+        setLoading(true);
         const { conformPass, ...regForm } = values;
 
         if (conformPass !== values.password) {
             toast({
                 variant: 'destructive',
-                description: 'Your message has been sent.',
+                description: 'Password and confirm password is not match.',
             });
+            setLoading(false);
             return;
         }
 
@@ -54,6 +59,8 @@ export default function RegisterForm() {
             });
 
             if (isCrete?.ok) {
+                setLoading(false);
+
                 toast({
                     variant: 'success',
                     description: 'User register successful😀!',
@@ -62,10 +69,12 @@ export default function RegisterForm() {
                 router.push('/login');
                 form.reset();
             }
-
-            console.log(isCrete);
         } catch (error) {
-            console.log(error);
+            toast({
+                variant: 'destructive',
+                description: error?.message,
+            });
+            setLoading(false);
         }
     }
     return (
@@ -116,7 +125,15 @@ export default function RegisterForm() {
                         <Button
                             variant=""
                             className="w-full bg-primaryColor hover:bg-green-700 duration-100">
-                            Login
+                            Register
+                            {loading && (
+                                <>
+                                    ...
+                                    <span className="ml-2">
+                                        <FcSynchronize className="text-xl animate-spin" />
+                                    </span>
+                                </>
+                            )}
                         </Button>
 
                         <p className="px-4 text-sm text-center dark:text-gray-600">

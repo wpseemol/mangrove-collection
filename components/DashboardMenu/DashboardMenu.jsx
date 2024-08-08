@@ -1,7 +1,6 @@
-'use client';
-
-import { useAuth } from '@/app/hooks';
-import userType from '@/utils/userType';
+import { auth } from '@/auth/auth';
+import { CREATOR } from '@/constant-value';
+import { redirect } from 'next/navigation';
 import { FaUpload } from 'react-icons/fa';
 import { FaUsersGear } from 'react-icons/fa6';
 import { ImProfile } from 'react-icons/im';
@@ -10,12 +9,10 @@ import { TbHelpHexagonFilled } from 'react-icons/tb';
 import DashboardLink from '../Client/DashboardLink/DashboardLink';
 
 export default function DashboardMenu({ isDryerClose }) {
-    const [auth] = useAuth();
-
-    const userTypeCake = userType(auth);
+    const session = auth();
 
     let menuArrays = [];
-    if (userTypeCake?.type === 'admin') {
+    if (session?.user?.role === ADMIN) {
         menuArrays = [
             {
                 href: '/dashboard/add-product',
@@ -49,15 +46,14 @@ export default function DashboardMenu({ isDryerClose }) {
                 id: 5,
             },
         ];
-    } else if (userTypeCake?.type === 'contentCreator') {
+    } else if (session?.user?.role === CREATOR) {
         menuArrays = [
             {
-                href: '/dashboard/upload-product',
+                href: '/dashboard/add-product',
                 icon: <FaUpload />,
-                name: 'Upload Product',
+                name: 'Add Product',
                 id: 1,
             },
-
             {
                 href: '/dashboard/profile',
                 icon: <ImProfile />,
@@ -65,19 +61,14 @@ export default function DashboardMenu({ isDryerClose }) {
                 id: 2,
             },
             {
-                href: '/dashboard/add-product',
-                icon: <FaUpload />,
-                name: 'Add Product',
-                id: 3,
-            },
-
-            {
                 href: '/dashboard/help',
                 icon: <TbHelpHexagonFilled />,
                 name: 'Help',
-                id: 4,
+                id: 3,
             },
         ];
+    } else {
+        redirect('/account');
     }
 
     return (

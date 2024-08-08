@@ -11,6 +11,9 @@ export default function LoadingComponent({ type }) {
                             src={loadingImage}
                             alt="loading-image"
                             className=""
+                            width={50}
+                            height={50}
+                            unoptimized
                         />
                     </figure>
                 </section>
@@ -25,6 +28,9 @@ export default function LoadingComponent({ type }) {
                                 src={loadingImage}
                                 alt="loading-image"
                                 className=""
+                                width={50}
+                                height={50}
+                                unoptimized
                             />
                         </figure>
                     </section>
