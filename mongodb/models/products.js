@@ -55,7 +55,7 @@ const productSchema = new mongoose.Schema({
         type: Array,
         require: false,
     },
-    user: {
+    author: {
         type: mongoose.Schema.ObjectId,
         require: true,
     },

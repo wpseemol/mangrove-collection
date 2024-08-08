@@ -10,6 +10,8 @@ import DashboardLink from '../Client/DashboardLink/DashboardLink';
 export default function DashboardMenu({ isDryerClose, user }) {
     let menuArrays = [];
 
+    console.log(user);
+
     switch (user?.role) {
         case ADMIN:
             menuArrays = adminMenus;

@@ -7,7 +7,6 @@ const apiAuthPrefix = '/api/auth';
 const DEFAULT_LOGIN_REDIRECT = '/';
 
 const adminRoutes = [
-    '/dashboard',
     '/dashboard/add-product',
     '/dashboard/users',
     '/dashboard/profile',
@@ -15,7 +14,6 @@ const adminRoutes = [
     '/dashboard/help',
 ];
 const creatorRoutes = [
-    '/dashboard',
     '/dashboard/add-product',
     '/dashboard/profile',
     '/dashboard/help',

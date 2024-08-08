@@ -1,6 +1,5 @@
 import { ADMIN, CREATOR } from '@/constant-value';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 
 export default async function DashboardMenuUser({ user }) {
     let userTypeCake;
@@ -8,9 +7,9 @@ export default async function DashboardMenuUser({ user }) {
         userTypeCake = 'Admin';
     } else if (user === CREATOR) {
         userTypeCake = 'Content Creator';
-    } else {
-        redirect('/account');
     }
+
+    console.log(user);
 
     return (
         <section>
@@ -19,13 +18,11 @@ export default async function DashboardMenuUser({ user }) {
                     className="w-8 h-8 border bg-primaryColor/30
                  rounded-full flex items-center justify-center">
                     <Link href="/dashboard">
-                        <span className="text-xl">
-                            {loginUser?.fullName[0]}
-                        </span>
+                        <span className="text-xl">{user?.name[0]}</span>
                     </Link>
                 </div>
                 <div>
-                    <h2 className="text-sm">{loginUser?.fullName}</h2>
+                    <h2 className="text-sm">{user?.name}</h2>
                     <p className="text-xs">{userTypeCake}</p>
                 </div>
             </div>

@@ -15,8 +15,6 @@ const { auth: middleware } = NextAuth(authConfig);
 export default middleware(async (request) => {
     const { nextUrl } = request;
 
-    console.log('middleware isLogin:', request?.auth);
-
     const isLoggedIn = !!request?.auth;
     const isAdmin = request?.auth?.role === ADMIN;
     const isCreator = request?.auth?.role === CREATOR;

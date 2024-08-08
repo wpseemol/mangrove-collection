@@ -1,4 +1,3 @@
-import afterLogin from '@/app/actions/afterLogin/afterLogin';
 import '@/app/globals.css';
 import { Poppins, Roboto } from 'next/font/google';
 
@@ -14,8 +13,6 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-    const loginUser = await afterLogin();
-
     return (
         <html lang="en" className="scroll-smooth">
             <body

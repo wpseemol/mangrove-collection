@@ -19,7 +19,7 @@ import Pricing from './pricing';
 import ProductInformation from './product-information';
 import Variants from './variants';
 
-export default function AddProductSection({ allCategory }) {
+export default function AddProductSection({ allCategory, user }) {
     const router = useRouter();
     const { toast } = useToast();
 
@@ -43,7 +43,10 @@ export default function AddProductSection({ allCategory }) {
 
     async function onSubmit(values) {
         try {
-            const isProductAdd = await addProductAction(values);
+            const isProductAdd = await addProductAction({
+                ...values,
+                author: user?.id,
+            });
             if (isProductAdd === 'created') {
                 toast({
                     variant: 'success',
