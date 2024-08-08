@@ -8,7 +8,7 @@ export default async function loginAction(loginObj) {
         const isLogin = await signIn('credentials', {
             email: loginObj.email,
             password: loginObj.password,
-            redirect: false,
+            redirectTo: '/',
         });
 
         return JSON.stringify({ message: 'user is login', response: isLogin });

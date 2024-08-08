@@ -45,7 +45,7 @@ export default function RegisterForm() {
         }
 
         try {
-            const isCrete = await fetch('/api/v1/user/register', {
+            const isCrete = await fetch('/api/auth/user/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

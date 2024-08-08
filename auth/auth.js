@@ -6,6 +6,7 @@ import { authCallbacks } from './callbacks';
 import { providers } from './providers';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+    ...authConfig,
     adapter: MongoDBAdapter(client),
     callbacks: authCallbacks,
     providers,
@@ -13,5 +14,4 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         signIn: '/login',
         error: '/login/error',
     },
-    ...authConfig,
 });

@@ -1,23 +1,18 @@
 import NextAuth from 'next-auth';
 import { authConfig } from './auth/auth.config';
-import {
-    apiAuthPrefix,
-    DEFAULT_LOGIN_REDIRECT,
-    loginAuth,
-    PUBLIC_ROUTE,
-} from './routes';
+import { apiAuthPrefix, loginAuth, PUBLIC_ROUTE } from './routes';
 
 const { auth: middleware } = NextAuth(authConfig);
 
 export default middleware(async (request) => {
     const { nextUrl } = request;
 
-    // console.log('middleware isLogin:', await auth());
+    console.log('middleware isLogin:', request?.auth);
 
     const isLoggedIn = !!request?.auth;
 
     const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
-    const isPublicRoute = PUBLIC_ROUTE.includes(nextUrl.pathname);
+    const isPublicRoutes = PUBLIC_ROUTE.includes(nextUrl.pathname);
     const isAuthRoutes = loginAuth.includes(nextUrl.pathname);
 
     if (isApiAuthRoute) return null;

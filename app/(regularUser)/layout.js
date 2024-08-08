@@ -1,6 +1,4 @@
-import afterLogin from '@/app/actions/afterLogin/afterLogin';
 import '@/app/globals.css';
-import AuthProvider from '@/components/Client/Providers/Auth/AuthProvider';
 import NotificationProvider from '@/components/Client/Providers/NotificationProvider.jsx/NotificationProvider';
 import Footer from '@/components/Footer/Footer';
 import Header from '@/components/Header/Header';
@@ -19,22 +17,18 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children, modal }) {
-    const loginUser = await afterLogin();
-
     return (
         <html lang="en" className="scroll-smooth">
             <body
                 className={poppins.className + ' ' + roboto.className}
                 suppressHydrationWarning={true}>
                 <PageChangeAnimation>
-                    <AuthProvider loginUser={loginUser}>
-                        <NotificationProvider>
-                            <Header />
-                            {modal}
-                            {children}
-                            <Footer />
-                        </NotificationProvider>
-                    </AuthProvider>
+                    <NotificationProvider>
+                        <Header />
+                        {modal}
+                        {children}
+                        <Footer />
+                    </NotificationProvider>
                 </PageChangeAnimation>
             </body>
         </html>

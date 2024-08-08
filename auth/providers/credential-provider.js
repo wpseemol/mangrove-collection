@@ -12,7 +12,7 @@ const credentialsProvider = Credentials({
     async authorize(request) {
         try {
             const response = await fetch(
-                `${process.env.BASE_URL_NAME}/api/v1/user/login`,
+                `${process.env.BASE_URL_NAME}/api/auth/user/login`,
                 {
                     method: 'POST',
                     headers: {

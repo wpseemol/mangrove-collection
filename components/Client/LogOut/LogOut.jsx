@@ -1,9 +1,11 @@
 'use client';
 
-import useLogout from './useLogout';
+import { userLogout } from '@/app/actions/logout-action';
 
 export default function LogOut() {
-    const { handelLogout } = useLogout();
+    async function handelLogout() {
+        await userLogout();
+    }
 
     return (
         <div>

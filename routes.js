@@ -1,6 +1,6 @@
 const PUBLIC_ROUTE = ['/', '/product'];
 
-const loginAuth = ['/login', '/register', '/login/error'];
+const loginAuth = ['/login', '/register'];
 
 const apiAuthPrefix = '/api/auth';
 

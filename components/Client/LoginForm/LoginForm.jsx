@@ -35,7 +35,9 @@ export default function LoginForm() {
         try {
             const response = await loginAction(values);
 
-            form.reset();
+            console.log(response);
+
+            // form.reset();
         } catch (error) {
             toast({
                 variant: 'destructive',
