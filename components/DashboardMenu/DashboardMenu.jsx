@@ -1,6 +1,5 @@
-import { auth } from '@/auth/auth';
-import { CREATOR } from '@/constant-value';
-import { redirect } from 'next/navigation';
+'use client';
+import { ADMIN, CREATOR } from '@/constant-value';
 import { FaUpload } from 'react-icons/fa';
 import { FaUsersGear } from 'react-icons/fa6';
 import { ImProfile } from 'react-icons/im';
@@ -8,67 +7,16 @@ import { IoSettings } from 'react-icons/io5';
 import { TbHelpHexagonFilled } from 'react-icons/tb';
 import DashboardLink from '../Client/DashboardLink/DashboardLink';
 
-export default function DashboardMenu({ isDryerClose }) {
-    const session = auth();
-
+export default function DashboardMenu({ isDryerClose, user }) {
     let menuArrays = [];
-    if (session?.user?.role === ADMIN) {
-        menuArrays = [
-            {
-                href: '/dashboard/add-product',
-                icon: <FaUpload />,
-                name: 'Add Product',
-                id: 1,
-            },
-            {
-                href: '/dashboard/users',
-                icon: <FaUsersGear />,
-                name: 'Manage All User',
-                id: 2,
-            },
 
-            {
-                href: '/dashboard/profile',
-                icon: <ImProfile />,
-                name: 'Profile',
-                id: 3,
-            },
-            {
-                href: '/dashboard/setting',
-                icon: <IoSettings />,
-                name: 'Setting',
-                id: 4,
-            },
-            {
-                href: '/dashboard/help',
-                icon: <TbHelpHexagonFilled />,
-                name: 'Help',
-                id: 5,
-            },
-        ];
-    } else if (session?.user?.role === CREATOR) {
-        menuArrays = [
-            {
-                href: '/dashboard/add-product',
-                icon: <FaUpload />,
-                name: 'Add Product',
-                id: 1,
-            },
-            {
-                href: '/dashboard/profile',
-                icon: <ImProfile />,
-                name: 'Profile',
-                id: 2,
-            },
-            {
-                href: '/dashboard/help',
-                icon: <TbHelpHexagonFilled />,
-                name: 'Help',
-                id: 3,
-            },
-        ];
-    } else {
-        redirect('/account');
+    switch (user?.role) {
+        case ADMIN:
+            menuArrays = adminMenus;
+            break;
+        case CREATOR:
+            menuArrays = creatorMenus;
+            break;
     }
 
     return (
@@ -91,3 +39,58 @@ export default function DashboardMenu({ isDryerClose }) {
         </ul>
     );
 }
+
+const adminMenus = [
+    {
+        href: '/dashboard/add-product',
+        icon: <FaUpload />,
+        name: 'Add Product',
+        id: 1,
+    },
+    {
+        href: '/dashboard/users',
+        icon: <FaUsersGear />,
+        name: 'Manage All User',
+        id: 2,
+    },
+
+    {
+        href: '/dashboard/profile',
+        icon: <ImProfile />,
+        name: 'Profile',
+        id: 3,
+    },
+    {
+        href: '/dashboard/setting',
+        icon: <IoSettings />,
+        name: 'Setting',
+        id: 4,
+    },
+    {
+        href: '/dashboard/help',
+        icon: <TbHelpHexagonFilled />,
+        name: 'Help',
+        id: 5,
+    },
+];
+
+const creatorMenus = [
+    {
+        href: '/dashboard/add-product',
+        icon: <FaUpload />,
+        name: 'Add Product',
+        id: 1,
+    },
+    {
+        href: '/dashboard/profile',
+        icon: <ImProfile />,
+        name: 'Profile',
+        id: 2,
+    },
+    {
+        href: '/dashboard/help',
+        icon: <TbHelpHexagonFilled />,
+        name: 'Help',
+        id: 3,
+    },
+];

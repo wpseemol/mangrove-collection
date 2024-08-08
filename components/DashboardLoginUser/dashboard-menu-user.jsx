@@ -1,15 +1,12 @@
-import { auth } from '@/auth/auth';
 import { ADMIN, CREATOR } from '@/constant-value';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
-export default async function DashboardLoginUser() {
-    const session = await auth();
-
+export default async function DashboardMenuUser({ user }) {
     let userTypeCake;
-    if (session?.user?.role === ADMIN) {
+    if (user === ADMIN) {
         userTypeCake = 'Admin';
-    } else if (session?.user?.role === CREATOR) {
+    } else if (user === CREATOR) {
         userTypeCake = 'Content Creator';
     } else {
         redirect('/account');

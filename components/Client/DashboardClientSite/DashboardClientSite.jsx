@@ -1,5 +1,6 @@
 'use client';
 
+import DashboardMenuUser from '@/components/DashboardLoginUser/dashboard-menu-user';
 import { useState } from 'react';
 import { ImSpinner9 } from 'react-icons/im';
 import { IoCloseOutline } from 'react-icons/io5';
@@ -9,7 +10,7 @@ import DarkModeToggle from '../DarkModeToggle/DarkModeToggle';
 import DashboardLogout from '../DashboardLogout/DashboardLogout';
 import DashboardSiteLogo from '../DashboardSiteLogo/DashboardSiteLogo';
 
-export default function DashboardClientSite({ children, loginUser }) {
+export default function DashboardClientSite({ children, user, dashboardMenu }) {
     const [isDryerClose, setIsDryerClose] = useState(false);
 
     return (
@@ -48,7 +49,10 @@ export default function DashboardClientSite({ children, loginUser }) {
 
                     <div className="px-2 py-4 flex flex-col items-center h-[calc(100vh-8rem)] overflow-x-hidden overflow-y-auto">
                         {/* dashboard menu here */}
-                        <DashboardMenu isDryerClose={isDryerClose} />
+                        <DashboardMenu
+                            isDryerClose={isDryerClose}
+                            user={user}
+                        />
                     </div>
                     {/* log out btn */}
                     <DashboardLogout isDryerClose={isDryerClose} />
@@ -89,8 +93,8 @@ export default function DashboardClientSite({ children, loginUser }) {
 
                             {/* user detels  */}
 
-                            {loginUser ? (
-                                loginUser
+                            {user ? (
+                                <DashboardMenuUser user={user} />
                             ) : (
                                 <span className="px-10">
                                     <ImSpinner9 className="animate-spin text-2xl" />

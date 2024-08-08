@@ -1,10 +1,17 @@
 'use client';
 
+import { userLogout } from '@/app/actions/logout-action';
 import { IoIosLogOut } from 'react-icons/io';
-import useLogout from '../LogOut/useLogout';
 
 export default function DashboardLogout({ isDryerClose }) {
-    const { handelLogout } = useLogout();
+    async function handelLogout() {
+        try {
+            await userLogout();
+        } catch (error) {
+            throw error;
+        }
+    }
+
     return (
         <div className="flex justify-center">
             <button
