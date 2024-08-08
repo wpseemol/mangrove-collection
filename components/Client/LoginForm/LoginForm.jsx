@@ -11,14 +11,18 @@ import {
     FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { ToastAction } from '@/components/ui/toast';
+import { Toaster } from '@/components/ui/toaster';
+import { useToast } from '@/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
-import { Toaster } from 'react-hot-toast';
 import { loginSchema } from './login-schema';
 import PasswordField from './password-field';
 
 export default function LoginForm() {
+    const { toast } = useToast();
+
     const form = useForm({
         resolver: zodResolver(loginSchema),
         defaultValues: {
@@ -29,12 +33,18 @@ export default function LoginForm() {
 
     async function onSubmit(values) {
         try {
-            const isLogin = loginAction(values);
-            console.log('is login :', await isLogin);
+            const response = await loginAction(values);
 
             form.reset();
         } catch (error) {
-            console.log(error);
+            toast({
+                variant: 'destructive',
+                title: 'Uh oh! Something went wrong.',
+                description: error?.message,
+                action: (
+                    <ToastAction altText="Try again">Try again</ToastAction>
+                ),
+            });
         }
     }
 

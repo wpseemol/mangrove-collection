@@ -7,7 +7,7 @@ import PopularProducts from '@/components/_home/PopularProducts';
 import SomeDetails from '@/components/_home/SomeDetails';
 
 export default async function Home() {
-    console.log(await auth());
+    console.log('home page: ', await auth());
 
     return (
         <main>

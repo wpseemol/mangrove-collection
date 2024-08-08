@@ -1,4 +1,4 @@
-import { credentialsProvider } from './auth-provider';
+import { credentialsProvider } from './credential-provider';
 
 const providers = [credentialsProvider];
 

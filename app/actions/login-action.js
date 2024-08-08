@@ -1,6 +1,7 @@
 'use server';
 
 import { signIn } from '@/auth/auth';
+import { AuthError } from 'next-auth';
 
 export default async function loginAction(loginObj) {
     try {
@@ -12,6 +13,9 @@ export default async function loginAction(loginObj) {
 
         return JSON.stringify({ message: 'user is login', response: isLogin });
     } catch (error) {
+        if (error instanceof AuthError) {
+            throw error;
+        }
         throw error;
     }
 }
