@@ -1,9 +1,15 @@
 import afterLogin from '@/app/actions/afterLogin/afterLogin';
 import { Suspense } from 'react';
-import Account from '../../Client/Account/Account';
 import MenuBtn from '../../Client/MenuBtn/MenuBtn';
 import SearchBtn from '../../Client/SearchBtn/SearchBtn';
-import { Card, Logo, NavMenu, Offer, Search } from '../NavElement/NavElement';
+import {
+    Account,
+    Card,
+    Logo,
+    NavMenu,
+    Offer,
+    Search,
+} from '../NavElement/NavElement';
 
 export default async function NavSmallScreen() {
     const loginUser = await afterLogin();

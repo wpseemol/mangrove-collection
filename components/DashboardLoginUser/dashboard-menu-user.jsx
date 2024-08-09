@@ -3,13 +3,11 @@ import Link from 'next/link';
 
 export default async function DashboardMenuUser({ user }) {
     let userTypeCake;
-    if (user === ADMIN) {
+    if (user?.role === ADMIN) {
         userTypeCake = 'Admin';
-    } else if (user === CREATOR) {
+    } else if (user?.role === CREATOR) {
         userTypeCake = 'Content Creator';
     }
-
-    console.log(user);
 
     return (
         <section>

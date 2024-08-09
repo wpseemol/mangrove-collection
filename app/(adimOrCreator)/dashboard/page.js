@@ -1,6 +1,7 @@
 import { auth } from '@/auth/auth';
 import { ADMIN, CREATOR } from '@/constant-value';
 import { redirect } from 'next/navigation';
+import { SaleChart } from './_components/total-sale-chart';
 
 export default async function DashboardPage() {
     const section = await auth();
@@ -22,9 +23,7 @@ export default async function DashboardPage() {
 
     return (
         <main>
-            <div>
-                <p className="text-center">login user type {userTypeCake} </p>
-            </div>
+            <SaleChart />
         </main>
     );
 }

@@ -1,4 +1,6 @@
+import { auth } from '@/auth/auth';
 import CategoryMenus from '@/components/CategoryMenus/CategoryMenus';
+import NavLink from '@/components/Client/NavLink/NavLink';
 import AnimationLink from '@/components/page-change-animation/animation-link';
 import siteLogo from '@/public/assets/logo/mangrove-collection.png';
 import Image from 'next/image';
@@ -7,6 +9,7 @@ import {
     FaCartFlatbed,
     FaDollarSign,
     FaMagnifyingGlass,
+    FaRegUser,
 } from 'react-icons/fa6';
 
 const user = null;
@@ -98,6 +101,67 @@ function Card() {
     );
 }
 
+async function Account() {
+    const section = await auth();
+
+    const firstName = section?.user?.name.split(' ')[0];
+
+    let linkUrl;
+    if (section?.user?.role === 'admin') {
+        linkUrl = '/dashboard';
+    } else if (section?.user?.role === 'contentCreator') {
+        linkUrl = '/dashboard';
+    } else {
+        linkUrl = '/account';
+    }
+
+    let userImage;
+    if (section?.user?.image) {
+        userImage = (
+            <Image
+                src={section?.user?.image}
+                width={30}
+                hidden={30}
+                alt={section?.user?.name}
+            />
+        );
+    } else {
+        userImage = (
+            <span
+                className="uppercase bg-primaryColor w-[32px] h-[32px] text-white rounded-full
+            text-2xl flex items-center justify-center ">
+                {section?.user?.name?.charAt(0)}
+            </span>
+        );
+    }
+
+    return (
+        <li className="text-white">
+            <NavLink href={section?.user ? linkUrl : '/login'}>
+                <div className="flex md:flex-row flex-col items-center xl:gap-3 md:gap-2 gap-1">
+                    <div className="text-primaryColor lg:text-3xl text-xl">
+                        {section?.user ? userImage : <FaRegUser />}
+                    </div>
+                    <div>
+                        <h2 className="lg:2xl md:text-xl text-sm font-semibold">
+                            Account
+                        </h2>
+                        {section?.user ? (
+                            <p className="text-sm hidden md:block">
+                                {firstName}
+                            </p>
+                        ) : (
+                            <p className="text-sm hidden md:block">
+                                register or Login
+                            </p>
+                        )}
+                    </div>
+                </div>
+            </NavLink>
+        </li>
+    );
+}
+
 function NavMenu() {
     const menuArray = [
         { id: 'category', link: '/category', name: 'Category' },
@@ -133,4 +197,4 @@ function NavMenu() {
     );
 }
 
-export { Card, Logo, NavMenu, Offer, Search };
+export { Account, Card, Logo, NavMenu, Offer, Search };

@@ -1,7 +1,14 @@
 import afterLogin from '@/app/actions/afterLogin/afterLogin';
 import { Suspense } from 'react';
-import Account from '../../Client/Account/Account';
-import { Card, Logo, NavMenu, Offer, Search } from '../NavElement/NavElement';
+
+import {
+    Account,
+    Card,
+    Logo,
+    NavMenu,
+    Offer,
+    Search,
+} from '../NavElement/NavElement';
 
 export default async function NavBigScreen() {
     const loginUser = await afterLogin();
@@ -9,7 +16,7 @@ export default async function NavBigScreen() {
     return (
         <nav className="hidden md:block">
             <div className="">
-                <div className="bg-black py-2 fixed top-0 left-0 w-full z-30">
+                <div className="bg-neutral-800 py-2 fixed top-0 left-0 w-full z-30">
                     <ul className="container mx-auto flex justify-evenly items-center">
                         {/* logo  */}
                         <Logo />

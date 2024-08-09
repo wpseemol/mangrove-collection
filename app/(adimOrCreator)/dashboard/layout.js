@@ -1,5 +1,6 @@
 import { auth } from '@/auth/auth';
 import DashboardClientSite from '@/components/Client/DashboardClientSite/DashboardClientSite';
+import DashboardMenuUser from '@/components/DashboardLoginUser/dashboard-menu-user';
 
 export default async function DashboardLayout({ children }) {
     const session = await auth();
@@ -10,7 +11,9 @@ export default async function DashboardLayout({ children }) {
     // }
 
     return (
-        <DashboardClientSite user={session?.user}>
+        <DashboardClientSite
+            user={session?.user}
+            userMenu={<DashboardMenuUser user={session?.user} />}>
             {children}
         </DashboardClientSite>
     );
