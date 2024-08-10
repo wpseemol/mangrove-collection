@@ -19,7 +19,7 @@ export default function Footer() {
 
                     {/* Social  */}
                     <div className="space-y-3 w-fit mx-auto mt-3 md:mt-0">
-                        <div className="uppercase text-primary font-semibold">
+                        <div className="uppercase text-primary-foreground font-semibold">
                             Social media
                         </div>
                         <div className="flex justify-start space-x-3">
@@ -27,7 +27,7 @@ export default function Footer() {
                                 rel="noopener noreferrer"
                                 href="#"
                                 title="Facebook"
-                                className="flex items-center p-1 hover:text-primary duration-150">
+                                className="flex items-center p-1 hover:text-primary-foreground duration-150">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="currentColor"
@@ -40,7 +40,7 @@ export default function Footer() {
                                 rel="noopener noreferrer"
                                 href="#"
                                 title="Twitter"
-                                className="flex items-center p-1 hover:text-primary duration-150">
+                                className="flex items-center p-1 hover:text-primary-foreground duration-150">
                                 <svg
                                     viewBox="0 0 24 24"
                                     xmlns="http://www.w3.org/2000/svg"
@@ -52,7 +52,7 @@ export default function Footer() {
                                 rel="noopener noreferrer"
                                 href="#"
                                 title="Instagram"
-                                className="flex items-center p-1 hover:text-primary duration-150">
+                                className="flex items-center p-1 hover:text-primary-foreground duration-150">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 32 32"
@@ -67,13 +67,16 @@ export default function Footer() {
 
                 {/* product section */}
                 <div className="space-y-3 w-fit  justify-self-center xl:text-left text-center">
-                    <h3 className=" uppercase text-primary font-semibold">
+                    <h3 className=" uppercase text-primary-foreground font-semibold">
                         Product
                     </h3>
                     <ul className="space-y-1">
                         {products.map((product) => (
-                            <li key={product.id} className="animate-delay-100">
+                            <li
+                                key={product.id}
+                                className="animate-delay-100 hover:text-primary-foreground duration-150">
                                 <Link
+                                    className="hover:translate-x-2 inline-block duration-500"
                                     rel="noopener noreferrer"
                                     href={product.href}>
                                     {product.label}
@@ -83,14 +86,17 @@ export default function Footer() {
                     </ul>
                 </div>
                 <div className="space-y-3 w-fit  justify-self-center xl:text-left text-center ">
-                    <h3 className=" uppercase text-primary font-semibold">
+                    <h3 className=" uppercase text-primary-foreground font-semibold">
                         Company
                     </h3>
 
                     <ul className="space-y-1">
                         {allCompany.map((company) => (
-                            <li key={company.id} className="animate-delay-100">
+                            <li
+                                key={company.id}
+                                className="animate-delay-100 hover:text-primary-foreground duration-150">
                                 <Link
+                                    className="hover:translate-x-2 inline-block duration-500"
                                     rel="noopener noreferrer"
                                     href={company.href}>
                                     {company.label}
@@ -100,15 +106,16 @@ export default function Footer() {
                     </ul>
                 </div>
                 <div className="space-y-3 w-fit  justify-self-center xl:text-left text-center">
-                    <h3 className="uppercase text-primary font-semibold">
+                    <h3 className="uppercase text-primary-foreground font-semibold">
                         Developers
                     </h3>
-                    <ul className="space-y-1">
+                    <ul className="space-y-1 ">
                         {developers.map((developer) => (
                             <li
                                 key={developer.id}
-                                className="animate-delay-100 ">
+                                className="animate-delay-100 hover:text-primary-foreground duration-150">
                                 <Link
+                                    className="hover:translate-x-2 inline-block duration-500"
                                     rel="noopener noreferrer"
                                     href={developer.href}>
                                     {developer.label}
@@ -143,7 +150,7 @@ function FooterSiteLogo() {
                 </figure>
             </div>
             <div>
-                <h2 className="flex-none font-bold text-primary text-sm md:text-base">
+                <h2 className="flex-none font-bold text-primary-foreground text-sm md:text-base">
                     Mangrove Collection
                 </h2>
             </div>
