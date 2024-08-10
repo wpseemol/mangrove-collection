@@ -1,3 +1,4 @@
+import PageChangeAnimation from '@/app/(user)/_components/page-change-animation';
 import { ThemeProvider } from '@/components/theme-provider';
 
 export default function Providers({
@@ -13,7 +14,7 @@ export default function Providers({
                 themes={['green', 'dark', 'light']}
                 enableSystem
                 disableTransitionOnChange>
-                {children}
+                <PageChangeAnimation>{children}</PageChangeAnimation>
             </ThemeProvider>
         </>
     );
