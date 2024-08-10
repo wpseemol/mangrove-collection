@@ -5,9 +5,9 @@ import { useEffect } from 'react';
 
 export default function PageChangeAnimation({
     children,
-}: Readonly<{
+}: {
     children: React.ReactNode;
-}>) {
+}) {
     useEffect(() => {
         animationPageIn();
     }, []);

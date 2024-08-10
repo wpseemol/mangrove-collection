@@ -1,7 +1,8 @@
 import '@/app/globals.css';
 
+import Providers from '@/app/(user)/_components/providers';
 import { Poppins, Roboto } from 'next/font/google';
-import Providers from './_components/providers';
+import Footer from './_components/footer';
 
 const poppins = Poppins({
     subsets: ['latin'],
@@ -20,11 +21,14 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" className="scroll-smooth">
+        <html lang="en" className="green">
             <body
-                className={`${poppins.className} ${roboto.className}`}
+                className={poppins.className + ' ' + roboto.className}
                 suppressHydrationWarning={true}>
-                <Providers>{children}</Providers>
+                <Providers>
+                    {children}
+                    <Footer />
+                </Providers>
             </body>
         </html>
     );

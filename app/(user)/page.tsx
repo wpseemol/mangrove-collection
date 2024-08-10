@@ -13,8 +13,10 @@ export default function Home() {
                     <ModeToggle />{' '}
                 </nav>
             </header>
-            <main className="flex min-h-screen flex-col items-center justify-between p-24">
-                <p>this is home page</p>
+            <main className="flex flex-col items-center justify-between p-24">
+                {/* .................... */}
+                <h2>this is home page</h2>
+                {/* .................... */}
             </main>
         </>
     );
