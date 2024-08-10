@@ -1,7 +1,16 @@
+import { ModeToggle } from '@/components/mode-toggle';
+
 export default function Home() {
     return (
-        <main className="flex min-h-screen flex-col items-center justify-between p-24">
-            <p>this is home page</p>
-        </main>
+        <>
+            <header className="bg-background border-b shadow p-5 ">
+                <nav className="container mx-auto">
+                    <ModeToggle />{' '}
+                </nav>
+            </header>
+            <main className="flex min-h-screen flex-col items-center justify-between p-24">
+                <p>this is home page</p>
+            </main>
+        </>
     );
 }
