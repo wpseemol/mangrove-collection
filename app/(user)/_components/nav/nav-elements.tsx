@@ -1,4 +1,5 @@
 import CustomLink from '@/components/custom-link';
+import { Input } from '@/components/ui/input';
 import siteLogo from '@/public/assets/logo/mangrove-collection.png';
 import { MenuType } from '@/types/nav';
 import Image from 'next/image';
@@ -8,6 +9,7 @@ import {
     FaMagnifyingGlass,
     FaRegUser,
 } from 'react-icons/fa6';
+import CategoryMenus from './category-menus';
 
 function Logo() {
     return (
@@ -21,7 +23,7 @@ function Logo() {
                             className="w-full object-cover hover:scale-125 duration-300"
                         />
                     </figure>
-                    <h2 className="font-bold text-text-primary-foreground text-sm md:text-base animate-fade-right">
+                    <h2 className="font-bold text-primary-foreground text-sm md:text-base animate-fade-right">
                         Mangrove Collection
                     </h2>
                 </div>
@@ -34,14 +36,14 @@ function Search() {
     return (
         <li>
             <div className=" 2xl:w-[25rem] xl:w-[22rem] md:w-[13rem] sm:w-[22rem] w-[16rem] md:mt-0 mt-6  relative">
-                <input
+                <Input
                     type="text"
                     name="search"
-                    id="searchIcon"
-                    className="w-full text-gray-600 py-2 pl-3 rounded-md font-semibold outline-none"
+                    id="search"
+                    className="w-full placeholder:text-muted-foreground py-2 pl-3 focus:text-secondary-foreground rounded font-medium outline-none text-base"
                     placeholder="Search"
                 />
-                <div className="absolute top-2 z-10 right-3 text-text-primary-foreground md:text-2xl text-xl hidden sm:block">
+                <div className="absolute top-2 z-10 right-3 text-muted-foreground hover:text-primary-foreground md:text-2xl text-xl hidden sm:block">
                     <FaMagnifyingGlass />
                 </div>
             </div>
@@ -54,10 +56,10 @@ function Offer() {
         <li className="text-white">
             {' '}
             <CustomLink
-                className="hover:text-text-primary-foreground duration-300"
+                className="hover:text-primary-foreground duration-150"
                 href="/offers">
                 <div className="flex md:flex-row flex-col items-center xl:gap-3 md:gap-2 gap-1">
-                    <div className="text-text-primary-foreground xl:text-3xl md:text-2xl text-xl">
+                    <div className="text-primary-foreground xl:text-3xl md:text-2xl text-xl">
                         <FaDollarSign />
                     </div>
                     <div>
@@ -79,8 +81,10 @@ function Card() {
         <li className="text-white">
             {' '}
             <CustomLink href="/cart-items">
-                <div className="flex md:flex-row flex-col items-center xl:gap-3 md:gap-2 gap-1">
-                    <div className="text-text-primary-foreground xl:text-3xl md:text-2xl text-xl">
+                <div
+                    className="flex md:flex-row flex-col items-center xl:gap-3 md:gap-2 gap-1
+                hover:text-primary-foreground duration-150">
+                    <div className="text-primary-foreground xl:text-3xl md:text-2xl text-xl">
                         <FaCartFlatbed />
                     </div>
                     <div>
@@ -113,7 +117,7 @@ async function Account() {
         return <div>Loading...</div>; // Or handle the case where user is null
     }
 
-    const firstName = section.user.name.split(' ')[0];
+    const firstName = section.user.name;
 
     let linkUrl;
     if (section?.user?.role === 'admin') {
@@ -137,7 +141,7 @@ async function Account() {
     } else {
         userImage = (
             <span
-                className="uppercase bg-text-primary-foreground w-[32px] h-[32px] text-white rounded-full
+                className="uppercase bg-primary-foreground w-[32px] h-[32px] text-white rounded-full
             text-2xl flex items-center justify-center ">
                 {section?.user?.name?.charAt(0)}
             </span>
@@ -147,8 +151,8 @@ async function Account() {
     return (
         <li className="text-white">
             <CustomLink href={section?.user ? linkUrl : '/login'}>
-                <div className="flex md:flex-row flex-col items-center xl:gap-3 md:gap-2 gap-1">
-                    <div className="text-text-primary-foreground lg:text-3xl text-xl">
+                <div className="flex md:flex-row flex-col items-center xl:gap-3 md:gap-2 gap-1 hover:text-primary-foreground duration-150">
+                    <div className="text-primary-foreground lg:text-3xl text-xl">
                         {section?.user ? userImage : <FaRegUser />}
                     </div>
                     <div>

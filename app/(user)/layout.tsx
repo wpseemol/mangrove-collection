@@ -3,6 +3,7 @@ import '@/app/globals.css';
 import Providers from '@/app/(user)/_components/providers';
 import { Poppins, Roboto } from 'next/font/google';
 import Footer from './_components/footer';
+import Header from './_components/header';
 
 const poppins = Poppins({
     subsets: ['latin'],
@@ -26,6 +27,7 @@ export default function RootLayout({
                 className={poppins.className + ' ' + roboto.className}
                 suppressHydrationWarning={true}>
                 <Providers>
+                    <Header />
                     {children}
                     <Footer />
                 </Providers>

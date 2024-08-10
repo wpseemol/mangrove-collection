@@ -1,13 +1,6 @@
 import { Suspense } from 'react';
 
-import {
-    Account,
-    Card,
-    Logo,
-    NavMenu,
-    Offer,
-    Search,
-} from '../NavElement/NavElement';
+import { Account, Card, Logo, NavMenu, Offer, Search } from './nav-elements';
 
 export default async function FullScreen() {
     return (
@@ -29,13 +22,13 @@ export default async function FullScreen() {
 
                         {/* account */}
                         <Suspense fallback={<p>loading...</p>}>
-                            <Account loginUser={loginUser} />
+                            <Account />
                         </Suspense>
                     </ul>
                 </div>
                 <div className="hidden md:block h-[5.4rem] w-full"></div>
             </div>
-            <div className="shadow-lg">
+            <div className="border-b shadow">
                 <ul className="w-fit text-base font-medium flex items-center mx-auto gap-5 ">
                     <NavMenu />
                 </ul>
