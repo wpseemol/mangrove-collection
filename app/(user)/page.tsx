@@ -1,5 +1,10 @@
 import { ModeToggle } from '@/components/mode-toggle';
 
+export const metadata = {
+    title: 'Mangrove Collection | Home',
+    description: 'Mangrove Collection home page.',
+};
+
 export default function Home() {
     return (
         <>
