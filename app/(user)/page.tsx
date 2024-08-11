@@ -3,10 +3,10 @@ export const metadata = {
     description: 'Mangrove Collection home page.',
 };
 
-export default function Home() {
+export default function HomePage() {
     return (
         <>
-            <main className="flex flex-col items-center justify-between p-24">
+            <main className="flex min-h-[calc(100vh-26em)] items-center justify-between p-24">
                 {/* .................... */}
                 <h2>this is home page</h2>
                 {/* .................... */}

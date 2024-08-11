@@ -6,7 +6,7 @@ export default async function FullScreen() {
     return (
         <nav className="hidden md:block">
             <div className="">
-                <div className="bg-neutral-800 py-2 fixed top-0 left-0 w-full z-30">
+                <div className="bg-neutral-800/90 dark:bg-neutral-900/65 dark:border-y dark:border-neutral-800 py-2 fixed top-0 left-0 w-full z-30">
                     <ul className="container mx-auto flex justify-evenly items-center">
                         {/* logo  */}
                         <Logo />
