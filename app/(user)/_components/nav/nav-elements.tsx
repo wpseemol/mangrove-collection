@@ -136,13 +136,14 @@ async function Account() {
                 width={30}
                 height={30}
                 alt={section?.user?.name}
+                className="md:w-[32px] md:h-[32px] w-[20px] h-[20px]"
             />
         );
     } else {
         userImage = (
             <span
-                className="uppercase bg-primary-foreground w-[32px] h-[32px] text-white rounded-full
-            text-2xl flex items-center justify-center ">
+                className="uppercase bg-primary-foreground  text-white rounded-full
+            md:text-2xl text-lg flex items-center justify-center md:w-[32px] md:h-[32px] w-[20px] h-[20px] ">
                 {section?.user?.name?.charAt(0)}
             </span>
         );
