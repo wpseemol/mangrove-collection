@@ -25,7 +25,7 @@ export default function MobileScreen() {
                 </div>
 
                 <div>
-                    <ul className="fixed bottom-0 z-[9] bg-black py-2 flex w-full justify-evenly">
+                    <ul className="fixed bottom-0 z-[9] bg-black py-2 flex w-full justify-evenly ">
                         {/* offer */}
                         <Offer />
 
