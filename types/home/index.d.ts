@@ -10,4 +10,11 @@ interface NextArrowProps {
     onClick?: () => void;
 }
 
-export type { NextArrowProps, SliderContent };
+interface OuterInfoType {
+    id: string | number;
+    icon: JSX.Element;
+    title: string;
+    description: string;
+}
+
+export type { NextArrowProps, OuterInfoType, SliderContent };

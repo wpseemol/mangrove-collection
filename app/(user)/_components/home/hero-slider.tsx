@@ -56,12 +56,13 @@ export default function HeroSlider() {
         focusOnSelect: true,
         dotsClass: 'slick-dots xl:mb-[10rem] md:mb-10 mb-10',
         centerPadding: '200px',
+
         nextArrow: <SampleNextArrow />,
         prevArrow: <SamplePrevArrow />,
     };
 
     return (
-        <div className="slider-container w-full h-full group">
+        <div className="slider-container md:w-full h-full ">
             <Slider {...settings}>
                 {sliderContent.map((slidItem) => (
                     <CustomSlide key={slidItem.id} slidItem={slidItem} />
@@ -73,25 +74,27 @@ export default function HeroSlider() {
 
 function CustomSlide({ slidItem }: { slidItem: SliderContent }) {
     return (
-        <div>
-            <figure className="w-full h-full ">
+        <>
+            <figure className="w-full h-full overflow-hidden flex justify-center items-center bg-secondary">
                 <Image
-                    className="w-full 2xl:h-[45rem] xl:h-[36rem] lg:h-[29rem] md:h-[22rem] sm:h-[18rem] h-[15rem] object-cover object-center"
+                    className="object-cover object-center w-full xl:h-[600px] border-red-600 md:h-[450px] sm:h-[300px] h-[200px]"
                     src={slidItem.imgUrl}
                     alt={slidItem.name}
+                    width={1019}
+                    height={600}
                 />
             </figure>
-        </div>
+        </>
     );
 }
 
 function SampleNextArrow({ className, style, onClick }: NextArrowProps) {
     return (
         <div
-            className={`${className} z-[9]  scale-[1.3] duration-300`}
+            className={`${className}  z-[9]  duration-300 md:opacity-100 md:scale-[1.6] opacity-0 scale-0`}
             style={{
                 ...style,
-                scale: '1.3',
+                scale: '1.6',
                 display: 'block',
                 right: '3rem',
             }}
@@ -103,8 +106,8 @@ function SampleNextArrow({ className, style, onClick }: NextArrowProps) {
 function SamplePrevArrow({ className, style, onClick }: NextArrowProps) {
     return (
         <div
-            className={`${className} z-[9] scale-[1.3] duration-300`}
-            style={{ ...style, scale: '1.3', display: 'block', left: '3rem' }}
+            className={`${className} z-[9]  duration-300 md:opacity-100 md:scale-[1.6] opacity-0 scale-0`}
+            style={{ ...style, scale: '1.6', display: 'block', left: '3rem' }}
             onClick={onClick}>
             next
         </div>
