@@ -63,10 +63,12 @@ function Offer() {
                         <FaDollarSign />
                     </div>
                     <div>
-                        <h2 className="sm:text-lg text-sm font-semibold">
+                        <h2 className="sm:text-lg text-sm font-medium">
                             Offers
                         </h2>
-                        <p className="text-sm hidden md:block">Latest Offers</p>
+                        <p className="text-sm hidden md:block text-muted">
+                            Latest Offers
+                        </p>
                     </div>
                 </div>
             </CustomLink>{' '}
@@ -88,11 +90,13 @@ function Card() {
                         <FaCartFlatbed />
                     </div>
                     <div>
-                        <h2 className="sm:text-lg text-sm font-semibold">
+                        <h2 className="sm:text-lg text-sm font-medium">
                             Cart
                             <span></span>
                         </h2>
-                        <p className="text-sm hidden md:block">Add items</p>
+                        <p className="text-sm hidden md:block text-muted">
+                            Add items
+                        </p>
                     </div>
                 </div>
             </CustomLink>{' '}
@@ -157,15 +161,15 @@ async function Account() {
                         {section?.user ? userImage : <FaRegUser />}
                     </div>
                     <div>
-                        <h2 className="lg:2xl md:text-xl text-sm font-semibold">
+                        <h2 className="sm:text-lg text-sm font-medium">
                             Account
                         </h2>
                         {section?.user ? (
-                            <p className="text-sm hidden md:block">
+                            <p className="text-sm hidden md:block text-muted">
                                 {firstName}
                             </p>
                         ) : (
-                            <p className="text-sm hidden md:block">
+                            <p className="text-sm hidden md:block text-muted">
                                 register or Login
                             </p>
                         )}

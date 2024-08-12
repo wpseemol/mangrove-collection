@@ -52,7 +52,7 @@ export default function HeroSection() {
                         key={info.id}
                         className="bg-card px-5 py-2 rounded-sm">
                         <div className="flex gap-4 items-center">
-                            <div className="w-12 h-12 rounded-full bg-primary text-neutral-200 flex justify-center items-center">
+                            <div className="w-12 h-12 rounded-full bg-primary text-neutral-200 flex justify-center items-center text-xl">
                                 {info.icon}
                             </div>
                             <div>
