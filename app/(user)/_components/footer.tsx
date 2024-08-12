@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function Footer() {
     return (
-        <footer className=" divide-y bg-neutral-800/90 dark:bg-neutral-900/65 dark:border-y dark:border-neutral-800 text-gray-100 md:pb-0 pb-20">
+        <footer className=" divide-y bg-black/95 dark:bg-neutral-900/65 dark:border-y dark:border-neutral-800 text-gray-100 md:pb-0 pb-20">
             <div className="w-fit lg:container grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1  justify-items-stretch md:px-16 py-10 mx-auto space-y-8 lg:space-y-0 xl:gap-0 gap-x-16">
                 {/* footer logo section for table mod */}
 
