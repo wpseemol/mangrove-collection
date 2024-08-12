@@ -1,26 +1,12 @@
 import { Card } from '@/components/ui/card';
+import { getCategory } from '@/db/mongoos-querys/get-category';
 import { CategoryType } from '@/types/mongoose-models';
 import Image from 'next/image';
 import Link from 'next/link';
 import HomeTitle from './home-title';
 
 export default async function CategorySection() {
-    let allCategory: CategoryType[] = [];
-
-    try {
-        const response = await fetch(
-            `${process.env.VERCEL_URL}/api/v1/category`
-        );
-
-        if (!response.ok) {
-            throw new Error(response.statusText);
-        }
-
-        const data: CategoryType[] = await response.json();
-        allCategory = data;
-    } catch (error) {
-        throw error;
-    }
+    const allCategory: CategoryType[] = await getCategory();
 
     return (
         <section className="container mx-auto pb-10">
@@ -32,7 +18,7 @@ export default async function CategorySection() {
             </p>
 
             {allCategory.length > 0 && (
-                <div className=" mx-auto grid xl:grid-cols-6 lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-4 grid-cols-2 gap-x-3 gap-y-5 mt-10">
+                <div className=" mx-auto grid xl:grid-cols-6 lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-4 grid-cols-2 gap-x-3 gap-y-5 mt-5">
                     {allCategory.map((category) => {
                         return (
                             <Card

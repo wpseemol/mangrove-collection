@@ -11,7 +11,7 @@ interface CategoryBase {
 interface CategoryWithMongo_Id extends CategoryBase {
     _id: mongoose.Schema.Types.ObjectId;
 }
-export interface CategoryType extends Omit<CategoryWithMongo_Id, '_id'> {
+export interface CategoryType extends CategoryBase {
     id: string;
 }
 
