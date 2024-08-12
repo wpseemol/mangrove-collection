@@ -66,7 +66,7 @@ function Offer() {
                         <h2 className="sm:text-lg text-sm font-medium">
                             Offers
                         </h2>
-                        <p className="text-sm hidden md:block text-muted">
+                        <p className="text-sm hidden md:block text-muted dark:text-neutral-300/90">
                             Latest Offers
                         </p>
                     </div>
@@ -94,7 +94,7 @@ function Card() {
                             Cart
                             <span></span>
                         </h2>
-                        <p className="text-sm hidden md:block text-muted">
+                        <p className="text-sm hidden md:block text-muted dark:text-neutral-300/90">
                             Add items
                         </p>
                     </div>
@@ -165,11 +165,11 @@ async function Account() {
                             Account
                         </h2>
                         {section?.user ? (
-                            <p className="text-sm hidden md:block text-muted">
+                            <p className="text-sm hidden md:block text-muted dark:text-neutral-300/90">
                                 {firstName}
                             </p>
                         ) : (
-                            <p className="text-sm hidden md:block text-muted">
+                            <p className="text-sm hidden md:block text-muted dark:text-neutral-300/90">
                                 register or Login
                             </p>
                         )}
