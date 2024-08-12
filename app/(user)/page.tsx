@@ -1,3 +1,4 @@
+import CategorySection from './_components/home/category-section';
 import HeroSection from './_components/home/hero-section';
 
 export const metadata = {
@@ -10,6 +11,7 @@ export default function HomePage() {
         <>
             <main className="">
                 <HeroSection />
+                <CategorySection />
             </main>
         </>
     );
