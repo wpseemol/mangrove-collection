@@ -3,13 +3,13 @@ import getProducts from '@/db/mongoos-queries/get-products';
 import { ProductType } from '@/types/mongoose-models';
 import HomeTitle from './home-title';
 
-export default async function PopularProduct() {
-    const products: ProductType[] | null = await getProducts('popular-product');
+export default async function NewArrivalProduct() {
+    const products: ProductType[] | null = await getProducts('new-arrival');
 
     return (
         <section className="container mx-auto pb-10">
             <HomeTitle>
-                <samp className="uppercase">POPULAR PRODUCTS🔥</samp>
+                <samp className="uppercase">TOP NEW ARRIVAL</samp>
             </HomeTitle>
             {products && (
                 <div
