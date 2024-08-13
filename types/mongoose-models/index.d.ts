@@ -67,6 +67,7 @@ export type {
     CategoryBase,
     CategoryType,
     CategoryWithMongo_Id,
+    PriceType,
     ProductBase,
     ProductType,
     ProductWithMongo_Id,

@@ -1,5 +1,5 @@
 import { Card } from '@/components/ui/card';
-import { getCategory } from '@/db/mongoos-querys/get-category';
+import { getCategory } from '@/db/mongoos-queries/get-category';
 import { CategoryType } from '@/types/mongoose-models';
 import Image from 'next/image';
 import Link from 'next/link';
