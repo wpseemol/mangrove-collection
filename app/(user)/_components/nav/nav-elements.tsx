@@ -187,6 +187,7 @@ function NavMenu() {
         { id: 'contact', href: '/#contact', label: 'contact' },
         { id: 'about', href: '/#about', label: 'about' },
     ];
+
     return (
         <>
             {menuArray?.map((items) => {
