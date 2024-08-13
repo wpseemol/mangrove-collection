@@ -29,7 +29,7 @@ export default async function CategorySection() {
                             <Card
                                 key={category?.id}
                                 className=" bg-card  py-4 px-2 group
-                             hover:text-primary-foreground duration-300 rounded overflow-hidden sm:w-[166px] h-[175px] w-[150px] justify-self-center">
+                             hover:text-primary-foreground duration-300 rounded overflow-hidden sm:w-[166px] h-[175px] w-[150px] justify-self-center flex flex-col justify-center items-center">
                                 <Link
                                     href={`/products?category=${category?.slug}`}>
                                     <figure className="mx-auto sm:w-20 sm:h-20 w-16 h-16 overflow-hidden rounded">
@@ -42,7 +42,7 @@ export default async function CategorySection() {
                                         />
                                     </figure>
                                     <div>
-                                        <h2 className="text-base font-medium text-center mt-2 capitalize">
+                                        <h2 className="sm:text-base text-sm font-medium text-center mt-2 capitalize">
                                             {category.name.toLocaleLowerCase()}
                                         </h2>
                                     </div>
