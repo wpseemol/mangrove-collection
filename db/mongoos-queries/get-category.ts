@@ -18,7 +18,7 @@ async function getCategory() {
                 })
                 .map(({ _id, ...rest }) => rest);
         } else {
-            return [];
+            return null;
         }
     } catch (error) {
         throw error;

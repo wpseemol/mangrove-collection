@@ -6,7 +6,7 @@ import Link from 'next/link';
 import HomeTitle from './home-title';
 
 export default async function CategorySection() {
-    const allCategory: CategoryType[] = await getCategory();
+    const allCategory: CategoryType[] | null = await getCategory();
 
     return (
         <section className="container mx-auto pb-10">
@@ -17,17 +17,22 @@ export default async function CategorySection() {
                 Get your desired product from a featured category
             </p>
 
-            {allCategory.length > 0 && (
-                <div className=" mx-auto grid xl:grid-cols-6 lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-4 grid-cols-2 gap-x-3 gap-y-5 mt-5">
+            {allCategory && (
+                <div
+                    className={`${
+                        allCategory.length <= 7
+                            ? 'flex justify-center items-center flex-wrap'
+                            : 'md:grid 2xl:grid-cols-8 xl:grid-cols-6 lg:grid-cols-5 md:grid-cols-4 grid-cols-2 flex justify-center items-center flex-wrap'
+                    } gap-x-3 gap-y-5 mt-5`}>
                     {allCategory.map((category) => {
                         return (
                             <Card
                                 key={category?.id}
-                                className=" bg-card  py-4 group
-                             hover:text-primary-foreground duration-300 rounded overflow-hidden">
+                                className=" bg-card  py-4 px-2 group
+                             hover:text-primary-foreground duration-300 rounded overflow-hidden sm:w-[166px] h-[175px] w-[150px] justify-self-center">
                                 <Link
                                     href={`/products?category=${category?.slug}`}>
-                                    <figure className="mx-auto w-20 h-20 overflow-hidden rounded">
+                                    <figure className="mx-auto sm:w-20 sm:h-20 w-16 h-16 overflow-hidden rounded">
                                         <Image
                                             src={category?.imgUrl}
                                             alt={category?.name}

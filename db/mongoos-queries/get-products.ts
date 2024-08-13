@@ -79,12 +79,12 @@ export default async function getProducts(
                             .lean();
 
                     if (popularProducts) {
-                        // place mongo id here
+                        // replace mongo id here
                         return popularProducts
                             ?.map((obj) => ({ id: obj._id.toString(), ...obj }))
                             .map(({ _id, ...rest }) => rest);
                     } else {
-                        return [];
+                        return null;
                     }
                 }
 
@@ -93,7 +93,7 @@ export default async function getProducts(
                         ?.map((obj) => ({ id: obj._id.toString(), ...obj }))
                         .map(({ _id, ...rest }) => rest);
                 } else {
-                    return [];
+                    return null;
                 }
 
             case 'filter':
@@ -125,7 +125,10 @@ export default async function getProducts(
                 break;
         }
 
-        const products = await Product.find(findOption, showField)
+        const products: ProductWithMongo_Id[] = await Product.find(
+            findOption,
+            showField
+        )
             .populate({
                 path: 'category',
                 model: Category,
@@ -134,6 +137,15 @@ export default async function getProducts(
             .sort(sortOption)
             .limit(limitOption)
             .lean();
+
+        if (products) {
+            // replace mongo id here
+            return products
+                ?.map((obj) => ({ id: obj._id.toString(), ...obj }))
+                .map(({ _id, ...rest }) => rest);
+        } else {
+            return null;
+        }
     } catch (error) {
         throw error;
     }
