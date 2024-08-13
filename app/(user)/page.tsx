@@ -1,4 +1,5 @@
 import CategorySection from './_components/home/category-section';
+import Contact from './_components/home/contact';
 import HeroSection from './_components/home/hero-section';
 import NewArrivalProduct from './_components/home/new-arrival-product';
 import PopularProduct from './_components/home/popular-product';
@@ -16,6 +17,7 @@ export default function HomePage() {
                 <CategorySection />
                 <PopularProduct />
                 <NewArrivalProduct />
+                <Contact />
             </main>
         </>
     );
