@@ -1,17 +1,17 @@
 'use client';
 
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick-theme.css';
-import 'slick-carousel/slick/slick.css';
-
 import mangroveFish from '@/public/assets/image/mangrove Fish.png';
 import mangroveFish1 from '@/public/assets/image/mangrove fish2.jpg';
 import mangroveHoney1 from '@/public/assets/image/mangrove honey 1.jpg';
 import mangroveHoney from '@/public/assets/image/mangrove honey.jpg';
 import mangrove from '@/public/assets/image/mangrove picture.jpg';
 import { NextArrowProps, SliderContent } from '@/types/home';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import { useState } from 'react';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick-theme.css';
+import 'slick-carousel/slick/slick.css';
 
 const sliderContent: SliderContent[] = [
     { imgUrl: mangrove, id: crypto.randomUUID(), name: 'Mangrove Picture' },
@@ -73,16 +73,30 @@ export default function HeroSlider() {
 }
 
 function CustomSlide({ slidItem }: { slidItem: SliderContent }) {
+    const { scrollY } = useScroll();
+    const scale = useTransform(scrollY, [0, 1000], [1, 2]);
     return (
         <>
             <figure className="w-full h-full overflow-hidden flex justify-center items-center bg-secondary">
-                <Image
-                    className="object-cover object-center w-full xl:h-[600px] border-red-600 md:h-[450px] sm:h-[300px] h-[200px]"
-                    src={slidItem.imgUrl}
-                    alt={slidItem.name}
-                    width={1019}
-                    height={600}
-                />
+                <motion.span
+                    style={{ scale }}
+                    initial={{ scale: 1.5 }}
+                    animate={{ scale: 1 }}
+                    transition={{
+                        delay: 0.3,
+                        duration: 0.8,
+                        type: 'keyframes',
+                        stiffness: 50,
+                    }}
+                    className="w-full h-full">
+                    <Image
+                        className="object-cover object-center w-full xl:h-[600px] md:h-[450px] sm:h-[300px] h-[200px]"
+                        src={slidItem.imgUrl}
+                        alt={slidItem.name}
+                        width={1019}
+                        height={600}
+                    />
+                </motion.span>
             </figure>
         </>
     );
