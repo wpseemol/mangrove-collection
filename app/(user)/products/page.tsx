@@ -23,7 +23,7 @@ export default async function ProductPage({
                 <FilterSection allCategory={allCategory} />
                 <div>
                     <pre className="text-wrap">
-                        {JSON.stringify(allCategory)}
+                        {JSON.stringify(searchParams)}
                     </pre>
                 </div>
             </section>

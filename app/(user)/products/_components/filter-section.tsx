@@ -1,6 +1,6 @@
 'use client';
 
-import { CategoryType } from '@/types/mongoose-models';
+import { CategoryType, CategoryWithCountType } from '@/types/mongoose-models';
 import useFilterSection from './use-filter-section';
 
 const sizeArray = ['xs', 's', 'm', 'l', 'xl'];
@@ -13,9 +13,6 @@ export default function FilterSection({
     const { handelChange, selectCategory, selectPrice, selectSize } =
         useFilterSection();
 
-    console.log(allCategory);
-
-    if (allCategory) return <></>;
     return (
         <div className="col-span-1 content-center bg-white px-4 pb-6 shadow rounded overflow-hidden w-fit mx-auto">
             <div className="divide-y divide-gray-200 space-y-5 ">
@@ -25,7 +22,8 @@ export default function FilterSection({
                     </h3>
                     <div className="space-y-2">
                         {allCategory?.map((category) => {
-                            const { id, name, slug, productCount } = category;
+                            const { id, name, slug, productCount } =
+                                category as CategoryWithCountType;
                             return (
                                 <div
                                     key={id}
