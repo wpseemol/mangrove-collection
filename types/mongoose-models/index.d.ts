@@ -12,9 +12,22 @@ interface CategoryBase {
 interface CategoryWithMongo_Id extends CategoryBase {
     _id: mongoose.Schema.Types.ObjectId;
 }
-export interface CategoryType extends CategoryBase {
+interface CategoryWith_IdCount
+    extends Omit<CategoryBase, 'imgUrl' | 'author' | 'createdAt'> {
+    _id: mongoose.Schema.Types.ObjectId;
+    productCount: number;
+}
+export interface AllCategoryType extends CategoryBase {
     id: string;
 }
+export interface CategoryWithCountType
+    extends Omit<CategoryBase, 'imgUrl' | 'author' | 'createdAt'> {
+    id: string;
+    productCount: number;
+}
+
+type CategoryType = (CategoryWithCountType | AllCategoryType)[] | null;
+
 //category model types
 
 // product model type
@@ -66,7 +79,9 @@ export interface ProductType extends ProductBase {
 export type {
     CategoryBase,
     CategoryType,
+    CategoryWithCountType,
     CategoryWithMongo_Id,
+    CategoryWith_IdCount,
     PriceType,
     ProductBase,
     ProductType,

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import HomeTitle from './home-title';
 
 export default async function CategorySection() {
-    const allCategory: CategoryType[] | null = await getCategory();
+    const allCategory: CategoryType = await getCategory();
 
     return (
         <section className="container mx-auto pb-10">
