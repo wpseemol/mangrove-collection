@@ -1,6 +1,6 @@
 import { Card } from '@/components/ui/card';
 import { getCategory } from '@/db/mongoos-queries/get-category';
-import { CategoryType } from '@/types/mongoose-models';
+import { AllCategoryType, CategoryType } from '@/types/mongoose-models';
 import Image from 'next/image';
 import Link from 'next/link';
 import HomeTitle from './home-title';
@@ -24,7 +24,9 @@ export default async function CategorySection() {
                             ? 'flex justify-center items-center flex-wrap'
                             : 'md:grid 2xl:grid-cols-8 xl:grid-cols-6 lg:grid-cols-5 md:grid-cols-4 grid-cols-2 flex justify-center items-center flex-wrap'
                     } gap-x-3 gap-y-5 mt-5`}>
-                    {allCategory.map((category) => {
+                    {allCategory.map((categoryWithoutType) => {
+                        const category = categoryWithoutType as AllCategoryType;
+
                         return (
                             <Card
                                 key={category?.id}

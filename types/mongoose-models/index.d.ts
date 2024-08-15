@@ -9,16 +9,19 @@ interface CategoryBase {
     createdAt?: Date;
 }
 
-interface CategoryWithMongo_Id extends CategoryBase {
+interface CategoryWithMongo_Id
+    extends Omit<CategoryBase, 'author' | 'createdAt'> {
     _id: mongoose.Schema.Types.ObjectId;
 }
+export interface AllCategoryType
+    extends Omit<CategoryBase, 'author' | 'createdAt'> {
+    id: string;
+}
+
 interface CategoryWith_IdCount
     extends Omit<CategoryBase, 'imgUrl' | 'author' | 'createdAt'> {
     _id: mongoose.Schema.Types.ObjectId;
     productCount: number;
-}
-export interface AllCategoryType extends CategoryBase {
-    id: string;
 }
 export interface CategoryWithCountType
     extends Omit<CategoryBase, 'imgUrl' | 'author' | 'createdAt'> {
@@ -77,6 +80,7 @@ export interface ProductType extends ProductBase {
 }
 
 export type {
+    AllCategoryType,
     CategoryBase,
     CategoryType,
     CategoryWithCountType,
