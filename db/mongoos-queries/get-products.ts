@@ -1,6 +1,7 @@
 'use server';
 
 import { ProductType, ProductWithMongo_Id } from '@/types/mongoose-models';
+import { PriceObjType } from '@/types/products';
 import replaceMongoId from '@/utils/replace-mongo-id';
 import { connectMongoDB } from '../connections/mongoose-connect';
 import { Category } from '../models/category';
@@ -12,15 +13,10 @@ type GetProductType =
     | 'related-product'
     | 'filter';
 
-interface IPriceType {
-    maxPrice: number;
-    minPrice: number;
-}
-
 export default async function getProducts(
     type: GetProductType | null = null,
     categoryIds: string[] | null = null,
-    price: IPriceType | null = null,
+    price: PriceObjType | null = null,
     size: string | null = null,
     excludeProductId: string | null = null
 ) {
@@ -105,13 +101,17 @@ export default async function getProducts(
                     };
                 }
 
-                if (price) {
+                if (
+                    price &&
+                    price.maxPrice &&
+                    price.minPrice &&
+                    price.maxPrice > price.minPrice
+                ) {
                     findOption = {
-                        $match: {
-                            'price.price': {
-                                $gte: price.minPrice,
-                                $lte: price.maxPrice,
-                            },
+                        ...findOption,
+                        'price.price': {
+                            $gte: price.minPrice,
+                            $lte: price.maxPrice,
                         },
                     };
                 }

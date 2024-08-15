@@ -58,7 +58,7 @@ function Offer() {
             <CustomLink
                 className="hover:text-primary-foreground duration-150"
                 href="/offers">
-                <div className="flex md:flex-row flex-col items-center xl:gap-3 md:gap-2 gap-1">
+                <div className="flex md:flex-row flex-col items-center xl:gap-3 md:gap-2 gap-1 group">
                     <div className="text-primary-foreground xl:text-3xl md:text-2xl text-xl">
                         <FaDollarSign />
                     </div>
@@ -66,7 +66,7 @@ function Offer() {
                         <h2 className="sm:text-lg text-sm font-medium">
                             Offers
                         </h2>
-                        <p className="text-sm hidden md:block text-muted dark:text-neutral-300/90">
+                        <p className="text-sm hidden md:block text-muted dark:text-neutral-300/90 duration-150 group-hover:text-primary-foreground">
                             Latest Offers
                         </p>
                     </div>
@@ -85,16 +85,16 @@ function Card() {
             <CustomLink href="/cart-items">
                 <div
                     className="flex md:flex-row flex-col items-center xl:gap-3 md:gap-2 gap-1
-                hover:text-primary-foreground duration-150">
+                hover:text-primary-foreground duration-150 group">
                     <div className="text-primary-foreground xl:text-3xl md:text-2xl text-xl">
                         <FaCartFlatbed />
                     </div>
                     <div>
-                        <h2 className="sm:text-lg text-sm font-medium">
+                        <h2 className="sm:text-lg text-sm font-medium duration-150 group-hover:text-primary-foreground">
                             Cart
                             <span></span>
                         </h2>
-                        <p className="text-sm hidden md:block text-muted dark:text-neutral-300/90">
+                        <p className="text-sm hidden md:block text-muted dark:text-neutral-300/90 group-hover:text-primary-foreground duration-150">
                             Add items
                         </p>
                     </div>
@@ -156,7 +156,7 @@ async function Account() {
     return (
         <li className="text-white">
             <CustomLink href={section?.user ? linkUrl : '/login'}>
-                <div className="flex md:flex-row flex-col items-center xl:gap-3 md:gap-2 gap-1 hover:text-primary-foreground duration-150">
+                <div className="flex md:flex-row flex-col items-center xl:gap-3 md:gap-2 gap-1 hover:text-primary-foreground duration-150 group">
                     <div className="text-primary-foreground lg:text-3xl text-xl">
                         {section?.user ? userImage : <FaRegUser />}
                     </div>
@@ -165,11 +165,11 @@ async function Account() {
                             Account
                         </h2>
                         {section?.user ? (
-                            <p className="text-sm hidden md:block text-muted dark:text-neutral-300/90">
+                            <p className="text-sm hidden md:block text-muted group-hover:text-primary-foreground dark:text-neutral-300/90 duration-150">
                                 {firstName}
                             </p>
                         ) : (
-                            <p className="text-sm hidden md:block text-muted dark:text-neutral-300/90">
+                            <p className="text-sm hidden md:block text-muted group-hover:text-primary-foreground dark:text-neutral-300/90 duration-150">
                                 register or Login
                             </p>
                         )}

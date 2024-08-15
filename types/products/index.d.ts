@@ -1,7 +1,12 @@
-interface FilterSearchParam {
+interface FilterSearchParamType {
     category?: string;
     price?: string;
-    siz?: string;
+    size?: string;
 }
 
-export type { FilterSearchParam };
+interface PriceObjType {
+    minPrice: number | null;
+    maxPrice: number | null;
+}
+
+export type { FilterSearchParamType, PriceObjType };

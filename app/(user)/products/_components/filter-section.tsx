@@ -1,9 +1,8 @@
 'use client';
 
 import { CategoryType, CategoryWithCountType } from '@/types/mongoose-models';
+import { sizeArray } from '.';
 import useFilterSection from './use-filter-section';
-
-const sizeArray = ['xs', 's', 'm', 'l', 'xl'];
 
 export default function FilterSection({
     allCategory,
@@ -93,7 +92,7 @@ export default function FilterSection({
                         size
                     </h3>
                     <div className="flex items-center gap-2">
-                        {sizeArray?.map((name) => (
+                        {sizeArray.map((name) => (
                             <div key={name} className="size-selector">
                                 <input
                                     onChange={(event) =>

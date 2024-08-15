@@ -7,6 +7,7 @@ import {
     CategoryWithMongo_Id,
 } from '@/types/mongoose-models';
 import replaceMongoId from '@/utils/replace-mongo-id';
+import mongoose from 'mongoose';
 import { connectMongoDB } from '../connections/mongoose-connect';
 import { Category } from '../models/category';
 
@@ -60,4 +61,32 @@ async function getCategory(type?: GetCategoryType) {
     }
 }
 
-export { getCategory };
+async function getCategoryMongoId(slugArray: string[]) {
+    try {
+        await connectMongoDB();
+
+        const response: CategoryIdsType[] = await Category.find(
+            {
+                slug: { $in: slugArray },
+            },
+            '_id'
+        ).lean();
+
+        if (response && response.length > 0) {
+            const categoryIds = response.map((category) =>
+                category._id.toString()
+            );
+            return categoryIds;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        throw error;
+    }
+}
+
+interface CategoryIdsType {
+    _id: mongoose.Schema.Types.ObjectId;
+}
+
+export { getCategory, getCategoryMongoId };

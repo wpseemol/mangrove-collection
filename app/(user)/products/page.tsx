@@ -2,8 +2,9 @@ import Breadcrumb from '@/components/bread-crumb';
 import { getCategory } from '@/db/mongoos-queries/get-category';
 
 import { CategoryType } from '@/types/mongoose-models';
-import { FilterSearchParam } from '@/types/products';
+import { FilterSearchParamType } from '@/types/products';
 import FilterSection from './_components/filter-section';
+import ProductSection from './_components/product-section';
 
 export const metadata = {
     title: 'Mangrove Collection | Products',
@@ -12,7 +13,7 @@ export const metadata = {
 export default async function ProductPage({
     searchParams,
 }: {
-    searchParams: FilterSearchParam;
+    searchParams: FilterSearchParamType;
 }) {
     const allCategory: CategoryType = await getCategory('withCountProduct');
     return (
@@ -22,9 +23,7 @@ export default async function ProductPage({
             <section className="grid lg:grid-cols-5 md:grid-cols-4 grid-cols-1 gap-6 pt-4 pb-16 items-start justify-center sm:mx-auto mx-2 ">
                 <FilterSection allCategory={allCategory} />
                 <div>
-                    <pre className="text-wrap">
-                        {JSON.stringify(searchParams)}
-                    </pre>
+                    <ProductSection searchParams={searchParams} />
                 </div>
             </section>
         </main>
