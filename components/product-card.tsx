@@ -6,11 +6,6 @@ import wordEllipsis from '@/utils/word-ellipsis';
 import Image from 'next/image';
 import Link from 'next/link';
 
-interface imageUrl {
-    id: string;
-    imgUrl: string;
-}
-
 export default function ProductCard({ details }: { details: ProductType }) {
     const displayPrice = details.price.find((item) => item.select);
 
@@ -27,7 +22,7 @@ export default function ProductCard({ details }: { details: ProductType }) {
 
     return (
         <>
-            <Card className="sm:w-[250px] h-fit w-[260px]  justify-self-center rounded group relative overflow-hidden">
+            <Card className="sm:w-[230px] h-fit w-[260px]  justify-self-center rounded group relative overflow-hidden">
                 <CardContent className="h-fit p-0">
                     <Link href={`/products/${details.slug}`}>
                         <figure className=" w-full sm:h-[250px] h-[260px] mx-auto rounded-t overflow-hidden relative">

@@ -1,7 +1,9 @@
+import ProductCard from '@/components/product-card';
 import { getCategoryMongoId } from '@/db/mongoos-queries/get-category';
 import getProducts from '@/db/mongoos-queries/get-products';
 import { FilterSearchParamType, PriceObjType } from '@/types/products';
 import { sizeArray } from '.';
+import ProductViewChange from './product-view-change';
 
 export default async function ProductSection({
     searchParams,
@@ -47,27 +49,14 @@ export default async function ProductSection({
     );
 
     return (
-        <div>
-            all products length:{' '}
-            <pre className="text-wrap">
-                {allProduct &&
-                    allProduct.map((item, inx) => (
-                        <pre key={item.id} className="text-wrap">
-                            <p>
-                                {' '}
-                                <span>{inx + 1}.</span>
-                                {item.name}
-                            </p>
-                            {item.price.map((element) => (
-                                <span key={element.variantId}>
-                                    {element.price}
-                                    <br />
-                                </span>
-                            ))}
-                        </pre>
+        <>
+            {allProduct && (
+                <ProductViewChange listViewCard={<div>List card</div>}>
+                    {allProduct?.map((product) => (
+                        <ProductCard key={product.id} details={product} />
                     ))}
-            </pre>
-            <pre>{JSON.stringify(priceObj)}</pre>
-        </div>
+                </ProductViewChange>
+            )}
+        </>
     );
 }
