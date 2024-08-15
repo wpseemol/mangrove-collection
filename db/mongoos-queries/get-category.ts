@@ -1,7 +1,9 @@
 'use server';
 
 import {
+    AllCategoryType,
     CategoryWith_IdCount,
+    CategoryWithCountType,
     CategoryWithMongo_Id,
 } from '@/types/mongoose-models';
 import replaceMongoId from '@/utils/replace-mongo-id';
@@ -36,7 +38,9 @@ async function getCategory(type?: GetCategoryType) {
                     ]).exec();
 
                 if (allCategoryWithProductCount) {
-                    return replaceMongoId(allCategoryWithProductCount);
+                    return replaceMongoId(
+                        allCategoryWithProductCount
+                    ) as CategoryWithCountType[];
                 } else {
                     return null;
                 }
@@ -46,7 +50,7 @@ async function getCategory(type?: GetCategoryType) {
                     await Category.find().lean();
 
                 if (allCategory) {
-                    return replaceMongoId(allCategory);
+                    return replaceMongoId(allCategory) as AllCategoryType[];
                 } else {
                     return null;
                 }
