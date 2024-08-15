@@ -1,11 +1,12 @@
 'use server';
 
-import { ProductWithMongo_Id } from '@/types/mongoose-models';
+import { ProductType, ProductWithMongo_Id } from '@/types/mongoose-models';
+import replaceMongoId from '@/utils/replace-mongo-id';
 import { connectMongoDB } from '../connections/mongoose-connect';
 import { Category } from '../models/category';
 import { Product } from '../models/product';
 
-type ProductType =
+type GetProductType =
     | 'popular-product'
     | 'new-arrival'
     | 'related-product'
@@ -17,7 +18,7 @@ interface IPriceType {
 }
 
 export default async function getProducts(
-    type: ProductType | null = null,
+    type: GetProductType | null = null,
     categoryIds: string[] | null = null,
     price: IPriceType | null = null,
     size: string | null = null,
@@ -140,9 +141,8 @@ export default async function getProducts(
 
         if (products) {
             // replace mongo id here
-            return products
-                ?.map((obj) => ({ id: obj._id.toString(), ...obj }))
-                .map(({ _id, ...rest }) => rest);
+
+            return replaceMongoId(products) as ProductType[];
         } else {
             return null;
         }

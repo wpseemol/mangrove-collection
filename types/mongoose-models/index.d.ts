@@ -90,6 +90,20 @@ export interface ProductType extends Omit<ProductWithMongo_Id, '_id'> {
     id: string;
 }
 
+// replace mongodb id function types
+type ReplaceMongoIdAccepted = (
+    | ProductWithMongo_Id
+    | CategoryWithMongo_Id
+    | CategoryWith_IdCount
+)[];
+
+type ReplaceMongoIdReturn = (
+    | ProductType
+    | AllCategoryType
+    | CategoryWithCountType
+)[];
+// replace mongodb id types
+
 export type {
     AllCategoryType,
     CategoryBase,
@@ -101,4 +115,6 @@ export type {
     ProductBase,
     ProductType,
     ProductWithMongo_Id,
+    ReplaceMongoIdAccepted,
+    ReplaceMongoIdReturn,
 };

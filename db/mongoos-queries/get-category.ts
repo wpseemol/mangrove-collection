@@ -4,6 +4,7 @@ import {
     CategoryWith_IdCount,
     CategoryWithMongo_Id,
 } from '@/types/mongoose-models';
+import replaceMongoId from '@/utils/replace-mongo-id';
 import { connectMongoDB } from '../connections/mongoose-connect';
 import { Category } from '../models/category';
 
@@ -34,14 +35,8 @@ async function getCategory(type?: GetCategoryType) {
                         },
                     ]).exec();
 
-                console.log('getCategory:', allCategoryWithProductCount);
-
                 if (allCategoryWithProductCount) {
-                    return allCategoryWithProductCount
-                        ?.map((obj) => {
-                            return { id: obj._id.toString(), ...obj };
-                        })
-                        .map(({ _id, ...rest }) => rest);
+                    return replaceMongoId(allCategoryWithProductCount);
                 } else {
                     return null;
                 }
@@ -51,11 +46,7 @@ async function getCategory(type?: GetCategoryType) {
                     await Category.find().lean();
 
                 if (allCategory) {
-                    return allCategory
-                        ?.map((obj) => {
-                            return { id: obj._id.toString(), ...obj };
-                        })
-                        .map(({ _id, ...rest }) => rest);
+                    return replaceMongoId(allCategory);
                 } else {
                     return null;
                 }
