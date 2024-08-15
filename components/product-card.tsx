@@ -20,8 +20,6 @@ export default function ProductCard({ details }: { details: ProductType }) {
         const randomIndex: number = Math.floor(
             Math.random() * details.images.length
         );
-        console.log(randomIndex);
-
         imageUrl = details.images[randomIndex].imgUrl;
     } else {
         imageUrl = null;
