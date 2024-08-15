@@ -13,8 +13,7 @@ interface CategoryWithMongo_Id
     extends Omit<CategoryBase, 'author' | 'createdAt'> {
     _id: mongoose.Schema.Types.ObjectId;
 }
-export interface AllCategoryType
-    extends Omit<CategoryBase, 'author' | 'createdAt'> {
+export interface AllCategoryType extends Omit<CategoryWithMongo_Id, '_id'> {
     id: string;
 }
 
@@ -72,10 +71,22 @@ interface ProductBase {
     tags?: string[];
 }
 
-interface ProductWithMongo_Id extends ProductBase {
+interface ProductWithMongo_Id
+    extends Pick<
+        ProductBase,
+        | '_id'
+        | 'images'
+        | 'currency'
+        | 'price'
+        | 'thumbnail'
+        | 'unit'
+        | 'offer'
+        | 'name'
+        | 'slug'
+    > {
     _id: mongoose.Schema.Types.ObjectId;
 }
-export interface ProductType extends ProductBase {
+export interface ProductType extends Omit<ProductWithMongo_Id, '_id'> {
     id: string;
 }
 
