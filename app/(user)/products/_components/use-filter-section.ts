@@ -12,7 +12,7 @@ export default function useFilterSection() {
     const searchParams = new URLSearchParams(searchParamsInstance);
     const category = searchParams.get('category');
     const price = searchParams.get('price');
-    const selectSize = searchParams.get('size');
+    const size = searchParams.get('size');
     const router = useRouter();
     const pathName = usePathname();
 
@@ -30,6 +30,12 @@ export default function useFilterSection() {
     } else {
         selectPrice = { min: '', max: '' };
     }
+
+    // if (size) {
+    //     selectSize = size;
+    // } else {
+    //     selectSize = '';
+    // }
 
     function handelChange(
         event: React.ChangeEvent<HTMLInputElement>,
@@ -76,12 +82,24 @@ export default function useFilterSection() {
             }
         } else if (type === 'size') {
             const value = event.target.value;
-
             searchParams.set('size', value);
         }
 
         router.replace(`${pathName}?${searchParams.toString()}`);
     }
 
-    return { handelChange, selectCategory, selectPrice, selectSize };
+    function clickToRemoveSize(witch: string): void {
+        if (witch === size) {
+            searchParams.delete('size');
+            router.replace(`${pathName}?${searchParams.toString()}`);
+        }
+    }
+
+    return {
+        handelChange,
+        clickToRemoveSize,
+        selectCategory,
+        selectPrice,
+        size,
+    };
 }

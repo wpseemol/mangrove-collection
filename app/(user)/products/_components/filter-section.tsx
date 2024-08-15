@@ -10,8 +10,13 @@ export default function FilterSection({
 }: {
     allCategory: CategoryType;
 }) {
-    const { handelChange, selectCategory, selectPrice, selectSize } =
-        useFilterSection();
+    const {
+        handelChange,
+        selectCategory,
+        selectPrice,
+        size,
+        clickToRemoveSize,
+    } = useFilterSection();
 
     return (
         <div className="col-span-1 content-center bg-white px-4 pb-6 shadow rounded overflow-hidden w-fit mx-auto">
@@ -95,15 +100,28 @@ export default function FilterSection({
                                         handelChange(event, 'size')
                                     }
                                     type="radio"
-                                    checked={selectSize === name}
+                                    checked={size === name}
                                     name="size"
                                     id={`size-${name}`}
                                     value={name}
                                     className="hidden"
                                 />
                                 <label
+                                    title={
+                                        size === name
+                                            ? 'Click to remove size from filter.'
+                                            : ''
+                                    }
+                                    onClick={() => {
+                                        size === name &&
+                                            clickToRemoveSize(size);
+                                    }}
                                     htmlFor={`size-${name}`}
-                                    className="text-xs border border-gray-200 rounded-sm h-6 w-6 flex items-center justify-center cursor-pointer shadow-sm text-gray-600 uppercase checked:bg-primaryColor">
+                                    className={`${
+                                        size === name
+                                            ? 'bg-primary-foreground text-neutral-100'
+                                            : ''
+                                    } text-xs border border-gray-200 rounded-sm h-6 w-6 flex items-center justify-center cursor-pointer shadow-sm text-gray-600 uppercase checked:bg-primary-foreground`}>
                                     {name}
                                 </label>
                             </div>
