@@ -4,7 +4,7 @@ import { ProductType } from '@/types/mongoose-models';
 import { CurrencyIcon } from '@/utils/currency-icon';
 import wordEllipsis from '@/utils/word-ellipsis';
 import Image from 'next/image';
-import Link from 'next/link';
+import CustomLink from './custom-link';
 
 type WhichType = 'products-page';
 
@@ -35,13 +35,13 @@ export default function ProductCard({
                     which === 'products-page' ? 'sm:w-[230px]' : 'sm:w-[250px]'
                 }  h-fit w-[260px]  justify-self-center rounded group relative overflow-hidden`}>
                 <CardContent className="h-fit p-0">
-                    <Link href={`/products/${details.slug}`}>
+                    <CustomLink href={`/products/${details.slug}`}>
                         <figure
                             className={`${
                                 which === 'products-page'
                                     ? 'sm:h-[230px]'
                                     : 'sm:h-[250px]'
-                            } w-full h-[260px] mx-auto rounded-t overflow-hidden relative`}>
+                            } w-full h-[260px] mx-auto rounded-t overflow-hidden relative animate-fade animate-duration-1000`}>
                             <Image
                                 src={details.thumbnail}
                                 alt={details.name}
@@ -71,7 +71,7 @@ export default function ProductCard({
                                 <CurrencyIcon currency={details.currency} />
                             </p>
                         </div>
-                    </Link>
+                    </CustomLink>
                     <div className="absolute group-hover:bottom-0 left-0 -bottom-20 flex justify-center items-center gap-x-2 w-full duration-700 backdrop-blur bg-green-700/5 border-t p-5 ">
                         <Button
                             variant="default"
