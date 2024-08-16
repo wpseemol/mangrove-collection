@@ -6,7 +6,15 @@ import wordEllipsis from '@/utils/word-ellipsis';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function ProductCard({ details }: { details: ProductType }) {
+type WhichType = 'products-page';
+
+export default function ProductCard({
+    details,
+    which,
+}: {
+    details: ProductType;
+    which?: WhichType;
+}) {
     const displayPrice = details.price.find((item) => item.select);
 
     let imageUrl: string | null;
@@ -22,10 +30,18 @@ export default function ProductCard({ details }: { details: ProductType }) {
 
     return (
         <>
-            <Card className="sm:w-[230px] h-fit w-[260px]  justify-self-center rounded group relative overflow-hidden">
+            <Card
+                className={`${
+                    which === 'products-page' ? 'sm:w-[230px]' : 'sm:w-[250px]'
+                }  h-fit w-[260px]  justify-self-center rounded group relative overflow-hidden`}>
                 <CardContent className="h-fit p-0">
                     <Link href={`/products/${details.slug}`}>
-                        <figure className=" w-full sm:h-[250px] h-[260px] mx-auto rounded-t overflow-hidden relative">
+                        <figure
+                            className={`${
+                                which === 'products-page'
+                                    ? 'sm:h-[230px]'
+                                    : 'sm:h-[250px]'
+                            } w-full h-[260px] mx-auto rounded-t overflow-hidden relative`}>
                             <Image
                                 src={details.thumbnail}
                                 alt={details.name}
@@ -45,7 +61,7 @@ export default function ProductCard({ details }: { details: ProductType }) {
                                 />
                             )}
                         </figure>
-                        <div className="h-[130px] w-full px-2 mt-1 flex flex-col items-center">
+                        <div className="animate-fade-up animate-once animate-duration-1000 h-[130px] w-full px-2 mt-1 flex flex-col items-center">
                             <h2 className="max-h-[63px] overflow-hidden font-normal md:text-lg text-base text-ellipsis text-center group-hover:text-primary-foreground capitalize group-hover:underline duration-150">
                                 {wordEllipsis(details.name.toLocaleLowerCase())}
                             </h2>

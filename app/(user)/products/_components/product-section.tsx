@@ -3,6 +3,7 @@ import { getCategoryMongoId } from '@/db/mongoos-queries/get-category';
 import getProducts from '@/db/mongoos-queries/get-products';
 import { FilterSearchParamType, PriceObjType } from '@/types/products';
 import { sizeArray } from '.';
+import ListViewProductCard from './list-view-card';
 import ProductViewChange from './product-view-change';
 
 export default async function ProductSection({
@@ -51,9 +52,19 @@ export default async function ProductSection({
     return (
         <>
             {allProduct && (
-                <ProductViewChange listViewCard={<div>List card</div>}>
+                <ProductViewChange
+                    listViewCard={allProduct?.map((product) => (
+                        <ListViewProductCard
+                            key={product.id}
+                            details={product}
+                        />
+                    ))}>
                     {allProduct?.map((product) => (
-                        <ProductCard key={product.id} details={product} />
+                        <ProductCard
+                            key={product.id}
+                            details={product}
+                            which="products-page"
+                        />
                     ))}
                 </ProductViewChange>
             )}

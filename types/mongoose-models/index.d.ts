@@ -51,7 +51,7 @@ interface VariantsType {
 
 interface ProductBase {
     name: string;
-    category: mongoose.Schema.Types.ObjectId;
+    category: mongoose.Schema.Types.ObjectId | CategoryWithMongo_Id;
     slug: string;
     unit: string;
     size?: string;
@@ -83,6 +83,8 @@ interface ProductWithMongo_Id
         | 'offer'
         | 'name'
         | 'slug'
+        | 'category'
+        | 'shortDescription'
     > {
     _id: mongoose.Schema.Types.ObjectId;
 }

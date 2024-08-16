@@ -151,4 +151,5 @@ export default async function getProducts(
     }
 }
 
-const showField = 'name slug offer images currency price unit thumbnail';
+const showField =
+    'name slug offer images currency price unit thumbnail category shortDescription';
