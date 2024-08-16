@@ -30,7 +30,11 @@ export default function ProductViewChange({
                         setIsGridView('gird');
                         sessionStorage.removeItem('card-view');
                     }}
-                    className="border p-2 text-nowrap rounded-sm">
+                    className={`${
+                        isGridView === 'gird'
+                            ? 'bg-primary hover:bg-primary-foreground text-neutral-100'
+                            : 'hover:bg-slate-200/80'
+                    } border p-2 text-nowrap rounded-sm duration-150`}>
                     <SlGrid />
                 </button>
                 <button
@@ -39,7 +43,11 @@ export default function ProductViewChange({
                         setIsGridView('list');
                         sessionStorage.setItem('card-view', 'list');
                     }}
-                    className="border p-2 text-nowrap rounded-sm">
+                    className={`${
+                        isGridView === 'list'
+                            ? 'bg-primary hover:bg-primary-foreground text-neutral-100'
+                            : 'hover:bg-slate-200/80'
+                    } border p-2 text-nowrap rounded-sm duration-150`}>
                     <FaListUl />
                 </button>
             </div>
