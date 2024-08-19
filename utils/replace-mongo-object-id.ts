@@ -8,12 +8,11 @@ type ObjType = ProductDetailsWith_idType;
 type ReturnType = ProductDetailsType;
 
 export default function replaceMongoObjectId(obj: ObjType): ReturnType {
-    const { _id, ...rest } = obj;
-
     const finalObj = {
-        ...rest,
-        id: _id.toString(),
+        id: obj._id.toString(),
+        ...obj,
     };
+    const { _id, ...rest } = finalObj;
 
-    return finalObj;
+    return rest;
 }
