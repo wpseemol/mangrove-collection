@@ -40,14 +40,14 @@ export default function ListViewProductCard({
     return (
         details && (
             <div
-                className="w-full shadow hover:shadow-lg grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-3 grid-cols-1 items-center gap-4 lg:h-[17.5rem] md:h-[12rem] h-[17.5rem]
+                className="md:w-full sm:w-80 w-72 md:mx-0 mx-auto shadow hover:shadow-lg flex md:flex-row flex-col items-center gap-4 lg:h-[15.5rem] md:h-[12rem] h-fit
         duration-200 border border-neutral-700/10 group
         ">
                 <CustomLink
                     isActive={false}
                     href={`/products/${slug}`}
-                    className="animate-fade animate-duration-1000 col-span-1 w-full h-full overflow-hidden flex justify-center items-center border-r">
-                    <figure className="lg:h-[17.5rem] md:h-[12rem] h-[17.5rem] w-full overflow-hidden relative ">
+                    className="animate-fade animate-duration-1000 border-r">
+                    <figure className="lg:w-[15.5rem] md:w-[12rem] sm:w-80 w-72 lg:h-[15.5rem] md:h-[12rem] sm:h-80 h-72 overflow-hidden relative ">
                         <Image
                             src={details.thumbnail}
                             alt={details.name}
@@ -68,14 +68,16 @@ export default function ListViewProductCard({
                         )}
                     </figure>
                 </CustomLink>
-                <div className="animate-fade-left animate-duration-1000 md:col-span-3 sm:col-span-2  w-full">
+                <div className="animate-fade-left animate-duration-1000 md:col-span-3 sm:col-span-2  w-full md:p-0 p-3">
                     <Link href={`/products?category=${categoryType.slug}`}>
                         <p className="text-xs font-extralight hover:text-primaryColor duration-200 text-[#999]">
                             {categoryType.name}
                         </p>
                     </Link>
                     <Link href={`/products/${slug}`}>
-                        <h2 className="text-[28px] font-medium my-2">{name}</h2>
+                        <h2 className="md:text-[28px] text-xl font-medium my-2">
+                            {name}
+                        </h2>
                     </Link>
                     <p className=" text-green-800 mb-2">
                         <CurrencyIcon currency={details.currency} />{' '}

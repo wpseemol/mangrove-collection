@@ -74,7 +74,7 @@ export default function HeroSlider() {
 
 function CustomSlide({ slidItem }: { slidItem: SliderContent }) {
     const { scrollY } = useScroll();
-    const scale = useTransform(scrollY, [0, 1000], [1, 2]);
+    const scale = useTransform(scrollY, [0, 750], [1, 2]);
     return (
         <>
             <figure className="w-full h-full overflow-hidden flex justify-center items-center bg-secondary">

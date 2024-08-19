@@ -28,6 +28,7 @@ export default function CustomLink({
 
     return (
         <Link
+            scroll={false}
             className={`${
                 isActive
                     ? pathName === href
