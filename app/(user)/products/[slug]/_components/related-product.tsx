@@ -20,7 +20,7 @@ export default async function RelatedProduct({
     return (
         relatedProducts &&
         relatedProducts.length > 0 && (
-            <div className="container md:pb-10 pb-5">
+            <section className="container md:pb-10 pb-5">
                 <h2 className="text-2xl font-medium text-gray-800 dark:text-neutral-100 uppercase mb-6">
                     Related products
                 </h2>
@@ -29,7 +29,7 @@ export default async function RelatedProduct({
                         <ProductCard key={product?.id} details={product} />
                     ))}
                 </div>
-            </div>
+            </section>
         )
     );
 }

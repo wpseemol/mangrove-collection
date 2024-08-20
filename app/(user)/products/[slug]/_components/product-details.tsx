@@ -1,8 +1,10 @@
 import Breadcrumb from '@/components/bread-crumb';
+import VariantContentUpdateProvider from '@/components/providers/varient-update-provider';
 import { ProductDetailsType } from '@/types/products';
 import wordEllipsis from '@/utils/word-ellipsis';
 import Link from 'next/link';
 import { FaChevronRight } from 'react-icons/fa6';
+import Details from './details-section';
 import RelatedProduct from './related-product';
 
 export default function ProductDetails({
@@ -12,6 +14,7 @@ export default function ProductDetails({
 }) {
     return (
         <>
+            {/* Breadcrumb */}
             <Breadcrumb
                 pageName="Products"
                 href="/products"
@@ -20,19 +23,22 @@ export default function ProductDetails({
                         <FaChevronRight className="text-sm text-gray-400" />
                         <Link href="#">
                             <p className="text-primary text-base hover:text-primary-foreground duration-150 capitalize">
-                                {wordEllipsis(details.name.toLowerCase())}
+                                {wordEllipsis(details.name.toLowerCase(), 10)}
                             </p>
                         </Link>
                     </>
                 }
             />
-            <h2 className="text-4xl">{details.name}</h2>
-            <pre className="text-wrap">{JSON.stringify(details)}</pre>
-
+            {/* Breadcrumb */}
+            <VariantContentUpdateProvider>
+                <Details details={details} />
+            </VariantContentUpdateProvider>
+            {/* related product */}
             <RelatedProduct
                 excludeProductId={details.id}
                 categoryId={details.category.toString()}
             />
+            {/* related product */}
         </>
     );
 }
