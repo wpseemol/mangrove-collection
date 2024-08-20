@@ -1,5 +1,6 @@
 'use client';
 
+import { useVariantUpdate } from '@/hooks';
 import { useState } from 'react';
 
 interface PriceSectionType {
@@ -7,7 +8,9 @@ interface PriceSectionType {
 }
 
 export default function PriceSection({ displayPrice }: PriceSectionType) {
-    const [price, setPrice] = useState(displayPrice);
+    const [price, setPrice] = useState<number>(displayPrice);
+
+    const { variantSelectId, setVariantSelectId } = useVariantUpdate;
 
     return <>{price.toFixed(2)}</>;
 }
