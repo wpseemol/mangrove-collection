@@ -53,9 +53,7 @@ export default function ProductViewChange({
             </div>
             <div
                 className={`flex flex-wrap mt-4 ${
-                    isGridView === 'gird'
-                        ? ' items-center justify-center gap-x-3 gap-y-5'
-                        : ''
+                    isGridView === 'gird' ? ' items-center gap-x-3 gap-y-5' : ''
                 } ${isGridView === 'list' ? ' flex-col gap-y-5' : ''}`}>
                 {isGridView === 'gird' && children}
                 {isGridView === 'list' && listViewCard}

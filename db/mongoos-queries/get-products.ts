@@ -14,11 +14,11 @@ type GetProductType =
     | 'filter';
 
 export default async function getProducts(
-    type: GetProductType | null = null,
-    categoryIds: string[] | null = null,
-    price: PriceObjType | null = null,
-    size: string | null = null,
-    excludeProductId: string | null = null
+    type: GetProductType | null = null, // what type of product you want to get.
+    categoryIds: string[] | null = null, // category ids give all product.
+    price: PriceObjType | null = null, // price object is support minPrice and maxPrice it's number.
+    size: string | null = null, // input size, it's string.
+    excludeProductId: string | null = null // whose product you want to remove from the least.
 ) {
     try {
         await connectMongoDB();

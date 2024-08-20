@@ -3,6 +3,7 @@ import { ProductDetailsType } from '@/types/products';
 import wordEllipsis from '@/utils/word-ellipsis';
 import Link from 'next/link';
 import { FaChevronRight } from 'react-icons/fa6';
+import RelatedProduct from './related-product';
 
 export default function ProductDetails({
     details,
@@ -27,6 +28,11 @@ export default function ProductDetails({
             />
             <h2 className="text-4xl">{details.name}</h2>
             <pre className="text-wrap">{JSON.stringify(details)}</pre>
+
+            <RelatedProduct
+                excludeProductId={details.id}
+                categoryId={details.category.toString()}
+            />
         </>
     );
 }
