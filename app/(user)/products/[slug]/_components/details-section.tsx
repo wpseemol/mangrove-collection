@@ -2,9 +2,14 @@ import CustomLink from '@/components/custom-link';
 import { ProductDetailsType } from '@/types/products';
 import { CurrencyIcon } from '@/utils/currency-icon';
 import PriceSection from './price-section';
+import SelectedVariant from './selected-variant';
 
 export default function Details({ details }: { details: ProductDetailsType }) {
     let displayPrice = details.price.find((item) => item.select);
+
+    const displayVariant = Array.from(
+        new Set(details.variants?.map((item) => item.type))
+    );
 
     return (
         <section>
@@ -85,8 +90,8 @@ export default function Details({ details }: { details: ProductDetailsType }) {
                                 {details.unit}{' '}
                             </span>
                         </p>
-
-                        {/* {displayVariant?.length > 0 &&
+                        {/* variant section */}
+                        {displayVariant?.length > 0 &&
                             displayVariant?.map((variant) => (
                                 <p key={variant} className="space-x-2">
                                     <span className="text-gray-800 font-semibold capitalize">
@@ -94,10 +99,11 @@ export default function Details({ details }: { details: ProductDetailsType }) {
                                     </span>
                                     <SelectedVariant
                                         type={variant}
-                                        variants={variants}
+                                        variants={details.variants}
                                     />
                                 </p>
-                            ))} */}
+                            ))}
+                        {/* variant section */}
 
                         {/* <p className="space-x-2">
                             <span className="text-gray-800 font-semibold">

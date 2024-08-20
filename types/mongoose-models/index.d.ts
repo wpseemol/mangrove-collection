@@ -119,4 +119,5 @@ export type {
     ProductWithMongo_Id,
     ReplaceMongoIdAccepted,
     ReplaceMongoIdReturn,
+    VariantsType,
 };
