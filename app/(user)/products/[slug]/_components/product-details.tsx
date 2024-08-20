@@ -7,7 +7,7 @@ export default function ProductDetails({
 }) {
     return (
         <div>
-            <h2 className="text-4xl">product details</h2>
+            <h2 className="text-4xl">{details.name}</h2>
             <pre className="text-wrap">{JSON.stringify(details)}</pre>
         </div>
     );

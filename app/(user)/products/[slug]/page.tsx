@@ -15,26 +15,30 @@ export async function generateMetadata({
         productDetail = await getProductDetails(params.slug);
     }
 
-    const previousImages = productDetail?.images || [
-        { imgUrl: productDetail?.thumbnail || '' },
-    ];
+    if (productDetail) {
+        const previousImages = productDetail?.images || [
+            { imgUrl: productDetail.thumbnail || '' },
+        ];
 
-    return {
-        title: productDetail?.name || 'Details Page',
-        description: productDetail?.description,
-        openGraph: {
-            title: productDetail?.name || 'Details Page',
-            description: productDetail?.description,
-            images: previousImages.map((img) => ({
-                url: img.imgUrl,
-                width: 300,
-                height: 300,
-                alt: productDetail?.name || 'Product Image',
-            })),
+        return {
+            title: productDetail.name,
+            description: productDetail.description,
+            openGraph: {
+                title: productDetail.name,
+                description: productDetail?.description,
+                images: previousImages.map((img) => ({
+                    url: img.imgUrl,
+                    width: 300,
+                    height: 300,
+                    alt: productDetail.name,
+                })),
 
-            url: `${process.env.VERCEL_URL}/products/${params?.slug}`,
-        },
-    };
+                url: `${process.env.VERCEL_URL}/products/${params?.slug}`,
+            },
+        };
+    } else {
+        return { title: 'Mangrove Collection | Details Page' };
+    }
 }
 
 export default async function ProductDetailPage({ params }: PramsType) {
@@ -45,7 +49,7 @@ export default async function ProductDetailPage({ params }: PramsType) {
     }
 
     return (
-        <main className="container mx-auto">
+        <main className="container mx-auto min-h-[calc(100vh-25rem)]">
             {productDetail && <ProductDetails details={productDetail} />}
         </main>
     );
