@@ -2,6 +2,7 @@ import CustomLink from '@/components/custom-link';
 import { ImageType } from '@/types/mongoose-models';
 import { ProductDetailsType } from '@/types/products';
 import { CurrencyIcon } from '@/utils/currency-icon';
+import BuyAndCardBtn from './btns';
 import ImagePreview from './image-preview';
 import PriceSection from './price-section';
 import SelectedVariant from './selected-variant';
@@ -132,7 +133,7 @@ export default function Details({ details }: { details: ProductDetailsType }) {
                         {/* btn click site */}
 
                         <div className="flex items-center justify-center md:justify-start gap-4 mt-4">
-                            {/* <CardBtn /> */}
+                            <BuyAndCardBtn />
                         </div>
 
                         {/* <div className="mt-4">
