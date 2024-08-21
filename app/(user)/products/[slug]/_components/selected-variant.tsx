@@ -1,16 +1,19 @@
 'use client';
 
 import { useVariantUpdate } from '@/hooks';
-import { VariantsType } from '@/types/mongoose-models';
+import { PriceType, VariantsType } from '@/types/mongoose-models';
+import { useEffect } from 'react';
 
 interface SelectedVariantType {
     type: string;
     variants?: VariantsType[];
+    displayPrice?: PriceType;
 }
 
 export default function SelectedVariant({
     type,
     variants,
+    displayPrice,
 }: SelectedVariantType) {
     const { variantSelectId, setVariantSelectId } = useVariantUpdate();
 
@@ -19,6 +22,12 @@ export default function SelectedVariant({
     function handelSelectVariant(selectedId: string) {
         setVariantSelectId(selectedId);
     }
+
+    useEffect(() => {
+        if (displayPrice?.variantId) {
+            setVariantSelectId(displayPrice?.variantId);
+        }
+    }, [displayPrice?.variantId, setVariantSelectId]);
 
     return typeVariants?.map((variant) => (
         <button

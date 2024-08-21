@@ -106,6 +106,7 @@ export default function Details({ details }: { details: ProductDetailsType }) {
                                     <SelectedVariant
                                         type={variant}
                                         variants={details.variants}
+                                        displayPrice={displayPrice}
                                     />
                                 </p>
                             ))}

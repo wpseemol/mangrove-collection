@@ -17,8 +17,6 @@ export default function ImagePreview({
 }: ImagePreviewType) {
     const [previewImage, setPreviewImage] = useState(allImage[0]);
 
-    console.log('image preview:', allImage);
-
     function handelImagePreviewHover(img: ImageType) {
         setPreviewImage(img);
     }
