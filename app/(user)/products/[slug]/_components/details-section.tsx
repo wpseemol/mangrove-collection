@@ -1,6 +1,8 @@
 import CustomLink from '@/components/custom-link';
+import { ImageType } from '@/types/mongoose-models';
 import { ProductDetailsType } from '@/types/products';
 import { CurrencyIcon } from '@/utils/currency-icon';
+import ImagePreview from './image-preview';
 import PriceSection from './price-section';
 import SelectedVariant from './selected-variant';
 
@@ -25,10 +27,13 @@ export default function Details({ details }: { details: ProductDetailsType }) {
 
                     {/* image preview component */}
                     {/* allImage function return array and input a single image url and images array */}
-                    {/* <ImagePreview
-                        allImage={allImageArray(thumbnail, images)}
-                        productName={name}
-                    /> */}
+                    <ImagePreview
+                        allImage={allImageArray(
+                            details.thumbnail,
+                            details.images
+                        )}
+                        productName={details.name}
+                    />
 
                     <div className="flex flex-col gap-y-3">
                         <h2 className="md:text-3xl text-xl font-medium capitalize">
@@ -179,4 +184,21 @@ export default function Details({ details }: { details: ProductDetailsType }) {
             </>
         </section>
     );
+}
+
+function allImageArray(thumbnail: string, images?: ImageType[]): ImageType[] {
+    let allImage: ImageType[] = [];
+
+    if (thumbnail) {
+        allImage.push({
+            id: crypto.randomUUID(),
+            imgUrl: thumbnail,
+        });
+    }
+
+    if (images) {
+        allImage = [...allImage, ...images];
+    }
+
+    return allImage;
 }

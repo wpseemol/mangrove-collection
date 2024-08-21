@@ -17,8 +17,6 @@ export default function PriceSection({
 
     const { variantSelectId, setVariantSelectId } = useVariantUpdate();
 
-    console.log('selected price:', variantSelectId);
-
     useEffect(() => {
         if (variantSelectId) {
             const selectedPrice = priceVariants.find(

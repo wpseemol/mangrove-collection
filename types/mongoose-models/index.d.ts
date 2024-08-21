@@ -113,6 +113,7 @@ export type {
     CategoryWithCountType,
     CategoryWithMongo_Id,
     CategoryWith_IdCount,
+    ImageType,
     PriceType,
     ProductBase,
     ProductType,
