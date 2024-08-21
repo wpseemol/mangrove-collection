@@ -41,15 +41,15 @@ export default function ImagePreview({
                         key={img?.id}
                         className={`${
                             previewImage?.id === img?.id
-                                ? 'border-2 border-primary-foreground'
+                                ? 'border-primary-foreground'
                                 : 'border-neutral-500'
-                        } xl:w-20 xl:h-20 lg:w-16 lg:h-16 h-14 w-14 overflow-hidden border rounded flex items-center justify-start duration-150`}>
+                        } h-14 w-14 overflow-hidden border rounded flex items-center justify-start duration-150`}>
                         <Image
                             src={img?.imgUrl}
                             alt={`${productName} - ${inx + 1}`}
                             width={100}
                             height={100}
-                            className="w-full cursor-pointer border "
+                            className="w-full cursor-pointer border object-cover object-center"
                         />
                     </div>
                 ))}

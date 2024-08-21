@@ -114,7 +114,7 @@ interface UserSectionTem {
 
 async function Account() {
     const section: UserSectionTem = {
-        user: { name: 'John Doe', role: 'admin', image: '' },
+        user: { name: 'John Doe', role: 'user', image: '' },
     };
 
     if (!section.user) {
@@ -123,13 +123,22 @@ async function Account() {
 
     const firstName = section.user.name;
 
-    let linkUrl;
-    if (section?.user?.role === 'admin') {
-        linkUrl = '/dashboard';
-    } else if (section?.user?.role === 'contentCreator') {
-        linkUrl = '/dashboard';
-    } else {
-        linkUrl = '/account';
+    let linkUrl: string = '';
+
+    switch (section.user.role) {
+        case 'admin':
+            linkUrl = '/dashboard';
+            break;
+        case 'creator':
+            linkUrl = '/dashboard';
+            break;
+        case 'user':
+            linkUrl = '/account';
+            break;
+
+        default:
+            linkUrl = '/login';
+            break;
     }
 
     let userImage: React.ReactNode;
