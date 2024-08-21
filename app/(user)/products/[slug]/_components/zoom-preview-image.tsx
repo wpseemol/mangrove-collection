@@ -4,6 +4,7 @@ import { useZoomImageHover } from '@zoom-image/react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
+import MobileViewSlider from './mobile-view-slider';
 
 interface ZoomPreviewImageType {
     previewImage: ImageType;
@@ -92,7 +93,7 @@ export default function ZoomPreviewImage({
             </motion.figure>
 
             {/* mobile view */}
-            {/* <MobileViewSlider allImage={allImage} productName={productName} /> */}
+            <MobileViewSlider allImage={allImage} productName={productName} />
 
             <figure
                 className="absolute top-0 lg:left-[33rem] md:left-[22rem] hidden"

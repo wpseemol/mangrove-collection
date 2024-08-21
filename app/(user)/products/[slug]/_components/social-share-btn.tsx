@@ -22,7 +22,7 @@ export default function SocialShareBtn({
             : 'URL_NOT_AVAILABLE';
 
     return (
-        <div className="flex gap-3 mt-4">
+        <div className="flex md:justify-start justify-center items-center gap-3 mt-4">
             <FacebookShareButton
                 url={fullUrl}
                 title={title}

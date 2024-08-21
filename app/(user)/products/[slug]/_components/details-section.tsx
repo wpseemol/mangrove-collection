@@ -16,11 +16,11 @@ export default function Details({ details }: { details: ProductDetailsType }) {
     );
 
     return (
-        <section>
+        <section className="group">
             <>
                 <section
                     key={details.id}
-                    className=" flex md:flex-nowrap flex-wrap gap-6 group relative ">
+                    className="flex md:flex-nowrap md:justify-start justify-center flex-wrap gap-6 group relative md:text-start text-center">
                     {/* <ProductNextPreviousButton
                     productsIdArray={trendingProductIdArray}
                     local={local}
@@ -38,12 +38,12 @@ export default function Details({ details }: { details: ProductDetailsType }) {
                     />
 
                     <div className="flex flex-col gap-y-3">
-                        <h2 className="md:text-3xl text-xl font-medium capitalize">
+                        <h2 className="md:text-3xl text-xl font-medium capitalize group-hover:underline group-hover:underline-offset-4 group-hover:text-primary-foreground duration-200">
                             {details.name}
                         </h2>
 
                         {/* price section */}
-                        <div className="flex items-baseline font-roboto">
+                        <div className="flex md:justify-start justify-center items-baseline font-roboto">
                             <p className="text-xl text-primary font-semibold">
                                 {displayPrice && (
                                     <PriceSection
@@ -174,7 +174,7 @@ export default function Details({ details }: { details: ProductDetailsType }) {
                     <h3 className="border-b border-gray-200 font-roboto text-gray-800 pb-3 font-medium text-center md:text-left">
                         Description
                     </h3>
-                    <div className="w-3/5 pt-6 text-gray-600">
+                    <div className="w-3/5 pt-6 text-gray-600 md:text-start text-center md:mx-0 mx-auto">
                         <div
                             className="quill-content"
                             dangerouslySetInnerHTML={{

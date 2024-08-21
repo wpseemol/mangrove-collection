@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 
 export default function BuyAndCardBtn() {
     return (
-        <div className="flex items-center flex-wrap gap-x-2 w-full">
+        <div className="flex items-center md:justify-start justify-center flex-wrap gap-x-2 w-full">
             <Button
                 variant="default"
                 size="sm"

@@ -13,7 +13,7 @@ export default function Breadcrumb({
     more = null,
 }: BreadcrumbProps) {
     return (
-        <div className="container py-4 flex items-center gap-3">
+        <div className="container py-4 flex items-center gap-3 md:ml-0 ml-5">
             <Link
                 href="/"
                 className="text-primary text-base hover:text-primary-foreground duration-150">
