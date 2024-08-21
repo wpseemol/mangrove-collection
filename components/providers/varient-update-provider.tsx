@@ -8,7 +8,7 @@ export default function VariantContentUpdateProvider({
 }: {
     children: React.ReactNode;
 }) {
-    const [variantSelectId, setVariantSelectId] = useState<number | null>(null);
+    const [variantSelectId, setVariantSelectId] = useState<string | null>(null);
 
     const sendObj = { variantSelectId, setVariantSelectId };
 

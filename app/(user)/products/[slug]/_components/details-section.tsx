@@ -41,6 +41,7 @@ export default function Details({ details }: { details: ProductDetailsType }) {
                                 {displayPrice && (
                                     <PriceSection
                                         displayPrice={displayPrice.price}
+                                        priceVariants={details.price}
                                     />
                                 )}
                                 <CurrencyIcon currency={details.currency} />{' '}
