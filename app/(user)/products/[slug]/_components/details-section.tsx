@@ -1,5 +1,5 @@
 import CustomLink from '@/components/custom-link';
-import { ImageType } from '@/types/mongoose-models';
+import { CategoryWithMongo_Id, ImageType } from '@/types/mongoose-models';
 import { ProductDetailsType } from '@/types/products';
 import { CurrencyIcon } from '@/utils/currency-icon';
 import BuyAndCardBtn from './btns';
@@ -15,12 +15,14 @@ export default function Details({ details }: { details: ProductDetailsType }) {
         new Set(details.variants?.map((item) => item.type))
     );
 
+    const category = details.category as CategoryWithMongo_Id;
+
     return (
         <section className="group">
             <>
                 <section
                     key={details.id}
-                    className="flex md:flex-nowrap md:justify-start justify-center flex-wrap gap-6 group relative md:text-start text-center">
+                    className="flex md:flex-nowrap justify-center flex-wrap gap-6 group relative md:text-start text-center">
                     {/* <ProductNextPreviousButton
                     productsIdArray={trendingProductIdArray}
                     local={local}
@@ -37,7 +39,7 @@ export default function Details({ details }: { details: ProductDetailsType }) {
                         productName={details.name}
                     />
 
-                    <div className="flex flex-col gap-y-3">
+                    <div className="flex flex-col gap-y-3 w-full">
                         <h2 className="md:text-3xl text-xl font-medium capitalize group-hover:underline group-hover:underline-offset-4 group-hover:text-primary-foreground duration-200">
                             {details.name}
                         </h2>
@@ -65,11 +67,12 @@ export default function Details({ details }: { details: ProductDetailsType }) {
                         {/* category section */}
                         <p className="">
                             <span className="text-gray-800 font-semibold">
-                                Category :
+                                Category :{' '}
                             </span>
-                            <CustomLink href={`/products?category=${'slug'}`}>
+                            <CustomLink
+                                href={`/products?category=${category.slug}`}>
                                 <span className="text-gray-600 capitalize">
-                                    {'category name'}
+                                    {category.name.toLowerCase()}
                                 </span>
                             </CustomLink>
                         </p>
@@ -174,7 +177,7 @@ export default function Details({ details }: { details: ProductDetailsType }) {
                     <h3 className="border-b border-gray-200 font-roboto text-gray-800 pb-3 font-medium text-center md:text-left">
                         Description
                     </h3>
-                    <div className="w-3/5 pt-6 text-gray-600 md:text-start text-center md:mx-0 mx-auto">
+                    <div className=" mx-4 pt-6 text-gray-600 md:mx-0 sm:mx-auto">
                         <div
                             className="quill-content"
                             dangerouslySetInnerHTML={{

@@ -1,5 +1,6 @@
 import Breadcrumb from '@/components/bread-crumb';
 import VariantContentUpdateProvider from '@/components/providers/varient-update-provider';
+import { CategoryWithMongo_Id } from '@/types/mongoose-models';
 import { ProductDetailsType } from '@/types/products';
 import wordEllipsis from '@/utils/word-ellipsis';
 import Link from 'next/link';
@@ -12,6 +13,8 @@ export default function ProductDetails({
 }: {
     details: ProductDetailsType;
 }) {
+    const category = details.category as CategoryWithMongo_Id;
+
     return (
         <>
             {/* Breadcrumb */}
@@ -36,7 +39,7 @@ export default function ProductDetails({
             {/* related product */}
             <RelatedProduct
                 excludeProductId={details.id}
-                categoryId={details.category.toString()}
+                categoryId={category._id.toString()}
             />
             {/* related product */}
         </>

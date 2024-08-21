@@ -6,6 +6,7 @@ import {
 } from '@/types/products';
 import replaceMongoObjectId from '@/utils/replace-mongo-object-id';
 import { connectMongoDB } from '../connections/mongoose-connect';
+import { Category } from '../models/category';
 import { Product } from '../models/product';
 
 export default async function getProductDetails(
@@ -17,7 +18,13 @@ export default async function getProductDetails(
         const response: ProductDetailsWith_idType | null =
             await Product.findOne({
                 slug,
-            }).lean();
+            })
+                .populate({
+                    path: 'category',
+                    model: Category,
+                    select: 'name slug imgUrl',
+                })
+                .lean();
         if (response) {
             return replaceMongoObjectId(response);
         } else {
