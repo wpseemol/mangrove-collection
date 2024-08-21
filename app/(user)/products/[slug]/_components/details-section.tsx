@@ -5,6 +5,7 @@ import { CurrencyIcon } from '@/utils/currency-icon';
 import ImagePreview from './image-preview';
 import PriceSection from './price-section';
 import SelectedVariant from './selected-variant';
+import SocialShareBtn from './social-share-btn';
 
 export default function Details({ details }: { details: ProductDetailsType }) {
     let displayPrice = details.price.find((item) => item.select);
@@ -159,10 +160,10 @@ export default function Details({ details }: { details: ProductDetailsType }) {
                         {/* </div> */}
                         {/* btn click site */}
 
-                        {/* <SocialShareBtn
-                        title={productDetails?.name}
-                        description={productDetails?.description}
-                    /> */}
+                        <SocialShareBtn
+                            title={details.name}
+                            description={details.description}
+                        />
                     </div>
                 </section>
                 {/* ./product-detail */}
