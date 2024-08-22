@@ -33,9 +33,7 @@ export default function LoginForm() {
 
     // 2. Define a submit handler.
     function onSubmit(values: z.infer<typeof loginSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values);
+        console.log('login data:', values);
     }
 
     return (
@@ -86,7 +84,7 @@ export default function LoginForm() {
                         variant="default"
                         className={`${
                             loading ? 'cursor-wait' : ''
-                        } w-full bg-primary-foreground hover:bg-primary duration-100 text-neutral-100`}>
+                        } w-full bg-primary hover:bg-primary-foreground duration-100 text-neutral-100`}>
                         Login
                         {loading && (
                             <>
