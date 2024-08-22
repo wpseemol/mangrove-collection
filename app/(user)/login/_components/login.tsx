@@ -12,7 +12,7 @@ export default function LoginSection() {
         <Card className="">
             <CardHeader>
                 <CardTitle className="text-center">Sign in</CardTitle>
-                <CardDescription>
+                <CardDescription className="text-center">
                     Sign in to access your account.
                 </CardDescription>
             </CardHeader>
