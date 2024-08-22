@@ -5,9 +5,9 @@ import {
     ProductDetailsWith_idType,
 } from '@/types/products';
 import replaceMongoObjectId from '@/utils/replace-mongo-object-id';
+import { Category } from '../../lib/schemas/mongoose/category';
+import { Product } from '../../lib/schemas/mongoose/product';
 import { connectMongoDB } from '../connections/mongoose-connect';
-import { Category } from '../models/category';
-import { Product } from '../models/product';
 
 export default async function getProductDetails(
     slug: string

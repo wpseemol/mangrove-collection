@@ -1,5 +1,5 @@
 import { connectMongoDB } from '@/db/connections/mongoose-connect';
-import { Category } from '@/db/models/category';
+import { Category } from '@/lib/schemas/mongoose/category';
 import { CategoryWithMongo_Id } from '@/types/mongoose-models';
 import { NextRequest, NextResponse } from 'next/server';
 

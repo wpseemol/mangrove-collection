@@ -8,8 +8,8 @@ import {
 } from '@/types/mongoose-models';
 import replaceMongoId from '@/utils/replace-mongo-id';
 import mongoose from 'mongoose';
+import { Category } from '../../lib/schemas/mongoose/category';
 import { connectMongoDB } from '../connections/mongoose-connect';
-import { Category } from '../models/category';
 
 type GetCategoryType = 'withCountProduct';
 

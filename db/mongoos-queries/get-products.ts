@@ -3,9 +3,9 @@
 import { ProductType, ProductWithMongo_Id } from '@/types/mongoose-models';
 import { PriceObjType } from '@/types/products';
 import replaceMongoId from '@/utils/replace-mongo-id';
+import { Category } from '../../lib/schemas/mongoose/category';
+import { Product } from '../../lib/schemas/mongoose/product';
 import { connectMongoDB } from '../connections/mongoose-connect';
-import { Category } from '../models/category';
-import { Product } from '../models/product';
 
 type GetProductType =
     | 'popular-product'
