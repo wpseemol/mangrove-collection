@@ -26,6 +26,7 @@ const userSchema = new mongoose.Schema<IUser>({
     phone: {
         type: String,
         required: true,
+        unique: true,
     },
 
     role: {

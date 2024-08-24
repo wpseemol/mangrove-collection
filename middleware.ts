@@ -28,7 +28,7 @@ export default middleware(async (request) => {
     const isAdminRoutes = adminRoutes.includes(nextUrl.pathname);
     const isCreatorRoutes = creatorRoutes.includes(nextUrl.pathname);
 
-    console.log('middle ware path name:', nextUrl);
+    // console.log('middle ware path name:', nextUrl);
 
     if (isApiAuthRoute) return NextResponse.next();
 

@@ -217,7 +217,7 @@ export type RoleType = 'user' | 'creator' | 'admin';
 export interface UserBase {
     username: string;
     fullName: string | null;
-    email: string | null;
+    email: string;
     image: string | null;
     phone: string;
     /**

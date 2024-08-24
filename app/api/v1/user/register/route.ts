@@ -1,6 +1,7 @@
 import { connectMongoDB } from '@/db/connections/mongoose-connect';
 import { User } from '@/lib/schemas/mongoose/user';
 import bcryptjs from 'bcryptjs';
+import { MongoServerError } from 'mongodb';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
@@ -34,10 +35,35 @@ export async function POST(request: NextRequest) {
             { status: 201 }
         );
     } catch (error) {
-        console.error('register api router Error creating user:', error);
+        const typeError = error as MongoServerError;
+
+        console.log('api reg:', typeError);
+
+        if (typeError.code === 11000) {
+            const pattern: string | null =
+                typeof typeError.keyPattern === 'object'
+                    ? Object.keys(typeError.keyPattern)[0]
+                    : null;
+
+            let message = '';
+
+            if (pattern === 'email')
+                message = 'Email is already in use in another account.';
+            if (pattern === 'username') message = 'Username is already in use.';
+            if (pattern === 'phone')
+                message = 'Phone number already in use in another account.';
+
+            return NextResponse.json(
+                {
+                    message,
+                    pattern,
+                },
+                { status: 409 }
+            );
+        }
 
         return NextResponse.json(
-            { message: 'Error creating user' },
+            { message: 'Inter nal server Error.' },
             { status: 500 }
         );
     }

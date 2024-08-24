@@ -17,7 +17,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { FcSynchronize } from 'react-icons/fc';
 import { PiEyeClosedDuotone, PiEyeDuotone } from 'react-icons/pi';
@@ -40,20 +40,69 @@ export default function RegisterForm() {
     });
 
     // 2. Define a submit handler.
-    function onSubmit(values: z.infer<typeof registerSchema>) {
+    async function onSubmit(values: z.infer<typeof registerSchema>) {
         setLoading(true);
         const { conformPass, ...regForm } = values;
 
         if (conformPass !== values.password) {
-            toast({
-                variant: 'destructive',
-                description: 'Password and confirm password is not match.',
+            form.setError('conformPass', {
+                type: 'required',
+                message: 'Password and confirm password do not match.',
             });
             setLoading(false);
             return;
         }
 
-        console.log('register data:', regForm);
+        try {
+            const response = await fetch('/api/v1/user/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(regForm),
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                console.log(error);
+
+                if (error.pattern === 'email') {
+                    form.setError('email', {
+                        type: 'required',
+                        message: error.message,
+                    });
+                } else if (error.pattern === 'phone') {
+                    form.setError('phone', {
+                        type: 'required',
+                        message: error.message,
+                    });
+                } else {
+                    throw new Error(error.message);
+                }
+
+                return;
+            }
+
+            toast({
+                variant: 'default',
+                description: 'User registration is successful!',
+            });
+        } catch (error) {
+            if (error instanceof Error) {
+                toast({
+                    variant: 'destructive',
+                    description: error.message,
+                });
+            } else {
+                // Handle unexpected error types
+                toast({
+                    variant: 'destructive',
+                    description: 'An unexpected error occurred.',
+                });
+            }
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (
@@ -182,40 +231,61 @@ function PasswordOrConfirmPassField({ form }: PasswordOrConfirmPassFieldProps) {
     const [isHidden, setIsHidden] = useState(false);
     const [passwordValue, setPasswordValue] = useState('');
 
-    // password strong Check
+    const [strengthLevel, setStrengthLevel] = useState<string | null>(null);
 
-    const containsUpperCase = /[A-Z]/.test(passwordValue);
-    const containsLowerCase = /[a-z]/.test(passwordValue);
-    const containsNumber = /[0-9]/.test(passwordValue);
-    const containsSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(
-        passwordValue
-    );
-    const strengthScore =
-        (containsSpecial ? 1 : 0) +
-        (containsUpperCase ? 1 : 0) +
-        (containsLowerCase ? 1 : 0) +
-        (containsNumber ? 1 : 0);
+    // Memoize the password strength calculation
+    const strengthScore = useMemo(() => {
+        const containsUpperCase = /[A-Z]/.test(passwordValue);
+        const containsLowerCase = /[a-z]/.test(passwordValue);
+        const containsNumber = /[0-9]/.test(passwordValue);
+        const containsSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(
+            passwordValue
+        );
+        return (
+            (containsSpecial ? 1 : 0) +
+            (containsUpperCase ? 1 : 0) +
+            (containsLowerCase ? 1 : 0) +
+            (containsNumber ? 1 : 0)
+        );
+    }, [passwordValue]);
 
-    let strengthLevel: string = '';
-    let style: string = '';
-    if (passwordValue.length > 5) {
-        switch (strengthScore) {
-            case 1:
-            case 2:
-                strengthLevel = 'Weak';
-                style = 'text-[#ff2323]';
-                break;
-            case 3:
-                strengthLevel = 'Medium';
-                style = 'text-[#fecf02]';
-                break;
-            case 4:
-                strengthLevel = 'Strong';
-                style = 'text-[#0dc547]';
-                break;
+    // Set password strength level based on the score
+    useEffect(() => {
+        if (passwordValue.length > 5) {
+            switch (strengthScore) {
+                case 1:
+                case 2:
+                    setStrengthLevel('Weak');
+                    style = 'text-[#ff2323]';
+                    break;
+                case 3:
+                    setStrengthLevel('Medium');
+                    style = 'text-[#fecf02]';
+                    break;
+                case 4:
+                    setStrengthLevel('Strong');
+                    style = 'text-[#0dc547]';
+                    break;
+                default:
+                    setStrengthLevel(null);
+            }
+        } else {
+            setStrengthLevel(null);
+            style = '';
         }
-    }
-    // password strong Check
+    }, [strengthScore, passwordValue]);
+
+    // Clear the strength level after 5 seconds
+    useEffect(() => {
+        if (strengthLevel) {
+            const timer = setTimeout(() => {
+                setStrengthLevel(null);
+                style = '';
+            }, 5000);
+
+            return () => clearTimeout(timer); // Cleanup on unmount or on strengthLevel change
+        }
+    }, [strengthLevel]);
 
     const password = form.watch('password');
 
@@ -281,3 +351,5 @@ function PasswordOrConfirmPassField({ form }: PasswordOrConfirmPassFieldProps) {
         </>
     );
 }
+
+let style = '';
