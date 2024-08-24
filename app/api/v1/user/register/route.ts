@@ -37,8 +37,6 @@ export async function POST(request: NextRequest) {
     } catch (error) {
         const typeError = error as MongoServerError;
 
-        console.log('api reg:', typeError);
-
         if (typeError.code === 11000) {
             const pattern: string | null =
                 typeof typeError.keyPattern === 'object'

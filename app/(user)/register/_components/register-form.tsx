@@ -64,8 +64,6 @@ export default function RegisterForm() {
 
             if (!response.ok) {
                 const error = await response.json();
-                console.log(error);
-
                 if (error.pattern === 'email') {
                     form.setError('email', {
                         type: 'required',
@@ -84,9 +82,11 @@ export default function RegisterForm() {
             }
 
             toast({
-                variant: 'default',
+                variant: 'success',
                 description: 'User registration is successful!',
             });
+
+            router.push('/login');
         } catch (error) {
             if (error instanceof Error) {
                 toast({
