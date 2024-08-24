@@ -1,16 +1,42 @@
+/**
+ * An Array of routes that are used for public route
+ *
+ * @type {string[]}
+ */
 const PUBLIC_ROUTE = ['/', '/product'];
-// this router is public route
 
-const loginAuth = ['/login', '/register'];
-// this is login router
+/**
+ * An array of routes that are used for authentication.
+ * these routes will user to login.
+ * @type {string[]}
+ */
+const loginAuth = ['/login', '/register', '/login/error'];
 
+/**
+ * this route is for next login routes.
+ * these routes will user to login.
+ * @type {string}
+ */
 const apiAuthPrefix = '/api/auth';
-//next auth api login prefixed
 
+/**
+ * if user is login then throw user this route.
+ * this is redirect route.
+ * @type {string}
+ */
 const DEFAULT_REDIRECT = '/';
-// default route if login
+
+/**
+ * if you are not login throw route.
+ * this is redirect route.
+ * @type {string}
+ */
 const DEFAULT_LOGIN_REDIRECT = '/login';
 
+/**
+ * Admin routes all route for only admin route.
+ * @type {string[]}
+ */
 const adminRoutes = [
     '/dashboard',
     '/dashboard/add-product',
@@ -19,15 +45,18 @@ const adminRoutes = [
     '/dashboard/setting',
     '/dashboard/help',
 ];
-// those are admin router
 
+/**
+ * Creator routes all route for only creator user.
+ * throw routes.
+ * @type {string[]}
+ */
 const creatorRoutes = [
     '/dashboard',
     '/dashboard/add-product',
     '/dashboard/profile',
     '/dashboard/help',
 ];
-//those is creator routes;
 
 export {
     DEFAULT_LOGIN_REDIRECT,
