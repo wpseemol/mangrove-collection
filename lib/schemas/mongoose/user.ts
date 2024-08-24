@@ -34,6 +34,10 @@ const userSchema = new mongoose.Schema<IUser>({
         enum: ['user', 'creator', 'admin'], // Use enum for restricted values
         default: 'user',
     },
+    registerAt: {
+        type: Date,
+        default: Date.now,
+    },
 });
 
 const User = mongoose.models.User || mongoose.model<IUser>('User', userSchema);

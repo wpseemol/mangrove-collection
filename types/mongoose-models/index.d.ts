@@ -207,11 +207,12 @@ export type RoleType = 'user' | 'creator' | 'admin';
 /**
  * The `UserBase` interface defines the base structure for a user.
  * - `username`: Unique identifier for the user.
- * - `fullName`: Optional full name of the user, which can be `null` if not provided.
- * - `email`: Optional email address of the user, which can be `null` if not provided.
- * - `image`: Optional URL or path to the user's profile image, which can be `null` if not provided.
+ * - `fullName`: Full name of the user, which can be `null` if not provided.
+ * - `email`:  Email address of the user, which can be `null` if not provided.
+ * - `image`:  URL or path to the user's profile image, which can be `null` if not provided.
  * - `phone`: Phone number of the user.
  * - `role`: Specifies the role of the user within the system. Must be one of 'user', 'creator', or 'admin'.
+ * - `registerAt`: user register time here
  */
 export interface UserBase {
     username: string;
@@ -223,4 +224,8 @@ export interface UserBase {
      * Role of the user within the system, constrained to 'user', 'creator', or 'admin'
      */
     role: RoleType;
+    /**
+     * User register time here.
+     */
+    registerAt: Date;
 }
