@@ -10,7 +10,7 @@ import mongoose from 'mongoose';
  * - `author`: MongoDB ObjectId of the author who created the category.
  * - `createdAt`: Optional timestamp indicating when the category was created.
  */
-interface CategoryBase {
+export interface CategoryBase {
     name: string; // The name of the category.
     slug: string; // URL-friendly identifier for the category.
     imgUrl: string; // URL of the category image.
@@ -23,7 +23,7 @@ interface CategoryBase {
  * with a MongoDB `_id` field.
  * - `_id`: MongoDB ObjectId for the category.
  */
-interface CategoryWithMongo_Id
+export interface CategoryWithMongo_Id
     extends Omit<CategoryBase, 'author' | 'createdAt'> {
     _id: mongoose.Schema.Types.ObjectId; // Unique identifier for the category in MongoDB.
 }
@@ -42,7 +42,7 @@ export interface AllCategoryType extends Omit<CategoryWithMongo_Id, '_id'> {
  * - `_id`: MongoDB ObjectId for the category.
  * - `productCount`: The count of products within the category.
  */
-interface CategoryWith_IdCount
+export interface CategoryWith_IdCount
     extends Omit<CategoryBase, 'imgUrl' | 'author' | 'createdAt'> {
     _id: mongoose.Schema.Types.ObjectId; // MongoDB ObjectId for the category.
     productCount: number; // Number of products in the category.
@@ -64,7 +64,7 @@ export interface CategoryWithCountType
  * The `CategoryType` type represents an array of categories, which can include either
  * `CategoryWithCountType` or `AllCategoryType` objects, or be `null`.
  */
-type CategoryType = (CategoryWithCountType | AllCategoryType)[] | null;
+export type CategoryType = (CategoryWithCountType | AllCategoryType)[] | null;
 
 // Product model types
 
@@ -74,7 +74,7 @@ type CategoryType = (CategoryWithCountType | AllCategoryType)[] | null;
  * - `price`: The price of the variant.
  * - `select`: Boolean indicating if this variant is selected.
  */
-interface PriceType {
+export interface PriceType {
     variantId: string; // Identifier for the variant.
     price: number; // Price for the variant.
     select: boolean; // Indicates if the variant is selected.
@@ -85,7 +85,7 @@ interface PriceType {
  * - `id`: The unique identifier for the image.
  * - `imgUrl`: The URL of the image.
  */
-interface ImageType {
+export interface ImageType {
     id: string; // Identifier for the image.
     imgUrl: string; // URL of the image.
 }
@@ -96,7 +96,7 @@ interface ImageType {
  * - `type`: The type of the variant (e.g., color, size).
  * - `title`: The title or name of the variant.
  */
-interface VariantsType {
+export interface VariantsType {
     id: string; // Identifier for the variant.
     type: string; // Type of the variant.
     title: string; // Title of the variant.
@@ -124,7 +124,7 @@ interface VariantsType {
  * - `popularity`: Optional popularity score of the product.
  * - `tags`: Optional array of tags associated with the product.
  */
-interface ProductBase {
+export interface ProductBase {
     name: string; // Name of the product.
     category: mongoose.Schema.Types.ObjectId | CategoryWithMongo_Id; // Category ObjectId or Category object.
     slug: string; // URL-friendly identifier for the product.
@@ -151,7 +151,7 @@ interface ProductBase {
  * and adding a MongoDB `_id`.
  * - `_id`: MongoDB ObjectId for the product.
  */
-interface ProductWithMongo_Id
+export interface ProductWithMongo_Id
     extends Pick<
         ProductBase,
         | '_id'
@@ -183,7 +183,7 @@ export interface ProductType extends Omit<ProductWithMongo_Id, '_id'> {
  * The `ReplaceMongoIdAccepted` type represents an array of objects that can be of type
  * `ProductWithMongo_Id`, `CategoryWithMongo_Id`, or `CategoryWith_IdCount`.
  */
-type ReplaceMongoIdAccepted = (
+export type ReplaceMongoIdAccepted = (
     | ProductWithMongo_Id
     | CategoryWithMongo_Id
     | CategoryWith_IdCount
@@ -199,21 +199,28 @@ type ReplaceMongoIdReturn = (
     | CategoryWithCountType
 )[];
 
-// Exporting types
+/**
+ *  Define the possible roles a user can have
+ */
+export type RoleType = 'user' | 'creator' | 'admin';
 
-export type {
-    AllCategoryType, // Type representing a category with a string `id`.
-    CategoryBase, // Base structure for a category.
-    CategoryType, // Array type for categories with different structures.
-    CategoryWithCountType, // Category type including a product count.
-    CategoryWithMongo_Id, // Category type including a MongoDB `_id`.
-    CategoryWith_IdCount, // Category type with MongoDB `_id` and product count.
-    ImageType, // Structure for an image associated with a product.
-    PriceType, // Structure for product pricing.
-    ProductBase, // Base structure for a product.
-    ProductType, // Product structure with a string `id`.
-    ProductWithMongo_Id, // Product structure with a MongoDB `_id`.
-    ReplaceMongoIdAccepted, // Type for accepted objects in a replace MongoDB ID function.
-    ReplaceMongoIdReturn, // Type for the return value of a replace MongoDB ID function.
-    VariantsType,
-};
+/**
+ * The `UserBase` interface defines the base structure for a user.
+ * - `username`: Unique identifier for the user.
+ * - `fullName`: Optional full name of the user, which can be `null` if not provided.
+ * - `email`: Optional email address of the user, which can be `null` if not provided.
+ * - `image`: Optional URL or path to the user's profile image, which can be `null` if not provided.
+ * - `phone`: Phone number of the user.
+ * - `role`: Specifies the role of the user within the system. Must be one of 'user', 'creator', or 'admin'.
+ */
+export interface UserBase {
+    username: string;
+    fullName: string | null;
+    email: string | null;
+    image: string | null;
+    phone: string;
+    /**
+     * Role of the user within the system, constrained to 'user', 'creator', or 'admin'
+     */
+    role: RoleType;
+}
