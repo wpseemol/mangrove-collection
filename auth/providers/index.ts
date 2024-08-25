@@ -1,5 +1,6 @@
 import { Provider } from '@auth/core/providers';
+import { credentialsProvider } from './credential-provider';
 
-const providers: Provider[] = [];
+const providers: Provider[] = [credentialsProvider];
 
 export { providers };

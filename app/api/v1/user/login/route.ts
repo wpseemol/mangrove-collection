@@ -45,7 +45,8 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(
             {
                 user: {
-                    id: findUser?.id?.toString(),
+                    id: findUser?._id?.toString(),
+                    username: findUser?.username,
                     name: findUser?.fullName,
                     phone: findUser?.phone,
                     role: findUser?.role,

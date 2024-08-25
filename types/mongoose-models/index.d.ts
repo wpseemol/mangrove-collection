@@ -218,6 +218,7 @@ export interface UserBase {
     username: string;
     fullName: string | null;
     email: string;
+    password: string | null;
     image: string | null;
     phone: string;
     /**
