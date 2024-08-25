@@ -41,16 +41,16 @@ export default middleware(async (request) => {
         return NextResponse.next();
     }
 
-    if (isUserRoutes) {
+    if (isUserRoutes && isUser) {
         if (isUser) return NextResponse.next();
         return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }
-    if (isAdminRoutes) {
+    if (isAdminRoutes && isAdmin) {
         if (isAdmin) return NextResponse.next();
         return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }
 
-    if (isCreatorRoutes) {
+    if (isCreatorRoutes && isCreator) {
         if (isCreator) return NextResponse.next();
         return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }

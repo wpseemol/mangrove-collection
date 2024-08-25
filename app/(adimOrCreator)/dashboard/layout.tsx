@@ -1,3 +1,4 @@
+import Btn from '@/app/(user)/account/_components/btn';
 import '@/app/globals.css';
 import { auth } from '@/auth/auth';
 import { ADMIN, CREATOR } from '@/lib/constant-value';
@@ -32,6 +33,7 @@ export default async function RootLayout({
                     className={poppins.className + ' ' + roboto.className}
                     suppressHydrationWarning={true}>
                     {children}
+                    <Btn />
                 </body>
             </html>
         );
