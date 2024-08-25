@@ -1,8 +1,10 @@
 import { AuthConfigType } from '@/types/auth';
+import { authCallbacks } from './callbacks';
 
 export const authConfig: AuthConfigType = {
-    providers: [],
     session: {
         strategy: 'jwt',
     },
+    callbacks: authCallbacks,
+    providers: [],
 };

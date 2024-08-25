@@ -5,7 +5,23 @@ import { Provider } from '@auth/core/providers';
  * - `providers`: An array of authentication providers.
  * - `session`: Configuration for managing user sessions.
  */
-interface AuthConfigType {
+
+export interface AuthConfigType extends NextAuthOptions {
+    callbacks: {
+        signIn?: (params: {
+            user: User;
+            account: Account | null;
+        }) => Promise<boolean>;
+        session?: (params: {
+            session: Session;
+            token: JWT;
+        }) => Promise<Session>;
+        jwt?: (params: {
+            token: JWT;
+            user?: User;
+            account?: Account | null;
+        }) => Promise<JWT>;
+    };
     providers: Provider[]; // An array of authentication providers used by NextAuth.
     session: SessionType; // Configuration for session management.
 }
@@ -27,4 +43,51 @@ type SessionType =
       }
     | undefined; // Session can also be undefined, indicating no session configuration is provided.
 
-export type { AuthConfigType };
+import 'next-auth';
+import { RoleType } from '../mongoose-models';
+
+declare module 'next-auth' {
+    /**
+     * Returned by `useSession`, `getSession` and received as a prop on the `Provider` React Context
+     */
+    interface Session {
+        user: {
+            /** The user's postal address. */
+            name: string;
+            role: RoleType | string;
+            id: string;
+            image: string | null;
+        };
+    }
+
+    /**
+     * The shape of the user object returned in the OAuth providers' `profile` callback,
+     * or the second parameter of the `session` callback, when using a database.
+     */
+    interface User {
+        id?: string;
+        username?: string;
+        name: string;
+        phone?: string;
+        role?: RoleType;
+    }
+    /**
+     * Usually contains information about the provider being used
+     * and also extends `TokenSet`, which is different tokens returned by OAuth Providers.
+     */
+    interface Account {
+        providerAccountId: string;
+        type: string;
+        provider: string;
+        role?: RoleType;
+    }
+}
+
+declare module 'next-auth/jwt' {
+    /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
+    interface JWT {
+        /** OpenID ID Token */
+
+        role?: RoleType;
+    }
+}
