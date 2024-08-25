@@ -1,3 +1,4 @@
+import { auth } from '@/auth/auth';
 import CustomLink from '@/components/custom-link';
 import { Input } from '@/components/ui/input';
 import siteLogo from '@/public/assets/logo/mangrove-collection.png';
@@ -104,28 +105,18 @@ function Card() {
     );
 }
 
-interface UserSectionTem {
-    user: {
-        name: string;
-        role: string;
-        image?: string; // Make image optional
-    } | null;
-}
-
 async function Account() {
-    const section: UserSectionTem = {
-        user: { name: 'John Doe', role: 'user', image: '' },
-    };
+    const session = await auth();
 
-    if (!section.user) {
+    if (!session?.user) {
         return <div>Loading...</div>; // Or handle the case where user is null
     }
 
-    const firstName = section.user.name;
+    const firstName = session?.user?.name;
 
     let linkUrl: string = '';
 
-    switch (section.user.role) {
+    switch (session?.user?.role) {
         case 'admin':
             linkUrl = '/dashboard';
             break;
@@ -142,13 +133,13 @@ async function Account() {
     }
 
     let userImage: React.ReactNode;
-    if (section?.user?.image) {
+    if (session?.user?.image) {
         userImage = (
             <Image
-                src={section?.user?.image}
+                src={session?.user?.image}
                 width={30}
                 height={30}
-                alt={section?.user?.name}
+                alt={firstName || ''}
                 className="md:w-[32px] md:h-[32px] w-[20px] h-[20px]"
             />
         );
@@ -157,23 +148,23 @@ async function Account() {
             <span
                 className="uppercase bg-primary-foreground  text-white rounded-full
             md:text-2xl text-lg flex items-center justify-center md:w-[32px] md:h-[32px] w-[20px] h-[20px] ">
-                {section?.user?.name?.charAt(0)}
+                {session?.user?.name?.charAt(0)}
             </span>
         );
     }
 
     return (
         <li className="text-white">
-            <CustomLink href={section?.user ? linkUrl : '/login'}>
+            <CustomLink href={session?.user ? linkUrl : '/login'}>
                 <div className="flex md:flex-row flex-col items-center xl:gap-3 md:gap-2 gap-1 hover:text-primary-foreground duration-150 group">
                     <div className="text-primary-foreground lg:text-3xl text-xl">
-                        {section?.user ? userImage : <FaRegUser />}
+                        {session?.user ? userImage : <FaRegUser />}
                     </div>
                     <div>
                         <h2 className="sm:text-lg text-sm font-medium">
                             Account
                         </h2>
-                        {section?.user ? (
+                        {session?.user ? (
                             <p className="text-sm hidden md:block text-muted group-hover:text-primary-foreground dark:text-neutral-300/90 duration-150">
                                 {firstName}
                             </p>
