@@ -58,6 +58,13 @@ const creatorRoutes = [
     '/dashboard/help',
 ];
 
+/**
+ * user routes all route for only user.
+ * throw routes.
+ * @type {string[]}
+ */
+const userRoute = ['/account'];
+
 export {
     DEFAULT_LOGIN_REDIRECT,
     DEFAULT_REDIRECT,
@@ -66,4 +73,5 @@ export {
     apiAuthPrefix,
     creatorRoutes,
     loginAuth,
+    userRoute,
 };

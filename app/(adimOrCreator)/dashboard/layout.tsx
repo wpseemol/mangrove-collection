@@ -1,5 +1,8 @@
 import '@/app/globals.css';
+import { auth } from '@/auth/auth';
+import { ADMIN, CREATOR } from '@/lib/constant-value';
 import { Poppins, Roboto } from 'next/font/google';
+import { redirect } from 'next/navigation';
 
 const poppins = Poppins({
     subsets: ['latin'],
@@ -17,13 +20,23 @@ export default async function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    return (
-        <html lang="en" className="scroll-smooth">
-            <body
-                className={poppins.className + ' ' + roboto.className}
-                suppressHydrationWarning={true}>
-                {children}
-            </body>
-        </html>
-    );
+    const session = await auth();
+
+    const admin = session?.user.role === ADMIN;
+    const creator = session?.user.role === CREATOR;
+
+    if (admin || creator) {
+        return (
+            <html lang="en" className="scroll-smooth">
+                <body
+                    className={poppins.className + ' ' + roboto.className}
+                    suppressHydrationWarning={true}>
+                    {children}
+                </body>
+            </html>
+        );
+    } else {
+        redirect('/account');
+        return <></>;
+    }
 }
