@@ -7,6 +7,9 @@ import { Provider } from '@auth/core/providers';
  */
 
 export interface AuthConfigType extends NextAuthOptions {
+    /**
+     *  Callbacks are asynchronous functions you can use to control what happens when an auth-related action is performed. Callbacks allow you to implement access controls without a database or to integrate with external databases or APIs.
+     */
     callbacks: {
         signIn?: (params: {
             user: User;
@@ -87,7 +90,6 @@ declare module 'next-auth/jwt' {
     /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
     interface JWT {
         /** OpenID ID Token */
-
         role?: RoleType;
     }
 }

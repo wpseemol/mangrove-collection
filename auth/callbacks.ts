@@ -9,8 +9,8 @@ export const authCallbacks = {
         user: User;
         account: Account | null;
     }): Promise<boolean> {
-        console.log('from authCallback singin user:', user);
-        console.log('from authCallback singin account:', account);
+        // console.log('from authCallback singin user:', user);
+        // console.log('from authCallback singin account:', account);
         if (account && user) {
             if (user && user?.role) account.role = user.role;
         }
@@ -26,7 +26,7 @@ export const authCallbacks = {
         if (token && token?.role) session.user.role = token.role;
         if (token && token?.sub) session.user.id = token.sub;
 
-        // console.log('from authCallback session session:', session.user);
+        // console.log('from authCallback session session.user:', session.user);
         // console.log('from authCallback session token:', token);
 
         return session;

@@ -1,6 +1,7 @@
 import NextAuth from 'next-auth';
 import { NextResponse } from 'next/server';
 import { authConfig } from './auth/auth.config';
+import { ADMIN, CREATOR } from './lib/constant-value';
 import {
     adminRoutes,
     apiAuthPrefix,
@@ -17,10 +18,8 @@ export default middleware(async (request) => {
     const { nextUrl } = request;
 
     const isLoggedIn = !!request?.auth;
-    // const isAdmin = request?.auth?.user?.role === 'Admin' ;
-    // const isCreator = request?.auth?.user?.role === 'creator';
-    const isAdmin = false;
-    const isCreator = false;
+    const isAdmin = request?.auth?.user?.role === ADMIN;
+    const isCreator = request?.auth?.user?.role === CREATOR;
 
     const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
     const isPublicRoutes = PUBLIC_ROUTE.includes(nextUrl.pathname);
