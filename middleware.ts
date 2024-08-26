@@ -45,13 +45,13 @@ export default middleware(async (request) => {
         return NextResponse.redirect(new URL(backUrl, nextUrl));
     }
 
-    if (isAdminRoutes) {
-        if (isAdmin) return NextResponse.next();
+    if (isUserRoutes) {
+        if (isUser) return NextResponse.next();
         return NextResponse.redirect(new URL(backUrl, nextUrl));
     }
 
-    if (isUserRoutes) {
-        if (isUser) return NextResponse.next();
+    if (isAdminRoutes) {
+        if (isAdmin) return NextResponse.next();
         return NextResponse.redirect(new URL(backUrl, nextUrl));
     }
 

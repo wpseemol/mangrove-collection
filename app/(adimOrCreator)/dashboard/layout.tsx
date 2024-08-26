@@ -1,4 +1,3 @@
-import Btn from '@/app/(user)/account/_components/btn';
 import '@/app/globals.css';
 import { auth } from '@/auth/auth';
 import { ADMIN, CREATOR } from '@/lib/constant-value';
@@ -6,6 +5,7 @@ import { Poppins, Roboto } from 'next/font/google';
 import { redirect } from 'next/navigation';
 import DashboardMenuLayout from './_components/dashboard-menu-layout';
 import DashboardLoginUser from './_components/dashboard-menu-login-user';
+import Providers from './_components/providers';
 
 const poppins = Poppins({
     subsets: ['latin'],
@@ -26,26 +26,33 @@ export default async function RootLayout({
 }>) {
     const session = await auth();
 
-    const admin = session?.user.role === ADMIN;
-    const creator = session?.user.role === CREATOR;
+    if (!session) {
+        redirect('/');
+        return null;
+    }
 
-    if (admin || creator) {
+    const { role } = session.user;
+    const isAdmin = role === ADMIN;
+    const isCreator = role === CREATOR;
+
+    if (isAdmin || isCreator) {
         return (
-            <html lang="en" className="scroll-smooth">
+            <html lang="en" className="scroll-smooth dark">
                 <body
-                    className={poppins.className + ' ' + roboto.className}
+                    className={`${poppins.className} ${roboto.className}`}
                     suppressHydrationWarning={true}>
-                    <DashboardMenuLayout
-                        user={session?.user}
-                        userMenu={<DashboardLoginUser />}>
-                        {children}
-                    </DashboardMenuLayout>
-                    <Btn />
+                    <Providers>
+                        <DashboardMenuLayout
+                            user={session.user}
+                            userMenu={<DashboardLoginUser />}>
+                            {children}
+                        </DashboardMenuLayout>
+                    </Providers>
                 </body>
             </html>
         );
     } else {
         redirect('/');
-        return <></>;
+        return null;
     }
 }

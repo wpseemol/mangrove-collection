@@ -1,5 +1,6 @@
 'use client';
 
+import { ModeToggle } from '@/components/mode-toggle';
 import { UserType } from '@/types/auth';
 import { useState } from 'react';
 import { ImSpinner9 } from 'react-icons/im';
@@ -94,7 +95,10 @@ export default function DashboardMenuLayout({
                         </div>
 
                         <div className="flex items-center gap-3 mr-2">
-                            <div className=" ">{/* <DarkModeToggle /> */}</div>
+                            <div className=" ">
+                                {' '}
+                                <ModeToggle />{' '}
+                            </div>
 
                             {/* user detels  */}
 
@@ -128,7 +132,7 @@ export default function DashboardMenuLayout({
                         isDryerClose
                             ? 'md:w-[calc(100%-5rem)] w-full origin-right'
                             : 'md:w-[calc(100%-16rem)] w-full origin-left'
-                    }  dark:bg-[#252729] duration-300
+                    } duration-300
                  dark:text-neutral-300 text-neutral-700 ml-auto
                 `}>
                     {children}
