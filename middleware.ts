@@ -31,8 +31,9 @@ export default middleware(async (request) => {
     const isUserRoutes = userRoute.includes(nextUrl.pathname);
 
     // console.log('middle ware path name:', nextUrl);
-
     if (isApiAuthRoute) return NextResponse.next();
+
+    if (isPublicRoutes) return NextResponse.next();
 
     if (isAuthRoutes) {
         if (isLoggedIn) {
@@ -41,25 +42,23 @@ export default middleware(async (request) => {
         return NextResponse.next();
     }
 
-    if (isUserRoutes && isUser) {
-        if (isUser) return NextResponse.next();
+    if (!isLoggedIn) {
         return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }
+
     if (isAdminRoutes && isAdmin) {
-        if (isAdmin) return NextResponse.next();
-        return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+        return NextResponse.next();
     }
 
     if (isCreatorRoutes && isCreator) {
-        if (isCreator) return NextResponse.next();
-        return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+        return NextResponse.next();
     }
 
-    if (!isLoggedIn && !isPublicRoutes) {
-        return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+    if (isUserRoutes && isUser) {
+        return NextResponse.next();
     }
 
-    return NextResponse.next();
+    return NextResponse.redirect(new URL('/dashboard', nextUrl));
 });
 
 export const config = {

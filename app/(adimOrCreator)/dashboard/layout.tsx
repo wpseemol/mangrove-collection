@@ -45,7 +45,7 @@ export default async function RootLayout({
             </html>
         );
     } else {
-        redirect('/account');
+        redirect('/');
         return <></>;
     }
 }
