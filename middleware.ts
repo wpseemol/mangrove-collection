@@ -6,7 +6,6 @@ import {
     adminRoutes,
     apiAuthPrefix,
     creatorRoutes,
-    DEFAULT_LOGIN_REDIRECT,
     DEFAULT_REDIRECT,
     loginAuth,
     PUBLIC_ROUTE,
@@ -31,9 +30,8 @@ export default middleware(async (request) => {
     const isUserRoutes = userRoute.includes(nextUrl.pathname);
 
     // console.log('middle ware path name:', nextUrl);
-    if (isApiAuthRoute) return NextResponse.next();
 
-    if (isPublicRoutes) return NextResponse.next();
+    const backUrl = isAdmin || isCreator ? '/dashboard' : '/';
 
     if (isAuthRoutes) {
         if (isLoggedIn) {
@@ -42,25 +40,20 @@ export default middleware(async (request) => {
         return NextResponse.next();
     }
 
-    if (!isLoggedIn) {
-        return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
-    }
-
-    if (isAdminRoutes && isAdmin) {
-        return NextResponse.next();
-    }
-
     if (isCreatorRoutes && isCreator) {
-        return NextResponse.next();
+        if (isCreator) return NextResponse.next();
+        return NextResponse.redirect(new URL(backUrl, nextUrl));
     }
 
-    if (isUserRoutes && isUser) {
-        return NextResponse.next();
+    if (isAdminRoutes) {
+        if (isAdmin) return NextResponse.next();
+        return NextResponse.redirect(new URL(backUrl, nextUrl));
     }
 
-    return NextResponse.redirect(new URL('/dashboard', nextUrl));
+    if (isUserRoutes) {
+        if (isUser) return NextResponse.next();
+        return NextResponse.redirect(new URL(backUrl, nextUrl));
+    }
+
+    return NextResponse.next();
 });
-
-export const config = {
-    matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
-};
