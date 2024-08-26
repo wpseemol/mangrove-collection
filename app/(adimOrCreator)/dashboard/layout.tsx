@@ -4,6 +4,8 @@ import { auth } from '@/auth/auth';
 import { ADMIN, CREATOR } from '@/lib/constant-value';
 import { Poppins, Roboto } from 'next/font/google';
 import { redirect } from 'next/navigation';
+import DashboardMenuLayout from './_components/dashboard-menu-layout';
+import DashboardLoginUser from './_components/dashboard-menu-login-user';
 
 const poppins = Poppins({
     subsets: ['latin'],
@@ -12,8 +14,9 @@ const poppins = Poppins({
 const roboto = Roboto({ subsets: ['latin'], weight: ['400', '500', '700'] });
 
 export const metadata = {
-    title: 'Mangrove Collection | Home',
-    description: 'Mangrove Collection is shopping project ',
+    title: 'Dashboard | Mangrove Collection',
+    description:
+        'Mangrove Collection is shopping project Backend Boar layout start.',
 };
 
 export default async function RootLayout({
@@ -32,7 +35,11 @@ export default async function RootLayout({
                 <body
                     className={poppins.className + ' ' + roboto.className}
                     suppressHydrationWarning={true}>
-                    {children}
+                    <DashboardMenuLayout
+                        user={session?.user}
+                        userMenu={<DashboardLoginUser />}>
+                        {children}
+                    </DashboardMenuLayout>
                     <Btn />
                 </body>
             </html>

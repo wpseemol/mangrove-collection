@@ -93,3 +93,10 @@ declare module 'next-auth/jwt' {
         role?: RoleType;
     }
 }
+
+export interface UserType {
+    name: string;
+    role: RoleType | string;
+    id: string;
+    image: string | null;
+}
