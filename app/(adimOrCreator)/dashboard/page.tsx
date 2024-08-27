@@ -1,3 +1,10 @@
+import { SaleChart } from './_components/sale-chart';
+
 export default function DashboardPage() {
-    return <div className="">this is dashboard page</div>;
+    return (
+        <section className="p-5">
+            {' '}
+            <SaleChart />{' '}
+        </section>
+    );
 }

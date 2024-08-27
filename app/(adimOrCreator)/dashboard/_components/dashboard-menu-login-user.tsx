@@ -13,18 +13,22 @@ export default async function DashboardLoginUser() {
     }
 
     return (
-        <section>
-            <div className="flex items-center gap-2">
-                <div
-                    className="w-8 h-8 border bg-primaryColor/30
-                 rounded-full flex items-center justify-center">
-                    <Link href="/dashboard">
-                        <span className="text-xl">{session?.user.name[0]}</span>
+        <section className="mr-5">
+            <div className="flex items-center gap-2 group">
+                <div className="w-9 h-9 border rounded-full flex items-center justify-center overflow-hidden">
+                    <Link href="/dashboard/profile">
+                        <span className="text-xl group-hover:text-2xl duration-100">
+                            {session?.user.name[0]}
+                        </span>
                     </Link>
                 </div>
                 <div>
-                    <h2 className="text-sm">{session?.user.name}</h2>
-                    <p className="text-xs">{userTypeCake}</p>
+                    <Link href="/dashboard/profile">
+                        <h2 className="text-sm group-hover:underline group-hover:underline-offset-2 group-hover:underline-primary duration-100 ">
+                            {session?.user.name}
+                        </h2>
+                        <p className="text-xs">{userTypeCake}</p>
+                    </Link>
                 </div>
             </div>
         </section>
