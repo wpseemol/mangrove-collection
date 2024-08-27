@@ -8,15 +8,9 @@ import {
     FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { addProductSchema } from '@/lib/schemas/zod/add-product-schema';
-import { UseFormReturn } from 'react-hook-form';
-import { z } from 'zod';
+import { AddProductFormType } from '@/types/add-product';
 
-export default function ProductName({
-    form,
-}: {
-    form: UseFormReturn<z.infer<typeof addProductSchema>>;
-}) {
+export default function ProductName({ form }: { form: AddProductFormType }) {
     return (
         <>
             <FormField

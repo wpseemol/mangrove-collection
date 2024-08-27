@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { addProductSchema } from '@/lib/schemas/zod/add-product-schema';
 import { UserType } from '@/types/auth';
-import { CategoryType } from '@/types/mongoose-models';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -15,7 +14,7 @@ export default function AddProduct({
     allCategory,
     user,
 }: {
-    allCategory: CategoryType;
+    allCategory: string;
     user: UserType;
 }) {
     // console.log(allCategory);
