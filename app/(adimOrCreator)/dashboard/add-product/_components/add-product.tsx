@@ -10,6 +10,7 @@ import { z } from 'zod';
 import Media from './media';
 import ProductCategoryContainer from './product-category-container';
 import ProductInformation from './product-information';
+import Variants from './variants';
 
 export default function AddProduct({
     allCategory,
@@ -58,6 +59,11 @@ export default function AddProduct({
                         <Media form={form} />
                     </ProductCategoryContainer>
                     {/* product Media section */}
+                    {/* product Variants */}
+                    <ProductCategoryContainer title="Variants">
+                        <Variants form={form} />
+                    </ProductCategoryContainer>
+                    {/* product variants */}
                 </div>
                 <div className="md:col-span-1"></div>
                 <section className="md:col-span-3 -mt-4">
