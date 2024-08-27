@@ -20,7 +20,7 @@ export default function DashboardLogout({
         <div className="flex justify-center">
             <button
                 onClick={handelLogout}
-                className="flex items-center justify-center gap-2 bg-slate-800/60 hover:bg-slate-800/80 p-3 rounded font-bold">
+                className="flex items-center justify-center gap-2 bg-slate-800/60 hover:bg-slate-800/80 p-3 rounded font-bold hover:text-primary-foreground">
                 <IoIosLogOut />
                 <span className={isDryerClose ? 'md:hidden block' : 'block'}>
                     Log out

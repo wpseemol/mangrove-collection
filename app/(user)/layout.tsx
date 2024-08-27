@@ -22,7 +22,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" className="scroll-smooth dark">
+        <html lang="en" className="scroll-smooth green">
             <body
                 className={poppins.className + ' ' + roboto.className}
                 suppressHydrationWarning={true}>

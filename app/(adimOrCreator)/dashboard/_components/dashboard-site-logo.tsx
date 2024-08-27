@@ -11,7 +11,7 @@ export default function DashboardSiteLogo({
     return (
         <Link href="/">
             <div className={`flex gap-1 items-center`}>
-                <figure className="md:w-12 md:h-12 w-10 h-10 mx-auto rounded-full overflow-hidden border-2 border-primaryColor ">
+                <figure className="md:w-12 md:h-12 w-10 h-10 mx-auto rounded-full overflow-hidden border-2 border-primary-foreground ">
                     <Image
                         src={siteLogo}
                         alt="Site logo"
@@ -19,7 +19,7 @@ export default function DashboardSiteLogo({
                     />
                 </figure>
                 <h2
-                    className={`font-bold text-primaryColor text-sm md:text-base
+                    className={`font-bold text-primary-foreground text-sm md:text-base
                                     ${isDryerClose ? 'sm:hidden block' : ''}
                                     `}>
                     Mangrove Collection

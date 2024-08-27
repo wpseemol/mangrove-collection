@@ -9,8 +9,8 @@ export default function Providers({
         <>
             <ThemeProvider
                 attribute="class"
-                defaultTheme="dark"
-                themes={['dark', 'light']}
+                defaultTheme="green"
+                themes={['green', 'dark', 'light']}
                 enableSystem
                 disableTransitionOnChange>
                 {children}

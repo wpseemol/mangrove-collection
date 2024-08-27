@@ -1,3 +1,7 @@
 export default function ProfilePage() {
-    return <div>profile page</div>;
+    return (
+        <div className="mt-5 text-center text-5xl font-semibold capitalize">
+            profile page under Development
+        </div>
+    );
 }

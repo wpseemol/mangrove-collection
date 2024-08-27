@@ -37,7 +37,7 @@ export default async function RootLayout({
 
     if (isAdmin || isCreator) {
         return (
-            <html lang="en" className="scroll-smooth dark">
+            <html lang="en" className="scroll-smooth green">
                 <body
                     className={`${poppins.className} ${roboto.className}`}
                     suppressHydrationWarning={true}>

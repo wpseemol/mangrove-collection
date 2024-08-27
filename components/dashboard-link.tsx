@@ -16,8 +16,8 @@ export default function DashboardLink({
     return (
         <Link
             className={`${
-                pathName === href ? 'text-primary' : ''
-            } className hover:text-primary duration-200`}
+                pathName === href ? 'text-primary-foreground' : ''
+            } className hover:text-primary-foreground duration-200`}
             href={href}>
             {children}
         </Link>
