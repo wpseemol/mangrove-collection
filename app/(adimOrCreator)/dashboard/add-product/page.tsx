@@ -13,7 +13,10 @@ export default async function AddProductPage() {
                 Add product
             </h1>
             {session && (
-                <AddProduct allCategory={allCategory} user={session?.user} />
+                <AddProduct
+                    allCategory={JSON.stringify(allCategory)}
+                    user={session?.user}
+                />
             )}
         </>
     );
