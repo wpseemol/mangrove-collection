@@ -197,7 +197,7 @@ function InputOrImage({
                         alt={`image-${element?.id}`}
                         width={100}
                         height={100}
-                        className="w-auto h-auto"
+                        className="w-auto h-auto object-cover object-center"
                     />
                     {uploadProgress !== 100 ? (
                         <>
@@ -257,7 +257,7 @@ function InputOrImage({
 }
 
 const uploadImageBtn =
-    'w-24 h-24 border border-neutral-500/20 flex flex-col justify-center items-center rounded relative';
+    'w-24 h-24 border border-neutral-500/20 flex flex-col justify-center items-center rounded relative overflow-hidden';
 
 // image preview or input box here
 
