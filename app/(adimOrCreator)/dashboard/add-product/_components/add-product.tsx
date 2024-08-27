@@ -7,6 +7,7 @@ import { UserType } from '@/types/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import Media from './media';
 import ProductCategoryContainer from './product-category-container';
 import ProductInformation from './product-information';
 
@@ -45,11 +46,18 @@ export default function AddProduct({
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="grid md:grid-cols-3 grid-cols-1 gap-4 md:mx-5">
+                className="grid md:grid-cols-3 grid-cols-1 gap-4 md:mx-5 mb-5">
                 <div className="md:col-span-2">
+                    {/* product information section */}
                     <ProductCategoryContainer title="Product information">
                         <ProductInformation form={form} />
                     </ProductCategoryContainer>{' '}
+                    {/* product information section */}
+                    {/* product Media section */}
+                    <ProductCategoryContainer title="Media">
+                        <Media form={form} />
+                    </ProductCategoryContainer>
+                    {/* product Media section */}
                 </div>
                 <div className="md:col-span-1"></div>
                 <section className="md:col-span-3 -mt-4">
