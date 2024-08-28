@@ -34,3 +34,11 @@ export const PC_VARIANTS = [
  * Kg variants array variants. { id: 1, type: 'Size', value: 'size' }[].
  */
 export const KG_VARIANTS = [{ id: 1, type: 'Size', value: 'size' }];
+
+/**
+ * Price unit array.
+ */
+export const PRICE_UNITS = [
+    { id: 'taka', title: '&#2547; টাকা' },
+    { id: 'dollar', title: '&#36; Dollar' },
+];

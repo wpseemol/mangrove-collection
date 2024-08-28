@@ -8,6 +8,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import Media from './media';
+import OtherInformation from './other-information';
+import Pricing from './pricing';
 import ProductCategoryContainer from './product-category-container';
 import ProductInformation from './product-information';
 import Variants from './variants';
@@ -65,7 +67,22 @@ export default function AddProduct({
                     </ProductCategoryContainer>
                     {/* product variants */}
                 </div>
-                <div className="md:col-span-1"></div>
+                <div className="md:col-span-1">
+                    {/* product pricing */}
+                    <ProductCategoryContainer className="h-fit" title="Pricing">
+                        <Pricing form={form} />
+                    </ProductCategoryContainer>
+                    {/* product pricing */}
+
+                    <ProductCategoryContainer
+                        className="h-fit"
+                        title="Other information">
+                        <OtherInformation
+                            form={form}
+                            allCategory={allCategory}
+                        />
+                    </ProductCategoryContainer>
+                </div>
                 <section className="md:col-span-3 -mt-4">
                     <Button type="submit">Submit</Button>
                 </section>
