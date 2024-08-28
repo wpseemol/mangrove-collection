@@ -48,7 +48,7 @@ export default function CategorySlug({ form }: { form: AddCategoryFormType }) {
                                 {...field}
                                 className="w-full bg-transparent border border-neutral-500/20
                                             p-2 focus:outline-none focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] rounded"
-                                placeholder="product-slug-example"
+                                placeholder="category-slug-example"
                             />
                         </FormControl>
                         <FormMessage>{fieldState.error?.message}</FormMessage>
