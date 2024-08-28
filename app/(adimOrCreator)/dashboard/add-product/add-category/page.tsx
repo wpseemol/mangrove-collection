@@ -1,4 +1,4 @@
-import AddCategoryComponent from './_components/add-category';
+import AddCategory from './_components/add-category';
 
 export default function AddCategoryPage() {
     return (
@@ -6,7 +6,7 @@ export default function AddCategoryPage() {
             <h2 className="md:text-2xl text-xl font-semibold md:m-5 m-2">
                 Add category
             </h2>
-            <AddCategoryComponent />
+            <AddCategory />
         </>
     );
 }

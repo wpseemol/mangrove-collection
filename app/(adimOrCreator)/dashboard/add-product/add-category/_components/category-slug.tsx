@@ -8,10 +8,10 @@ import {
     FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { AddProductFormType } from '@/types/add-product';
+import { AddCategoryFormType } from '@/types/add-category';
 import { useEffect } from 'react';
 
-export default function ProductSlug({ form }: { form: AddProductFormType }) {
+export default function CategorySlug({ form }: { form: AddCategoryFormType }) {
     const name = form.watch('name');
     // slug create
     useEffect(() => {
@@ -41,7 +41,7 @@ export default function ProductSlug({ form }: { form: AddProductFormType }) {
                 name="slug"
                 render={({ field, fieldState }) => (
                     <FormItem>
-                        <FormLabel className="mb-1">Product Slug*</FormLabel>
+                        <FormLabel className="mb-1">Category Slug*</FormLabel>
 
                         <FormControl>
                             <Input

@@ -84,7 +84,7 @@ export default function AddProduct({
                     </ProductCategoryContainer>
                 </div>
                 <section className="md:col-span-3 -mt-4">
-                    <Button type="submit">Submit</Button>
+                    <Button type="submit">Upload</Button>
                 </section>
             </form>
         </Form>
