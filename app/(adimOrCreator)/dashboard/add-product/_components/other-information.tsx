@@ -1,6 +1,7 @@
 import { AddProductFormType } from '@/types/add-product';
 import CategorySelect from './other-information/category-select';
 import ShortDescription from './other-information/short-description';
+import TagsComponent from './tags-component';
 
 export default function OtherInformation({
     form,
@@ -18,7 +19,7 @@ export default function OtherInformation({
                 <ShortDescription form={form} />
             </section>
             <section className="mb-4">
-                {/* <TagsComponent form={form} /> */}
+                <TagsComponent form={form} />
             </section>
         </>
     );
