@@ -9,9 +9,9 @@ export default async function AddProductPage() {
 
     return (
         <>
-            <h1 className="md:text-3xl text-2xl font-semibold md:m-5 m-2 ">
+            <h2 className="md:text-2xl text-xl font-semibold md:m-5 m-2">
                 Add product
-            </h1>
+            </h2>
             {session && (
                 <AddProduct
                     allCategory={JSON.stringify(allCategory)}
