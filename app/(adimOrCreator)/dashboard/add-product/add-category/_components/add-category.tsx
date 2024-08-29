@@ -6,6 +6,7 @@ import { addCategorySchema } from '@/lib/schemas/zod/add-category-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import CategoryImage from './category-img-url';
 import NameSlugSection from './name-slug';
 import ProductCategoryContainer from './product-category-container';
 
@@ -20,7 +21,7 @@ export default function AddCategory() {
     });
 
     async function onSubmit(values: z.infer<typeof addCategorySchema>) {
-        console.log(values);
+        console.log('add-category-category:', values);
     }
 
     return (
@@ -33,6 +34,7 @@ export default function AddCategory() {
                     title="Category information">
                     {/* <AddCategorySection /> */}
                     <NameSlugSection form={form} />
+                    <CategoryImage form={form} />
                 </ProductCategoryContainer>
                 <section className="md:col-span-3 -mt-4">
                     <Button type="submit">Upload</Button>
