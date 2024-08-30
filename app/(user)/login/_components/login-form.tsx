@@ -26,8 +26,6 @@ import { AuthError } from 'next-auth';
 import Link from 'next/link';
 
 export default function LoginForm() {
-    const [loading, setLoading] = useState(false);
-
     const { toast } = useToast();
 
     const form = useForm<z.infer<typeof loginSchema>>({
@@ -40,7 +38,6 @@ export default function LoginForm() {
 
     // 2. Define a submit handler.
     async function onSubmit(values: z.infer<typeof loginSchema>) {
-        setLoading(true);
         try {
             await loginAction(values);
             form.reset();
@@ -59,8 +56,6 @@ export default function LoginForm() {
                     <ToastAction altText="Try again">Try again</ToastAction>
                 ),
             });
-        } finally {
-            setLoading(false);
         }
     }
 
@@ -110,11 +105,11 @@ export default function LoginForm() {
 
                     <div className="space-y-2 w-full">
                         <Button
-                            disabled={loading}
+                            disabled={form.formState.isSubmitting}
                             variant="default"
                             className={`disabled:cursor-wait w-full bg-primary hover:bg-primary-foreground duration-100 text-neutral-100`}>
                             Login
-                            {loading && <ButtonLoading />}
+                            {form.formState.isSubmitting && <ButtonLoading />}
                         </Button>
 
                         <p className="px-4 text-sm text-center dark:text-gray-600">

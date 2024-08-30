@@ -1,5 +1,6 @@
 'use client';
 
+import ButtonLoading from '@/components/button-loading';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { Toaster } from '@/components/ui/toaster';
@@ -40,7 +41,12 @@ export default function AddCategory() {
                         <CategoryImage form={form} />
                     </ProductCategoryContainer>
                     <section className="md:col-span-3 -mt-4">
-                        <Button type="submit">Upload</Button>
+                        <Button
+                            disabled={form.formState.isSubmitting}
+                            type="submit">
+                            Upload
+                            {form.formState.isSubmitting && <ButtonLoading />}
+                        </Button>
                     </section>
                 </form>
             </Form>
