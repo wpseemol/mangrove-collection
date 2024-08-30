@@ -3,7 +3,7 @@ import TabBtn from './_components/tab-btn';
 export default function AddProductOrCategoryLayout({
     children,
 }: {
-    children: Readonly<{ children: React.ReactNode }>;
+    children: React.ReactNode;
 }) {
     return (
         <>
