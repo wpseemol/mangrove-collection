@@ -72,7 +72,6 @@ export async function POST(request: NextRequest) {
                 { status: 400 }
             );
         }
-
         await connectMongoDB();
 
         const categoryObj = { ...body, author: session.user.id };
