@@ -3,9 +3,10 @@ import { connectMongoDB } from '@/db/connections/mongoose-connect';
 import { ADMIN, CREATOR } from '@/lib/constant-value';
 import { Category } from '@/lib/schemas/mongoose/category';
 import { CategoryWithMongo_Id } from '@/types/mongoose-models';
+import { MongoServerError } from 'mongodb';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(required: NextRequest) {
+export async function GET() {
     try {
         await connectMongoDB();
 
@@ -71,5 +72,44 @@ export async function POST(request: NextRequest) {
                 { status: 400 }
             );
         }
-    } catch (error) {}
+
+        await connectMongoDB();
+
+        const categoryObj = { ...body, author: session.user.id };
+
+        const isCreate = Category.create(categoryObj);
+
+        return NextResponse.json(
+            { message: 'Product add successful.', isCreate },
+            { status: 201 }
+        );
+    } catch (error) {
+        const typeError = error as MongoServerError;
+
+        if (typeError.code === 11000) {
+            const pattern: string | null =
+                typeof typeError.keyPattern === 'object'
+                    ? Object.keys(typeError.keyPattern)[0]
+                    : null;
+
+            let message = '';
+
+            if (pattern === 'slug')
+                message =
+                    'Category slug already exist, Slug value must be unique';
+
+            return NextResponse.json(
+                {
+                    message,
+                    pattern,
+                },
+                { status: 409 }
+            );
+        }
+
+        return NextResponse.json(
+            { message: 'Inter nal server Error.' },
+            { status: 500 }
+        );
+    }
 }

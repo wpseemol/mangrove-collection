@@ -10,8 +10,34 @@ export default async function onSubmit(
     const { form } = obj;
 
     try {
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        toast({ description: JSON.stringify(values) });
+        const response = await fetch('/api/v1/category', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(values),
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            if (error.pattern === 'slug') {
+                form.setError('slug', {
+                    type: 'required',
+                    message: error.message,
+                });
+            } else {
+                throw new Error(error.message);
+            }
+            return;
+        }
+
+        const isAddCategory = await response.json();
+        toast({
+            variant: 'success',
+            description: isAddCategory.message,
+        });
+
+        form.reset();
     } catch (error) {
         if (error instanceof Error) {
             toast({
