@@ -33,7 +33,7 @@ export async function generateMetadata({
                     alt: productDetail.name,
                 })),
 
-                url: `${process.env.VERCEL_URL}/products/${params?.slug}`,
+                url: `${process.env.SITE_BASE_URL!}/products/${params?.slug}`,
             },
         };
     } else {
