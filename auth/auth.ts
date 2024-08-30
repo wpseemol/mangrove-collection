@@ -5,6 +5,7 @@ import { providers } from './providers';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     ...authConfig,
+    trustHost: true,
     providers,
     callbacks: authCallbacks,
     pages: {
