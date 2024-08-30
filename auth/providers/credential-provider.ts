@@ -13,7 +13,7 @@ const credentialsProvider = Credentials({
     async authorize(request) {
         try {
             const response = await fetch(
-                `${process.env.VERCEL_URL}/api/v1/user/login`,
+                `${process.env.SITE_BASE_URL!}/api/v1/user/login`,
                 {
                     method: 'POST',
                     headers: {
