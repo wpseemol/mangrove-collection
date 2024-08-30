@@ -23,7 +23,7 @@ export default function Images({ form }: { form: AddProductFormType }) {
     const [imageUpload, setImageUpload] = useState<ImageUploadType[]>(
         initialUpdatedImageValue
     );
-    const [firebaseUrls, setFirebaseUrls] = useState<FirebaseUrlsType[]>([]);
+    const [imgUrl, setImgUrl] = useState<ImgUrlType[]>([]);
 
     function handelAddElement() {
         setImageUpload((pre: ImageUploadType[]) => [
@@ -39,17 +39,17 @@ export default function Images({ form }: { form: AddProductFormType }) {
     }
 
     useEffect(() => {
-        if (firebaseUrls.length > 0) {
-            form.setValue('images', firebaseUrls);
+        if (imgUrl.length > 0) {
+            form.setValue('images', imgUrl);
         }
-    }, [firebaseUrls, form]);
+    }, [imgUrl, form]);
 
     // when form rest state also reset
     useEffect(() => {
         // Listen for reset event from the form
         const subscription = form.watch((value, { name }) => {
             if (name === undefined) {
-                setFirebaseUrls([]);
+                setImgUrl([]);
                 setImageUpload(initialUpdatedImageValue);
             }
         });
@@ -76,7 +76,7 @@ export default function Images({ form }: { form: AddProductFormType }) {
                             element={element}
                             setImageUpload={setImageUpload}
                             form={form}
-                            setFirebaseUrls={setFirebaseUrls}
+                            setImgUrl={setImgUrl}
                         />
                     ))}
 
@@ -101,7 +101,7 @@ function InputOrImage({
     element,
     setImageUpload,
     form,
-    setFirebaseUrls,
+    setImgUrl,
 }: InputOrImageType) {
     const [uploadProgress, setUploadProgress] = useState(0);
     const [imageNameWithRandomId, setImageNameWithRandomId] = useState<
@@ -125,7 +125,7 @@ function InputOrImage({
         try {
             await imageDeleteAction(pathName, imageName);
             setImageUpload((pre) => pre?.filter((item) => item.id !== id));
-            setFirebaseUrls((pre) => pre?.filter((item) => item.id !== id));
+            setImgUrl((pre) => pre?.filter((item) => item.id !== id));
         } catch (error) {
             throw error;
         }
@@ -158,9 +158,9 @@ function InputOrImage({
                         });
                     },
                     async () => {
-                        const firebaseUrl = await getDownloadURL(ref(imageRef));
+                        const imgUrl = await getDownloadURL(ref(imageRef));
 
-                        setFirebaseUrls((prevUrls) => {
+                        setImgUrl((prevUrls) => {
                             // Check if the URL with the same ID already exists
                             const urlExists = prevUrls.some(
                                 (url) => url.id === uploadImageId
@@ -168,7 +168,7 @@ function InputOrImage({
                             if (!urlExists) {
                                 return [
                                     ...prevUrls,
-                                    { id: uploadImageId, firebaseUrl },
+                                    { id: uploadImageId, imgUrl },
                                 ];
                             }
                             return prevUrls;
@@ -186,7 +186,7 @@ function InputOrImage({
         if (element?.imgUrl && element?.file) {
             firebaseImageUpload(element?.file, element?.id);
         }
-    }, [element, form, setFirebaseUrls]);
+    }, [element, form, setImgUrl]);
 
     return (
         <>
@@ -426,14 +426,14 @@ type ImageUploadType = {
     imgUrl: ArrayBuffer | FileReader | string | null;
 };
 
-type FirebaseUrlsType = {
+type ImgUrlType = {
     id: string;
-    firebaseUrl: string;
+    imgUrl: string;
 };
 
 type InputOrImageType = {
     element: ImageUploadType;
     setImageUpload: React.Dispatch<React.SetStateAction<ImageUploadType[]>>;
     form: AddProductFormType; // Replace 'any' with the correct form type if available
-    setFirebaseUrls: React.Dispatch<React.SetStateAction<FirebaseUrlsType[]>>;
+    setImgUrl: React.Dispatch<React.SetStateAction<ImgUrlType[]>>;
 };

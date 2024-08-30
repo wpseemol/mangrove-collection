@@ -140,7 +140,7 @@ function PriceVariant({
                 form={form}
                 onChangeValue={(value: number) => handelPriceChange(value)}
             />
-            <div className="w-fit border flex justify-center items-center">
+            <div className="w-fit flex justify-center items-center">
                 <input
                     title="This price show is product card."
                     defaultChecked={variant?.id === 'regular'}

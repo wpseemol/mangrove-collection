@@ -17,7 +17,7 @@ const addProductSchema = z.object({
     images: z.array(
         z.object({
             id: z.string(),
-            firebaseUrl: z.string(),
+            imgUrl: z.string(),
         })
     ),
     variants: z.array(

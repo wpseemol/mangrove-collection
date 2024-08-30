@@ -31,7 +31,6 @@ export default function Thumbnail({ form }: { form: AddProductFormType }) {
             async function thumbnailUpload(files: File[]) {
                 try {
                     const uploadImage = files[0];
-                    console.log(uploadImage);
 
                     const uploadImageName =
                         crypto.randomUUID() + '-' + uploadImage?.name;
@@ -67,11 +66,6 @@ export default function Thumbnail({ form }: { form: AddProductFormType }) {
                         },
                         async () => {
                             const imgUrl = await getDownloadURL(imageRef);
-
-                            console.log(
-                                'thumnail upload image url firage:',
-                                imgUrl
-                            );
 
                             form.setValue('thumbnail', imgUrl);
                         }
