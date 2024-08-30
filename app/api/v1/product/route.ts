@@ -2,6 +2,7 @@ import { auth } from '@/auth/auth';
 import { connectMongoDB } from '@/db/connections/mongoose-connect';
 import { ADMIN, CREATOR } from '@/lib/constant-value';
 import { Product } from '@/lib/schemas/mongoose/product';
+import { MongoServerError } from 'mongodb';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
@@ -39,8 +40,6 @@ export async function POST(request: NextRequest) {
 
         const productObj = { ...body, author: session.user.id };
 
-        console.log(productObj);
-
         const isCreate = await Product.create(productObj);
 
         return NextResponse.json(
@@ -48,6 +47,32 @@ export async function POST(request: NextRequest) {
             { status: 201 }
         );
     } catch (error) {
-        return NextResponse.json({ error }, { status: 500 });
+        const typeError = error as MongoServerError;
+
+        if (typeError.code === 11000) {
+            const pattern: string | null =
+                typeof typeError.keyPattern === 'object'
+                    ? Object.keys(typeError.keyPattern)[0]
+                    : null;
+
+            let message = '';
+
+            if (pattern === 'slug')
+                message =
+                    'Product slug already exist, Slug value must be unique';
+
+            return NextResponse.json(
+                {
+                    message,
+                    pattern,
+                },
+                { status: 409 }
+            );
+        }
+
+        return NextResponse.json(
+            { message: 'Inter nal server Error.' },
+            { status: 500 }
+        );
     }
 }

@@ -7,7 +7,7 @@ import Thumbnail from './media/thumbnail';
 export default function Media({ form }: { form: AddProductFormType }) {
     return (
         <>
-            <div className="mb-4">
+            <div id="product-thumbnail" className="mb-4">
                 <Thumbnail form={form} />
             </div>
             <div className="mb-4">

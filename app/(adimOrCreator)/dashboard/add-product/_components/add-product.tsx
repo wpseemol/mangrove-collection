@@ -8,7 +8,8 @@ import { useToast } from '@/components/ui/use-toast';
 import { addProductSchema } from '@/lib/schemas/zod/add-product-schema';
 import { UserType } from '@/types/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import Media from './media';
@@ -25,6 +26,7 @@ export default function AddProduct({
     allCategory: string;
     user: UserType;
 }) {
+    const router = useRouter();
     const { toast } = useToast();
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -47,6 +49,10 @@ export default function AddProduct({
         },
     });
 
+    // console.log(form.formState.errors.name);
+
+    // console.log(form.setFocus('currency'));
+
     async function onSubmit(values: z.infer<typeof addProductSchema>) {
         setLoading(true);
         try {
@@ -58,9 +64,28 @@ export default function AddProduct({
                 body: JSON.stringify(values),
             });
 
-            const isAdd = await response.json();
+            if (!response.ok) {
+                const error = await response.json();
+                if (error.pattern === 'slug') {
+                    form.setError('slug', {
+                        type: 'required',
+                        message: error.message,
+                    });
+                    router.push('#product-slug');
+                } else {
+                    throw new Error(error.message);
+                }
 
-            console.log(isAdd);
+                return;
+            }
+
+            const isAdd = await response.json();
+            toast({
+                variant: 'success',
+                description: isAdd.message,
+            });
+
+            form.reset();
         } catch (error) {
             if (error instanceof Error) {
                 toast({
@@ -79,6 +104,27 @@ export default function AddProduct({
         }
     }
 
+    useEffect(() => {
+        if (form.formState.isSubmitting) {
+            const isFormError = form.formState.errors;
+            if (
+                !!isFormError.name ||
+                !!isFormError.slug ||
+                !!isFormError.description
+            ) {
+                router.push('#product-information');
+            } else if (!!isFormError.thumbnail) {
+                router.push('#product-thumbnail');
+            } else if (!!isFormError.currency) {
+                router.push('#product-price');
+            } else if (!!isFormError.category) {
+                router.push('#product-outer-info');
+            } else {
+                router.push('');
+            }
+        }
+    }, [form.formState.isSubmitting, form.formState.errors, router]);
+
     return (
         <>
             <Form {...form}>
@@ -87,12 +133,14 @@ export default function AddProduct({
                     className="grid md:grid-cols-3 grid-cols-1 gap-4 md:mx-5 mb-5">
                     <div className="md:col-span-2">
                         {/* product information section */}
-                        <ProductCategoryContainer title="Product information">
+                        <ProductCategoryContainer
+                            title="Product information"
+                            id="product-information">
                             <ProductInformation form={form} />
                         </ProductCategoryContainer>{' '}
                         {/* product information section */}
                         {/* product Media section */}
-                        <ProductCategoryContainer title="Media">
+                        <ProductCategoryContainer title="Media" id="media">
                             <Media form={form} />
                         </ProductCategoryContainer>
                         {/* product Media section */}
@@ -105,6 +153,7 @@ export default function AddProduct({
                     <div className="md:col-span-1">
                         {/* product pricing */}
                         <ProductCategoryContainer
+                            id="product-price"
                             className="h-fit"
                             title="Pricing">
                             <Pricing form={form} />
@@ -112,6 +161,7 @@ export default function AddProduct({
                         {/* product pricing */}
 
                         <ProductCategoryContainer
+                            id="product-outer-info"
                             className="h-fit"
                             title="Other information">
                             <OtherInformation

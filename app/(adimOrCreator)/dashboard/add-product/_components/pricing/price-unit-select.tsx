@@ -27,7 +27,9 @@ export default function PriceUnitSelect({
             name="currency"
             render={({ field, fieldState }) => (
                 <FormItem>
-                    <FormLabel className="mb-1">Currency*</FormLabel>
+                    <FormLabel id="price-currency" className="mb-1">
+                        Currency*
+                    </FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
                             <SelectTrigger

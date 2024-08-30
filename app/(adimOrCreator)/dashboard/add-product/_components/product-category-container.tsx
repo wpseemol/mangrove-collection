@@ -6,13 +6,16 @@ export default function ProductCategoryContainer({
     children,
     title,
     className,
+    id,
 }: {
     children: React.ReactNode;
     title: string;
     className?: string;
+    id?: string;
 }) {
     return (
         <section
+            id={id}
             className={cn(
                 'w-full shadow border border-neutral-500/30 rounded mb-4',
                 className

@@ -41,7 +41,9 @@ export default function ProductSlug({ form }: { form: AddProductFormType }) {
                 name="slug"
                 render={({ field, fieldState }) => (
                     <FormItem>
-                        <FormLabel className="mb-1">Product Slug*</FormLabel>
+                        <FormLabel id="product-slug" className="mb-1">
+                            Product Slug*
+                        </FormLabel>
 
                         <FormControl>
                             <Input

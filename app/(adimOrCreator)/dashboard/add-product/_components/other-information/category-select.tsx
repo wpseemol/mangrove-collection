@@ -64,7 +64,11 @@ export default function CategorySelect({
                 name="category"
                 render={({ field, fieldState }) => (
                     <FormItem>
-                        <FormLabel className="mb-1">Category*</FormLabel>
+                        <FormLabel
+                            id="product-category-select"
+                            className="mb-1">
+                            Category*
+                        </FormLabel>
                         <Select
                             onValueChange={handelCategory}
                             value={selectedCategory}>
