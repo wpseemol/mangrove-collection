@@ -8,7 +8,7 @@ import { addProductSchema } from '@/lib/schemas/zod/add-product-schema';
 import { UserType } from '@/types/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import Media from './media';
@@ -27,8 +27,6 @@ export default function AddProduct({
     user: UserType;
 }) {
     const router = useRouter();
-
-    const [loading, setLoading] = useState<boolean>(false);
 
     const form = useForm<z.infer<typeof addProductSchema>>({
         resolver: zodResolver(addProductSchema),
@@ -74,7 +72,7 @@ export default function AddProduct({
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit((values) =>
-                        onSubmit(values, { form, router, setLoading })
+                        onSubmit(values, { form, router })
                     )}
                     className="grid md:grid-cols-3 grid-cols-1 gap-4 md:mx-5 mb-5">
                     <div className="md:col-span-2">
@@ -117,8 +115,11 @@ export default function AddProduct({
                         </ProductCategoryContainer>
                     </div>
                     <section className="md:col-span-3 -mt-4">
-                        <Button disabled={loading} type="submit">
-                            Upload{loading && <ButtonLoading />}
+                        <Button
+                            disabled={form.formState.isSubmitting}
+                            type="submit">
+                            Upload
+                            {form.formState.isSubmitting && <ButtonLoading />}
                         </Button>
                     </section>
                 </form>

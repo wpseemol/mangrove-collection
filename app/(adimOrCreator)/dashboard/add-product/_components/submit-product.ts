@@ -9,9 +9,8 @@ export async function onSubmit(
     values: z.infer<typeof addProductSchema>,
     obj: AdditionalObjType
 ) {
-    const { form, router, setLoading } = obj;
+    const { form, router } = obj;
 
-    setLoading(true);
     try {
         const response = await fetch('/api/v1/product', {
             method: 'POST',
@@ -56,13 +55,10 @@ export async function onSubmit(
                 description: 'An unexpected error occurred.',
             });
         }
-    } finally {
-        setLoading(false);
     }
 }
 
 type AdditionalObjType = {
     form: AddProductFormType;
     router: AppRouterInstance;
-    setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };

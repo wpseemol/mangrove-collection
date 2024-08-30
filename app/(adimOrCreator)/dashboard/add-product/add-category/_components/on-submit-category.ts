@@ -7,10 +7,25 @@ export default async function onSubmit(
     values: z.infer<typeof addCategorySchema>,
     obj: AdditionalObjType
 ) {
-    toast({
-        variant: 'success',
-        description: JSON.stringify(values),
-    });
+    const { form } = obj;
+
+    try {
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        toast({ description: JSON.stringify(values) });
+    } catch (error) {
+        if (error instanceof Error) {
+            toast({
+                variant: 'destructive',
+                description: error.message,
+            });
+        } else {
+            // Handle unexpected error types
+            toast({
+                variant: 'destructive',
+                description: 'An unexpected error occurred.',
+            });
+        }
+    }
 }
 
 type AdditionalObjType = {
