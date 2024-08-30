@@ -11,6 +11,7 @@ const categorySchema = new mongoose.Schema<ICategory>({
     slug: {
         type: String,
         required: true,
+        unique: true,
     },
     imgUrl: {
         type: String,

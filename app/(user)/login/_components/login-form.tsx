@@ -18,12 +18,12 @@ import { PiEyeClosedDuotone, PiEyeDuotone } from 'react-icons/pi';
 import { z } from 'zod';
 
 import loginAction from '@/action/login';
+import ButtonLoading from '@/components/button-loading';
 import { ToastAction } from '@/components/ui/toast';
 import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/components/ui/use-toast';
 import { AuthError } from 'next-auth';
 import Link from 'next/link';
-import { FcSynchronize } from 'react-icons/fc';
 
 export default function LoginForm() {
     const [loading, setLoading] = useState(false);
@@ -110,19 +110,11 @@ export default function LoginForm() {
 
                     <div className="space-y-2 w-full">
                         <Button
+                            disabled={loading}
                             variant="default"
-                            className={`${
-                                loading ? 'cursor-wait' : ''
-                            } w-full bg-primary hover:bg-primary-foreground duration-100 text-neutral-100`}>
+                            className={`disabled:cursor-wait w-full bg-primary hover:bg-primary-foreground duration-100 text-neutral-100`}>
                             Login
-                            {loading && (
-                                <>
-                                    ...
-                                    <span className="ml-2">
-                                        <FcSynchronize className="text-xl animate-spin" />
-                                    </span>
-                                </>
-                            )}
+                            {loading && <ButtonLoading />}
                         </Button>
 
                         <p className="px-4 text-sm text-center dark:text-gray-600">

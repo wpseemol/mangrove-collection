@@ -1,10 +1,12 @@
 'use client';
 
+import ButtonLoading from '@/components/button-loading';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { addProductSchema } from '@/lib/schemas/zod/add-product-schema';
 import { UserType } from '@/types/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import Media from './media';
@@ -22,6 +24,8 @@ export default function AddProduct({
     user: UserType;
 }) {
     // console.log(allCategory);
+
+    const [loading, setLoading] = useState<boolean>(false);
 
     const form = useForm<z.infer<typeof addProductSchema>>({
         resolver: zodResolver(addProductSchema),
@@ -42,7 +46,18 @@ export default function AddProduct({
     });
 
     async function onSubmit(values: z.infer<typeof addProductSchema>) {
-        console.log(values);
+        try {
+        } catch (error) {
+            const response = await fetch('/api/v1/product', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(values),
+            });
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (
@@ -84,7 +99,12 @@ export default function AddProduct({
                     </ProductCategoryContainer>
                 </div>
                 <section className="md:col-span-3 -mt-4">
-                    <Button type="submit">Upload</Button>
+                    <Button
+                        disabled={loading}
+                        type="submit"
+                        className="disabled:cursor-not-allowed">
+                        Upload{loading && <ButtonLoading />}
+                    </Button>
                 </section>
             </form>
         </Form>
