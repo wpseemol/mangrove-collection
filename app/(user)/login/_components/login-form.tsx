@@ -51,8 +51,6 @@ export default function LoginForm() {
         } catch (error) {
             const errorType = error as AuthError;
 
-            console.log(error);
-
             toast({
                 variant: 'destructive',
                 title: 'Uh oh! Something went wrong.',
