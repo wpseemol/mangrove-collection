@@ -1,6 +1,9 @@
-import { data } from '@/app/(adimOrCreator)/dashboard/users/_component/columns';
 import { auth } from '@/auth/auth';
+import { connectMongoDB } from '@/db/connections/mongoose-connect';
 import { ADMIN } from '@/lib/constant-value';
+import { User } from '@/lib/schemas/mongoose/user';
+import { UserWith_id } from '@/types/mongoose-models';
+import replaceMongoId from '@/utils/replace-mongo-id';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -14,7 +17,7 @@ export async function GET(request: NextRequest) {
             );
         }
 
-        const isAdmin = !(session?.user?.role === ADMIN);
+        const isAdmin = session?.user?.role === ADMIN;
 
         if (!isAdmin) {
             return NextResponse.json(
@@ -25,9 +28,18 @@ export async function GET(request: NextRequest) {
             );
         }
 
+        await connectMongoDB();
+
+        const response: UserWith_id[] = await User.find(
+            {},
+            'name fullName email image phone role username registerAt'
+        ).lean();
+
+        const users = replaceMongoId(response);
+
         return NextResponse.json(
             {
-                data,
+                users,
             },
             { status: 200 }
         );
