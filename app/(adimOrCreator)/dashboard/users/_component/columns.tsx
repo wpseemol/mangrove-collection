@@ -31,6 +31,7 @@ export const columns: ColumnDef<UserType>[] = [
                 </Button>
             );
         },
+        enableHiding: false,
     },
     {
         accessorKey: 'email',
