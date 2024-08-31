@@ -10,7 +10,7 @@
  */
 export type ManageUserType = {
     id: string;
-    name: string;
+    fullName: string;
     email: string;
     role: RoleType;
     image?: string | null;

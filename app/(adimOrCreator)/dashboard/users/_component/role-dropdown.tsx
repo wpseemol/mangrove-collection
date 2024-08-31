@@ -10,14 +10,14 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ADMIN, CREATOR, USER } from '@/lib/constant-value';
-import { ManageUserType } from '@/types/users';
+import { BaseUserType } from '@/types/mongoose-models';
 import { DropdownMenuCheckboxItemProps } from '@radix-ui/react-dropdown-menu';
 import { Row } from '@tanstack/react-table';
 import * as React from 'react';
 
 type Checked = DropdownMenuCheckboxItemProps['checked'];
 
-export default function RoleDropdown({ row }: { row: Row<ManageUserType> }) {
+export default function RoleDropdown({ row }: { row: Row<BaseUserType> }) {
     const roleValue: string = row.getValue('role');
     const [userRole, setUserRole] = React.useState(roleValue);
 
