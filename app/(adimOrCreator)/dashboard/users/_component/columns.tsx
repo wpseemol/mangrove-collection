@@ -3,6 +3,7 @@
 import { DataTableColumnHeader } from '@/components/data-table-column-header';
 import { ManageUserType } from '@/types/users';
 import { ColumnDef } from '@tanstack/react-table';
+import RoleDropdown from './role-dropdown';
 import UserAvatar from './user-avatar';
 
 export const columns: ColumnDef<ManageUserType>[] = [
@@ -36,6 +37,9 @@ export const columns: ColumnDef<ManageUserType>[] = [
     {
         accessorKey: 'role',
         header: 'Role',
+        cell: ({ row }) => {
+            return <RoleDropdown row={row} />;
+        },
     },
 ];
 
