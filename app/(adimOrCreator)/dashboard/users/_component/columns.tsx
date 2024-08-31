@@ -1,11 +1,11 @@
 'use client';
 
 import { DataTableColumnHeader } from '@/components/data-table-column-header';
-import { RoleType } from '@/types/mongoose-models';
+import { ManageUserType } from '@/types/users';
 import { ColumnDef } from '@tanstack/react-table';
 import UserAvatar from './user-avatar';
 
-export const columns: ColumnDef<UserType>[] = [
+export const columns: ColumnDef<ManageUserType>[] = [
     {
         accessorKey: 'image',
         header: 'Image',
@@ -39,7 +39,7 @@ export const columns: ColumnDef<UserType>[] = [
     },
 ];
 
-export const data: UserType[] = [
+export const data: ManageUserType[] = [
     {
         id: 'slkdjoe',
         name: 'Seemol chakroborti',
@@ -236,13 +236,3 @@ export const data: UserType[] = [
         role: 'creator',
     },
 ];
-
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type UserType = {
-    id: string;
-    name: string;
-    email: string;
-    role: RoleType;
-    image?: string | null;
-};
