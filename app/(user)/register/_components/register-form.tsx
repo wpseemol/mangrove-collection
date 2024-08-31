@@ -1,5 +1,6 @@
 'use client';
 
+import ButtonLoading from '@/components/button-loading';
 import { Button } from '@/components/ui/button';
 import {
     Form,
@@ -19,12 +20,10 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
-import { FcSynchronize } from 'react-icons/fc';
 import { PiEyeClosedDuotone, PiEyeDuotone } from 'react-icons/pi';
 import { z } from 'zod';
 
 export default function RegisterForm() {
-    const [loading, setLoading] = useState(false);
     const router = useRouter();
     const { toast } = useToast();
 
@@ -41,7 +40,6 @@ export default function RegisterForm() {
 
     // 2. Define a submit handler.
     async function onSubmit(values: z.infer<typeof registerSchema>) {
-        setLoading(true);
         const { conformPass, ...regForm } = values;
 
         if (conformPass !== values.password) {
@@ -49,7 +47,7 @@ export default function RegisterForm() {
                 type: 'required',
                 message: 'Password and confirm password do not match.',
             });
-            setLoading(false);
+
             return;
         }
 
@@ -100,8 +98,6 @@ export default function RegisterForm() {
                     description: 'An unexpected error occurred.',
                 });
             }
-        } finally {
-            setLoading(false);
         }
     }
 
@@ -152,18 +148,10 @@ export default function RegisterForm() {
                     <div className="space-y-2 w-full">
                         <Button
                             variant="default"
-                            className={`${
-                                loading ? 'cursor-wait' : ''
-                            } w-full bg-primary hover:bg-primary-foreground duration-100 text-neutral-100`}>
+                            disabled={form.formState.isSubmitting}
+                            className={`w-full bg-primary hover:bg-primary-foreground duration-100 text-neutral-100`}>
                             Register
-                            {loading && (
-                                <>
-                                    ...
-                                    <span className="ml-2">
-                                        <FcSynchronize className="text-xl animate-spin" />
-                                    </span>
-                                </>
-                            )}
+                            {form.formState.isSubmitting && <ButtonLoading />}
                         </Button>
 
                         <p className="px-4 text-sm text-center dark:text-gray-600">

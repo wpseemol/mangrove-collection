@@ -17,8 +17,8 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const isAdmin = !(session?.user?.role === ADMIN);
-        const isCreator = !(session?.user?.role === CREATOR);
+        const isAdmin = session?.user?.role === ADMIN;
+        const isCreator = session?.user?.role === CREATOR;
 
         if (!isAdmin && !isCreator) {
             return NextResponse.json(

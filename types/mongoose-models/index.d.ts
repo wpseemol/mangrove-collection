@@ -177,28 +177,6 @@ export interface ProductType extends Omit<ProductWithMongo_Id, '_id'> {
     id: string; // String identifier for the product.
 }
 
-// Replace MongoDB ID function types
-
-/**
- * The `ReplaceMongoIdAccepted` type represents an array of objects that can be of type
- * `ProductWithMongo_Id`, `CategoryWithMongo_Id`, or `CategoryWith_IdCount`.
- */
-export type ReplaceMongoIdAccepted = (
-    | ProductWithMongo_Id
-    | CategoryWithMongo_Id
-    | CategoryWith_IdCount
-)[];
-
-/**
- * The `ReplaceMongoIdReturn` type represents an array of objects that can be of type
- * `ProductType`, `AllCategoryType`, or `CategoryWithCountType`.
- */
-type ReplaceMongoIdReturn = (
-    | ProductType
-    | AllCategoryType
-    | CategoryWithCountType
-)[];
-
 /**
  *  Define the possible roles a user can have
  */
@@ -229,4 +207,12 @@ export interface UserBase {
      * User register time here.
      */
     registerAt: Date;
+}
+
+export interface UserWith_id extends Omit<UserBase, 'password'> {
+    _id: mongoose.Schema.Types.ObjectId;
+}
+
+export interface BaseUserType extends Omit<UserWith_id, '_id'> {
+    id: string;
 }

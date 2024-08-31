@@ -49,7 +49,7 @@ export default function ProductCard({
                                 height={145}
                                 className={`${
                                     imageUrl ? 'group-hover:z-[0]' : ''
-                                } object-cover object-center w-full h-full group-hover:scale-105 duration-500 z-[2] absolute top-0 left-0`}
+                                } object-cover object-center w-full h-full group-hover:scale-105 duration-500 z-[2] absolute top-0 left-0 bg-white border-b border`}
                             />
                             {imageUrl && (
                                 <Image
@@ -57,7 +57,7 @@ export default function ProductCard({
                                     alt={details.name}
                                     width={145}
                                     height={145}
-                                    className="object-cover object-center w-full h-full duration-500 group-hover:scale-105 absolute top-0 left-0 z-[1]"
+                                    className="object-cover object-center w-full h-full duration-500 group-hover:scale-105 absolute top-0 left-0 z-[1] bg-white border border-b"
                                 />
                             )}
                         </figure>
