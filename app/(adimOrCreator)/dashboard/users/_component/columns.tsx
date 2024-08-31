@@ -1,8 +1,7 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { DataTableColumnHeader } from '@/components/data-table-column-header';
 import { RoleType } from '@/types/mongoose-models';
-import { CaretSortIcon } from '@radix-ui/react-icons';
 import { ColumnDef } from '@tanstack/react-table';
 import UserAvatar from './user-avatar';
 
@@ -19,34 +18,20 @@ export const columns: ColumnDef<UserType>[] = [
     },
     {
         accessorKey: 'name',
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === 'asc')
-                    }>
-                    Name
-                    <CaretSortIcon className="ml-2 h-4 w-4" />
-                </Button>
-            );
-        },
+        header: ({ column }) => (
+            <DataTableColumnHeader
+                column={column}
+                title="Name"
+                enableHiding={false}
+            />
+        ),
         enableHiding: false,
     },
     {
         accessorKey: 'email',
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === 'asc')
-                    }>
-                    Email
-                    <CaretSortIcon className="ml-2 h-4 w-4" />
-                </Button>
-            );
-        },
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Email" />
+        ),
     },
     {
         accessorKey: 'role',
