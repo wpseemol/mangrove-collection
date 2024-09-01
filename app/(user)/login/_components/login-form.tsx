@@ -6,7 +6,6 @@ import {
     FormControl,
     FormField,
     FormItem,
-    FormLabel,
     FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -19,6 +18,7 @@ import { z } from 'zod';
 
 import loginAction from '@/action/login';
 import ButtonLoading from '@/components/button-loading';
+import { Label } from '@/components/ui/label';
 import { ToastAction } from '@/components/ui/toast';
 import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/components/ui/use-toast';
@@ -64,25 +64,24 @@ export default function LoginForm() {
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}
-                    className="flex flex-col justify-center items-center  gap-y-5 md:w-96">
+                    className="grid gap-y-4 -mt-2">
                     {/* input email */}
 
-                    <div className="w-full">
+                    <div className="grid gap-2">
                         <FormField
                             control={form.control}
                             name="email"
                             render={({ field, fieldState }) => (
                                 <FormItem>
-                                    <FormLabel className="">
-                                        Email address
-                                    </FormLabel>
+                                    <Label htmlFor="email">Email</Label>
 
                                     <FormControl>
                                         <Input
+                                            id="email"
                                             type="email"
                                             {...field}
                                             className="w-full bg-transparent border border-neutral-500/20
-                                            p-3 focus:outline-none  focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] rounded h-12 "
+                                            p-3 focus:outline-none  focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] rounded"
                                             placeholder="leroy@jenkins.com"
                                         />
                                     </FormControl>
@@ -97,13 +96,29 @@ export default function LoginForm() {
                     {/* input email */}
 
                     {/* input password */}
-                    <div className="w-full relative">
+                    <div className="grid gap-2">
+                        {/* if forget password */}
+                        <div className="flex items-center">
+                            <Label htmlFor="password">Password</Label>
+                            <Link
+                                href="#"
+                                className="ml-auto inline-block text-sm underline">
+                                Forgot your password?
+                            </Link>
+                        </div>
                         <PasswordField form={form} />
                     </div>
 
                     {/* input  password */}
 
-                    <div className="space-y-2 w-full">
+                    <Button
+                        disabled={form.formState.isSubmitting}
+                        type="submit"
+                        className="w-full">
+                        Login {form.formState.isSubmitting && <ButtonLoading />}
+                    </Button>
+
+                    {/* <div className="space-y-2 w-full">
                         <Button
                             disabled={form.formState.isSubmitting}
                             variant="default"
@@ -122,8 +137,17 @@ export default function LoginForm() {
                             </Link>
                             .
                         </p>
-                    </div>
+                    </div> */}
                 </form>
+                <Button variant="outline" className="w-full mt-4">
+                    Login with Google
+                </Button>
+                <div className="mt-4 text-center text-sm">
+                    Don&apos;t have an account?{' '}
+                    <Link href="/register" className="underline">
+                        Sign up
+                    </Link>
+                </div>
             </Form>
             <Toaster />
         </>
@@ -139,28 +163,30 @@ function PasswordField({ form }: PasswordFieldProps) {
 
     return (
         <>
-            <span
-                onClick={() => setIsHidden((prev) => !prev)}
-                className="absolute right-4 top-12">
-                {isHidden ? <PiEyeDuotone /> : <PiEyeClosedDuotone />}
-            </span>
-
             <FormField
                 control={form.control}
                 name="password"
                 render={({ field, fieldState }) => (
-                    <FormItem>
-                        <FormLabel className="">Password</FormLabel>
-
+                    <FormItem className="relative">
                         <FormControl>
                             <Input
+                                id="password"
                                 type={isHidden ? 'text' : 'password'}
                                 {...field}
                                 className="w-full bg-transparent border border-neutral-500/20
-                                            p-3 focus:outline-none  focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] rounded h-12 "
+                                            p-3 focus:outline-none  focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] rounded"
                                 placeholder={isHidden ? 'Password' : '********'}
                             />
                         </FormControl>
+                        <span
+                            onClick={() => setIsHidden((prev) => !prev)}
+                            className="absolute right-4 top-1">
+                            {isHidden ? (
+                                <PiEyeDuotone />
+                            ) : (
+                                <PiEyeClosedDuotone />
+                            )}
+                        </span>
                         <FormMessage>{fieldState.error?.message}</FormMessage>
                     </FormItem>
                 )}

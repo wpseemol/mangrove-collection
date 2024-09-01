@@ -9,11 +9,11 @@ import RegisterForm from './register-form';
 
 export default function RegisterSection() {
     return (
-        <Card className="">
+        <Card className="mx-auto max-w-sm">
             <CardHeader>
-                <CardTitle className="text-center">Sign Up</CardTitle>
-                <CardDescription className="text-center">
-                    Register Account.
+                <CardTitle className="text-xl">Sign Up</CardTitle>
+                <CardDescription>
+                    Enter your information to create an account
                 </CardDescription>
             </CardHeader>
             <CardContent>
