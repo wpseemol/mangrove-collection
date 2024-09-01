@@ -46,7 +46,7 @@ export default function HeroSection() {
                     otherInfo.length > 3
                         ? 'grid md:grid-cols-4 grid-cols-2'
                         : 'flex justify-center flex-wrap'
-                }  md:mt-10 mt-8  md:gap-14 gap-5 p-2`}>
+                }  md:mt-10 mt-5  md:gap-14 gap-5 p-2`}>
                 {otherInfo.map((info) => (
                     <Card
                         key={info.id}

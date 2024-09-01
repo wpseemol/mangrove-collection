@@ -9,7 +9,7 @@ export default async function CategorySection() {
     const allCategory: CategoryType = await getCategory();
 
     return (
-        <section className="container mx-auto pb-10">
+        <section className="container mx-auto md:pb-10 pb-5">
             <HomeTitle>
                 <samp className="uppercase">Our Product Category</samp>
             </HomeTitle>
@@ -21,20 +21,20 @@ export default async function CategorySection() {
                 <div
                     className={`${
                         allCategory.length <= 7
-                            ? 'flex justify-center items-center flex-wrap'
-                            : 'md:grid 2xl:grid-cols-8 xl:grid-cols-6 lg:grid-cols-5 md:grid-cols-4 grid-cols-2 flex justify-center items-center flex-wrap'
-                    } gap-x-3 gap-y-5 mt-5`}>
+                            ? 'md:flex justify-center items-center flex-wrap grid'
+                            : 'grid 2xl:grid-cols-8 xl:grid-cols-6 lg:grid-cols-5 items-center'
+                    } grid-cols-4 md:gap-4 gap-1 mt-5 p-3`}>
                     {allCategory.map((categoryWithoutType) => {
                         const category = categoryWithoutType as AllCategoryType;
 
                         return (
                             <Card
                                 key={category?.id}
-                                className=" bg-card  py-4 px-2 group
-                             hover:text-primary-foreground duration-300 rounded overflow-hidden sm:w-[166px] h-[175px] w-[150px] justify-self-center flex flex-col justify-center items-center">
+                                className=" bg-card py-4 sm:px-2 px-1 group
+                             hover:text-primary-foreground duration-300 rounded overflow-hidden md:w-[166px] md:h-[175px] h-[160px] w-full justify-self-center flex flex-col justify-center items-center">
                                 <Link
                                     href={`/products?category=${category?.slug}`}>
-                                    <figure className="mx-auto sm:w-20 sm:h-20 w-16 h-16 overflow-hidden rounded">
+                                    <figure className="mx-auto sm:w-20 sm:h-20 w-10 h-12 overflow-hidden rounded ">
                                         <Image
                                             src={category?.imgUrl}
                                             alt={category?.name}
