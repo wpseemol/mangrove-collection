@@ -18,10 +18,10 @@ export default function FilterSection({
     } = useFilterSection();
 
     return (
-        <div className="col-span-1 content-center bg-white px-4 pb-6 shadow rounded overflow-hidden w-fit mx-auto">
+        <div className="col-span-1 content-center bg-white dark:bg-transparent dark:text-neutral-200 px-4 pb-6 shadow rounded overflow-hidden w-fit mx-auto">
             <div className="divide-y divide-gray-200 space-y-5 ">
                 <div>
-                    <h3 className="text-xl text-gray-800 mb-3 uppercase font-medium">
+                    <h3 className="text-xl text-gray-800 dark:text-neutral-200 mb-3 uppercase font-medium">
                         Categories
                     </h3>
                     <div className="space-y-2">
@@ -45,12 +45,12 @@ export default function FilterSection({
                                     <label
                                         id={slug}
                                         htmlFor={slug}
-                                        className="text-gray-600 ml-3 cursor-pointer">
+                                        className="text-gray-600 dark:text-neutral-300 ml-3 cursor-pointer">
                                         <span className="capitalize">
                                             {name?.toLowerCase()}
                                         </span>
                                     </label>
-                                    <div className="ml-auto text-gray-600 text-sm">
+                                    <div className="ml-auto text-gray-600 dark:text-neutral-300 text-sm">
                                         ({productCount})
                                     </div>
                                 </div>
@@ -60,7 +60,7 @@ export default function FilterSection({
                 </div>
 
                 <div className="pt-4">
-                    <h3 className="text-xl text-gray-800 mb-3 uppercase font-medium">
+                    <h3 className="text-xl text-gray-800 dark:text-neutral-200 mb-3 uppercase font-medium">
                         Price
                     </h3>
                     {/* price input component */}
@@ -71,7 +71,7 @@ export default function FilterSection({
                             type="number"
                             name="min"
                             id="min"
-                            className="w-full border-gray-300 focus:border-primary rounded focus:ring-0 px-3 py-1 text-gray-600 shadow-sm"
+                            className="w-full border-gray-300 focus:border-primary rounded focus:ring-0 px-3 py-1 text-gray-600 shadow-sm dark:text-neutral-300"
                             placeholder="min"
                         />
                         <span className="mx-3 text-gray-500">-</span>
@@ -81,14 +81,14 @@ export default function FilterSection({
                             type="number"
                             name="max"
                             id="max"
-                            className="w-full border-gray-300 focus:border-primary rounded focus:ring-0 px-3 py-1 text-gray-600 shadow-sm"
+                            className="w-full border-gray-300 focus:border-primary rounded focus:ring-0 px-3 py-1 text-gray-600 shadow-sm dark:text-neutral-300"
                             placeholder="max"
                         />
                     </div>
                 </div>
 
                 <div className="pt-4">
-                    <h3 className="text-xl text-gray-800 mb-3 uppercase font-medium">
+                    <h3 className="text-xl text-gray-800 dark:text-neutral-200 mb-3 uppercase font-medium">
                         size
                     </h3>
                     <div className="flex items-center gap-2">
@@ -120,7 +120,7 @@ export default function FilterSection({
                                         size === name
                                             ? 'bg-primary-foreground text-neutral-100'
                                             : ''
-                                    } text-xs border border-gray-200 rounded-sm h-6 w-6 flex items-center justify-center cursor-pointer shadow-sm text-gray-600 uppercase checked:bg-primary-foreground`}>
+                                    } text-xs border border-gray-200 rounded-sm h-6 w-6 flex items-center justify-center cursor-pointer shadow-sm text-gray-600 uppercase checked:bg-primary-foreground dark:text-neutral-300`}>
                                     {name}
                                 </label>
                             </div>

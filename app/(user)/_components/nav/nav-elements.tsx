@@ -115,6 +115,7 @@ async function Account() {
         }
 
         const firstName = session?.user?.name.split(' ')[0];
+        const fullName = session?.user?.name;
         // ADMIN or CREATOR OR USER url set
         let linkUrl = '';
         if (session?.user?.role === ADMIN || session?.user?.role === CREATOR)
@@ -129,7 +130,7 @@ async function Account() {
                     src={session?.user?.image}
                     width={30}
                     height={30}
-                    alt={session?.user?.name || ''}
+                    alt={fullName || ''}
                     className="md:w-[32px] md:h-[32px] w-[20px] h-[20px]"
                 />
             );
@@ -156,7 +157,7 @@ async function Account() {
                             </h2>
                             {session?.user ? (
                                 <p className="text-sm hidden md:block text-muted group-hover:text-primary-foreground dark:text-neutral-300/90 duration-150">
-                                    {firstName}
+                                    {fullName}
                                 </p>
                             ) : (
                                 <p className="text-sm hidden md:block text-muted group-hover:text-primary-foreground dark:text-neutral-300/90 duration-150">

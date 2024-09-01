@@ -16,14 +16,14 @@ export default function Breadcrumb({
         <div className="container py-4 flex items-center gap-3 md:ml-0 pl-5 ">
             <Link
                 href="/"
-                className="text-primary text-base hover:text-primary-foreground duration-150">
+                className="text-primary dark:text-primary-foreground text-base hover:text-primary-foreground duration-150">
                 <FaHouse />
             </Link>
 
             <FaChevronRight className="text-sm text-gray-400" />
 
             <Link href={href}>
-                <p className="text-primary text-base hover:text-primary-foreground font-medium duration-150">
+                <p className="text-primary dark:text-primary-foreground text-base hover:text-primary-foreground font-medium duration-150">
                     {pageName}
                 </p>
             </Link>
