@@ -7,7 +7,7 @@ export default function MobileScreen() {
         <>
             <nav className="md:hidden ">
                 <div>
-                    <ul className=" flex justify-between items-center py-2 bg-black w-full fixed z-10 top-0 px-8">
+                    <ul className=" flex justify-between items-center py-2 bg-black w-full fixed z-10 top-0 px-8 border-b dark:border-neutral-200/20">
                         {/* small screen menu button  */}
 
                         <MenuBtn>
@@ -25,7 +25,7 @@ export default function MobileScreen() {
                 </div>
 
                 <div>
-                    <ul className="fixed bottom-0 z-[9] bg-black py-2 flex w-full justify-evenly ">
+                    <ul className="fixed bottom-0 z-[9] bg-black py-2 flex w-full justify-evenly border-t border-neutral-200/20">
                         {/* offer */}
                         <Offer />
 

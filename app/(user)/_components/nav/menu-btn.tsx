@@ -39,7 +39,7 @@ export default function MenuBtn({ children }: { children: React.ReactNode }) {
     return (
         <li className={``}>
             <Button
-                className=" text-neutral-100 text-2xl bg-transparent"
+                className=" text-neutral-100 text-2xl bg-transparent "
                 onClick={() =>
                     setMenuShow({
                         animation: !menuShow.animation,
@@ -58,7 +58,7 @@ export default function MenuBtn({ children }: { children: React.ReactNode }) {
                         duration: 0.5,
                         ease: [0.25, 0.1, 0.25, 1], // Custom ease curve for a smooth animation
                     }}
-                    className={`fixed top-[4.8rem] z-50 left-0 border rounded-sm text-xl font-normal text-secondary-foreground sm:min-w-[calc(100vw-8rem)] min-w-[calc(100vw-5rem)] min-h-[calc(100vh-4.8rem)] bg-gray-100  `}
+                    className={`fixed top-[4.8rem] z-50 left-0 border rounded-sm text-xl font-normal text-secondary-foreground sm:min-w-[calc(100vw-8rem)] min-w-[calc(100vw-5rem)] min-h-[calc(100vh-4.8rem)] bg-gray-100 dark:bg-slate-900 `}
                     onAnimationComplete={() => {
                         if (!menuShow.animation) {
                             setMenuShow({

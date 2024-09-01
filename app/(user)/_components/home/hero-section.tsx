@@ -10,9 +10,9 @@ import HeroSlider from './hero-slider';
 
 export default function HeroSection() {
     return (
-        <section className="md:min-h-[calc(100vh-8.5rem)] container mx-auto flex flex-col justify-center py-10">
+        <section className="md:min-h-[calc(100vh-8.5rem)] container mx-auto flex flex-col justify-center md:py-10 py-5 ">
             {/* hero slider section */}
-            <div className="grid md:grid-cols-3 grid-cols-2 gap-4 xl:h-[600px] md:h-[450px]">
+            <div className="grid md:grid-cols-3 grid-cols-2 md:gap-4 gap-2 xl:h-[600px] md:h-[450px] p-2 md:p-0">
                 <div
                     className="md:col-span-2 col-span-2 md:row-span-2 border relative overflow-hidden md:h-full
                     sm:h-[300px] h-[200px]">

@@ -31,17 +31,11 @@ export default function ProductCard({
     return (
         <>
             <Card
-                className={`${
-                    which === 'products-page' ? 'sm:w-[230px]' : 'sm:w-[250px]'
-                }  h-fit w-[260px]  justify-self-center rounded group relative overflow-hidden`}>
+                className={` h-fit sm:w-[260px] w-[150px]  justify-self-center rounded group relative overflow-hidden`}>
                 <CardContent className="h-fit p-0">
                     <CustomLink href={`/products/${details.slug}`}>
                         <figure
-                            className={`${
-                                which === 'products-page'
-                                    ? 'sm:h-[230px]'
-                                    : 'sm:h-[250px]'
-                            } w-full h-[260px] mx-auto rounded-t overflow-hidden relative animate-fade animate-duration-1000`}>
+                            className={` w-full h-[260px] mx-auto rounded-t overflow-hidden relative animate-fade animate-duration-1000`}>
                             <Image
                                 src={details.thumbnail}
                                 alt={details.name}
