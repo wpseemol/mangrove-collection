@@ -23,8 +23,6 @@ export default function AddCategory() {
         },
     });
 
-    console.log('is loading:', form.formState.isSubmitting);
-
     return (
         <>
             <Form {...form}>
