@@ -9,7 +9,7 @@ export default async function CategorySection() {
     const allCategory: CategoryType = await getCategory();
 
     return (
-        <section className="container mx-auto md:pb-10 pb-5">
+        <section className="container mx-auto md:pb-10 pb-5 px-2 md:px-0">
             <HomeTitle>
                 <samp className="uppercase">Our Product Category</samp>
             </HomeTitle>
@@ -23,7 +23,7 @@ export default async function CategorySection() {
                         allCategory.length <= 7
                             ? 'md:flex justify-center items-center flex-wrap grid'
                             : 'grid 2xl:grid-cols-8 xl:grid-cols-6 lg:grid-cols-5 items-center'
-                    } grid-cols-4 md:gap-4 gap-1 mt-5 p-3`}>
+                    } grid-cols-4 md:gap-4 gap-1 mt-5`}>
                     {allCategory.map((categoryWithoutType) => {
                         const category = categoryWithoutType as AllCategoryType;
 

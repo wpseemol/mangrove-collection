@@ -39,7 +39,7 @@ export default function MenuBtn({ children }: { children: React.ReactNode }) {
     return (
         <li className={``}>
             <Button
-                className=" text-neutral-100 text-2xl bg-transparent "
+                className=" text-neutral-100 text-2xl bg-transparent p-0 py-0"
                 onClick={() =>
                     setMenuShow({
                         animation: !menuShow.animation,
