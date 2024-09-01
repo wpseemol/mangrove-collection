@@ -11,7 +11,7 @@ export default function DashboardLogout({
 }: {
     isDryerClose: boolean;
 }) {
-    const [loading, setLoading] = useState<boolean>(!false);
+    const [loading, setLoading] = useState<boolean>(false);
 
     async function handelLogout() {
         setLoading(true);
@@ -29,10 +29,10 @@ export default function DashboardLogout({
             <button
                 disabled={loading}
                 onClick={handelLogout}
-                className="flex items-center justify-center gap-2 bg-slate-800/60 hover:bg-slate-800/80 p-3 rounded font-bold hover:text-primary-foreground">
+                className="flex items-center justify-center gap-2 bg-slate-800/60 hover:bg-slate-800/80 p-3 rounded font-bold hover:text-primary-foreground disabled:cursor-not-allowed">
                 {loading ? (
                     <span className={`${isDryerClose ? '' : 'hidden'} `}>
-                        <FcSynchronize className="text-xl animate-spin" />
+                        <FcSynchronize className="text-xl animate-spin text-white" />
                     </span>
                 ) : (
                     <IoIosLogOut />
