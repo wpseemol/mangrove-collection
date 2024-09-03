@@ -29,15 +29,16 @@ export default function RoleDropdown({ row }: { row: Row<BaseUserType> }) {
     const { data: session, status, update } = useSession();
 
     const roleArray = [ADMIN, CREATOR, USER];
+    const isLoginUser =
+        userId !== session?.user.id && status === 'authenticated';
 
     async function handelRoleChange(userId: string, role: string) {
         // console.log('session:', session);
-        // console.log('status:', status);
         // console.log('update:', update);
 
         if (session) {
             const isUpdate = await update({
-                user: { ...session.user, role: 'user' },
+                user: { role: 'user' },
             });
             console.log('role dropdown', isUpdate);
         }
@@ -54,12 +55,12 @@ export default function RoleDropdown({ row }: { row: Row<BaseUserType> }) {
 
             if (!response.ok) {
                 const error = await response.json();
-                console.log('role-dropdown:', error);
+                // console.log('role-dropdown:', error);
                 throw new Error(error.message || 'Failed to update user role.');
             }
 
             const updatedUser = await response.json();
-            console.log('role-dropdown:', updatedUser);
+            // console.log('role-dropdown:', updatedUser);
 
             toast({
                 variant: 'success',
@@ -83,32 +84,46 @@ export default function RoleDropdown({ row }: { row: Row<BaseUserType> }) {
         }
     }
 
-    return (
+    return loading || status === 'loading' ? (
+        <Button
+            disabled={loading}
+            variant="ghost"
+            className="focus-visible:ring-0 focus-visible:ring-white/0 capitalize">
+            {loading ? (
+                <LoadingIcon className="dark:text-white text-black" />
+            ) : (
+                userRole
+            )}
+        </Button>
+    ) : (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button
-                    disabled={loading}
                     variant="ghost"
                     className="focus-visible:ring-0 focus-visible:ring-white/0 capitalize">
-                    {loading ? (
-                        <LoadingIcon className="dark:text-white text-black" />
-                    ) : (
-                        userRole
-                    )}
+                    {userRole}
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
-                <DropdownMenuLabel>Select User Role</DropdownMenuLabel>
+                <DropdownMenuLabel className="capitalize">
+                    {isLoginUser
+                        ? 'Select User Role'
+                        : "You Can't Change Own role"}
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {roleArray.map((role) => (
                     <DropdownMenuCheckboxItem
                         key={role}
                         checked={userRole === role}
                         onCheckedChange={() => {
-                            setUserRole(role);
-                            handelRoleChange(userId, role);
+                            if (isLoginUser) {
+                                setUserRole(role);
+                                handelRoleChange(userId, role);
+                            }
                         }}
-                        className="capitalize">
+                        className={`${
+                            isLoginUser ? '' : 'cursor-not-allowed'
+                        } capitalize`}>
                         {role}
                     </DropdownMenuCheckboxItem>
                 ))}

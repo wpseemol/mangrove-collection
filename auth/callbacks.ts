@@ -46,8 +46,8 @@ export const authCallbacks = {
                 user.role = account.role;
             }
         }
-        // console.log('from authCallback jwt user:', user);
-        // console.log('from authCallback jwt account:', account);
+        console.log('from authCallback jwt user:', user);
+        console.log('from authCallback jwt account:', account);
         // console.log('from authCallback jwt token:', token);
 
         return token;

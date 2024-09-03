@@ -3,6 +3,7 @@
 import {
     ColumnDef,
     ColumnFiltersState,
+    Row,
     SortingState,
     VisibilityState,
     flexRender,
@@ -26,16 +27,19 @@ import {
 
 import { DataTableViewOptions } from '@/components/data-table-view-options';
 import { Toaster } from '@/components/ui/toaster';
+import { BaseUserType } from '@/types/mongoose-models';
 import { DataTablePagination } from '../../../../../components/data-table-pagination';
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
+    loginUserId?: string | undefined;
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
+    loginUserId,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] =
@@ -106,22 +110,34 @@ export function DataTable<TData, TValue>({
                     </TableHeader>
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map((row) => (
-                                <TableRow
-                                    key={row.id}
-                                    data-state={
-                                        row.getIsSelected() && 'selected'
-                                    }>
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext()
-                                            )}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            ))
+                            table.getRowModel().rows.map((row) => {
+                                const rowUerType = row as Row<BaseUserType>;
+
+                                const isLoginUser =
+                                    loginUserId === rowUerType.original.id;
+
+                                return (
+                                    <TableRow
+                                        key={row.id}
+                                        data-state={
+                                            row.getIsSelected() && 'selected'
+                                        }
+                                        className={`${
+                                            isLoginUser
+                                                ? 'bg-neutral-200/60 dark:bg-slate-200/20 hover:bg-neutral-200/65 hover:dark:bg-slate-200/25'
+                                                : ''
+                                        }`}>
+                                        {row.getVisibleCells().map((cell) => (
+                                            <TableCell key={cell.id}>
+                                                {flexRender(
+                                                    cell.column.columnDef.cell,
+                                                    cell.getContext()
+                                                )}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                );
+                            })
                         ) : (
                             <TableRow>
                                 <TableCell
