@@ -5,8 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { Toaster } from '@/components/ui/toaster';
 import { addProductSchema } from '@/lib/schemas/zod/add-product-schema';
-import { UserType } from '@/types/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { User } from 'next-auth';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -24,7 +24,7 @@ export default function AddProduct({
     user,
 }: {
     allCategory: string;
-    user: UserType;
+    user: User;
 }) {
     const router = useRouter();
 
