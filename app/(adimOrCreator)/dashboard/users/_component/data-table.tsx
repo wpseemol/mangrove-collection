@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/table';
 
 import { DataTableViewOptions } from '@/components/data-table-view-options';
+import { Toaster } from '@/components/ui/toaster';
 import { DataTablePagination } from '../../../../../components/data-table-pagination';
 
 interface DataTableProps<TData, TValue> {
@@ -135,6 +136,7 @@ export function DataTable<TData, TValue>({
             </div>
             {/* pagination */}
             <DataTablePagination table={table} />
+            <Toaster />
         </>
     );
 }

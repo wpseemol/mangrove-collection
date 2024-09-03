@@ -1,3 +1,5 @@
+import { cn } from '@/lib/utils';
+import { AiOutlineReload } from 'react-icons/ai';
 import { FcSynchronize } from 'react-icons/fc';
 
 export default function ButtonLoading() {
@@ -8,5 +10,15 @@ export default function ButtonLoading() {
                 <FcSynchronize className="text-xl animate-spin" />
             </span>
         </>
+    );
+}
+
+export function LoadingIcon({ className }: { className?: string }) {
+    return (
+        <span>
+            <AiOutlineReload
+                className={cn(`text-xl animate-spin`, className)}
+            />
+        </span>
     );
 }
