@@ -60,8 +60,6 @@ export const authCallbacks: NextAuthConfig['callbacks'] = {
                 ...token,
                 ...(session as Partial<JWT>),
             };
-
-            console.log(session);
         }
 
         return token;
