@@ -85,13 +85,13 @@
 //     }
 // }
 
-declare module 'next-auth/jwt' {
-    /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
-    interface JWT {
-        /** OpenID ID Token */
-        role?: RoleType;
-    }
-}
+// declare module 'next-auth/jwt' {
+//     /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
+//     interface JWT {
+//         /** OpenID ID Token */
+//         role?: RoleType;
+//     }
+// }
 
 // export interface UserType {
 //     name: string;

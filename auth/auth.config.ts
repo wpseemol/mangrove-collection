@@ -1,7 +1,8 @@
-import { AuthConfigType } from '@/types/auth';
+// import { AuthConfigType } from '@/types/auth';
+import { NextAuthConfig } from 'next-auth';
 import { authCallbacks } from './callbacks';
 
-export const authConfig: AuthConfigType = {
+export const authConfig: NextAuthConfig = {
     session: {
         strategy: 'jwt',
     },
