@@ -25,24 +25,13 @@ export default function RoleDropdown({ row }: { row: Row<BaseUserType> }) {
     const userId: string = row.original.id;
     const [userRole, setUserRole] = React.useState(roleValue);
     const [loading, setLoading] = React.useState<boolean>(false);
-
-    const { data: session, status, update } = useSession();
+    const { data: session, status } = useSession();
 
     const roleArray = [ADMIN, CREATOR, USER];
     const isLoginUser =
         userId !== session?.user.id && status === 'authenticated';
 
     async function handelRoleChange(userId: string, role: string) {
-        // console.log('session:', session);
-        // console.log('update:', update);
-
-        if (session) {
-            const isUpdate = await update({
-                user: { role: 'user' },
-            });
-            console.log('role dropdown', isUpdate);
-        }
-
         setLoading(true);
         try {
             const response = await fetch(`/api/v1/users/${userId}`, {
