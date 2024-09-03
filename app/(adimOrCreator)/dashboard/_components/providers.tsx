@@ -1,4 +1,5 @@
 import { ThemeProvider } from '@/components/theme-provider';
+import { SessionProvider } from 'next-auth/react';
 
 export default function Providers({
     children,
@@ -7,14 +8,16 @@ export default function Providers({
 }>) {
     return (
         <>
-            <ThemeProvider
-                attribute="class"
-                defaultTheme="green"
-                themes={['green', 'dark', 'light']}
-                enableSystem
-                disableTransitionOnChange>
-                {children}
-            </ThemeProvider>
+            <SessionProvider>
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="green"
+                    themes={['green', 'dark', 'light']}
+                    enableSystem
+                    disableTransitionOnChange>
+                    {children}
+                </ThemeProvider>
+            </SessionProvider>
         </>
     );
 }

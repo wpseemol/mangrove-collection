@@ -15,6 +15,7 @@ import { ADMIN, CREATOR, USER } from '@/lib/constant-value';
 import { BaseUserType } from '@/types/mongoose-models';
 import { DropdownMenuCheckboxItemProps } from '@radix-ui/react-dropdown-menu';
 import { Row } from '@tanstack/react-table';
+import { useSession } from 'next-auth/react';
 import * as React from 'react';
 
 type Checked = DropdownMenuCheckboxItemProps['checked'];
@@ -25,11 +26,15 @@ export default function RoleDropdown({ row }: { row: Row<BaseUserType> }) {
     const [userRole, setUserRole] = React.useState(roleValue);
     const [loading, setLoading] = React.useState<boolean>(false);
 
+    const { data: session, status, update } = useSession();
+
     const roleArray = [ADMIN, CREATOR, USER];
 
-    // console.log(userId);
-
     async function handelRoleChange(userId: string, role: string) {
+        console.log('session:', session);
+        console.log('status:', status);
+        console.log('update:', update);
+
         setLoading(true);
         try {
             const response = await fetch(`/api/v1/users/${userId}`, {
