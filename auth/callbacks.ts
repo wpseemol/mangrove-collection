@@ -1,7 +1,8 @@
-import { Account, Session, User } from 'next-auth';
-import { JWT } from 'next-auth/jwt';
+import { JWT } from '@auth/core/jwt';
 
-export const authCallbacks = {
+import { Account, NextAuthConfig, Profile, Session, User } from 'next-auth';
+
+export const authCallbacks: NextAuthConfig['callbacks'] = {
     async signIn({
         user,
         account,
@@ -9,10 +10,9 @@ export const authCallbacks = {
         user: User;
         account: Account | null;
     }): Promise<boolean> {
-        // console.log('from authCallback singin user:', user);
-        // console.log('from authCallback singin account:', account);
-        if (account && user) {
-            if (user && user?.role) account.role = user.role;
+        // Your logic here
+        if (account && user?.role) {
+            account.role = user.role;
         }
         return true;
     },
@@ -23,33 +23,42 @@ export const authCallbacks = {
         session: Session;
         token: JWT;
     }): Promise<Session> {
-        if (token && token?.role) session.user.role = token.role;
-        if (token && token?.sub) session.user.id = token.sub;
-
-        // console.log('from authCallback session session.user:', session.user);
-        // console.log('from authCallback session token:', token);
-
+        // Add role and id to the session from the token
+        if (token.role) {
+            session.user.role = token.role;
+        }
+        if (token.sub) {
+            session.user.id = token.sub;
+        }
         return session;
     },
     async jwt({
         token,
         user,
-        account,
+        profile,
+        trigger,
     }: {
         token: JWT;
         user?: User;
-        account?: Account | null;
+        profile?: Profile;
+        trigger?: 'update' | 'signIn' | 'signUp';
     }): Promise<JWT> {
-        if (account && account?.role) {
-            token.role = account.role;
-            if (user) {
-                user.role = account.role;
-            }
+        // Update token with role from user or session
+        if (user?.role) {
+            token.role = user.role;
         }
-        console.log('from authCallback jwt user:', user);
-        console.log('from authCallback jwt account:', account);
-        // console.log('from authCallback jwt token:', token);
+        if (profile?.role) {
+            token.role = profile.role;
+        }
 
+        // Handle updates
+        if (trigger === 'update') {
+            const profileType = profile;
+            token = {
+                ...token,
+                ...(profile as Partial<JWT>),
+            };
+        }
         return token;
     },
 };
