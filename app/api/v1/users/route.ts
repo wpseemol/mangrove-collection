@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
         const response: UserWith_id[] = await User.find(
             {},
             'fullName email image phone role username registerAt'
-        ).lean();
+        ).lean<UserWith_id[]>();
 
         const users = replaceMongoId(response);
 

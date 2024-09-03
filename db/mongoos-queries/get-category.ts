@@ -48,7 +48,7 @@ async function getCategory(type?: GetCategoryType) {
 
             default:
                 const allCategory: CategoryWithMongo_Id[] =
-                    await Category.find().lean();
+                    await Category.find().lean<CategoryWithMongo_Id[]>();
 
                 if (allCategory) {
                     return replaceMongoId(allCategory) as AllCategoryType[];
@@ -70,7 +70,7 @@ async function getCategoryMongoId(slugArray: string[]) {
                 slug: { $in: slugArray },
             },
             '_id'
-        ).lean();
+        ).lean<CategoryIdsType[]>();
 
         if (response && response.length > 0) {
             const categoryIds = response.map((category) =>

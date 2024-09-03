@@ -10,7 +10,9 @@ export async function GET() {
     try {
         await connectMongoDB();
 
-        const response: CategoryWithMongo_Id[] = await Category.find().lean();
+        const response: CategoryWithMongo_Id[] = await Category.find().lean<
+            CategoryWithMongo_Id[]
+        >();
 
         if (!response) {
             return NextResponse.json(
