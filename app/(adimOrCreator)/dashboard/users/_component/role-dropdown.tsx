@@ -31,9 +31,16 @@ export default function RoleDropdown({ row }: { row: Row<BaseUserType> }) {
     const roleArray = [ADMIN, CREATOR, USER];
 
     async function handelRoleChange(userId: string, role: string) {
-        console.log('session:', session);
-        console.log('status:', status);
-        console.log('update:', update);
+        // console.log('session:', session);
+        // console.log('status:', status);
+        // console.log('update:', update);
+
+        if (session) {
+            const isUpdate = await update({
+                user: { ...session.user, role: 'user' },
+            });
+            console.log('role dropdown', isUpdate);
+        }
 
         setLoading(true);
         try {

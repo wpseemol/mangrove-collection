@@ -3,7 +3,6 @@ import { connectMongoDB } from '@/db/connections/mongoose-connect';
 import { ADMIN } from '@/lib/constant-value';
 import { User } from '@/lib/schemas/mongoose/user';
 import { MongoServerError } from 'mongodb';
-import { getToken } from 'next-auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function PATCH(
@@ -15,10 +14,16 @@ export async function PATCH(
         const session = await auth();
         const body = await request.json();
 
-        const token = await getToken({
-            req: request,
-            secret: process.env.AUTH_SECRET,
-        });
+        // const secret = process.env.AUTH_SECRET || 'defaultSecret'; // Provide a fallback value if needed
+        // const token = await getToken({ req: request, secret });
+
+        // if (token) {
+        //     token.role = 'user';
+
+        //     console.log('is update');
+        // }
+
+        // console.log('role update api:', token);
 
         if (!userId) {
             return NextResponse.json(
