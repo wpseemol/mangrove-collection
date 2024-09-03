@@ -14,17 +14,6 @@ export async function PATCH(
         const session = await auth();
         const body = await request.json();
 
-        // const secret = process.env.AUTH_SECRET || 'defaultSecret'; // Provide a fallback value if needed
-        // const token = await getToken({ req: request, secret });
-
-        // if (token) {
-        //     token.role = 'user';
-
-        //     console.log('is update');
-        // }
-
-        // console.log('role update api:', token);
-
         if (!userId) {
             return NextResponse.json(
                 { error: 'User ID is required and must be a string.' },

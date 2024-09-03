@@ -30,35 +30,40 @@ export const authCallbacks: NextAuthConfig['callbacks'] = {
         if (token.sub) {
             session.user.id = token.sub;
         }
+
+        // console.log(session);
+
         return session;
     },
     async jwt({
         token,
         user,
-        profile,
+        session,
         trigger,
     }: {
         token: JWT;
         user?: User;
-        profile?: Profile;
+        session?: Profile;
         trigger?: 'update' | 'signIn' | 'signUp';
     }): Promise<JWT> {
         // Update token with role from user or session
         if (user?.role) {
             token.role = user.role;
         }
-        if (profile?.role) {
-            token.role = profile.role;
+        if (session?.role) {
+            token.role = session.role;
         }
 
         // Handle updates
         if (trigger === 'update') {
-            const profileType = profile;
             token = {
                 ...token,
-                ...(profile as Partial<JWT>),
+                ...(session as Partial<JWT>),
             };
+
+            console.log(session);
         }
+
         return token;
     },
 };
