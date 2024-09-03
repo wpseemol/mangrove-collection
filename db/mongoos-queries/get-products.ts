@@ -58,7 +58,7 @@ export default async function getProducts(
                     })
                     .sort(sortOption)
                     .limit(limitOption)
-                    .lean();
+                    .lean<ProductWithMongo_Id[]>();
 
                 if (products?.length < 1) {
                     const popularProducts: ProductWithMongo_Id[] =
@@ -73,7 +73,7 @@ export default async function getProducts(
                             })
                             .sort({ popularity: -1 })
                             .limit(limitOption)
-                            .lean();
+                            .lean<ProductWithMongo_Id[]>();
 
                     if (popularProducts) {
                         // replace mongo id here
@@ -137,7 +137,7 @@ export default async function getProducts(
             })
             .sort(sortOption)
             .limit(limitOption)
-            .lean();
+            .lean<ProductWithMongo_Id[]>();
 
         if (products) {
             // replace mongo id here

@@ -24,7 +24,7 @@ export default async function getProductDetails(
                     model: Category,
                     select: 'name slug imgUrl',
                 })
-                .lean();
+                .lean<ProductDetailsWith_idType | null>();
         if (response) {
             return replaceMongoObjectId(response);
         } else {
