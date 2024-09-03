@@ -1,7 +1,7 @@
 'use client';
 
 import { ModeToggle } from '@/components/mode-toggle';
-import { UserType } from '@/types/auth';
+import { User } from 'next-auth';
 import { useState } from 'react';
 import { ImSpinner9 } from 'react-icons/im';
 import { IoCloseOutline } from 'react-icons/io5';
@@ -17,7 +17,7 @@ export default function DashboardMenuLayout({
 }: Readonly<{
     children: React.ReactNode;
     userMenu?: React.ReactNode | null;
-    user: UserType;
+    user: User;
 }>) {
     const [isDryerClose, setIsDryerClose] = useState<boolean>(false);
 
