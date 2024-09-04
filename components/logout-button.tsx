@@ -19,7 +19,7 @@ export default function LogoutButton({
         setLoading(true);
         try {
             await logoutAction();
-            await signOut();
+            await signOut({ redirect: false });
         } catch (error) {
             throw error;
         } finally {

@@ -10,7 +10,7 @@ export default async function AccountPage() {
                 login use info :
             </h2>
             <pre>{JSON.stringify(section)}</pre>
-            <LogoutButton>Logout</LogoutButton>
+            <LogoutButton className="my-5">Logout</LogoutButton>
         </main>
     );
 }
