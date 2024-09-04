@@ -19,6 +19,15 @@ interface CartContextType {
 }
 
 export type CartType = {
+    /**
+     * The items currently in the cart, represented by an array of item IDs.
+     * This can be null if the cart is empty or uninitialized.
+     */
     cartItems: string[] | null;
+
+    /**
+     * The total count of items in the cart.
+     * This can be null if the cart is empty or uninitialized.
+     */
     cartCount: number | null;
 };
