@@ -1,6 +1,6 @@
-export default function setLocalStorage(cartItemId: string) {
-    const key = 'cart-items';
+const key = 'cart-items';
 
+export function setLocalStorage(cartItemId: string): string[] {
     const cartItems = localStorage.getItem(key);
 
     let cartProductArray: string[] = [];
@@ -13,4 +13,11 @@ export default function setLocalStorage(cartItemId: string) {
     }
     localStorage.setItem(key, JSON.stringify(cartProductArray));
     return cartProductArray;
+}
+
+export function getLocalStorageValue(): string[] | null {
+    const cartItems = localStorage.getItem(key);
+    if (cartItems) return JSON.parse(cartItems);
+
+    return null;
 }

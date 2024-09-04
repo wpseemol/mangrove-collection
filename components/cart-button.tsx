@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import { useCart } from '@/hooks';
-import setLocalStorage from '@/utils/localstorage';
+import { setLocalStorage } from '@/utils/localstorage';
 import { useSession } from 'next-auth/react';
 import { ComponentProps, useState } from 'react';
 import ButtonLoading from './button-loading';

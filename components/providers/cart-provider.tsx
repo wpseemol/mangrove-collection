@@ -1,6 +1,7 @@
 'use client';
 import { CartContext, CartType } from '@/contexts';
-import { useState } from 'react';
+import { getLocalStorageValue } from '@/utils/localstorage';
+import { useEffect, useState } from 'react';
 
 export default function CartProvider({
     children,
@@ -13,6 +14,13 @@ export default function CartProvider({
     });
 
     const sendObj = { cart, setCart };
+
+    useEffect(() => {
+        const cartItemArray = getLocalStorageValue();
+        if (cartItemArray) {
+            setCart((prev) => ({ ...prev, cartCount: cartItemArray.length }));
+        }
+    }, []);
 
     return (
         <CartContext.Provider value={sendObj}>{children}</CartContext.Provider>
