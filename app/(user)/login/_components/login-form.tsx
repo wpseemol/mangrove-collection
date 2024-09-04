@@ -23,10 +23,13 @@ import { ToastAction } from '@/components/ui/toast';
 import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/components/ui/use-toast';
 import { AuthError } from 'next-auth';
+import { signIn } from 'next-auth/react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function LoginForm() {
     const { toast } = useToast();
+    const router = useRouter();
 
     const form = useForm<z.infer<typeof loginSchema>>({
         resolver: zodResolver(loginSchema),
@@ -40,7 +43,17 @@ export default function LoginForm() {
     async function onSubmit(values: z.infer<typeof loginSchema>) {
         try {
             await loginAction(values);
+            const result = await signIn('credentials', {
+                redirect: false,
+                ...values,
+            });
+
+            if (result?.error && result.error === 'CredentialsSignin') {
+                return;
+            }
+            router.refresh();
             form.reset();
+
             toast({
                 variant: 'success',
                 description: 'User login successful!',

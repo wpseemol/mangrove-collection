@@ -1,11 +1,18 @@
 import PageChangeAnimation from '@/app/(user)/_components/page-change-animation';
+import { auth } from '@/auth/auth';
 import { ThemeProvider } from '@/components/theme-provider';
 import { SessionProvider } from 'next-auth/react';
 
-export default function Providers({ children }: { children: React.ReactNode }) {
+export default async function Providers({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
+    const session = await auth();
+
     return (
         <>
-            <SessionProvider>
+            <SessionProvider session={session}>
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="green"

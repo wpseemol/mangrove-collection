@@ -11,7 +11,7 @@ export default function CartButton({
     variant,
     size,
 }: CartButtonType) {
-    const { data } = useSession();
+    const { data, status } = useSession();
 
     async function handelCart(productId: string) {
         const isLogin = !!data?.user;
