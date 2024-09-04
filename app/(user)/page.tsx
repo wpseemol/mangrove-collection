@@ -1,3 +1,4 @@
+import { Toaster } from '@/components/ui/toaster';
 import CategorySection from './_components/home/category-section';
 import Contact from './_components/home/contact';
 import HeroSection from './_components/home/hero-section';
@@ -21,6 +22,7 @@ export default function HomePage() {
                 <Contact />
                 <OtherDetails />
             </main>
+            <Toaster />
         </>
     );
 }

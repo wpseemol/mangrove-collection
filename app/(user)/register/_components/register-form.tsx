@@ -12,12 +12,10 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Toaster } from '@/components/ui/toaster';
-import { useToast } from '@/components/ui/use-toast';
+import { toast } from '@/components/ui/use-toast';
 import { registerSchema } from '@/lib/schemas/zod/register-schema';
-
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
@@ -26,7 +24,6 @@ import { z } from 'zod';
 
 export default function RegisterForm() {
     const router = useRouter();
-    const { toast } = useToast();
 
     const form = useForm<z.infer<typeof registerSchema>>({
         resolver: zodResolver(registerSchema),
