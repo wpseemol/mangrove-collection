@@ -18,7 +18,10 @@ declare module 'next-auth' {
             /** The user's postal address. */
             role?: RoleType | string;
             id: string;
-        } & DefaultSession['user'];
+            name: string;
+            email: string;
+            image: string | null;
+        };
     }
 
     /**
@@ -27,6 +30,10 @@ declare module 'next-auth' {
      */
     interface User {
         role?: RoleType | string;
+        id: string;
+        name: string;
+        email: string;
+        image: string | null;
     }
     /**
      * Usually contains information about the provider being used
@@ -34,9 +41,16 @@ declare module 'next-auth' {
      */
     interface Account {
         role?: RoleType | string;
+        id: string;
+        name: string;
+        email: string;
+        image: string | null;
     }
     /** The OAuth profile returned from your provider */
     interface Profile {
         role?: RoleType | string;
+        name?: string;
+        email?: string;
+        image?: string | null;
     }
 }

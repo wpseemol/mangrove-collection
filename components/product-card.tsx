@@ -4,6 +4,7 @@ import { ProductType } from '@/types/mongoose-models';
 import { CurrencyIcon } from '@/utils/currency-icon';
 import wordEllipsis from '@/utils/word-ellipsis';
 import Image from 'next/image';
+import CartButton from './cart-button';
 import CustomLink from './custom-link';
 
 type WhichType = 'products-page';
@@ -73,13 +74,16 @@ export default function ProductCard({
                             className="text-neutral-100 hover:bg-primary-foreground px-5 sm:w-fit w-[60px]">
                             Buy <span className="hidden sm:inline">Now</span>
                         </Button>{' '}
-                        <Button
+                        <CartButton
+                            productId={details.id}
                             variant="outline"
                             size="sm"
                             className="px-5 sm:w-fit w-[60px]">
-                            <span className="hidden sm:inline">Add to</span>{' '}
-                            Cart
-                        </Button>
+                            <>
+                                <span className="hidden sm:inline">Add to</span>
+                                Cart
+                            </>
+                        </CartButton>
                     </div>
                 </CardContent>
             </Card>
