@@ -37,7 +37,7 @@ export default function CartButton({
                  */
                 toast({
                     variant: 'destructive',
-                    description: 'Product is already Cart list.',
+                    description: 'Product is already cart list.',
                 });
             } else {
             }

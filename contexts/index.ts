@@ -9,4 +9,6 @@ const VariantUpdateContext = createContext<VariantUpdateContextType | null>(
     null
 );
 
-export { VariantUpdateContext };
+const CartContext = createContext<string[] | null>(null);
+
+export { CartContext, VariantUpdateContext };
