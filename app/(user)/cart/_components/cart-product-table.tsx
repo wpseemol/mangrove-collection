@@ -8,6 +8,9 @@ export default function CartProductTable() {
         <div>
             <h1 className="text-7xl mb-10">Welcome to Cart page</h1>
             <h2 className="text-5xl">cart product has {cart.cartCount}</h2>
+            <pre className="text-wrap text-md mt-3">
+                {JSON.stringify(cart.cartItems)}
+            </pre>
         </div>
     );
 }
