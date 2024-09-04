@@ -1,5 +1,5 @@
 'use client';
-import { CartContext } from '@/contexts';
+import { CartContext, CartType } from '@/contexts';
 import { useState } from 'react';
 
 export default function CartProvider({
@@ -7,9 +7,12 @@ export default function CartProvider({
 }: {
     children: React.ReactNode;
 }) {
-    const [cartItems, setCartItem] = useState<string[] | null>(null);
+    const [cart, setCart] = useState<CartType>({
+        cartItems: null,
+        cartCount: null,
+    });
 
-    const sendObj = { cartItems, setCartItem };
+    const sendObj = { cart, setCart };
 
     return (
         <CartContext.Provider value={sendObj}>{children}</CartContext.Provider>

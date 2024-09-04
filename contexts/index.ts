@@ -14,6 +14,11 @@ interface VariantUpdateContextType {
 }
 
 interface CartContextType {
-    cartItems: string[] | null;
-    setCartItem: Dispatch<SetStateAction<string[] | null>>;
+    cart: CartType;
+    setCart: Dispatch<SetStateAction<CartType>>;
 }
+
+export type CartType = {
+    cartItems: string[] | null;
+    cartCount: number | null;
+};

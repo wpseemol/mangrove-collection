@@ -20,8 +20,8 @@ const useVariantUpdate = function () {
 };
 
 /**
- * useCart hook pass cart item use {cartItems,setCartItem} object.
- * @returns {cartItems,setCartItem}
+ * useCart hook pass cart item use {cart, setCart} object.
+ * @returns {cart, setCart}
  */
 const useCart = function () {
     const context = useContext(CartContext);

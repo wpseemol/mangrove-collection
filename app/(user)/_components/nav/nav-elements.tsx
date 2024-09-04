@@ -11,6 +11,7 @@ import {
     FaMagnifyingGlass,
     FaRegUser,
 } from 'react-icons/fa6';
+import CartCount from './card-item-count';
 import CategoryMenus from './category-menus';
 
 function Logo() {
@@ -79,8 +80,6 @@ function Offer() {
 }
 
 function Card() {
-    const cardDataLength = 0;
-
     return (
         <li className="text-white">
             {' '}
@@ -94,7 +93,7 @@ function Card() {
                     <div>
                         <h2 className="sm:text-lg text-sm font-medium duration-150 group-hover:text-primary-foreground">
                             Cart
-                            <span></span>
+                            <CartCount />
                         </h2>
                         <p className="text-sm hidden md:block text-muted dark:text-neutral-300/90 group-hover:text-primary-foreground duration-150">
                             Add items
