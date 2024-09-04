@@ -16,7 +16,19 @@ export default function CartButton({
     async function handelCart(productId: string) {
         const isLogin = !!data?.user;
         const loginUserId = data?.user.id;
-        console.log(productId);
+
+        if (isLogin) {
+            /**
+             * User is logged in.
+             * mongodb model login user cart item keep.
+             */
+        } else {
+            /**
+             * User is not logged in.
+             * cart item keep local storage.
+             */
+        }
+
         console.log('user is login', isLogin);
         console.log('login userId', loginUserId);
     }
