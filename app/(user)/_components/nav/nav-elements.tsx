@@ -84,7 +84,7 @@ function Card() {
     return (
         <li className="text-white">
             {' '}
-            <CustomLink href="/cart-items">
+            <CustomLink href="/cart">
                 <div
                     className="flex md:flex-row flex-col items-center xl:gap-3 md:gap-2 gap-1
                 hover:text-primary-foreground duration-150 group">
