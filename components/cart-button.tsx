@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import setLocalStorage from '@/utils/localstorage';
 import { useSession } from 'next-auth/react';
 import { ComponentProps } from 'react';
 
@@ -27,10 +28,12 @@ export default function CartButton({
              * User is not logged in.
              * cart item keep local storage.
              */
+
+            setLocalStorage(productId);
         }
 
-        console.log('user is login', isLogin);
-        console.log('login userId', loginUserId);
+        // console.log('user is login', isLogin);
+        // console.log('login userId', loginUserId);
     }
 
     return (
