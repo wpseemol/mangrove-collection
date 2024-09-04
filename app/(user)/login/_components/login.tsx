@@ -9,7 +9,7 @@ import LoginForm from './login-form';
 
 export default function LoginSection() {
     return (
-        <Card className="mx-auto max-w-sm sm:border-neutral-600/10 border-black/0 shadow-none sm:shadow-sm">
+        <Card className="mx-auto max-w-md md:min-w-[26rem] sm:border-neutral-600/10 border-black/0 shadow-none sm:shadow-sm">
             <CardHeader>
                 <CardTitle className="text-2xl">Login</CardTitle>
                 <CardDescription>
