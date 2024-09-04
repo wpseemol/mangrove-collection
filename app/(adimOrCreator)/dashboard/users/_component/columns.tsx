@@ -30,6 +30,10 @@ export const columns: ColumnDef<BaseUserType>[] = [
     },
     {
         accessorKey: 'email',
+        header: 'Phone number',
+    },
+    {
+        accessorKey: 'phone',
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Email" />
         ),

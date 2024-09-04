@@ -55,7 +55,7 @@ export default function DashboardMenuLayout({
                         </div>
                     </div>
 
-                    <div className="px-2 py-4 flex flex-col items-center h-[calc(100vh-8rem)] overflow-x-hidden overflow-y-auto">
+                    <div className="px-2 py-4 flex flex-col md:items-center md:pl-0 pl-5 h-[calc(100vh-8rem)] overflow-x-hidden overflow-y-auto">
                         {/* dashboard menu here */}
                         <DashboardMenu
                             isDryerClose={isDryerClose}

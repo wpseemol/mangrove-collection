@@ -21,11 +21,14 @@ export async function POST(request: NextRequest) {
         }
 
         const password = bcryptjs.hashSync(body?.password, 10);
+        const { firstName, lastName, ...obj } = body;
+        const fullName = `${body.firstName} ${body.lastName}`;
 
-        const createUser = await User.create({
-            ...body,
-            password,
-        });
+        const userRegObj = { fullName, password, ...obj };
+
+        console.log(userRegObj);
+
+        const createUser = await User.create(userRegObj);
 
         return NextResponse.json(
             {

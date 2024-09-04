@@ -7,17 +7,13 @@ export default async function PopularProduct() {
     const products: ProductType[] | null = await getProducts('popular-product');
 
     return (
-        <section className="container mx-auto pb-10">
+        <section className="container mx-auto md:pb-10 pb-5">
             <HomeTitle>
                 <samp className="uppercase">POPULAR PRODUCTS🔥</samp>
             </HomeTitle>
             {products && (
                 <div
-                    className={`${
-                        products.length <= 5
-                            ? 'flex justify-center items-center flex-wrap gap-5'
-                            : 'md:grid 2xl:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 flex justify-center items-center flex-wrap 2xl:gap-x-3 gap-y-4  md:gap-x-0 gap-x-5'
-                    }  mt-5`}>
+                    className={` flex justify-center items-center flex-wrap sm:mt-5 mt-2 2xl:gap-x-5 gap-y-4  md:gap-x-4 gap-x-2`}>
                     {products.map((product) => (
                         <ProductCard key={product.id} details={product} />
                     ))}

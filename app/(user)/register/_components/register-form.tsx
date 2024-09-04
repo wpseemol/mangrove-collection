@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/components/ui/use-toast';
 import { registerSchema } from '@/lib/schemas/zod/register-schema';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 
@@ -30,7 +31,8 @@ export default function RegisterForm() {
     const form = useForm<z.infer<typeof registerSchema>>({
         resolver: zodResolver(registerSchema),
         defaultValues: {
-            fullName: '',
+            firstName: '',
+            lastName: '',
             email: '',
             phone: '',
             password: '',
@@ -106,19 +108,39 @@ export default function RegisterForm() {
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}
-                    className="flex flex-col justify-center items-center  gap-y-5 md:w-96">
+                    className="grid gap-4 -mt-2">
                     {/* input email */}
 
-                    <div className="w-full">
-                        <InputField
-                            form={form}
-                            name="fullName"
-                            type="text"
-                            label="Full name*"
-                            placeholder="Full name"
-                        />
+                    {/* first name and last name */}
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="grid gap-2">
+                            <div className="w-full">
+                                <InputField
+                                    form={form}
+                                    name="firstName"
+                                    type="text"
+                                    label="First name*"
+                                    placeholder="Max"
+                                />
+                            </div>
+                        </div>
+                        <div className="grid gap-2">
+                            <div className="w-full">
+                                <InputField
+                                    form={form}
+                                    name="lastName"
+                                    type="text"
+                                    label="Last name*"
+                                    placeholder="Robinson"
+                                />
+                            </div>
+                        </div>
                     </div>
-                    <div className="w-full">
+
+                    {/* first name and last name */}
+
+                    <div className="grid gap-2">
                         <InputField
                             form={form}
                             name="email"
@@ -127,7 +149,7 @@ export default function RegisterForm() {
                             placeholder="leroy@jenkins.com"
                         />
                     </div>
-                    <div className="w-full">
+                    <div className="grid gap-2">
                         <InputField
                             form={form}
                             name="phone"
@@ -145,26 +167,23 @@ export default function RegisterForm() {
 
                     {/* input  password */}
 
-                    <div className="space-y-2 w-full">
-                        <Button
-                            variant="default"
-                            disabled={form.formState.isSubmitting}
-                            className={`w-full bg-primary hover:bg-primary-foreground duration-100 text-neutral-100`}>
-                            Register
-                            {form.formState.isSubmitting && <ButtonLoading />}
-                        </Button>
-
-                        <p className="px-4 text-sm text-center dark:text-gray-600">
-                            {`Already have an account?`}
-                            <Link
-                                href="/login"
-                                className="hover:underline text-primary">
-                                Login
-                            </Link>
-                            .
-                        </p>
-                    </div>
+                    <Button
+                        disabled={form.formState.isSubmitting}
+                        type="submit"
+                        className="w-full">
+                        Create an account
+                        {form.formState.isSubmitting && <ButtonLoading />}
+                    </Button>
                 </form>
+                <Button variant="outline" className="w-full mt-4">
+                    Sign up with Google
+                </Button>
+                <div className="mt-4 text-center text-sm">
+                    Already have an account?{' '}
+                    <Link href="/login" className="underline">
+                        Sign in
+                    </Link>
+                </div>
             </Form>
             <Toaster />
         </>
@@ -173,7 +192,13 @@ export default function RegisterForm() {
 
 type InputFieldProps = {
     form: UseFormReturn<z.infer<typeof registerSchema>>;
-    name: 'fullName' | 'email' | 'password' | 'conformPass' | 'phone';
+    name:
+        | 'firstName'
+        | 'lastName'
+        | 'email'
+        | 'password'
+        | 'conformPass'
+        | 'phone';
     label: string;
     placeholder: string;
     type: string;
@@ -192,14 +217,17 @@ function InputField({
             name={name}
             render={({ field, fieldState }) => (
                 <FormItem>
-                    <FormLabel className="">{label}</FormLabel>
+                    <FormLabel htmlFor={name} className="">
+                        {label}
+                    </FormLabel>
 
                     <FormControl>
                         <Input
+                            id={name}
                             type={type}
                             {...field}
                             className="w-full bg-transparent border border-neutral-500/20
-                                            p-3 focus:outline-none  focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] rounded h-12 "
+                                            p-3 focus:outline-none  focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] rounded "
                             placeholder={placeholder}
                         />
                     </FormControl>
@@ -283,20 +311,12 @@ function PasswordOrConfirmPassField({ form }: PasswordOrConfirmPassFieldProps) {
 
     return (
         <>
-            <div className="w-full relative">
-                <span
-                    onClick={() => setIsHidden((prev) => !prev)}
-                    className={`absolute right-4  ${
-                        strengthLevel ? 'top-20' : 'top-12'
-                    }`}>
-                    {isHidden ? <PiEyeDuotone /> : <PiEyeClosedDuotone />}
-                </span>
-
+            <div className="grid gap-2">
                 <FormField
                     control={form.control}
                     name="password"
                     render={({ field, fieldState }) => (
-                        <FormItem>
+                        <FormItem className="relative">
                             <FormLabel className="">Password*</FormLabel>
                             {strengthLevel && (
                                 <p className={`${style}`}>
@@ -309,12 +329,25 @@ function PasswordOrConfirmPassField({ form }: PasswordOrConfirmPassFieldProps) {
                                     type={isHidden ? 'text' : 'password'}
                                     {...field}
                                     className="w-full bg-transparent border border-neutral-500/20
-                                            p-3 focus:outline-none  focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] rounded h-12 "
+                                            p-3 focus:outline-none  focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] rounded "
                                     placeholder={
                                         isHidden ? 'Password' : '********'
                                     }
                                 />
                             </FormControl>
+
+                            <span
+                                onClick={() => setIsHidden((prev) => !prev)}
+                                className={`absolute right-4  ${
+                                    strengthLevel ? 'top-[67px]' : 'top-9'
+                                }`}>
+                                {isHidden ? (
+                                    <PiEyeDuotone />
+                                ) : (
+                                    <PiEyeClosedDuotone />
+                                )}
+                            </span>
+
                             <FormMessage>
                                 {fieldState.error?.message}
                             </FormMessage>
@@ -322,10 +355,10 @@ function PasswordOrConfirmPassField({ form }: PasswordOrConfirmPassFieldProps) {
                     )}
                 />
             </div>
-            <div className="w-full relative">
+            <div className="grid gap-2 relative">
                 <span
                     onClick={() => setIsHidden((prev) => !prev)}
-                    className="absolute right-4 top-12">
+                    className="absolute right-4 top-11">
                     {isHidden ? <PiEyeDuotone /> : <PiEyeClosedDuotone />}
                 </span>
                 <InputField

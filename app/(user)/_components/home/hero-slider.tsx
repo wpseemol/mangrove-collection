@@ -32,16 +32,16 @@ export default function HeroSlider() {
             setCurrentIndex(newIndex);
         },
 
-        className: 'h-full w-full overflow-hidden p-0 m-0',
+        className: 'h-full w-full overflow-hidden p-0 m-0 gap-1',
         customPaging: (i: number) => {
             return (
-                <div className="absolute bottom-10">
+                <div className="absolute md:bottom-10 bottom-8 ">
                     <div
                         className={`${
                             currentIndex === i
                                 ? 'bg-primary-foreground'
-                                : 'bg-white'
-                        } w-5 h-2 duration-200`}></div>
+                                : 'bg-white/90'
+                        } md:w-5 md:h-2 w-3 h-1 duration-200`}></div>
                 </div>
             );
         },

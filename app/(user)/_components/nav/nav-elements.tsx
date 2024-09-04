@@ -114,7 +114,7 @@ async function Account() {
             return <div>Loading...</div>; // Or handle the case where user is null
         }
 
-        const firstName = session?.user?.name;
+        const firstName = session?.user?.name.split(' ')[0];
         // ADMIN or CREATOR OR USER url set
         let linkUrl = '';
         if (session?.user?.role === ADMIN || session?.user?.role === CREATOR)
@@ -129,7 +129,7 @@ async function Account() {
                     src={session?.user?.image}
                     width={30}
                     height={30}
-                    alt={firstName || ''}
+                    alt={session?.user?.name || ''}
                     className="md:w-[32px] md:h-[32px] w-[20px] h-[20px]"
                 />
             );
@@ -152,7 +152,7 @@ async function Account() {
                         </div>
                         <div>
                             <h2 className="sm:text-lg text-sm font-medium">
-                                Account
+                                {firstName}
                             </h2>
                             {session?.user ? (
                                 <p className="text-sm hidden md:block text-muted group-hover:text-primary-foreground dark:text-neutral-300/90 duration-150">
@@ -206,7 +206,7 @@ function NavMenu() {
                 return (
                     <li
                         key={items.id}
-                        className={`capitalize hover:text-primary-foreground duration-200 border-b border-border md:py-3 md:border-none p-2 group/menu last:border-none ${
+                        className={`capitalize hover:text-primary-foreground duration-200 border-b border-border md:py-3 md:border-none p-2 group/menu last:border-none dark:border-neutral-200/20 ${
                             items.id === 'category'
                                 ? 'group/category relative duration-500 origin-top'
                                 : ''

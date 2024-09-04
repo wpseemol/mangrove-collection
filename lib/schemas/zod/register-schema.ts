@@ -1,8 +1,11 @@
 import { z } from 'zod';
 
 const registerSchema = z.object({
-    fullName: z.string().min(1, {
-        message: 'Please input your name.',
+    firstName: z.string().min(1, {
+        message: 'Please input your first name.',
+    }),
+    lastName: z.string().min(1, {
+        message: 'Please input your last name.',
     }),
     email: z.string().min(1, {
         message: 'Input your email address.',

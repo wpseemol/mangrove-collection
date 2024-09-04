@@ -31,17 +31,11 @@ export default function ProductCard({
     return (
         <>
             <Card
-                className={`${
-                    which === 'products-page' ? 'sm:w-[230px]' : 'sm:w-[250px]'
-                }  h-fit w-[260px]  justify-self-center rounded group relative overflow-hidden`}>
+                className={` h-fit sm:w-[260px] w-[145px]  justify-self-center rounded group relative overflow-hidden`}>
                 <CardContent className="h-fit p-0">
                     <CustomLink href={`/products/${details.slug}`}>
                         <figure
-                            className={`${
-                                which === 'products-page'
-                                    ? 'sm:h-[230px]'
-                                    : 'sm:h-[250px]'
-                            } w-full h-[260px] mx-auto rounded-t overflow-hidden relative animate-fade animate-duration-1000`}>
+                            className={` w-full sm:h-[260px] h-[145px] mx-auto rounded-t overflow-hidden relative animate-fade animate-duration-1000`}>
                             <Image
                                 src={details.thumbnail}
                                 alt={details.name}
@@ -61,26 +55,30 @@ export default function ProductCard({
                                 />
                             )}
                         </figure>
-                        <div className="animate-fade-up animate-once animate-duration-1000 h-[130px] w-full px-2 mt-1 flex flex-col items-center">
+                        <div className="animate-fade-up animate-once animate-duration-1000 sm:min-h-[90px] sm:max-h-[130px] max-h-[76px] w-full px-2 mt-1 flex flex-col items-center">
                             <h2 className="max-h-[63px] overflow-hidden font-normal md:text-lg text-base text-ellipsis text-center group-hover:text-primary-foreground capitalize group-hover:underline duration-150">
                                 {wordEllipsis(details.name.toLocaleLowerCase())}
                             </h2>
 
-                            <p className="font-medium flex justify-center items-center gap-x-1">
+                            <p className="font-medium flex justify-center items-center gap-x-1 mb-2">
                                 {displayPrice?.price.toFixed(2)}{' '}
                                 <CurrencyIcon currency={details.currency} />
                             </p>
                         </div>
                     </CustomLink>
-                    <div className="absolute group-hover:bottom-0 left-0 -bottom-20 flex justify-center items-center gap-x-2 w-full duration-700 backdrop-blur bg-green-700/5 border-t p-5 ">
+                    <div className="sm:absolute group-hover:bottom-0 left-0 -bottom-20 flex justify-center items-center gap-x-2 w-full duration-700 backdrop-blur bg-green-700/5 border-t sm:p-5 p-3">
                         <Button
                             variant="default"
                             size="sm"
-                            className="text-neutral-100 hover:bg-primary-foreground px-5">
-                            Buy Now
+                            className="text-neutral-100 hover:bg-primary-foreground px-5 sm:w-fit w-[60px]">
+                            Buy <span className="hidden sm:inline">Now</span>
                         </Button>{' '}
-                        <Button variant="outline" size="sm" className="px-5 ">
-                            Add to Cart
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="px-5 sm:w-fit w-[60px]">
+                            <span className="hidden sm:inline">Add to</span>{' '}
+                            Cart
                         </Button>
                     </div>
                 </CardContent>
