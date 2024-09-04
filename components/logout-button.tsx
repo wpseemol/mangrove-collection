@@ -34,6 +34,7 @@ export default function LogoutButton({
     }
     return (
         <Button
+            disabled={loading}
             onClick={handelLogout}
             variant={variant}
             size={size}
