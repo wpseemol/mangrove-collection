@@ -26,8 +26,20 @@ export type CartType = {
     cartItems: string[] | null;
 
     /**
+     * cart product details here.
+     * cart product object array it's.
+     */
+    cartProducts: null;
+
+    /**
      * The total count of items in the cart.
      * This can be null if the cart is empty or uninitialized.
      */
     cartCount: number | null;
+
+    /**
+     * cart loading state.
+     * loading type can true, false.
+     */
+    loading: boolean;
 };

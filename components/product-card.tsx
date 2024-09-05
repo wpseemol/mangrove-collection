@@ -80,8 +80,10 @@ export default function ProductCard({
                             size="sm"
                             className="px-5 sm:w-fit w-[60px]">
                             <>
-                                <span className="hidden sm:inline">Add to</span>
-                                Cart
+                                <span className="hidden sm:inline">
+                                    Add to Cart
+                                </span>
+                                <span className="sm:hidden">Cart</span>
                             </>
                         </CartButton>
                     </div>

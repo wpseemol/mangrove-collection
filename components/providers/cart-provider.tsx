@@ -11,6 +11,8 @@ export default function CartProvider({
     const [cart, setCart] = useState<CartType>({
         cartItems: null,
         cartCount: null,
+        cartProducts: null,
+        loading: false,
     });
 
     const sendObj = { cart, setCart };
@@ -18,7 +20,11 @@ export default function CartProvider({
     useEffect(() => {
         const cartItemArray = getLocalStorageValue();
         if (cartItemArray) {
-            setCart((prev) => ({ ...prev, cartCount: cartItemArray.length }));
+            setCart((prev) => ({
+                ...prev,
+                cartItems: cartItemArray,
+                cartCount: cartItemArray.length,
+            }));
         }
     }, []);
 

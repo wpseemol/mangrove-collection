@@ -19,7 +19,9 @@ export default function CartButton({
     const [loading, setLoading] = useState<boolean>(false);
     const { data, status } = useSession();
 
-    const { setCart } = useCart();
+    const { setCart, cart } = useCart();
+
+    const isAlreadyInCart = cart.cartItems?.includes(productId as string);
 
     async function handelCart(productId: string) {
         setLoading(true);
@@ -76,7 +78,8 @@ export default function CartButton({
             variant={variant}
             size={size}
             className={className}>
-            {children}
+            {isAlreadyInCart ? 'Added' : children}
+            <>{loading && loadingIconComponent}</>
         </Button>
     );
 }
