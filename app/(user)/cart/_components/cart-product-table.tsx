@@ -66,7 +66,7 @@ export default function CartProductTable() {
     });
 
     return (
-        <div className="w-full">
+        <div className="w-full animate-fade animate-duration-1000 animate-ease-in">
             <div className="flex items-center py-4">
                 <Input
                     placeholder="Filter emails..."

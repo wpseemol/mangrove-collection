@@ -6,6 +6,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { CartProductType } from '@/types/cart';
+import CartPrice from './cart-price';
 import CartProductImage from './cart-product-image';
 import TotalOrDeleted from './total-deleted';
 
@@ -45,6 +46,7 @@ export const columns: ColumnDef<CartProductType>[] = [
             return (
                 <Button
                     variant="ghost"
+                    className="mx-auto"
                     onClick={() =>
                         column.toggleSorting(column.getIsSorted() === 'asc')
                     }>
@@ -59,55 +61,21 @@ export const columns: ColumnDef<CartProductType>[] = [
     },
     {
         accessorKey: 'category',
-        header: () => <div className="text-right">Category</div>,
+        header: () => <div className="text-center">Category</div>,
         cell: ({ row }) => {
             const category: { name: string; slug: string } =
                 row.getValue('category');
             const amount = parseFloat(row.getValue('category'));
 
-            // // Format the amount as a dollar amount
-            // const formatted = new Intl.NumberFormat('en-US', {
-            //     style: 'currency',
-            //     currency: 'USD',
-            // }).format(amount);
-
             return (
-                <div className="text-right font-medium">{category.name}</div>
+                <div className="text-center font-medium">{category.name}</div>
             );
         },
     },
     {
         accessorKey: 'price',
-        header: 'Unit Price',
-        cell: ({ row }) => {
-            const price: number = row.getValue('price');
-            const currency = row.original.currency;
-
-            // console.log(row.getValue('price'));
-            // const formatter = new Intl.NumberFormat('en-US', {
-            //     style: 'currency',
-            //     currency: 'BDT',
-            //     minimumFractionDigits: 2,
-            //     maximumFractionDigits: 2,
-            // });
-
-            switch (currency) {
-                case 'taka':
-                    return (
-                        <>
-                            <p>{price.toFixed(2)}&#2547;</p>
-                        </>
-                    );
-                case 'dollar':
-                    return (
-                        <>
-                            <p>{price.toFixed(2)}&#36;</p>
-                        </>
-                    );
-                default:
-                    <p>{price.toFixed(2)}</p>;
-            }
-        },
+        header: () => <h2 className="text-center">Unit Price</h2>,
+        cell: ({ row }) => <CartPrice row={row} />,
     },
 
     {

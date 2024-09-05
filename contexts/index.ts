@@ -37,10 +37,11 @@ export type CartType = {
      * This can be null if the cart is empty or uninitialized.
      */
     cartCount: number | null;
+    cartCountLoading?: boolean;
 
     /**
      * cart loading state.
      * loading type can true, false.
      */
-    loading: boolean;
+    cartProductLoading: boolean;
 };

@@ -7,7 +7,6 @@ export default function GetCartData() {
     const { setCart } = useCart();
 
     async function fetchCartData() {
-        setCart((prev) => ({ ...prev, loading: true }));
         try {
             const cartItems = getLocalStorageValue();
             if (cartItems) {
@@ -27,12 +26,14 @@ export default function GetCartData() {
                 }
             }
         } catch (error) {
+            throw error;
         } finally {
-            setCart((prev) => ({ ...prev, loading: false }));
+            setCart((prev) => ({ ...prev, cartProductLoading: false }));
         }
     }
 
     useEffect(() => {
+        setCart((prev) => ({ ...prev, cartProductLoading: true }));
         /**
          * fetch data from cart data here
          */

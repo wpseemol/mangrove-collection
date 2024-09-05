@@ -12,13 +12,12 @@ export default function CartProvider({
         cartItems: null,
         cartCount: null,
         cartProducts: null,
-        loading: false,
+        cartProductLoading: false,
     });
 
     const sendObj = { cart, setCart };
 
     async function getCartData() {
-        setCart((prev) => ({ ...prev, loading: true }));
         try {
             const cartItemArray = getLocalStorageValue();
             if (cartItemArray) {
@@ -30,8 +29,6 @@ export default function CartProvider({
             }
         } catch (error) {
             throw error;
-        } finally {
-            setCart((prev) => ({ ...prev, loading: false }));
         }
     }
 

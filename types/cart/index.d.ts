@@ -1,3 +1,5 @@
+import { Row } from '@tanstack/react-table';
+
 /**
  * Represents a product in the cart.
  *
@@ -21,3 +23,10 @@ export interface CartProductType {
     price: number;
     currency: string;
 }
+
+/**
+ * cart table row type
+ *
+ */
+
+export type CartTableRowType = { row: Row<CartProductType> };
