@@ -15,8 +15,9 @@
  */
 export interface CartProductType {
     id: string;
-    image: string;
+    thumbnail: string;
     name: string;
     category: { name: string; slug: string };
     price: number;
+    currency: string;
 }

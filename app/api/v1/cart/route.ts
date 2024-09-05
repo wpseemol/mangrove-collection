@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
             {
                 _id: { $in: validCardItems },
             },
-            'image name category price'
+            'thumbnail name category price currency'
         )
             .populate({
                 path: 'category',

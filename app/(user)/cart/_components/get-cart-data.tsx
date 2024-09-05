@@ -24,8 +24,6 @@ export default function GetCartData() {
                         ...prev,
                         cartProducts: data.cartProducts,
                     }));
-
-                    console.log('get cart json data:', data);
                 }
             }
         } catch (error) {

@@ -30,7 +30,7 @@ export type CartType = {
      * cart product details here.
      * cart product object array it's.
      */
-    cartProducts: CartProductType | null;
+    cartProducts: CartProductType[] | null;
 
     /**
      * The total count of items in the cart.
