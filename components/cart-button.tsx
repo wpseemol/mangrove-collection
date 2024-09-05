@@ -5,7 +5,7 @@ import { toast } from '@/components/ui/use-toast';
 import { useCart } from '@/hooks';
 import { setLocalStorage } from '@/utils/localstorage';
 import { useSession } from 'next-auth/react';
-import { ComponentProps, useState } from 'react';
+import { ComponentProps, useEffect, useState } from 'react';
 import ButtonLoading from './button-loading';
 
 export default function CartButton({
@@ -17,11 +17,10 @@ export default function CartButton({
     size,
 }: CartButtonType) {
     const [loading, setLoading] = useState<boolean>(false);
+    const [isAlreadyInCart, setIsAlreadyInCart] = useState<boolean>(false);
     const { data, status } = useSession();
 
     const { setCart, cart } = useCart();
-
-    const isAlreadyInCart = cart.cartItems?.includes(productId as string);
 
     async function handelCart(productId: string) {
         setLoading(true);
@@ -44,8 +43,10 @@ export default function CartButton({
                 setCart((prev) => ({
                     ...prev,
                     cartCount: cartItemsArray.length,
+                    cartItems: cartItemsArray,
                 }));
-                if (cartItemsArray.includes(productId)) {
+                setIsAlreadyInCart(true);
+                if (isAlreadyInCart) {
                     /**
                      * Product cart already Exist.
                      */
@@ -70,6 +71,14 @@ export default function CartButton({
     if (loadingComponent) {
         loadingIconComponent = loadingComponent;
     }
+
+    useEffect(() => {
+        if (cart.cartItems && productId) {
+            const initial = cart.cartItems.includes(productId);
+
+            setIsAlreadyInCart(initial);
+        }
+    }, []);
 
     return (
         <Button

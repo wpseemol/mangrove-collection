@@ -17,15 +17,26 @@ export default function CartProvider({
 
     const sendObj = { cart, setCart };
 
-    useEffect(() => {
-        const cartItemArray = getLocalStorageValue();
-        if (cartItemArray) {
-            setCart((prev) => ({
-                ...prev,
-                cartItems: cartItemArray,
-                cartCount: cartItemArray.length,
-            }));
+    async function getCartData() {
+        setCart((prev) => ({ ...prev, loading: true }));
+        try {
+            const cartItemArray = getLocalStorageValue();
+            if (cartItemArray) {
+                setCart((prev) => ({
+                    ...prev,
+                    cartItems: cartItemArray,
+                    cartCount: cartItemArray.length,
+                }));
+            }
+        } catch (error) {
+            throw error;
+        } finally {
+            setCart((prev) => ({ ...prev, loading: false }));
         }
+    }
+
+    useEffect(() => {
+        getCartData();
     }, []);
 
     return (
