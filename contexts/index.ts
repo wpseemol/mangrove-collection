@@ -1,3 +1,4 @@
+import { CartProductType } from '@/types/cart';
 import { createContext, Dispatch, SetStateAction } from 'react';
 
 const VariantUpdateContext = createContext<VariantUpdateContextType | null>(
@@ -29,7 +30,7 @@ export type CartType = {
      * cart product details here.
      * cart product object array it's.
      */
-    cartProducts: null;
+    cartProducts: CartProductType | null;
 
     /**
      * The total count of items in the cart.

@@ -18,7 +18,14 @@ export default function GetCartData() {
                 const response = await fetch(`/api/v1/cart?${queryString}`);
 
                 if (response.ok) {
-                    console.log('get cart json data:', await response.json());
+                    const data = await response.json();
+
+                    setCart((prev) => ({
+                        ...prev,
+                        cartProducts: data.cartProducts,
+                    }));
+
+                    console.log('get cart json data:', data);
                 }
             }
         } catch (error) {
