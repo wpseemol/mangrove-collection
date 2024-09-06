@@ -29,7 +29,8 @@ import mongoose from 'mongoose';
  */
 
 export interface VisitorBase {
-    visitorId: string | mongoose.Schema.Types.ObjectId;
+    visitorId: mongoose.Schema.Types.ObjectId | string;
+    expires: Date | null;
     isLogin: boolean;
     visitAt: Date;
     lastVisitAt: Date;

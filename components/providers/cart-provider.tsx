@@ -2,6 +2,7 @@
 import setCookiesUniqueIdentifier from '@/action/set-unique-identifier';
 import { CartContext, CartType } from '@/contexts';
 import { getLocalStorageValue } from '@/utils/localstorage';
+import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 
 export default function CartProvider({
@@ -15,6 +16,8 @@ export default function CartProvider({
         cartProducts: null,
         cartProductLoading: false,
     });
+
+    const { data } = useSession();
 
     const sendObj = { cart, setCart };
 
@@ -37,7 +40,7 @@ export default function CartProvider({
 
     useEffect(() => {
         getCartData();
-    }, []);
+    }, [data]);
 
     return (
         <CartContext.Provider value={sendObj}>{children}</CartContext.Provider>

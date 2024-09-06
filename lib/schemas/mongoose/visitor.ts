@@ -5,9 +5,17 @@ interface IVisitor extends VisitorBase, mongoose.Document {}
 
 const visitorSchema = new mongoose.Schema<IVisitor>({
     visitorId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.Mixed,
         required: true,
+        unique: true,
     },
+
+    expires: {
+        type: Date,
+        required: false,
+        default: null,
+    },
+
     isLogin: {
         type: Boolean,
         required: true,
@@ -18,6 +26,7 @@ const visitorSchema = new mongoose.Schema<IVisitor>({
         required: true,
         default: Date.now,
     },
+
     lastVisitAt: {
         type: Date,
         required: true,
