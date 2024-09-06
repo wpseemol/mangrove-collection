@@ -29,7 +29,7 @@ export default middleware(async (request) => {
     const isCreatorRoutes = creatorRoutes.includes(nextUrl.pathname);
     const isUserRoutes = userRoute.includes(nextUrl.pathname);
 
-    // console.log('middle ware path name:', request?.auth);
+    // console.log('middle ware path name:', request?.auth)
 
     const backUrl = isAdmin || isCreator ? '/dashboard' : '/';
 

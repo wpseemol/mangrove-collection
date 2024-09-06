@@ -1,4 +1,5 @@
 'use client';
+import setCookiesUniqueIdentifier from '@/action/set-unique-identifier';
 import { CartContext, CartType } from '@/contexts';
 import { getLocalStorageValue } from '@/utils/localstorage';
 import { useEffect, useState } from 'react';
@@ -30,6 +31,8 @@ export default function CartProvider({
         } catch (error) {
             throw error;
         }
+
+        await setCookiesUniqueIdentifier();
     }
 
     useEffect(() => {
