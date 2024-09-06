@@ -26,15 +26,17 @@ export default async function setCookiesUniqueIdentifier() {
                         }),
                     }
                 );
-            }
 
-            cookieStorage.set('_unique_id', '', {
-                path: '/',
-                expires: new Date(0), // Set to a date in the past
-                httpOnly: true,
-                secure: true,
-                sameSite: 'lax',
-            });
+                if (response.ok) {
+                    cookieStorage.set('_unique_id', '', {
+                        path: '/',
+                        expires: new Date(0), // Set to a date in the past
+                        httpOnly: true,
+                        secure: true,
+                        sameSite: 'lax',
+                    });
+                }
+            }
 
             return { message: 'successful cookies deleted!' };
         }
