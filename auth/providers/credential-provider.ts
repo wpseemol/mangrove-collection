@@ -51,10 +51,19 @@ export { credentialsProvider };
 
 class passwordNotMatch extends CredentialsSignin {
     message = 'Password is not match';
+    code: string = 'passwordNotPatch';
+    name: string = 'password not match';
+    stack?: string | undefined = 'password not patch';
 }
 class userNotFound extends CredentialsSignin {
     message = 'User account is not found.';
+    code: string = 'notFound';
+    name: string = 'User account is not found.';
+    stack?: string | undefined = 'User account is not found.';
 }
 class somethingWrong extends CredentialsSignin {
     message = 'Some thing is wrong.';
+    code: string = 'otherError';
+    name: string = 'Some thing is wrong.';
+    stack?: string | undefined = 'Some thing is wrong.';
 }

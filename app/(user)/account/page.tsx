@@ -1,5 +1,5 @@
 import { auth } from '@/auth/auth';
-import Btn from './_components/btn';
+import LogoutButton from '@/components/logout-button';
 
 export default async function AccountPage() {
     const section = await auth();
@@ -10,7 +10,7 @@ export default async function AccountPage() {
                 login use info :
             </h2>
             <pre>{JSON.stringify(section)}</pre>
-            <Btn />
+            <LogoutButton className="my-5">Logout</LogoutButton>
         </main>
     );
 }

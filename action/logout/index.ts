@@ -3,12 +3,12 @@
 import { signOut } from '@/auth/auth';
 import { revalidatePath } from 'next/cache';
 
-export default async function logoutAction(redirect = '/') {
+export default async function logoutAction(redirectTo = '/') {
     try {
         await signOut({
-            redirectTo: redirect,
+            redirectTo,
         });
-        revalidatePath(redirect);
+        revalidatePath(redirectTo);
     } catch (error) {
         throw error;
     }

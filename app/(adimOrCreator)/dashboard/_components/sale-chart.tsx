@@ -49,9 +49,9 @@ export function SaleChart() {
                         <CartesianGrid vertical={false} />
                         <XAxis
                             dataKey="month"
-                            tickLine={false}
+                            tickLine={true}
                             tickMargin={10}
-                            axisLine={false}
+                            axisLine={true}
                             tickFormatter={(value) => value.slice(0, 3)}
                         />
                         <ChartTooltip

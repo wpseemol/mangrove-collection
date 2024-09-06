@@ -1,6 +1,10 @@
-import { VariantUpdateContext } from '@/contexts';
+import { CartContext, VariantUpdateContext } from '@/contexts';
 import { useContext } from 'react';
 
+/**
+ * useVariantUpdate hook return { variantSelectId, setVariantSelectId } return
+ * @returns { variantSelectId, setVariantSelectId }
+ */
 const useVariantUpdate = function () {
     const context = useContext(VariantUpdateContext);
 
@@ -15,4 +19,18 @@ const useVariantUpdate = function () {
     return { variantSelectId, setVariantSelectId };
 };
 
-export { useVariantUpdate };
+/**
+ * useCart hook pass cart item use {cart, setCart} object.
+ * @returns {cart, setCart}
+ */
+const useCart = function () {
+    const context = useContext(CartContext);
+
+    if (!context) {
+        throw new Error('useCart muse be used within a CartProvider');
+    }
+
+    return context;
+};
+
+export { useCart, useVariantUpdate };

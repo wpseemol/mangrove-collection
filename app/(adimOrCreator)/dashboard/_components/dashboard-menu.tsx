@@ -1,7 +1,7 @@
 'use client';
 import DashboardLink from '@/components/dashboard-link';
 import { ADMIN, CREATOR } from '@/lib/constant-value';
-import { UserType } from '@/types/auth';
+import { User } from 'next-auth';
 import { FaUpload } from 'react-icons/fa';
 import { FaUsersGear } from 'react-icons/fa6';
 import { ImProfile } from 'react-icons/im';
@@ -13,7 +13,7 @@ export default function DashboardMenu({
     user,
 }: {
     isDryerClose: boolean;
-    user: UserType;
+    user: User;
 }) {
     let menuArrays: MenuArraysType[] = [];
 

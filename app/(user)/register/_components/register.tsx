@@ -9,7 +9,7 @@ import RegisterForm from './register-form';
 
 export default function RegisterSection() {
     return (
-        <Card className="mx-auto max-w-sm">
+        <Card className="mx-auto max-w-md md:min-w-[26rem]">
             <CardHeader>
                 <CardTitle className="text-xl">Sign Up</CardTitle>
                 <CardDescription>

@@ -1,5 +1,7 @@
 'use client';
 
+import loginAction from '@/action/login';
+import ButtonLoading from '@/components/button-loading';
 import { Button } from '@/components/ui/button';
 import {
     Form,
@@ -9,24 +11,23 @@ import {
     FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { ToastAction } from '@/components/ui/toast';
+import { Toaster } from '@/components/ui/toaster';
+import { toast } from '@/components/ui/use-toast';
 import { loginSchema } from '@/lib/schemas/zod/login-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { AuthError } from 'next-auth';
+import { signIn } from 'next-auth/react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { PiEyeClosedDuotone, PiEyeDuotone } from 'react-icons/pi';
 import { z } from 'zod';
 
-import loginAction from '@/action/login';
-import ButtonLoading from '@/components/button-loading';
-import { Label } from '@/components/ui/label';
-import { ToastAction } from '@/components/ui/toast';
-import { Toaster } from '@/components/ui/toaster';
-import { useToast } from '@/components/ui/use-toast';
-import { AuthError } from 'next-auth';
-import Link from 'next/link';
-
 export default function LoginForm() {
-    const { toast } = useToast();
+    const router = useRouter();
 
     const form = useForm<z.infer<typeof loginSchema>>({
         resolver: zodResolver(loginSchema),
@@ -40,7 +41,17 @@ export default function LoginForm() {
     async function onSubmit(values: z.infer<typeof loginSchema>) {
         try {
             await loginAction(values);
+            const result = await signIn('credentials', {
+                redirect: false,
+                ...values,
+            });
+
+            if (result?.error && result.error === 'CredentialsSignin') {
+                return;
+            }
+            router.refresh();
             form.reset();
+
             toast({
                 variant: 'success',
                 description: 'User login successful!',
