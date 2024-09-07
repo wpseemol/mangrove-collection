@@ -18,3 +18,7 @@ const cartSchema = new mongoose.Schema<ICart>({
         default: Date.now,
     },
 });
+
+const Cart = mongoose.models.Cart || mongoose.model<ICart>('Cart', cartSchema);
+
+export { Cart };

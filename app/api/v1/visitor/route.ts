@@ -1,5 +1,6 @@
 import { connectMongoDB } from '@/db/connections/mongoose-connect';
 import { Visitor } from '@/lib/schemas/mongoose/visitor';
+import { ObjectId } from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
@@ -16,12 +17,8 @@ export async function POST(request: NextRequest) {
         await connectMongoDB();
 
         const response = await Visitor.create(body);
-        const { _id, ...visitor } = response.toObject();
-
-        visitor.id = response._id;
-
         return NextResponse.json(
-            { message: 'Successful save user info.', visitor },
+            { message: 'Successful save user info.', visitor: response },
             { status: 201 }
         );
     } catch (error) {
@@ -52,7 +49,9 @@ export async function PATCH(request: NextRequest) {
             });
 
             if (isAlreadyHasUser) {
-                await Visitor.findOneAndDelete({ visitorId: body.id });
+                const deleted = await Visitor.findOneAndDelete({
+                    visitorId: body.id,
+                }).lean<{ _id: ObjectId }>();
 
                 const response = await Visitor.findOneAndUpdate(
                     { visitorId: body.visitorId },
@@ -61,15 +60,12 @@ export async function PATCH(request: NextRequest) {
                         expires: body.expires,
                         lastVisitAt: new Date(),
                         isLogin: body.isLogin,
+                        lastDeviceID: deleted?._id,
                     }
                 );
 
-                const { _id, ...visitor } = response.toObject();
-
-                visitor.id = response._id;
-
                 return NextResponse.json(
-                    { message: 'Update successful.', visitor },
+                    { message: 'Update successful.', visitor: response },
                     { status: 200 }
                 );
             } else {
@@ -83,12 +79,22 @@ export async function PATCH(request: NextRequest) {
                     }
                 );
 
-                const { _id, ...visitor } = response.toObject();
+                if (!response) {
+                    const visitor = await Visitor.create({
+                        visitorId: body.visitorId,
+                        expires: body.expires,
+                        lastVisitAt: new Date(),
+                        isLogin: body.isLogin,
+                    });
 
-                visitor.id = response._id;
+                    return NextResponse.json(
+                        { message: 'Update successful.', visitor },
+                        { status: 200 }
+                    );
+                }
 
                 return NextResponse.json(
-                    { message: 'Update successful.', visitor },
+                    { message: 'Update successful.', visitor: response },
                     { status: 200 }
                 );
             }
@@ -105,12 +111,22 @@ export async function PATCH(request: NextRequest) {
             }
         );
 
-        const { _id, ...visitor } = response.toObject();
+        if (!response) {
+            const visitor = await Visitor.create({
+                visitorId: body.visitorId,
+                expires: body.expires,
+                lastVisitAt: new Date(),
+                isLogin: body.isLogin,
+            });
 
-        visitor.id = response._id;
+            return NextResponse.json(
+                { message: 'Update successful.', visitor },
+                { status: 200 }
+            );
+        }
 
         return NextResponse.json(
-            { message: 'Update successful.', visitor },
+            { message: 'Update successful.', visitor: response },
             { status: 200 }
         );
     } catch (error) {

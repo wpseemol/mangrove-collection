@@ -32,6 +32,11 @@ const visitorSchema = new mongoose.Schema<IVisitor>({
         required: true,
         default: Date.now,
     },
+
+    lastDeviceID: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: false,
+    },
 });
 
 const Visitor =

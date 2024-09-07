@@ -37,7 +37,7 @@ export default function CartButton({
                  * User is not logged in.
                  * cart item keep local storage.
                  */
-                await cartAction();
+                await cartAction(productId);
             }
         } catch (error) {
         } finally {

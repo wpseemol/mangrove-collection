@@ -1,6 +1,8 @@
 import { connectMongoDB } from '@/db/connections/mongoose-connect';
+import { Cart } from '@/lib/schemas/mongoose/cart';
 import { Product } from '@/lib/schemas/mongoose/product';
-import mongoose from 'mongoose';
+import { Visitor } from '@/lib/schemas/mongoose/visitor';
+import mongoose, { ObjectId } from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -72,6 +74,51 @@ export async function GET(request: NextRequest) {
                 notFound,
             },
             { status: 200 }
+        );
+    } catch (error) {
+        return NextResponse.json(
+            { message: 'Internal server error', error },
+            { status: 500 }
+        );
+    }
+}
+
+export async function POST(request: NextRequest) {
+    try {
+        const body = await request.json();
+
+        if (!(body && body.productId && body.userId)) {
+            return NextResponse.json(
+                { message: 'ProductId is Required add cart product.' },
+                { status: 400 }
+            );
+        }
+
+        await connectMongoDB();
+
+        const visitor = await Visitor.findOne({
+            visitorId: body.userId,
+        }).lean<{ _id: ObjectId }>();
+        if (!visitor) {
+            return NextResponse.json(
+                { message: 'User id is required to add to cart.' },
+                { status: 400 }
+            );
+        }
+
+        const userId = visitor._id;
+        const productId = body.productId;
+
+        const addCart = await Cart.create({ userId, productId });
+
+        return NextResponse.json(
+            {
+                message: 'Successful product add to cart.',
+                addCart,
+            },
+            {
+                status: 201,
+            }
         );
     } catch (error) {
         return NextResponse.json(
