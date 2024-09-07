@@ -5,7 +5,7 @@ interface ICart extends CartBase, mongoose.Document {}
 
 const cartSchema = new mongoose.Schema<ICart>({
     userId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.Mixed,
         required: true,
     },
     productId: {

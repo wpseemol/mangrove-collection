@@ -34,5 +34,5 @@ export interface VisitorBase {
     isLogin: boolean;
     visitAt: Date;
     lastVisitAt: Date;
-    lastDeviceID: mongoose.Schema.Types.ObjectId;
+    lastDeviceID: string[];
 }

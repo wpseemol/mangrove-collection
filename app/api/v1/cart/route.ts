@@ -1,8 +1,7 @@
 import { connectMongoDB } from '@/db/connections/mongoose-connect';
 import { Cart } from '@/lib/schemas/mongoose/cart';
 import { Product } from '@/lib/schemas/mongoose/product';
-import { Visitor } from '@/lib/schemas/mongoose/visitor';
-import mongoose, { ObjectId } from 'mongoose';
+import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -96,18 +95,12 @@ export async function POST(request: NextRequest) {
 
         await connectMongoDB();
 
-        const visitor = await Visitor.findOne({
-            visitorId: body.userId,
-        }).lean<{ _id: ObjectId }>();
-        if (!visitor) {
-            return NextResponse.json(
-                { message: 'User id is required to add to cart.' },
-                { status: 400 }
-            );
-        }
-
-        const userId = visitor._id;
+        const userId = body.userId;
         const productId = body.productId;
+
+        // if(body.isLogin){
+
+        // }
 
         const addCart = await Cart.create({ userId, productId });
 

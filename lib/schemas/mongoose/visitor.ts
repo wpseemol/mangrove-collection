@@ -34,7 +34,7 @@ const visitorSchema = new mongoose.Schema<IVisitor>({
     },
 
     lastDeviceID: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: [String],
         required: false,
     },
 });

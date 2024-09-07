@@ -7,12 +7,12 @@ import mongoose from 'mongoose';
  * the product was added.
  *
  * @interface CartBase
- * @property {mongoose.Schema.Types.ObjectId} userId - The ID of the user who added the item to the cart.
+ * @property {mongoose.Schema.Types.ObjectId | string} userId - The ID of the user who added the item to the cart.
  * @property {mongoose.Schema.Types.ObjectId} productId - The ID of the product added to the cart.
  * @property {Date} cartAt - The date and time when the product was added to the cart.
  */
 export interface CartBase {
-    userId: mongoose.Schema.Types.ObjectId;
+    userId: mongoose.Schema.Types.ObjectId | string;
     productId: mongoose.Schema.Types.ObjectId;
     cartAt: Date;
 }

@@ -56,3 +56,5 @@ export async function cartAction(productId: string) {
         throw error;
     }
 }
+
+export async function afterLoginUserCartUpdate() {}

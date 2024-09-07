@@ -24,21 +24,7 @@ export default function CartButton({
     async function handelCart(productId: string) {
         setLoading(true);
         try {
-            const isLogin = !!data?.user;
-            const loginUserId = data?.user.id;
-
-            if (isLogin) {
-                /**
-                 * User is logged in.
-                 * mongodb model login user cart item keep.
-                 */
-            } else {
-                /**
-                 * User is not logged in.
-                 * cart item keep local storage.
-                 */
-                await cartAction(productId);
-            }
+            await cartAction(productId);
         } catch (error) {
         } finally {
             setLoading(false);
