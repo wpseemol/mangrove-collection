@@ -1,5 +1,6 @@
 'use client';
 
+import { cartAction } from '@/action/cart-action';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/hooks';
 import { useSession } from 'next-auth/react';
@@ -36,6 +37,7 @@ export default function CartButton({
                  * User is not logged in.
                  * cart item keep local storage.
                  */
+                await cartAction();
             }
         } catch (error) {
         } finally {

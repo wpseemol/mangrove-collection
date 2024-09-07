@@ -1,15 +1,16 @@
 'use server';
 
 import { auth } from '@/auth/auth';
+import { COOKIE_USER_ID } from '@/lib/constant-value';
 import { cookies } from 'next/headers';
 
 export default async function setCookiesUniqueIdentifier() {
     try {
         const session = await auth();
         const cookieStorage = cookies();
-        const cookieValue = cookieStorage.get('_unique_id')?.value;
 
         if (!!session) {
+            const cookieValue = cookieStorage.get(COOKIE_USER_ID)?.value;
             if (cookieValue) {
                 const response = await fetch(
                     `${process.env.SITE_BASE_URL!}/api/v1/visitor`,
@@ -28,7 +29,7 @@ export default async function setCookiesUniqueIdentifier() {
                 );
 
                 if (response.ok) {
-                    cookieStorage.set('_unique_id', '', {
+                    cookieStorage.set(COOKIE_USER_ID, '', {
                         path: '/',
                         expires: new Date(0), // Set to a date in the past
                         httpOnly: true,
@@ -44,15 +45,15 @@ export default async function setCookiesUniqueIdentifier() {
         const oneYearFromNow = new Date();
         oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1);
 
-        if (!cookieStorage.has('_unique_id')) {
-            cookieStorage.set('_unique_id', crypto.randomUUID(), {
+        if (!cookieStorage.has(COOKIE_USER_ID)) {
+            cookieStorage.set(COOKIE_USER_ID, crypto.randomUUID(), {
                 path: '/',
                 expires: oneYearFromNow, // 1 year from now
                 httpOnly: true,
                 secure: true,
                 sameSite: 'lax',
             });
-            const cookieValue = cookieStorage.get('_unique_id')?.value;
+            const cookieValue = cookieStorage.get(COOKIE_USER_ID)?.value;
             if (cookieValue) {
                 const response = await fetch(
                     `${process.env.SITE_BASE_URL!}/api/v1/visitor`,
@@ -74,11 +75,11 @@ export default async function setCookiesUniqueIdentifier() {
                     'successful cookies created and set data base cookies value!',
             };
         } else {
-            const cookieValue = cookieStorage.get('_unique_id')?.value;
+            const cookieValue = cookieStorage.get(COOKIE_USER_ID)?.value;
 
             if (cookieValue) {
                 // Update the cookie with the new maxAge
-                cookieStorage.set('_unique_id', cookieValue, {
+                cookieStorage.set(COOKIE_USER_ID, cookieValue, {
                     path: '/',
                     expires: oneYearFromNow, // 1 year from now
                     httpOnly: true,
