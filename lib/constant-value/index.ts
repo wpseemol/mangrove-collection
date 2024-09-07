@@ -42,3 +42,12 @@ export const PRICE_UNITS = [
     { id: 'taka', title: '&#2547; টাকা' },
     { id: 'dollar', title: '&#36; Dollar' },
 ];
+
+/**
+ * This constant defines the key used to store the unique user identifier
+ * in cookies. It helps in tracking the user's session or other user-specific
+ * data across the application.
+ *
+ * @constant {string} COOKIE_USER_ID - The key used for storing the unique user ID in cookies.
+ */
+export const COOKIE_USER_ID = '_unique_id';

@@ -1,9 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { toast } from '@/components/ui/use-toast';
 import { useCart } from '@/hooks';
-import { setLocalStorage } from '@/utils/localstorage';
 import { useSession } from 'next-auth/react';
 import { ComponentProps, useEffect, useState } from 'react';
 import ButtonLoading from './button-loading';
@@ -38,24 +36,6 @@ export default function CartButton({
                  * User is not logged in.
                  * cart item keep local storage.
                  */
-
-                const cartItemsArray = setLocalStorage(productId);
-                setCart((prev) => ({
-                    ...prev,
-                    cartCount: cartItemsArray.length,
-                    cartItems: cartItemsArray,
-                }));
-                setIsAlreadyInCart(true);
-                if (isAlreadyInCart) {
-                    /**
-                     * Product cart already Exist.
-                     */
-                    toast({
-                        variant: 'destructive',
-                        description: 'Product is already cart list.',
-                    });
-                } else {
-                }
             }
         } catch (error) {
         } finally {
