@@ -16,7 +16,6 @@ export async function POST(request: NextRequest) {
         await connectMongoDB();
 
         const response = await Visitor.create(body);
-
         const { _id, ...visitor } = response.toObject();
 
         visitor.id = response._id;
@@ -45,6 +44,56 @@ export async function PATCH(request: NextRequest) {
         }
 
         await connectMongoDB();
+        // if already Exist find on then delete an update
+
+        if (body.isLogin) {
+            const isAlreadyHasUser = await Visitor.findOne({
+                visitorId: body.visitorId,
+            });
+
+            if (isAlreadyHasUser) {
+                await Visitor.findOneAndDelete({ visitorId: body.id });
+
+                const response = await Visitor.findOneAndUpdate(
+                    { visitorId: body.visitorId },
+                    {
+                        visitorId: body.visitorId,
+                        expires: body.expires,
+                        lastVisitAt: new Date(),
+                        isLogin: body.isLogin,
+                    }
+                );
+
+                const { _id, ...visitor } = response.toObject();
+
+                visitor.id = response._id;
+
+                return NextResponse.json(
+                    { message: 'Update successful.', visitor },
+                    { status: 200 }
+                );
+            } else {
+                const response = await Visitor.findOneAndUpdate(
+                    { visitorId: body.id },
+                    {
+                        visitorId: body.visitorId,
+                        expires: body.expires,
+                        lastVisitAt: new Date(),
+                        isLogin: body.isLogin,
+                    }
+                );
+
+                const { _id, ...visitor } = response.toObject();
+
+                visitor.id = response._id;
+
+                return NextResponse.json(
+                    { message: 'Update successful.', visitor },
+                    { status: 200 }
+                );
+            }
+        }
+        // if already Exist find on then delete an update
 
         const response = await Visitor.findOneAndUpdate(
             { visitorId: body.id },
