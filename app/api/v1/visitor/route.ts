@@ -58,7 +58,7 @@ export async function PATCH(request: NextRequest) {
                 visitorId: body.visitorId,
             }).lean<{ _id: ObjectId }>();
 
-            console.log('api is already Login:', isAlreadyLogin);
+            // console.log('api is already Login:', isAlreadyLogin);
             // console.log('api is already Login:', isAlreadyLogin?._id);
 
             if (isAlreadyLogin) {
@@ -66,7 +66,7 @@ export async function PATCH(request: NextRequest) {
                     visitorId: body.deleteId,
                 }).lean<{ _id: ObjectId }>();
 
-                console.log('api is delete:', isDeleted);
+                // console.log('api is delete:', isDeleted);
 
                 const isUpdate = await Visitor.findByIdAndUpdate(
                     isAlreadyLogin._id,
@@ -77,7 +77,7 @@ export async function PATCH(request: NextRequest) {
                         lastDeviceID: isDeleted?._id,
                     }
                 );
-                console.log('api is delete isUpdate:', isUpdate);
+                // console.log('api is delete isUpdate:', isUpdate);
 
                 return NextResponse.json(
                     {
