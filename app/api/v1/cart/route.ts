@@ -19,8 +19,6 @@ export async function GET(request: NextRequest) {
 
         await connectMongoDB();
 
-        console.log(cartItems);
-
         const response = await Product.find(
             {
                 slug: { $in: cartItems },

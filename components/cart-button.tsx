@@ -19,8 +19,7 @@ export default function CartButton({
     const [loading, setLoading] = useState<boolean>(false);
     const [isAlreadyInCart, setIsAlreadyInCart] = useState<boolean>(false);
     const { data, status } = useSession();
-
-    const { setCart, cart } = useCart();
+    const { cart, setCart } = useCart();
 
     async function handelCart(productId: string) {
         setLoading(true);
@@ -44,6 +43,7 @@ export default function CartButton({
                         cartItems: isSet,
                         cartCount: isSet.length,
                     }));
+                    // setIsAlreadyInCart(true);
                 } else {
                     toast({
                         variant: 'destructive',
@@ -69,10 +69,9 @@ export default function CartButton({
     useEffect(() => {
         if (cart.cartItems && productId) {
             const initial = cart.cartItems.includes(productId);
-
             setIsAlreadyInCart(initial);
         }
-    }, []);
+    }, [cart.cartItems]);
 
     return (
         <Button
