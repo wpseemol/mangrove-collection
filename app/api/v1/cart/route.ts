@@ -1,7 +1,6 @@
 import { connectMongoDB } from '@/db/connections/mongoose-connect';
 import { Cart } from '@/lib/schemas/mongoose/cart';
 import { Product } from '@/lib/schemas/mongoose/product';
-import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -18,28 +17,13 @@ export async function GET(request: NextRequest) {
             );
         }
 
-        // mongodb object Validation
-        const validCardItems: string[] = [];
-        const wrongCardItems: WrongCardItemsType[] = [];
-        cartItems.forEach((Item) => {
-            if (mongoose.Types.ObjectId.isValid(Item)) {
-                validCardItems.push(Item);
-            } else {
-                wrongCardItems.push({
-                    id: Item,
-                    message: 'Invalid ObjectId',
-                    type: 'invalid-object-id',
-                });
-            }
-        });
-        const notFound = wrongCardItems.length > 0 ? wrongCardItems : null;
-        // mongodb object Validation
-
         await connectMongoDB();
+
+        console.log(cartItems);
 
         const response = await Product.find(
             {
-                _id: { $in: validCardItems },
+                slug: { $in: cartItems },
             },
             'thumbnail name category price currency'
         )
@@ -70,7 +54,6 @@ export async function GET(request: NextRequest) {
             {
                 message: 'Cart data successful send.',
                 cartProducts,
-                notFound,
             },
             { status: 200 }
         );
