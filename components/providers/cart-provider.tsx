@@ -1,6 +1,4 @@
 'use client';
-import { afterLoginUserCartUpdate } from '@/action/cart-action';
-import setCookiesUniqueIdentifier from '@/action/set-unique-identifier';
 import { CartContext, CartType } from '@/contexts';
 import { getLocalStorageValue } from '@/utils/localstorage';
 import { useSession } from 'next-auth/react';
@@ -35,9 +33,6 @@ export default function CartProvider({
         } catch (error) {
             throw error;
         }
-
-        await setCookiesUniqueIdentifier();
-        await afterLoginUserCartUpdate();
     }
 
     useEffect(() => {

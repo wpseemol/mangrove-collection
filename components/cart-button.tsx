@@ -1,8 +1,9 @@
 'use client';
 
-import { cartAction } from '@/action/cart-action';
 import { Button } from '@/components/ui/button';
+import { toast } from '@/components/ui/use-toast';
 import { useCart } from '@/hooks';
+import { setLocalStorage } from '@/utils/localstorage';
 import { useSession } from 'next-auth/react';
 import { ComponentProps, useEffect, useState } from 'react';
 import ButtonLoading from './button-loading';
@@ -24,7 +25,32 @@ export default function CartButton({
     async function handelCart(productId: string) {
         setLoading(true);
         try {
-            await cartAction(productId);
+            if (!!data?.user) {
+                /**
+                 * if user is login
+                 */
+            }
+
+            if (!data?.user) {
+                /**
+                 * user is not login
+                 */
+
+                const isSet = setLocalStorage(productId);
+
+                if (isSet) {
+                    setCart((prev) => ({
+                        ...prev,
+                        cartItems: isSet,
+                        cartCount: isSet.length,
+                    }));
+                } else {
+                    toast({
+                        variant: 'destructive',
+                        description: 'Product is already in cart.',
+                    });
+                }
+            }
         } catch (error) {
         } finally {
             setLoading(false);

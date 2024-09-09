@@ -13,52 +13,51 @@ export default async function setCookiesUniqueIdentifier() {
              * when user is login;
              * or has cookies.
              */
+
             const response = await fetchCall({
-                id: getCookiesUserId() as string,
-                deleteId: getCookiesUserId() as string,
+                id: session.user.id,
                 method: 'PATCH',
-                visitorId: session.user.id,
+                visitorId: getCookiesUserId() as string,
                 expires: null,
                 isLogin: true,
             });
-
-            // console.log(response.statusText);
-            // console.log(await response.json());
 
             if (response.status === 404) {
                 await fetchCall({
                     method: 'POST',
-                    visitorId: getCookiesUserId() as string,
-                    expires: oneYearFromNow,
-                });
-                return;
-            }
-
-            setUpdateDeletedCookies('', new Date(0)); // cookies deleted function
-            return;
-        }
-
-        if (!!session && !getCookiesUserId()) {
-            const response = await fetchCall({
-                id: session.user.id,
-                method: 'PATCH',
-                visitorId: session.user.id,
-                expires: null,
-                isLogin: true,
-            });
-
-            if (response.status === 404) {
-                const isCreate = await fetchCall({
-                    method: 'POST',
                     visitorId: session.user.id,
                     expires: null,
+                    // lastDeviceID: [getCookiesUserId()],
+                    isLogin: true,
                 });
-
                 return;
             }
 
+            // setUpdateDeletedCookies('', new Date(0)); // cookies deleted function
             return;
         }
+
+        // if (!!session && !getCookiesUserId()) {
+        //     const response = await fetchCall({
+        //         id: session.user.id,
+        //         method: 'PATCH',
+        //         visitorId: session.user.id,
+        //         expires: null,
+        //         isLogin: true,
+        //     });
+
+        //     if (response.status === 404) {
+        //         const isCreate = await fetchCall({
+        //             method: 'POST',
+        //             visitorId: session.user.id,
+        //             expires: null,
+        //         });
+
+        //         return;
+        //     }
+
+        //     return;
+        // }
 
         if (!(cookies().has(COOKIE_USER_ID) && getCookiesUserId())) {
             const value = crypto.randomUUID();

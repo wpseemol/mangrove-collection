@@ -72,10 +72,11 @@ export default function ProductCard({
                             variant="default"
                             size="sm"
                             className="text-neutral-100 hover:bg-primary-foreground px-5 sm:w-fit w-[60px]">
-                            Buy <span className="hidden sm:inline">Now</span>
+                            <span className="hidden sm:inline">Buy Now</span>
+                            <span className="sm:hidden">Now</span>
                         </Button>{' '}
                         <CartButton
-                            productId={details.id}
+                            productId={details.slug}
                             variant="outline"
                             size="sm"
                             className="px-5 sm:w-fit w-[60px]">
