@@ -19,11 +19,14 @@ function Logo() {
         <li className="text-white ">
             <CustomLink href="/">
                 <div className={``}>
-                    <figure className="md:w-12 md:h-12 w-10 h-10 mx-auto rounded-full overflow-hidden border-2 border-ring animate-jump">
+                    <figure className="md:w-12 md:h-12 w-10 h-10 mx-auto rounded-full overflow-hidden border-2 border-ring animate-jump relative">
                         <Image
                             src={siteLogo}
                             alt="Site logo"
-                            className="w-full object-cover hover:scale-125 duration-300"
+                            fill
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            style={{ objectFit: 'cover' }} // Use CSS for object-fit
+                            className="hover:scale-125 duration-300"
                         />
                     </figure>
                     <h2 className="font-bold text-primary-foreground text-sm md:text-base animate-fade-right">
