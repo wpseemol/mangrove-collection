@@ -10,6 +10,8 @@ export default function CartItems() {
     const { cart } = useCart();
     const [isCheckout, setIsCheckout] = useState(false);
 
+    console.log(cart);
+
     return (
         cart.cartItems && (
             <div className={`  w-full flex gap-2`}>

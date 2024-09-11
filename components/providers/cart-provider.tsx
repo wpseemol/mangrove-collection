@@ -22,12 +22,15 @@ export default function CartProvider({
 
     async function getCartData() {
         try {
-            const cartItemArray = getLocalStorageValue();
-            if (cartItemArray) {
+            const cartItems = getLocalStorageValue();
+
+            console.log(cartItems);
+
+            if (cartItems) {
                 setCart((prev) => ({
                     ...prev,
-                    cartItems: cartItemArray,
-                    cartCount: cartItemArray.length,
+                    cartItems,
+                    cartCount: cartItems.length,
                 }));
             }
         } catch (error) {

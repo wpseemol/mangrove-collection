@@ -17,6 +17,7 @@ import { Row } from '@tanstack/react-table';
  */
 export interface CartProductType {
     id: string;
+    slug: string;
     thumbnail: string;
     name: string;
     category: { name: string; slug: string };

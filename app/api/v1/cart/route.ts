@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
             {
                 slug: { $in: cartItems },
             },
-            'thumbnail name category price currency'
+            'slug thumbnail name category price currency '
         )
             .populate({
                 path: 'category',

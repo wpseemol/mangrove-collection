@@ -74,15 +74,17 @@ export default function CartButton({
     }, [cart.cartItems]);
 
     return (
-        <Button
-            disabled={loading}
-            onClick={() => productId && handelCart(productId)}
-            variant={variant}
-            size={size}
-            className={className}>
-            {isAlreadyInCart ? 'Added' : children}
-            <>{loading && loadingIconComponent}</>
-        </Button>
+        <>
+            <Button
+                disabled={loading}
+                onClick={() => productId && handelCart(productId)}
+                variant={variant}
+                size={size}
+                className={className}>
+                {isAlreadyInCart ? 'Added' : children}
+                <>{loading && loadingIconComponent}</>
+            </Button>
+        </>
     );
 }
 

@@ -1,20 +1,20 @@
 'use client';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
 
-export default function QuantityButton({ quantityValue }: QuantityButtonType) {
-    const [quantity, setQuantity] = useState<number>(1);
-
+export default function QuantityButton({
+    quantityValue,
+    quantityInitialValue,
+}: QuantityButtonType) {
     const handleQuantityChange = (type: 'increase' | 'decrease') => {
-        let value: number = quantity;
+        let value: number = quantityInitialValue;
 
         if (type === 'increase') {
-            value = quantity + 1;
+            value = quantityInitialValue + 1;
         } else if (type === 'decrease') {
-            value = quantity > 0 ? quantity - 1 : 0;
+            value = quantityInitialValue > 0 ? quantityInitialValue - 1 : 0;
         }
+
         quantityValue(value);
-        setQuantity(value);
     };
 
     return (
@@ -43,7 +43,7 @@ export default function QuantityButton({ quantityValue }: QuantityButtonType) {
 
             {/* Quantity Display */}
             <div className="text-lg font-medium text-gray-800 border-y w-full px-3 py-1">
-                {quantity}
+                {quantityInitialValue}
             </div>
 
             {/* Increase Button */}
@@ -73,4 +73,5 @@ export default function QuantityButton({ quantityValue }: QuantityButtonType) {
 
 type QuantityButtonType = {
     quantityValue: (value: number) => void;
+    quantityInitialValue: number;
 };

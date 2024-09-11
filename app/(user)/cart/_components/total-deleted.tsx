@@ -1,7 +1,10 @@
 'use client';
 import { Button } from '@/components/ui/button';
+import { useCart } from '@/hooks';
 import { CartProductType } from '@/types/cart';
+import { localStorageItemDelete } from '@/utils/localstorage';
 import { Row } from '@tanstack/react-table';
+import { useEffect } from 'react';
 import { MdDelete } from 'react-icons/md';
 
 export default function TotalOrDeleted({ row }: { row: Row<CartProductType> }) {
@@ -36,13 +39,42 @@ export default function TotalOrDeleted({ row }: { row: Row<CartProductType> }) {
 }
 
 function CartItemDeleted({ row }: { row: Row<CartProductType> }) {
-    function handelDeleted() {
-        console.log('click for deleted');
+    const { setCart } = useCart();
+
+    async function handelDeleted(productSlug: string) {
+        setCart((prev) => ({ ...prev, cartCountLoading: true }));
+        try {
+            const isDeleted = localStorageItemDelete(productSlug);
+
+            if (isDeleted) {
+                setCart((prev) => {
+                    const cartProducts = prev.cartProducts?.filter(
+                        (item) => item.slug !== isDeleted.deletedProductSlug
+                    ) as CartProductType[];
+
+                    return {
+                        ...prev,
+                        cartItems: isDeleted.cartItemsArray,
+                        cartCount: isDeleted.cartCountLength,
+                        cartProducts,
+                    };
+                });
+            }
+        } catch (error) {
+        } finally {
+            setCart((prev) => ({ ...prev, cartCountLoading: false }));
+        }
     }
+
+    useEffect(() => {
+        if (row.original.quantity === 0) {
+            handelDeleted(row.original.slug);
+        }
+    }, [row.original.quantity]);
 
     return (
         <Button
-            onClick={() => handelDeleted()}
+            onClick={() => handelDeleted(row.original.slug)}
             variant={'ghost'}
             className="p-0 text-lg">
             <MdDelete />

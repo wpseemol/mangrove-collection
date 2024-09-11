@@ -6,8 +6,6 @@ import { useEffect } from 'react';
 export default function GetCartData() {
     const { cart, setCart } = useCart();
 
-    console.log(cart);
-
     async function fetchCartData() {
         try {
             const cartItems = getLocalStorageValue();
