@@ -44,6 +44,7 @@ export async function GET(request: NextRequest) {
                           id: product._id,
                           ...withOut_id,
                           price: selectedPrice.price,
+                          quantity: 1,
                       };
                   })
                 : null;

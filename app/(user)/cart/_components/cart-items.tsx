@@ -21,8 +21,8 @@ export default function CartItems() {
                         Shopping Cart
                     </CardHeader>
                     {cart.cartProductLoading ? (
-                        <div>
-                            <p>'loading...'</p>
+                        <div className="flex justify-center items-center min-h-44">
+                            <p>loading...</p>
                         </div>
                     ) : (
                         <>

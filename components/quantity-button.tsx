@@ -13,6 +13,7 @@ export default function QuantityButton({ quantityValue }: QuantityButtonType) {
         } else if (type === 'decrease') {
             value = quantity > 0 ? quantity - 1 : 0;
         }
+        quantityValue(value);
         setQuantity(value);
     };
 

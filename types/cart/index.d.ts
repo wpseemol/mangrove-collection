@@ -20,7 +20,7 @@ export interface CartProductType {
     thumbnail: string;
     name: string;
     category: { name: string; slug: string };
-    quantity?: number | null;
+    quantity: number;
     price: number;
     currency: string;
 }
