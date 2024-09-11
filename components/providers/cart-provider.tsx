@@ -1,5 +1,4 @@
 'use client';
-import setCookiesUniqueIdentifier from '@/action/set-unique-identifier';
 import { CartContext, CartType } from '@/contexts';
 import { getLocalStorageValue } from '@/utils/localstorage';
 import { useSession } from 'next-auth/react';
@@ -23,19 +22,20 @@ export default function CartProvider({
 
     async function getCartData() {
         try {
-            const cartItemArray = getLocalStorageValue();
-            if (cartItemArray) {
+            const cartItems = getLocalStorageValue();
+
+            console.log(cartItems);
+
+            if (cartItems) {
                 setCart((prev) => ({
                     ...prev,
-                    cartItems: cartItemArray,
-                    cartCount: cartItemArray.length,
+                    cartItems,
+                    cartCount: cartItems.length,
                 }));
             }
         } catch (error) {
             throw error;
         }
-
-        await setCookiesUniqueIdentifier();
     }
 
     useEffect(() => {

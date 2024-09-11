@@ -1,8 +1,9 @@
+import CartButton from '@/components/cart-button';
 import CustomLink from '@/components/custom-link';
+import { Button } from '@/components/ui/button';
 import { CategoryWithMongo_Id, ImageType } from '@/types/mongoose-models';
 import { ProductDetailsType } from '@/types/products';
 import { CurrencyIcon } from '@/utils/currency-icon';
-import BuyAndCardBtn from './btns';
 import ImagePreview from './image-preview';
 import PriceSection from './price-section';
 import SelectedVariant from './selected-variant';
@@ -136,7 +137,28 @@ export default function Details({ details }: { details: ProductDetailsType }) {
                         {/* btn click site */}
 
                         <div className="flex items-center justify-center md:justify-start gap-4 mt-4">
-                            <BuyAndCardBtn />
+                            {/* bye button */}
+                            <Button
+                                variant="default"
+                                size="sm"
+                                className="text-neutral-100 hover:bg-primary-foreground px-5">
+                                Buy Now
+                            </Button>{' '}
+                            {/* bye button */}
+                            {/* cart button */}
+                            <CartButton
+                                productId={details.slug}
+                                variant="outline"
+                                size="sm"
+                                className="px-5 sm:w-fit w-[60px]">
+                                <>
+                                    <span className="hidden sm:inline">
+                                        Add to Cart
+                                    </span>
+                                    <span className="sm:hidden">Cart</span>
+                                </>
+                            </CartButton>
+                            {/* cart button */}
                         </div>
 
                         {/* <div className="mt-4">

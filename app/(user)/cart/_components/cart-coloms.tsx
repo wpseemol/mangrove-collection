@@ -8,6 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { CartProductType } from '@/types/cart';
 import CartPrice from './cart-price';
 import CartProductImage from './cart-product-image';
+import CartQuantity from './cart-quantity';
 import TotalOrDeleted from './total-deleted';
 
 export const columns: ColumnDef<CartProductType>[] = [
@@ -71,6 +72,11 @@ export const columns: ColumnDef<CartProductType>[] = [
                 <div className="text-center font-medium">{category.name}</div>
             );
         },
+    },
+    {
+        accessorKey: 'quantity',
+        header: () => <h2 className="text-center">Quantity</h2>,
+        cell: ({ row }) => <CartQuantity row={row} />,
     },
     {
         accessorKey: 'price',

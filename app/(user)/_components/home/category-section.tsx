@@ -23,7 +23,7 @@ export default async function CategorySection() {
                         allCategory.length <= 7
                             ? 'md:flex justify-center items-center flex-wrap grid'
                             : 'grid 2xl:grid-cols-8 xl:grid-cols-6 lg:grid-cols-5 items-center'
-                    } grid-cols-4 md:gap-4 gap-1 mt-5`}>
+                    } grid-cols-4 md:gap-2 gap-1 mt-5`}>
                     {allCategory.map((categoryWithoutType) => {
                         const category = categoryWithoutType as AllCategoryType;
 
@@ -31,10 +31,10 @@ export default async function CategorySection() {
                             <Card
                                 key={category?.id}
                                 className=" bg-card py-4 sm:px-2 px-1 group
-                             hover:text-primary-foreground duration-300 rounded overflow-hidden md:w-[166px] md:h-[175px] h-[160px] w-full justify-self-center flex flex-col justify-center items-center">
+                             hover:text-primary-foreground duration-300 rounded overflow-hidden md:h-[175px] h-[160px] w-full justify-self-center flex flex-col justify-center items-center shadow-none hover:shadow-[rgba(13,_38,_76,_0.19)_0px_9px_20px] ">
                                 <Link
                                     href={`/products?category=${category?.slug}`}>
-                                    <figure className="mx-auto sm:w-20 sm:h-20 w-10 h-12 overflow-hidden rounded ">
+                                    <figure className="mx-auto md:w-24 md:h-24 sm:w-20 sm:h-20 w-10 h-12 overflow-hidden rounded ">
                                         <Image
                                             src={category?.imgUrl}
                                             alt={category?.name}

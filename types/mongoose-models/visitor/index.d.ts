@@ -34,4 +34,5 @@ export interface VisitorBase {
     isLogin: boolean;
     visitAt: Date;
     lastVisitAt: Date;
+    lastDeviceID: string[];
 }

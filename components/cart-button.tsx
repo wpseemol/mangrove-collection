@@ -19,42 +19,36 @@ export default function CartButton({
     const [loading, setLoading] = useState<boolean>(false);
     const [isAlreadyInCart, setIsAlreadyInCart] = useState<boolean>(false);
     const { data, status } = useSession();
-
-    const { setCart, cart } = useCart();
+    const { cart, setCart } = useCart();
 
     async function handelCart(productId: string) {
         setLoading(true);
         try {
-            const isLogin = !!data?.user;
-            const loginUserId = data?.user.id;
-
-            if (isLogin) {
+            if (!!data?.user) {
                 /**
-                 * User is logged in.
-                 * mongodb model login user cart item keep.
+                 * if user is login
                  */
-            } else {
+            }
+
+            if (!data?.user) {
                 /**
-                 * User is not logged in.
-                 * cart item keep local storage.
+                 * user is not login
                  */
 
-                const cartItemsArray = setLocalStorage(productId);
-                setCart((prev) => ({
-                    ...prev,
-                    cartCount: cartItemsArray.length,
-                    cartItems: cartItemsArray,
-                }));
-                setIsAlreadyInCart(true);
-                if (isAlreadyInCart) {
-                    /**
-                     * Product cart already Exist.
-                     */
+                const isSet = setLocalStorage(productId);
+
+                if (isSet) {
+                    setCart((prev) => ({
+                        ...prev,
+                        cartItems: isSet,
+                        cartCount: isSet.length,
+                    }));
+                    // setIsAlreadyInCart(true);
+                } else {
                     toast({
                         variant: 'destructive',
-                        description: 'Product is already cart list.',
+                        description: 'Product is already in cart.',
                     });
-                } else {
                 }
             }
         } catch (error) {
@@ -75,21 +69,22 @@ export default function CartButton({
     useEffect(() => {
         if (cart.cartItems && productId) {
             const initial = cart.cartItems.includes(productId);
-
             setIsAlreadyInCart(initial);
         }
-    }, []);
+    }, [cart.cartItems]);
 
     return (
-        <Button
-            disabled={loading}
-            onClick={() => productId && handelCart(productId)}
-            variant={variant}
-            size={size}
-            className={className}>
-            {isAlreadyInCart ? 'Added' : children}
-            <>{loading && loadingIconComponent}</>
-        </Button>
+        <>
+            <Button
+                disabled={loading}
+                onClick={() => productId && handelCart(productId)}
+                variant={variant}
+                size={size}
+                className={className}>
+                {isAlreadyInCart ? 'Added' : children}
+                <>{loading && loadingIconComponent}</>
+            </Button>
+        </>
     );
 }
 

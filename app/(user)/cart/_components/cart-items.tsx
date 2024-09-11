@@ -10,6 +10,8 @@ export default function CartItems() {
     const { cart } = useCart();
     const [isCheckout, setIsCheckout] = useState(false);
 
+    console.log(cart);
+
     return (
         cart.cartItems && (
             <div className={`  w-full flex gap-2`}>
@@ -21,8 +23,8 @@ export default function CartItems() {
                         Shopping Cart
                     </CardHeader>
                     {cart.cartProductLoading ? (
-                        <div>
-                            <p>'loading...'</p>
+                        <div className="flex justify-center items-center min-h-44">
+                            <p>loading...</p>
                         </div>
                     ) : (
                         <>

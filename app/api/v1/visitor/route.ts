@@ -8,21 +8,22 @@ export async function POST(request: NextRequest) {
 
         if (!(body && body.visitorId)) {
             return NextResponse.json(
-                { message: 'Bad Request: Missing required fields.' },
+                {
+                    message:
+                        'Bad Request: Missing required fields visitorId or expires required.',
+                },
                 { status: 400 }
             );
         }
 
         await connectMongoDB();
 
-        const response = await Visitor.create(body);
-
-        const { _id, ...visitor } = response.toObject();
-
-        visitor.id = response._id;
-
+        const visitor = await Visitor.create({
+            visitorId: body.visitorId,
+            expires: body.expires,
+        });
         return NextResponse.json(
-            { message: 'Successful save user info.', visitor },
+            { message: 'Successful save user info.', visitor: visitor },
             { status: 201 }
         );
     } catch (error) {
@@ -37,7 +38,7 @@ export async function PATCH(request: NextRequest) {
     try {
         const body = await request.json();
 
-        if (!(body && body.visitorId)) {
+        if (!(body && body.id)) {
             return NextResponse.json(
                 { message: 'Bad Request: Missing required fields.' },
                 { status: 400 }
@@ -46,7 +47,12 @@ export async function PATCH(request: NextRequest) {
 
         await connectMongoDB();
 
-        const response = await Visitor.findOneAndUpdate(
+        // if already Exist find on then delete an update
+
+        // console.log('api body:', body);
+        // console.log('api body deleted id:', !!body.deleteId);
+
+        const isUpdate = await Visitor.findOneAndUpdate(
             { visitorId: body.id },
             {
                 visitorId: body.visitorId,
@@ -56,12 +62,19 @@ export async function PATCH(request: NextRequest) {
             }
         );
 
-        const { _id, ...visitor } = response.toObject();
-
-        visitor.id = response._id;
+        if (!isUpdate) {
+            return NextResponse.json(
+                {
+                    message: 'Update failed because the item was not found.',
+                    visitor: isUpdate,
+                    isUpdate,
+                },
+                { status: 404 }
+            );
+        }
 
         return NextResponse.json(
-            { message: 'Update successful.', visitor },
+            { message: 'Update successful.', visitor: isUpdate, isUpdate },
             { status: 200 }
         );
     } catch (error) {

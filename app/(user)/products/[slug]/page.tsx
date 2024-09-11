@@ -1,3 +1,4 @@
+import { Toaster } from '@/components/ui/toaster';
 import getProductDetails from '@/db/mongoos-queries/get-product-details';
 import { Metadata } from 'next';
 import ProductDetails from './_components/product-details';
@@ -49,8 +50,11 @@ export default async function ProductDetailPage({ params }: PramsType) {
     }
 
     return (
-        <main className="container mx-auto min-h-[calc(100vh-25rem)]">
-            {productDetail && <ProductDetails details={productDetail} />}
-        </main>
+        <>
+            <main className="container mx-auto min-h-[calc(100vh-25rem)]">
+                {productDetail && <ProductDetails details={productDetail} />}
+            </main>
+            <Toaster />
+        </>
     );
 }
