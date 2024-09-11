@@ -6,6 +6,9 @@ import { MdDelete } from 'react-icons/md';
 export default function TotalOrDeleted({ row }: { row: Row<CartProductType> }) {
     const price: number = row.getValue('price');
     const currency = row.original.currency;
+    const quantity = row.original.quantity;
+
+    console.log('cart product quentity:', quantity);
 
     // console.log(row.getValue('price'));
     // const formatter = new Intl.NumberFormat('en-US', {

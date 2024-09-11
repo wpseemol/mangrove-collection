@@ -1,10 +1,5 @@
 'use client';
 
-import mangroveFish from '@/public/assets/image/mangrove Fish.png';
-import mangroveFish1 from '@/public/assets/image/mangrove fish2.jpg';
-import mangroveHoney1 from '@/public/assets/image/mangrove honey 1.jpg';
-import mangroveHoney from '@/public/assets/image/mangrove honey.jpg';
-import mangrove from '@/public/assets/image/mangrove picture.jpg';
 import { NextArrowProps, SliderContent } from '@/types/home';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
@@ -14,15 +9,31 @@ import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 
 const sliderContent: SliderContent[] = [
-    { imgUrl: mangrove, id: crypto.randomUUID(), name: 'Mangrove Picture' },
-    { imgUrl: mangroveFish, id: crypto.randomUUID(), name: 'Mangrove fish' },
-    { imgUrl: mangroveFish1, id: crypto.randomUUID(), name: 'Mangrove fish 1' },
     {
-        imgUrl: mangroveHoney1,
+        imgUrl: '/assets/image/mangrove picture.jpg',
+        id: crypto.randomUUID(),
+        name: 'Mangrove Picture',
+    },
+    {
+        imgUrl: '/assets/image/mangrove Fish.png',
+        id: crypto.randomUUID(),
+        name: 'Mangrove fish',
+    },
+    {
+        imgUrl: '/assets/image/mangrove fish2.jpg',
+        id: crypto.randomUUID(),
+        name: 'Mangrove fish 1',
+    },
+    {
+        imgUrl: '/assets/image/mangrove honey 1.jpg',
         id: crypto.randomUUID(),
         name: 'Mangrove honey 1',
     },
-    { imgUrl: mangroveHoney, id: crypto.randomUUID(), name: 'Mangrove honey ' },
+    {
+        imgUrl: '/assets/image/mangrove honey.jpg',
+        id: crypto.randomUUID(),
+        name: 'Mangrove honey ',
+    },
 ];
 export default function HeroSlider() {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -90,7 +101,7 @@ function CustomSlide({ slidItem }: { slidItem: SliderContent }) {
                     }}
                     className="w-full h-full">
                     <Image
-                        className="object-cover object-center w-full xl:h-[600px] md:h-[450px] sm:h-[300px] h-[200px]"
+                        className="object-cover object-center w-full h-auto"
                         src={slidItem.imgUrl}
                         alt={slidItem.name}
                         width={1019}

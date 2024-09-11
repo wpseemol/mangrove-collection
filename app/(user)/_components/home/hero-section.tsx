@@ -1,6 +1,4 @@
 import { Card } from '@/components/ui/card';
-import mangroveFish from '@/public/assets/image/mangrove Fish.png';
-import honeyCollection from '@/public/assets/image/mangrove honey.jpg';
 import { OuterInfoType } from '@/types/home';
 import Image from 'next/image';
 import { BsFilterSquare } from 'react-icons/bs';
@@ -19,25 +17,25 @@ export default function HeroSection() {
                     {/* slider section */}
                     <HeroSlider />
                 </div>
-                <div className="md:col-span-1 col-span-1 overflow-hidden">
+                <figure className="md:col-span-1 col-span-1 overflow-hidden flex justify-center items-center relative">
                     <Image
-                        src={honeyCollection}
+                        src="/assets/image/mangrove honey.jpg"
                         alt="Honey Collection"
-                        className="object-cover object-center w-full h-full hover:scale-105 duration-200"
+                        className="object-cover object-center w-full h-auto hover:scale-105 duration-200"
                         width={501}
                         height={300}
                     />
-                </div>
+                </figure>
 
-                <div className="md:col-span-1 col-span-1 overflow-hidden ">
+                <figure className="md:col-span-1 col-span-1 overflow-hidden flex justify-center items-center">
                     <Image
-                        src={mangroveFish}
+                        src="/assets/image/mangrove Fish.png"
                         alt="Mangrove Fish"
-                        className="object-cover object-center w-full h-full hover:scale-105 duration-200"
+                        className="object-cover object-center w-full h-auto hover:scale-105 duration-200"
                         width={501}
                         height={300}
                     />
-                </div>
+                </figure>
             </div>
             {/* hero slider section */}
 
