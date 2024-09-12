@@ -24,8 +24,6 @@ export default function CartProvider({
         try {
             const cartItems = getLocalStorageValue();
 
-            console.log(cartItems);
-
             if (cartItems) {
                 setCart((prev) => ({
                     ...prev,

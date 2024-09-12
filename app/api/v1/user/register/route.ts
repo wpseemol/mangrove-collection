@@ -26,8 +26,6 @@ export async function POST(request: NextRequest) {
 
         const userRegObj = { fullName, password, ...obj };
 
-        console.log(userRegObj);
-
         const createUser = await User.create(userRegObj);
 
         return NextResponse.json(
