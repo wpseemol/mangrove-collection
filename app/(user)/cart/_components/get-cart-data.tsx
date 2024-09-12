@@ -28,9 +28,6 @@ export default function GetCartData() {
                         response.statusText
                     );
                 }
-            } else {
-                // If no cart items, ensure loading is turned off
-                setCart((prev) => ({ ...prev, cartProductLoading: false }));
             }
         } catch (error) {
             console.error('An error occurred while fetching cart data:', error);
@@ -42,7 +39,7 @@ export default function GetCartData() {
     useEffect(() => {
         setCart((prev) => ({ ...prev, cartProductLoading: true }));
         fetchCartData();
-    }, []);
+    }, [cart.cartItems]);
 
     return null;
 }
