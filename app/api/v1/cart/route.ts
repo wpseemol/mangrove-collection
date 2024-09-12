@@ -2,12 +2,11 @@ import { connectMongoDB } from '@/db/connections/mongoose-connect';
 import { Product } from '@/lib/schemas/mongoose/product';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest, params: any) {
+    const searchParams = request.nextUrl.searchParams;
+    const searchPramsString = searchParams.get('cart-items');
+    const cartItems = searchPramsString?.split('|');
     try {
-        const searchParams = request.nextUrl.searchParams;
-        const searchPramsString = searchParams.get('cart-items');
-        const cartItems = searchPramsString?.split('|');
-
         // Check if cartItems is valid before proceeding
         if (!cartItems || cartItems.length === 0) {
             return NextResponse.json(
@@ -57,7 +56,13 @@ export async function GET(request: NextRequest) {
         );
     } catch (error) {
         return NextResponse.json(
-            { message: 'Internal server error', error },
+            {
+                message: 'Internal server error',
+                error,
+                searchParams,
+                searchPramsString,
+                cartItems,
+            },
             { status: 500 }
         );
     }
