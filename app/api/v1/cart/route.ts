@@ -1,5 +1,4 @@
 import { connectMongoDB } from '@/db/connections/mongoose-connect';
-import { Cart } from '@/lib/schemas/mongoose/cart';
 import { Product } from '@/lib/schemas/mongoose/product';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -62,51 +61,6 @@ export async function GET(request: NextRequest) {
             { status: 500 }
         );
     }
-}
-
-export async function POST(request: NextRequest) {
-    try {
-        const body = await request.json();
-
-        if (!(body && body.productId && body.userId)) {
-            return NextResponse.json(
-                { message: 'ProductId is Required add cart product.' },
-                { status: 400 }
-            );
-        }
-
-        await connectMongoDB();
-
-        const userId = body.userId;
-        const productId = body.productId;
-
-        // if(body.isLogin){
-
-        // }
-
-        const addCart = await Cart.create({ userId, productId });
-
-        return NextResponse.json(
-            {
-                message: 'Successful product add to cart.',
-                addCart,
-            },
-            {
-                status: 201,
-            }
-        );
-    } catch (error) {
-        return NextResponse.json(
-            { message: 'Internal server error', error },
-            { status: 500 }
-        );
-    }
-}
-
-interface WrongCardItemsType {
-    id: string;
-    message: string;
-    type: string;
 }
 
 interface PriceType {
