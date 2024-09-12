@@ -23,10 +23,7 @@ export async function GET(request: NextRequest, params: any) {
             },
             'slug thumbnail name category price currency '
         )
-            .populate({
-                path: 'category',
-                select: 'name slug',
-            })
+            .populate('category', 'name slug')
             .lean();
 
         const cartProducts =
