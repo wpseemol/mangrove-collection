@@ -39,7 +39,7 @@ export default function GetCartData() {
     useEffect(() => {
         setCart((prev) => ({ ...prev, cartProductLoading: true }));
         fetchCartData();
-    }, [cart.cartItems]);
+    }, []);
 
     return null;
 }
