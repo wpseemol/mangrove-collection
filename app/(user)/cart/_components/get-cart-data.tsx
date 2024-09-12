@@ -9,7 +9,7 @@ export default function GetCartData() {
     async function fetchCartData() {
         try {
             const cartItems = getLocalStorageValue();
-            if (cartItems) {
+            if (cartItems && cartItems.length > 0) {
                 const queryString = new URLSearchParams({
                     'cart-items': cartItems.join('|'),
                 }).toString();
@@ -18,15 +18,22 @@ export default function GetCartData() {
 
                 if (response.ok) {
                     const data = await response.json();
-
                     setCart((prev) => ({
                         ...prev,
                         cartProducts: data.cartProducts,
                     }));
+                } else {
+                    console.error(
+                        'Failed to fetch cart data:',
+                        response.statusText
+                    );
                 }
+            } else {
+                // If no cart items, ensure loading is turned off
+                setCart((prev) => ({ ...prev, cartProductLoading: false }));
             }
         } catch (error) {
-            throw error;
+            console.error('An error occurred while fetching cart data:', error);
         } finally {
             setCart((prev) => ({ ...prev, cartProductLoading: false }));
         }
@@ -34,12 +41,8 @@ export default function GetCartData() {
 
     useEffect(() => {
         setCart((prev) => ({ ...prev, cartProductLoading: true }));
-        /**
-         * fetch data from cart data here
-         */
-
         fetchCartData();
     }, []);
 
-    return <></>;
+    return null;
 }
