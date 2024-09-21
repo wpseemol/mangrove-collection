@@ -28,6 +28,22 @@ export default function CartButton({
                 /**
                  * if user is login
                  */
+
+                const isSet = setLocalStorage(productId);
+
+                if (isSet) {
+                    setCart((prev) => ({
+                        ...prev,
+                        cartItems: isSet,
+                        cartCount: isSet.length,
+                    }));
+                    // setIsAlreadyInCart(true);
+                } else {
+                    toast({
+                        variant: 'destructive',
+                        description: 'Product is already in cart.',
+                    });
+                }
             }
 
             if (!data?.user) {
