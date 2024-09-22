@@ -1,4 +1,4 @@
-import { CartProductType } from '@/types/cart';
+import { CartProductType, OrderSummary } from '@/types/cart';
 import { createContext, Dispatch, SetStateAction } from 'react';
 
 const VariantUpdateContext = createContext<VariantUpdateContextType | null>(
@@ -17,6 +17,8 @@ interface VariantUpdateContextType {
 interface CartContextType {
     cart: CartType;
     setCart: Dispatch<SetStateAction<CartType>>;
+    orderSummary: null | OrderSummary[];
+    setOrderSummary: Dispatch<SetStateAction<null | OrderSummary[]>>;
 }
 
 export type CartType = {

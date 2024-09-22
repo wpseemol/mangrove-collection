@@ -1,5 +1,6 @@
 'use client';
 import { CartContext, CartType } from '@/contexts';
+import { OrderSummary } from '@/types/cart';
 import { getLocalStorageValue } from '@/utils/localstorage';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
@@ -16,9 +17,13 @@ export default function CartProvider({
         cartProductLoading: false,
     });
 
+    const [orderSummary, setOrderSummary] = useState<null | OrderSummary[]>(
+        null
+    );
+
     const { data } = useSession();
 
-    const sendObj = { cart, setCart };
+    const sendObj = { cart, setCart, orderSummary, setOrderSummary };
 
     async function getCartData() {
         try {

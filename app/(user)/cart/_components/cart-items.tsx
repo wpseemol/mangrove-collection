@@ -1,14 +1,19 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { Card, CardHeader } from '@/components/ui/card';
 import { useCart } from '@/hooks';
 import { useState } from 'react';
 import CartProductTable from './cart-product-table';
 
 export default function CartItems() {
-    const { cart } = useCart();
+    const { cart, orderSummary } = useCart();
     const [isCheckout, setIsCheckout] = useState(false);
+
+    // useEffect(() => {
+    //     if (orderSummary && orderSummary.length > 0) setIsCheckout(true);
+    // }, [orderSummary]);
+
+    console.log('cart-items:', orderSummary);
 
     return (
         cart.cartItems && (
@@ -29,10 +34,9 @@ export default function CartItems() {
                             <CartProductTable />
                         </>
                     )}
-                    <Button onClick={() => setIsCheckout((prev) => !prev)}>
-                        {' '}
-                        Checkout
-                    </Button>
+
+                    {/*  */}
+                    {/* <Button>Deleted</Button> */}
                 </Card>
                 {isCheckout && (
                     <Card
