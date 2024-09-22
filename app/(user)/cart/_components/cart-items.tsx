@@ -1,10 +1,10 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { Card, CardHeader } from '@/components/ui/card';
 import { useCart } from '@/hooks';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import CartMultiDeleted from './cart-multi-deleted';
 import CartOrderSummary from './cart-order-summary';
 import CartProductTable from './cart-product-table';
 
@@ -41,15 +41,7 @@ export default function CartItems() {
                     )}
 
                     {/* deleted multi items */}
-                    {orderSummary && orderSummary.length > 0 && (
-                        <Button>
-                            Deleted (
-                            {orderSummary.length > 1
-                                ? orderSummary.length + ' items'
-                                : orderSummary.length + ' item'}
-                            )
-                        </Button>
-                    )}
+                    <CartMultiDeleted />
                 </Card>
                 {isCheckout && (
                     <motion.section
