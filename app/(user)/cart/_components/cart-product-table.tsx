@@ -65,14 +65,17 @@ export default function CartProductTable() {
         },
     });
 
-    // get selected cart product data
-    const selectedCartProductIds = table
-        .getSelectedRowModel()
-        .rows.map((product) => ({ slug: product.original.slug }));
+    React.useEffect(() => {
+        const selectedCardProductIds = table
+            .getSelectedRowModel()
+            .rows.map((product) => ({ slug: product.original.slug }));
 
-    if (selectedCartProductIds.length > 0) {
-        setOrderSummary(selectedCartProductIds);
-    }
+        if (selectedCardProductIds.length > 0) {
+            setOrderSummary(selectedCardProductIds);
+        } else {
+            setOrderSummary(null);
+        }
+    }, [rowSelection]);
 
     return (
         <div className="w-full animate-fade animate-duration-1000 animate-ease-in">

@@ -1,7 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/hooks';
-import { CartProductType } from '@/types/cart';
+import { CartProductType, OrderSummary } from '@/types/cart';
 import { localStorageItemDelete } from '@/utils/localstorage';
 import { Row } from '@tanstack/react-table';
 import { useEffect } from 'react';
@@ -39,7 +39,7 @@ export default function TotalOrDeleted({ row }: { row: Row<CartProductType> }) {
 }
 
 function CartItemDeleted({ row }: { row: Row<CartProductType> }) {
-    const { setCart } = useCart();
+    const { setCart, setOrderSummary } = useCart();
 
     async function handelDeleted(productSlug: string) {
         setCart((prev) => ({ ...prev, cartCountLoading: true }));
@@ -59,6 +59,13 @@ function CartItemDeleted({ row }: { row: Row<CartProductType> }) {
                         cartProducts,
                     };
                 });
+
+                setOrderSummary((prev) => {
+                    const orderSummary = prev?.filter(
+                        (item) => item.slug !== isDeleted.deletedProductSlug
+                    ) as OrderSummary[];
+                    return orderSummary;
+                });
             }
         } catch (error) {
         } finally {
@@ -71,6 +78,20 @@ function CartItemDeleted({ row }: { row: Row<CartProductType> }) {
             handelDeleted(row.original.slug);
         }
     }, [row.original.quantity]);
+
+    // cart product order summary
+    // useEffect(() => {
+    //     if (row.getIsSelected()) {
+    //         setOrderSummary((prev) => {
+    //             if (prev) {
+    //                 return [...prev, { slug: row.original.slug }];
+    //             }
+    //             return [{ slug: row.original.slug }];
+    //         });
+    //     }
+    // }, [row.toggleSelected()]);
+
+    // console.log(row.toggleSelected);
 
     return (
         <Button
