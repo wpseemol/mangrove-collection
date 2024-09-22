@@ -24,7 +24,7 @@ export default function CartItems() {
                 <Card
                     className={`${
                         orderSummary && orderSummary.length > 0
-                            ? 'w-2/3 duration-300'
+                            ? 'w-[70%] duration-300'
                             : 'w-full'
                     } p-5 md:my-10 my-5 duration-300`}>
                     <CardHeader className="p-0 font-medium">
@@ -57,7 +57,7 @@ export default function CartItems() {
                         animate={{
                             width:
                                 orderSummary && orderSummary.length > 0
-                                    ? '33.333333%'
+                                    ? '30%'
                                     : 0,
                         }}
                         transition={{
