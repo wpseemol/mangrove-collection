@@ -73,7 +73,7 @@ export default function ProductCard({
                             size="sm"
                             className="text-neutral-100 hover:bg-primary-foreground px-5 sm:w-fit w-[60px]">
                             <span className="hidden sm:inline">Buy Now</span>
-                            <span className="sm:hidden">Now</span>
+                            <span className="sm:hidden">Buy</span>
                         </Button>{' '}
                         <CartButton
                             productId={details.slug}
