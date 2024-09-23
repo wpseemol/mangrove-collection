@@ -1,5 +1,5 @@
 import LoadingComponent from '@/components/loading-component';
 
-export default function TestPage() {
+export default function LoadingPage() {
     return <LoadingComponent />;
 }
