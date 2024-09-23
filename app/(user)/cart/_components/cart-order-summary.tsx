@@ -39,9 +39,9 @@ export default function CartOrderSummary() {
                 <div className="flex justify-between items-start my-3">
                     <p>
                         Subtotal (
-                        {orderSummary.length > 1
-                            ? orderSummary.length + ' items'
-                            : orderSummary.length + ' item'}
+                        {totalCount > 1
+                            ? totalCount + ' items'
+                            : totalCount + ' item'}
                         )
                     </p>{' '}
                     <span>{subTotal.toFixed(2)}&#2547;</span>
