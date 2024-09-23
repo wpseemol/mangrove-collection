@@ -20,13 +20,13 @@ export default function CartItems() {
 
     return (
         cart.cartItems && (
-            <div className={`  w-full flex gap-2`}>
+            <div className={` md:my-10 my-5 w-full flex gap-2`}>
                 <Card
                     className={`${
                         orderSummary && orderSummary.length > 0
-                            ? 'w-[70%] duration-300'
+                            ? 'w-[70%]'
                             : 'w-full'
-                    } p-5 md:my-10 my-5 duration-300`}>
+                    } p-5 duration-300`}>
                     <CardHeader className="p-0 font-medium">
                         Shopping Cart
                     </CardHeader>
