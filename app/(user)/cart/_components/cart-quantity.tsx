@@ -7,8 +7,6 @@ import { CartProductType, CartTableRowType } from '@/types/cart';
 export default function CartQuantity({ row }: CartTableRowType) {
     const { cart, setCart } = useCart();
 
-    console.log(cart);
-
     return (
         <section className="flex justify-center">
             <QuantityButton

@@ -42,9 +42,8 @@ export default function CartProductTable() {
         React.useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({});
-    const [rowSelection, setRowSelection] = React.useState({});
 
-    const { cart } = useCart();
+    const { cart, setOrderSummary, rowSelection, setRowSelection } = useCart();
 
     const table = useReactTable({
         data: cart.cartProducts ? cart.cartProducts : [],
@@ -64,6 +63,22 @@ export default function CartProductTable() {
             rowSelection,
         },
     });
+
+    React.useEffect(() => {
+        const selectedCardProductIds = table
+            .getSelectedRowModel()
+            .rows.map((product) => ({ slug: product.original.slug }));
+
+        if (selectedCardProductIds.length > 0) {
+            setOrderSummary(selectedCardProductIds);
+        } else {
+            setOrderSummary(null);
+        }
+    }, [rowSelection]);
+
+    // React.useEffect(() => {
+    //     console.log('cart product table:', table);
+    // }, [orderSummary]);
 
     return (
         <div className="w-full animate-fade animate-duration-1000 animate-ease-in">

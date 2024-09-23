@@ -32,3 +32,5 @@ export interface CartProductType {
  */
 
 export type CartTableRowType = { row: Row<CartProductType> };
+
+export type OrderSummary = { slug: string };

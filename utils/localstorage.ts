@@ -57,9 +57,43 @@ export function localStorageItemDelete(
     };
 }
 
+export function localStorageMultiDelete(
+    deleteSlugs: string[]
+): LocalStorageMultiDelete {
+    const cartItems = localStorage.getItem(key);
+
+    if (cartItems) {
+        const cartProductArray: string[] = JSON.parse(cartItems);
+
+        const afterDeleted: string[] = cartProductArray.filter(
+            (item) => !deleteSlugs.includes(item)
+        );
+
+        localStorage.setItem(key, JSON.stringify(afterDeleted));
+
+        return {
+            message: `Delete ${deleteSlugs.length} items deleted.`,
+            deleteCount: deleteSlugs.length,
+            deleteItem: deleteSlugs,
+            afterDeleteItem: afterDeleted.length > 0 ? afterDeleted : null,
+            afterDeleteItemCount:
+                afterDeleted.length > 0 ? afterDeleted.length : null,
+        };
+    }
+    return null;
+}
+
 type LocalStorageItemDelete = {
     message: string;
     cartCountLength: number | null;
     cartItemsArray: string[] | null;
     deletedProductSlug: string;
+} | null;
+
+type LocalStorageMultiDelete = {
+    message: string;
+    deleteItem: string[];
+    afterDeleteItem: string[] | null;
+    afterDeleteItemCount: null | number;
+    deleteCount: number;
 } | null;

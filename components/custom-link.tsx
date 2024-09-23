@@ -1,10 +1,8 @@
 'use client';
 import { CustomLinkType } from '@/types/nav';
-import { animatePageOut } from '@/utils/animation';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { MouseEvent } from 'react';
 
 export default function CustomLink({
     className,
@@ -15,16 +13,16 @@ export default function CustomLink({
     const router: AppRouterInstance = useRouter();
     const pathName: string = usePathname();
 
-    async function handelClick(event: MouseEvent<HTMLAnchorElement>) {
-        event.preventDefault();
-        if (pathName !== href) {
-            if (href.includes('#')) {
-                router.push(href);
-            } else {
-                animatePageOut(href, router);
-            }
-        }
-    }
+    // async function handelClick(event: MouseEvent<HTMLAnchorElement>) {
+    //     event.preventDefault();
+    //     if (pathName !== href) {
+    //         if (href.includes('#')) {
+    //             router.push(href);
+    //         } else {
+    //             animatePageOut(href, router);
+    //         }
+    //     }
+    // }
 
     return (
         <Link
@@ -37,7 +35,8 @@ export default function CustomLink({
                     : ''
             } ${className}`}
             href={href}
-            onClick={handelClick}>
+            // onClick={handelClick}
+        >
             {children}
         </Link>
     );
