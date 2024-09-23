@@ -2,12 +2,42 @@
 
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/hooks';
+import { localStorageMultiDelete } from '@/utils/localstorage';
 
 export default function CartMultiDeleted() {
-    const { setCart, orderSummary } = useCart();
+    const { setCart, orderSummary, setOrderSummary } = useCart();
 
     function handelMultiDeleted() {
-        console.log('multi deleted', orderSummary);
+        if (orderSummary && orderSummary.length > 0) {
+            const deletedSlugs = orderSummary.map((item) => item.slug);
+
+            const isDelete = localStorageMultiDelete(deletedSlugs);
+
+            if (isDelete) {
+                setCart((prev) => {
+                    const cartProducts =
+                        prev.cartProducts?.filter(
+                            (item) => !isDelete.deleteItem.includes(item.slug)
+                        ) || null;
+                    const obj = {
+                        ...prev,
+                        cartItems: isDelete.afterDeleteItem,
+                        cartCount: isDelete.afterDeleteItemCount,
+                        cartProducts,
+                    };
+
+                    return obj;
+                });
+
+                setOrderSummary((prev) => {
+                    const afterDelete =
+                        prev?.filter((item) =>
+                            isDelete.afterDeleteItem?.includes(item.slug)
+                        ) || null;
+                    return afterDelete;
+                });
+            }
+        }
     }
 
     return (
