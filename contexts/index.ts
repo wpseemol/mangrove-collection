@@ -19,6 +19,8 @@ interface CartContextType {
     setCart: Dispatch<SetStateAction<CartType>>;
     orderSummary: null | OrderSummary[];
     setOrderSummary: Dispatch<SetStateAction<null | OrderSummary[]>>;
+    rowSelection: {};
+    setRowSelection: Dispatch<SetStateAction<{}>>;
 }
 
 export type CartType = {

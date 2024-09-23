@@ -5,7 +5,8 @@ import { useCart } from '@/hooks';
 import { localStorageMultiDelete } from '@/utils/localstorage';
 
 export default function CartMultiDeleted() {
-    const { setCart, orderSummary, setOrderSummary } = useCart();
+    const { setCart, orderSummary, setOrderSummary, setRowSelection } =
+        useCart();
 
     function handelMultiDeleted() {
         if (orderSummary && orderSummary.length > 0) {
@@ -36,6 +37,8 @@ export default function CartMultiDeleted() {
                         ) || null;
                     return afterDelete;
                 });
+
+                setRowSelection({});
             }
         }
     }

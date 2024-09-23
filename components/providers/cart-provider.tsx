@@ -21,9 +21,18 @@ export default function CartProvider({
         null
     );
 
+    const [rowSelection, setRowSelection] = useState({});
+
     const { data } = useSession();
 
-    const sendObj = { cart, setCart, orderSummary, setOrderSummary };
+    const sendObj = {
+        cart,
+        setCart,
+        orderSummary,
+        setOrderSummary,
+        rowSelection,
+        setRowSelection,
+    };
 
     async function getCartData() {
         try {
