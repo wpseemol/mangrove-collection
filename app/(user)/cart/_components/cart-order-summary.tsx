@@ -11,7 +11,7 @@ export default function CartOrderSummary() {
     const orderProducts = orderSummary as OrderSummary[];
 
     const orderProduct = cart.cartProducts?.filter((product) =>
-        orderProducts.some((item) => item.slug === product.slug)
+        orderProducts?.some((item) => item.slug === product.slug)
     ) as CartProductType[];
 
     const subTotal = orderProduct.reduce((acc, curr) => {

@@ -44,7 +44,7 @@ export default function CartProductTable() {
         React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
 
-    const { cart, setOrderSummary } = useCart();
+    const { cart, setOrderSummary, orderSummary } = useCart();
 
     const table = useReactTable({
         data: cart.cartProducts ? cart.cartProducts : [],

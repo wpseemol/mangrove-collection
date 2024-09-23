@@ -79,20 +79,6 @@ function CartItemDeleted({ row }: { row: Row<CartProductType> }) {
         }
     }, [row.original.quantity]);
 
-    // cart product order summary
-    // useEffect(() => {
-    //     if (row.getIsSelected()) {
-    //         setOrderSummary((prev) => {
-    //             if (prev) {
-    //                 return [...prev, { slug: row.original.slug }];
-    //             }
-    //             return [{ slug: row.original.slug }];
-    //         });
-    //     }
-    // }, [row.toggleSelected()]);
-
-    // console.log(row.toggleSelected);
-
     return (
         <Button
             onClick={() => handelDeleted(row.original.slug)}
