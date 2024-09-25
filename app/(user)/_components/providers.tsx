@@ -1,6 +1,7 @@
 import PageChangeAnimation from '@/app/(user)/_components/page-change-animation';
 import { auth } from '@/auth/auth';
 import CartProvider from '@/components/providers/cart-provider';
+import ShippingProvider from '@/components/providers/shipping-provider';
 import { ThemeProvider } from '@/components/theme-provider';
 import { SessionProvider } from 'next-auth/react';
 
@@ -20,9 +21,13 @@ export default async function Providers({
                     themes={['green', 'dark', 'light']}
                     enableSystem
                     disableTransitionOnChange>
-                    <CartProvider>
-                        <PageChangeAnimation>{children}</PageChangeAnimation>
-                    </CartProvider>
+                    <ShippingProvider>
+                        <CartProvider>
+                            <PageChangeAnimation>
+                                {children}
+                            </PageChangeAnimation>
+                        </CartProvider>
+                    </ShippingProvider>
                 </ThemeProvider>
             </SessionProvider>
         </>
