@@ -1,5 +1,5 @@
 export interface ShippingContextType {
-    shipping: shipping;
+    shipping: Shipping[] | null;
     setShipping: Dispatch<SetStateAction<Shipping[] | null>>;
 }
 

@@ -2,19 +2,24 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { useCart } from '@/hooks';
+import { useCart, useShipping } from '@/hooks';
 import { CartProductType, OrderSummary } from '@/types/cart';
+import { useRouter } from 'next/navigation';
 
 export default function CartOrderSummary() {
     const { cart, orderSummary } = useCart();
 
-    const orderProducts = orderSummary as OrderSummary[];
+    const { setShipping } = useShipping();
 
-    const orderProduct = cart.cartProducts?.filter((product) =>
-        orderProducts?.some((item) => item.slug === product.slug)
+    const router = useRouter();
+
+    const orderProductsType = orderSummary as OrderSummary[];
+
+    const orderProducts = cart.cartProducts?.filter((product) =>
+        orderProductsType?.some((item) => item.slug === product.slug)
     ) as CartProductType[];
 
-    const subTotal = orderProduct.reduce((acc, curr) => {
+    const subTotal = orderProducts.reduce((acc, curr) => {
         const multiplyPrice = curr.price * curr.quantity;
 
         return acc + multiplyPrice;
@@ -26,10 +31,20 @@ export default function CartOrderSummary() {
 
     const totalPrice = subTotal + shippingFee + voucherCode;
 
-    const totalCount = orderProduct.reduce((acc, curr) => {
+    const totalCount = orderProducts.reduce((acc, curr) => {
         const count = curr.quantity + acc;
         return count;
     }, 0);
+
+    function handelShipping(shippingProduct: CartProductType[]) {
+        const shippingProducts = shippingProduct.map((product) => ({
+            productId: product.id,
+            count: product.quantity,
+        }));
+        setShipping(shippingProducts);
+
+        router.push('/products/cart/shipping');
+    }
 
     return orderSummary && orderSummary.length > 0 ? (
         <Card className={`p-5 h-fit`}>
@@ -67,7 +82,11 @@ export default function CartOrderSummary() {
                 {/* cart price section */}
             </CardContent>
 
-            <Button className="w-full">Proceed to Pay ({totalCount})</Button>
+            <Button
+                onClick={() => handelShipping(orderProducts)}
+                className="w-full">
+                Proceed to Pay ({totalCount})
+            </Button>
         </Card>
     ) : (
         <Card>
