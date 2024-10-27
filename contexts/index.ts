@@ -1,4 +1,5 @@
 import { CartProductType, OrderSummary } from '@/types/cart';
+import { ShippingContextType } from '@/types/shipping';
 import { createContext, Dispatch, SetStateAction } from 'react';
 
 const VariantUpdateContext = createContext<VariantUpdateContextType | null>(
@@ -7,7 +8,9 @@ const VariantUpdateContext = createContext<VariantUpdateContextType | null>(
 
 const CartContext = createContext<CartContextType | null>(null);
 
-export { CartContext, VariantUpdateContext };
+const ShippingContext = createContext<ShippingContextType | null>(null);
+
+export { CartContext, ShippingContext, VariantUpdateContext };
 
 interface VariantUpdateContextType {
     variantSelectId: string | null;
