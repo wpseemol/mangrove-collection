@@ -4,6 +4,8 @@ import { Input } from '@/components/ui/input';
 import { ADMIN, CREATOR, USER } from '@/lib/constant-value';
 import { MenuType } from '@/types/nav';
 import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react';
 import {
     FaCartFlatbed,
     FaDollarSign,
@@ -212,14 +214,20 @@ function NavMenu() {
                                 ? 'group/category relative duration-500 origin-top'
                                 : ''
                         }`}>
-                        {
+                        {items.id === 'contact' || items.id === 'about' ? (
+                            <Link
+                                href={items.href}
+                                className="group-hover/menu:md:pl-0 group-hover/menu:pl-2 duration-150">
+                                {items.label}
+                            </Link>
+                        ) : (
                             <CustomLink
                                 isActive={items.id !== 'category'}
                                 href={items.href}
-                                className="group-hover/menu:md:pl-0 group-hover/menu:pl-2  duration-150">
+                                className="group-hover/menu:md:pl-0 group-hover/menu:pl-2 duration-150">
                                 {items.label}
                             </CustomLink>
-                        }
+                        )}
 
                         {items.id === 'category' && <CategoryMenus />}
                     </li>

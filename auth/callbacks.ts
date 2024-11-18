@@ -12,7 +12,8 @@ export const authCallbacks: NextAuthConfig['callbacks'] = {
     }): Promise<boolean> {
         // Your logic here
         if (account && user?.role) {
-            account.role = user.role;
+            const userRole: string = user.role;
+            account.role = userRole;
         }
         return true;
     },
@@ -24,7 +25,7 @@ export const authCallbacks: NextAuthConfig['callbacks'] = {
         token: JWT;
     }): Promise<Session> {
         // Add role and id to the session from the token
-        if (token.role) {
+        if (typeof token.role === 'string') {
             session.user.role = token.role;
         }
         if (token.sub) {

@@ -1,4 +1,4 @@
-import { CartContext, VariantUpdateContext } from '@/contexts';
+import { CartContext, ShippingContext, VariantUpdateContext } from '@/contexts';
 import { useContext } from 'react';
 
 /**
@@ -33,4 +33,13 @@ const useCart = function () {
     return context;
 };
 
-export { useCart, useVariantUpdate };
+const useShipping = function () {
+    const context = useContext(ShippingContext);
+    if (!context) {
+        throw new Error('useCart muse be used within a CartProvider');
+    }
+
+    return context;
+};
+
+export { useCart, useShipping, useVariantUpdate };

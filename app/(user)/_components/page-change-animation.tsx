@@ -1,18 +1,17 @@
 'use client';
 
-import { useCart } from '@/hooks';
 import { animationPageIn } from '@/utils/animation';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react'; // Import React explicitly
 
 export default function PageChangeAnimation({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    const { setCart } = useCart();
     useEffect(() => {
         animationPageIn();
     }, []);
+
     return (
         <>
             {children}

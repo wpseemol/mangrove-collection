@@ -1,6 +1,7 @@
 import { Toaster } from '@/components/ui/toaster';
 import getProductDetails from '@/db/mongoos-queries/get-product-details';
 import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import ProductDetails from './_components/product-details';
 
 interface PramsType {
@@ -47,6 +48,10 @@ export default async function ProductDetailPage({ params }: PramsType) {
 
     if (params?.slug) {
         productDetail = await getProductDetails(params.slug);
+    }
+
+    if (!productDetail) {
+        notFound();
     }
 
     return (
