@@ -26,6 +26,8 @@ export const authCallbacks: NextAuthConfig['callbacks'] = {
         // Add role and id to the session from the token
         if (token.role) {
             session.user.role = token.role;
+
+            console.log('token role:', token.role);
         }
         if (token.sub) {
             session.user.id = token.sub;
