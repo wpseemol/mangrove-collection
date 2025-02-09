@@ -1,6 +1,11 @@
 import { Suspense } from 'react';
 
-import { Account, Card, Logo, NavMenu, Offer, Search } from './nav-elements';
+import Account from './account';
+import { Card } from './card';
+import { Logo } from './logo';
+import { NavMenu } from './nav-menu';
+import { Offer } from './offer';
+import { Search } from './search';
 
 export default async function FullScreen() {
     return (

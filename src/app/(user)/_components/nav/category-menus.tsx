@@ -1,10 +1,9 @@
 import CustomLink from '@/components/custom-link';
-import { getCategory } from '@/db/mongoos-queries/get-category';
-import { AllCategoryType, CategoryType } from '@/types/mongoose-models';
+// import { AllCategoryType, CategoryType } from '@/types/mongoose-models';
 import Image from 'next/image';
 
 export default async function CategoryMenus() {
-    const allCategory: CategoryType = await getCategory();
+    const allCategory = false;
 
     if (!allCategory) {
         return <></>;
