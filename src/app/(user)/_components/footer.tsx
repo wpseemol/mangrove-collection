@@ -7,8 +7,11 @@ import Link from 'next/link';
  *
  */
 export default function Footer() {
+    const date = new Date();
+    const currentYear = date.getFullYear();
+
     return (
-        <footer className=" divide-y bg-black/95 dark:bg-neutral-900/65 dark:border-y dark:border-neutral-800 text-gray-100 md:pb-0 pb-20">
+        <footer className=" divide-y bg-black/95 dark:bg-neutral-900/90 dark:border-y dark:border-neutral-800 text-gray-100 md:pb-0 pb-20">
             <div className="w-fit lg:container grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1  justify-items-stretch md:px-16 py-10 mx-auto space-y-8 lg:space-y-0 xl:gap-0 gap-x-16">
                 {/* footer logo section for table mod */}
 
@@ -131,8 +134,8 @@ export default function Footer() {
                 </div>
             </div>
             <div className="py-6 text-sm text-center text-gray-400">
-                © 2024 Thanks From Mangrove Collection™ Ltd. | All rights
-                reserved.
+                © {currentYear} Thanks From Mangrove Collection™ Ltd. | All
+                rights reserved.
             </div>
         </footer>
     );
