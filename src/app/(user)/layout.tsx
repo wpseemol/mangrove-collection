@@ -17,7 +17,7 @@ export const metadata: Metadata = {
         'Discover unique, eco-friendly products at Mangrove Collection. Shop sustainable fashion, home decor, and lifestyle essentials crafted with nature in mind. Elevate your style while supporting a greener future.',
 };
 
-export default function RootLayout({
+export default function UserLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
