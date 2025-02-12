@@ -1,3 +1,5 @@
+import React from 'react';
+import RootProviders from './_components/root-providers';
 import './globals.css';
 
 export default function RootLayout({
@@ -5,5 +7,9 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    return <html lang="en">{children}</html>;
+    return (
+        <html lang="en" className="scroll-smooth green">
+            <RootProviders>{children}</RootProviders>
+        </html>
+    );
 }

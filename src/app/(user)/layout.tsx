@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { Poppins, Roboto } from 'next/font/google';
+
 import Footer from './_components/footer';
 import Header from './_components/header';
+import UserProviders from './_components/user-providers';
 
 const poppins = Poppins({
     subsets: ['latin'],
@@ -21,14 +23,14 @@ export default function UserLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
-            <body className={`${poppins.className} ${roboto.className}`}>
+        <body
+            className={`${poppins.className} ${roboto.className}`}
+            suppressHydrationWarning={true}>
+            <UserProviders>
                 <Header />
-
                 {children}
-
                 <Footer />
-            </body>
-        </html>
+            </UserProviders>
+        </body>
     );
 }
