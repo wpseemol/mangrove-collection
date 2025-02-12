@@ -27,8 +27,6 @@ export default function MenuBtn({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         if (menuShow.animation) {
             document.addEventListener('mousedown', handleHiddenDrawer);
-        } else {
-            document.removeEventListener('mousedown', handleHiddenDrawer);
         }
 
         return () => {
@@ -37,15 +35,25 @@ export default function MenuBtn({ children }: { children: React.ReactNode }) {
     }, [menuShow.animation]);
 
     return (
-        <li className={``}>
+        <li className={`relative`}>
+            {/* open button  */}
             <Button
-                className=" text-neutral-100 text-2xl bg-transparent p-0 py-0"
-                onClick={() =>
-                    setMenuShow({
-                        animation: !menuShow.animation,
-                        status: true,
-                    })
-                }>
+                className=" text-neutral-100 text-2xl bg-transparent p-0 py-0 relative z-50"
+                onClick={() => {
+                    if (buttonClickStatus) {
+                        setMenuShow({
+                            animation: true,
+                            status: true,
+                        });
+                        buttonClickStatus = false;
+                    } else {
+                        setMenuShow({
+                            animation: false,
+                            status: true,
+                        });
+                        buttonClickStatus = true;
+                    }
+                }}>
                 {menuShow.animation ? <FaX /> : <FaBars />}
             </Button>
             {menuShow.status && (
@@ -58,13 +66,15 @@ export default function MenuBtn({ children }: { children: React.ReactNode }) {
                         duration: 0.5,
                         ease: [0.25, 0.1, 0.25, 1], // Custom ease curve for a smooth animation
                     }}
-                    className={`fixed top-[4.8rem] z-50 left-0 border rounded-sm text-xl font-normal text-secondary-foreground sm:min-w-[calc(100vw-8rem)] min-w-[calc(100vw-5rem)] min-h-[calc(100vh-4.8rem)] bg-gray-100 dark:bg-slate-900 `}
+                    className={`absolute top-[3.5rem] z-40 -left-7 border rounded-sm text-xl font-normal text-secondary-foreground sm:min-w-[calc(100vw-8rem)] min-w-[calc(100vw-5rem)] min-h-[calc(100vh-4.8rem)] bg-gray-100 dark:bg-slate-900 `}
                     onAnimationComplete={() => {
                         if (!menuShow.animation) {
                             setMenuShow({
                                 animation: false,
                                 status: false,
                             });
+
+                            buttonClickStatus = true;
                         }
                     }}>
                     {children}
@@ -78,3 +88,8 @@ interface MenuShowState {
     animation: boolean;
     status: boolean;
 }
+
+/**
+ * button click status
+ */
+let buttonClickStatus = true;

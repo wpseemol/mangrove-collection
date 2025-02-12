@@ -1,5 +1,10 @@
-import { Account, Card, Logo, NavMenu, Offer, Search } from './account';
+import Account from './account';
+import { Card } from './card';
+import { Logo } from './logo';
 import MenuBtn from './menu-btn';
+import { NavMenu } from './nav-menu';
+import { Offer } from './offer';
+import { Search } from './search';
 import SearchBtn from './search-btn';
 
 export default function MobileScreen() {
