@@ -8,7 +8,6 @@ import MobileScreen from './nav/mobile-screen';
 export default function Header() {
     return (
         <header>
-            this is my header
             <FullScreen />
             <MobileScreen />
         </header>

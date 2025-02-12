@@ -10,32 +10,33 @@ export default function HeroSection() {
     return (
         <section className="md:min-h-[calc(100vh-8.5rem)] container mx-auto flex flex-col justify-center md:py-10 py-5 ">
             {/* hero slider section */}
-            <div className="grid md:grid-cols-3 grid-cols-2 md:gap-4 gap-2 xl:h-[600px] md:h-[450px] p-2 md:p-0">
-                <div
-                    className="md:col-span-2 col-span-2 md:row-span-2 border relative overflow-hidden md:h-full
-                    sm:h-[300px] h-[200px]">
+            <div className="grid grid-cols-2 lg:grid-cols-10 gap-3 lg:gap-6">
+                <div className="lg:row-span-2 col-span-2 lg:col-span-7">
                     {/* slider section */}
                     <HeroSlider />
                 </div>
-                <figure className="md:col-span-1 col-span-1 overflow-hidden flex justify-center items-center relative">
-                    <Image
-                        src="/assets/image/mangrove honey.jpg"
-                        alt="Honey Collection"
-                        className="object-cover object-center w-full h-auto hover:scale-105 duration-200"
-                        width={501}
-                        height={300}
-                    />
-                </figure>
-
-                <figure className="md:col-span-1 col-span-1 overflow-hidden flex justify-center items-center">
-                    <Image
-                        src="/assets/image/mangrove Fish.png"
-                        alt="Mangrove Fish"
-                        className="object-cover object-center w-full h-auto hover:scale-105 duration-200"
-                        width={501}
-                        height={300}
-                    />
-                </figure>
+                <div className="lg:col-span-3 relative flex">
+                    <figure className=" overflow-hidden flex justify-center items-center relative">
+                        <Image
+                            src="/assets/image/mangrove honey.jpg"
+                            alt="Honey Collection"
+                            className="object-cover object-center w-full h-auto hover:scale-105 duration-200"
+                            width={501}
+                            height={300}
+                        />
+                    </figure>
+                </div>
+                <div className="lg:col-span-3 relative flex">
+                    <figure className=" overflow-hidden flex justify-center items-center">
+                        <Image
+                            src="/assets/image/mangrove Fish.png"
+                            alt="Mangrove Fish"
+                            className="object-cover object-center w-full h-auto hover:scale-105 duration-200"
+                            width={501}
+                            height={300}
+                        />
+                    </figure>
+                </div>
             </div>
             {/* hero slider section */}
 
