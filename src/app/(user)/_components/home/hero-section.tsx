@@ -1,5 +1,5 @@
 import { Card } from '@/components/ui/card';
-import { OuterInfoType } from '@/types/home';
+import { Feature } from '@/types/home';
 import Image from 'next/image';
 import { BsFilterSquare } from 'react-icons/bs';
 import { ImWhatsapp } from 'react-icons/im';
@@ -11,13 +11,13 @@ export default function HeroSection() {
         <section className=" container mx-auto flex flex-col justify-center 2xl:py-10 lg:py-8 py-5 ">
             <div className="grid grid-cols-2 lg:grid-cols-10 gap-3 lg:gap-6 2xl:h-[515px] lg:h-[450px]">
                 {/* hero slider section */}
-                <div className="lg:row-span-2 col-span-2 lg:col-span-7 border border-black/10 dark:border-white/10 shadow-sm rounded-l-xl overflow-hidden flex ">
+                <div className="lg:row-span-2 col-span-2 lg:col-span-7 border border-black/10 dark:border-white/10 shadow-sm rounded-l-sm overflow-hidden flex">
                     {/* slider section */}
                     <HeroSlider />
                 </div>
 
                 {/* top section */}
-                <div className="lg:col-span-3 border border-black/10 dark:border-white/10 shadow-sm rounded-tr-xl overflow-hidden flex justify-center items-center">
+                <div className="lg:col-span-3 border border-black/10 dark:border-white/10 shadow-sm rounded-tr-sm overflow-hidden flex justify-center items-center">
                     <figure className="">
                         <Image
                             src="/assets/image/mangrove honey.jpg"
@@ -30,7 +30,7 @@ export default function HeroSection() {
                 </div>
 
                 {/*right button section */}
-                <div className="lg:col-span-3 relative  border border-black/10 dark:border-white/10 shadow-sm rounded-br-xl overflow-hidden flex justify-center items-center">
+                <div className="lg:col-span-3 relative  border border-black/10 dark:border-white/10 shadow-sm rounded-br-sm overflow-hidden flex justify-center items-center">
                     <figure className="w-full">
                         <Image
                             src="/assets/image/mangrove Fish.png"
@@ -74,7 +74,7 @@ export default function HeroSection() {
     );
 }
 
-const otherInfo: OuterInfoType[] = [
+const otherInfo: Feature[] = [
     {
         id: '1',
         icon: <BsFilterSquare />,
