@@ -25,14 +25,14 @@ export interface Feature {
  */
 export interface SliderContent {
     /**
+     * The unique identifier for the item.
+     */
+    id: string | number;
+
+    /**
      * The URL of the item's image.
      */
     imgUrl: string;
-
-    /**
-     * The unique identifier for the item.
-     */
-    id: string;
 
     /**
      * The name of the item.

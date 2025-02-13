@@ -115,27 +115,27 @@ function SamplePrevArrow({ className, style, onClick }: NextArrowProps) {
 const sliderContent: SliderContent[] = [
     {
         imgUrl: '/assets/image/mangrove picture.jpg',
-        id: crypto.randomUUID(),
+        id: 1,
         name: 'Mangrove Picture',
     },
     {
         imgUrl: '/assets/image/mangrove Fish.png',
-        id: crypto.randomUUID(),
+        id: 2,
         name: 'Mangrove fish',
     },
     {
         imgUrl: '/assets/image/mangrove fish2.jpg',
-        id: crypto.randomUUID(),
+        id: 3,
         name: 'Mangrove fish 1',
     },
     {
         imgUrl: '/assets/image/mangrove honey 1.jpg',
-        id: crypto.randomUUID(),
+        id: 4,
         name: 'Mangrove honey 1',
     },
     {
         imgUrl: '/assets/image/mangrove honey.jpg',
-        id: crypto.randomUUID(),
+        id: 5,
         name: 'Mangrove honey ',
     },
 ];
