@@ -1,7 +1,7 @@
 'use client';
 
 import { sliderContent } from '@/db/home/sliderContent';
-import { NextArrowProps, SliderContent } from '@/types/home';
+import { SliderContent } from '@/types/home';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -111,4 +111,27 @@ function SamplePrevArrow({ className, style, onClick }: NextArrowProps) {
             next
         </div>
     );
+}
+
+/**
+ * The `NextArrowProps` interface defines the properties for the next arrow button in a slider or carousel component.
+ * - `className`: An optional CSS class name to style the arrow.
+ * - `style`: Optional inline CSS styles applied to the arrow element.
+ * - `onClick`: An optional click handler function that triggers when the arrow is clicked.
+ */
+export interface NextArrowProps {
+    /**
+     * Optional CSS class for styling the arrow.
+     */
+    className?: string;
+
+    /**
+     * Optional inline styles for the arrow element.
+     */
+    style?: React.CSSProperties;
+
+    /**
+     * Optional function triggered on arrow click.
+     */
+    onClick?: () => void; //
 }
