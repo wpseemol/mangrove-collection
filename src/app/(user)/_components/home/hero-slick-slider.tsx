@@ -1,5 +1,6 @@
 'use client';
 
+import { sliderContent } from '@/db/home/sliderContent';
 import { NextArrowProps, SliderContent } from '@/types/home';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
@@ -8,7 +9,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 
-export default function HeroSlider() {
+export default function HeroSlickSlider() {
     const [currentIndex, setCurrentIndex] = useState(0);
 
     const settings = {
@@ -111,31 +112,3 @@ function SamplePrevArrow({ className, style, onClick }: NextArrowProps) {
         </div>
     );
 }
-
-const sliderContent: SliderContent[] = [
-    {
-        imgUrl: '/assets/image/mangrove picture.jpg',
-        id: 1,
-        name: 'Mangrove Picture',
-    },
-    {
-        imgUrl: '/assets/image/mangrove Fish.png',
-        id: 2,
-        name: 'Mangrove fish',
-    },
-    {
-        imgUrl: '/assets/image/mangrove fish2.jpg',
-        id: 3,
-        name: 'Mangrove fish 1',
-    },
-    {
-        imgUrl: '/assets/image/mangrove honey 1.jpg',
-        id: 4,
-        name: 'Mangrove honey 1',
-    },
-    {
-        imgUrl: '/assets/image/mangrove honey.jpg',
-        id: 5,
-        name: 'Mangrove honey ',
-    },
-];
