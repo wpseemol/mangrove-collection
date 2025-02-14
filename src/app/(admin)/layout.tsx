@@ -1,11 +1,6 @@
 import React from 'react';
 
-/**
- * Meta is not need here Root Already has.
- *
- */
-
-export default function UserLayout({
+export default function AuthenticationLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
