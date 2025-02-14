@@ -1,4 +1,5 @@
 import CustomLink from '@/components/custom-link';
+import { MenuItem } from '@/types/home';
 import Link from 'next/link';
 import CategoryMenus from './category-menus';
 
@@ -44,7 +45,7 @@ export function NavMenu() {
  *
  */
 
-const menuArray: MenuType[] = [
+const menuArray: MenuItem[] = [
     { id: 'category', href: '#', label: 'Category' },
     { id: 'products', href: '/products', label: 'products' },
     { id: 'contact', href: '/#contact', label: 'contact' },

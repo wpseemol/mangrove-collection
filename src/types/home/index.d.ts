@@ -39,3 +39,26 @@ export interface SliderContent {
      */
     name: string;
 }
+
+/**
+ * Interface definition for a single menu item
+ */
+export interface MenuItem {
+    /**
+     * - `id` type `string` `number`
+     * Unique identifier for the menu item
+     */
+    id: string | number;
+
+    /**
+     * - `href` type `string`
+     * The URL or anchor link for the menu item
+     */
+    href: string;
+
+    /**
+     * - `label` type `string`
+     * The display label text for the menu item
+     */
+    label: string;
+}
