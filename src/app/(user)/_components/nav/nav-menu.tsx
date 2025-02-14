@@ -1,5 +1,6 @@
 import CustomLink from '@/components/custom-link';
-import { MenuItem } from '@/types/home';
+
+import { MenuItem } from '@/types/nav';
 import Link from 'next/link';
 import CategoryMenus from './category-menus';
 
