@@ -45,20 +45,23 @@ export interface SliderContent {
  */
 export interface MenuItem {
     /**
-     * - `id` type `string` `number`
-     * Unique identifier for the menu item
+     * Unique identifier for the menu item.
+     *
+     * - Type: `string | number`
      */
     id: string | number;
 
     /**
-     * - `href` type `string`
-     * The URL or anchor link for the menu item
+     * The URL or anchor link for the menu item.
+     *
+     * - Type: `string`
      */
     href: string;
 
     /**
-     * - `label` type `string`
-     * The display label text for the menu item
+     * The display label text for the menu item.
+     *
+     * - Type: `string`
      */
     label: string;
 }

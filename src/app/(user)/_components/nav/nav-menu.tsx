@@ -38,13 +38,6 @@ export function NavMenu() {
     );
 }
 
-/**
- * neu array can update
- *
- *
- *
- */
-
 const menuArray: MenuItem[] = [
     { id: 'category', href: '#', label: 'Category' },
     { id: 'products', href: '/products', label: 'products' },
