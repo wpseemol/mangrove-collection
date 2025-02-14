@@ -1,5 +1,5 @@
 import { Card } from '@/components/ui/card';
-import { OuterInfoType } from '@/types/home';
+import { Feature } from '@/types/home';
 import Image from 'next/image';
 import { BsFilterSquare } from 'react-icons/bs';
 import { ImWhatsapp } from 'react-icons/im';
@@ -8,31 +8,29 @@ import HeroSlider from './hero-slider';
 
 export default function HeroSection() {
     return (
-        <section className="md:min-h-[calc(100vh-8.5rem)] container mx-auto flex flex-col justify-center md:py-10 py-5 ">
+        <section className=" container mx-auto flex flex-col justify-center md:py-10 pb-5 ">
             {/* hero slider section */}
-            <div className="grid md:grid-cols-3 grid-cols-2 md:gap-4 gap-2 2xl:h-[515px] lg:h-[450px] p-2 md:p-0">
-                <div
-                    className="md:col-span-2 col-span-2 md:row-span-2 border relative md:h-full
-                    sm:h-[300px] h-[200px]  border-black/10 dark:border-white/10 shadow-sm md:rounded-l-sm overflow-hidden">
-                    {/* slider section */}
+            <div className="grid grid-cols-2 lg:grid-cols-10 gap-3 lg:gap-6 p-3 md:p-0 2xl:h-[515px] lg:h-[450px]">
+                {/* slider section */}
+                <div className="lg:row-span-2 col-span-2 lg:col-span-7 border border-black/10 dark:border-white/80 shadow-sm lg:rounded-l-sm">
                     <HeroSlider />
                 </div>
-                {/* top section */}
-                <div className="md:col-span-1 col-span-1 border border-black/10 dark:border-white/10 shadow-sm rounded-tr-sm overflow-hidden flex justify-center items-center">
+                {/* right top section */}
+                <div className="lg:col-span-3 relative flex overflow-hidden justify-center items-center border border-black/10 dark:border-white/10 shadow-sm lg:rounded-tr-sm">
                     <figure className="">
                         <Image
                             src="/assets/image/mangrove honey.jpg"
                             alt="Honey Collection"
                             className="object-cover object-center w-full h-auto hover:scale-105 duration-200"
-                            width={400}
-                            height={245}
+                            width={501}
+                            height={300}
                         />
                     </figure>
                 </div>
 
                 {/*right button section */}
-                <div className="md:col-span-1 col-span-1 relative  border border-black/10 dark:border-white/10 shadow-sm rounded-br-sm overflow-hidden flex justify-center items-center">
-                    <figure className="w-full">
+                <div className="lg:col-span-3 relative  border border-black/10 dark:border-white/10 shadow-sm lg:rounded-br-sm overflow-hidden flex justify-center items-center">
+                    <figure className="">
                         <Image
                             src="/assets/image/mangrove Fish.png"
                             alt="Mangrove Fish"
@@ -75,7 +73,7 @@ export default function HeroSection() {
     );
 }
 
-const otherInfo: OuterInfoType[] = [
+const otherInfo: Feature[] = [
     {
         id: '1',
         icon: <BsFilterSquare />,

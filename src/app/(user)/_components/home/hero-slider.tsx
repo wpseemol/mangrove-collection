@@ -74,7 +74,7 @@ function CustomSlide({ slidItem }: { slidItem: SliderContent }) {
                     }}
                     className="w-full h-full">
                     <Image
-                        className="object-cover object-center w-full h-auto"
+                        className="object-cover object-center w-full 2xl:h-[515px] lg:h-[450px]"
                         src={slidItem.imgUrl}
                         alt={slidItem.name}
                         width={965}
