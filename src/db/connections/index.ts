@@ -1,6 +1,6 @@
 import mongoose, { Mongoose } from 'mongoose';
 
-const MONGODB_URI: string = process.env.NEXT_PUBLIC_MONGODB_CONNECT_URL!;
+const MONGODB_URI: string = process.env.MONGODB_CONNECT_URL!;
 
 const cached: {
     connection?: Mongoose;
