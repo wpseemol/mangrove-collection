@@ -6,7 +6,6 @@ import { Category } from '@/types/home';
  * getCategory function return
  * @returns `Category[] | null`
  */
-
 export async function getCategory(): Category[] | null {
     try {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL!;
