@@ -1,11 +1,15 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { CardProductType } from '@/types/product';
+import { CardProductType, PriceType } from '@/types/product';
 import Image from 'next/image';
 import Link from 'next/link';
+import { CurrencyIcon } from './currency-icon';
 import { Button } from './ui/button';
 
 export default function ProductCard({ details }: { details: CardProductType }) {
-    // const displayPrice = details.price.find((item) => item.select);
+    /**
+     * selected price show.
+     */
+    const displayPrice = details.price.find((item: PriceType) => item.select);
 
     /**
      * image url random change every reload.
@@ -52,24 +56,26 @@ export default function ProductCard({ details }: { details: CardProductType }) {
                                 {details.name.toLocaleLowerCase()}
                             </h2>
 
-                            {/* <p className="font-medium flex justify-center items-center gap-x-1 mb-2">
-                                {displayPrice?.price.toFixed(2)}{' '}
-                                <CurrencyIcon currency={details.currency} />
-                            </p> */}
+                            {displayPrice && (
+                                <p className="font-medium flex justify-center items-center gap-x-1 mb-2">
+                                    {displayPrice.price.toFixed(2)}{' '}
+                                    <CurrencyIcon currency={details.currency} />
+                                </p>
+                            )}
                         </div>
                     </Link>
                     <div className="sm:absolute group-hover:bottom-0 left-0 -bottom-20 flex justify-center items-center gap-x-2 w-full duration-700 backdrop-blur bg-green-700/5 border-t sm:p-4 p-3">
                         <Button
                             variant="default"
                             size="sm"
-                            className="text-neutral-100 hover:bg-primary-foreground px-3 ">
+                            className="text-neutral-100 hover:bg-primary-foreground ">
                             <span className="hidden sm:inline">Buy Now</span>
                             <span className="sm:hidden">Buy</span>
                         </Button>{' '}
                         <Button
                             variant="default"
                             size="sm"
-                            className="text-neutral-100 hover:bg-primary-foreground px-3">
+                            className="text-neutral-100 hover:bg-primary-foreground">
                             <span className="hidden sm:inline">
                                 Add to Cart
                             </span>

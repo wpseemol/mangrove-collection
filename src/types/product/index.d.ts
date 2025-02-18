@@ -13,11 +13,12 @@ export interface CardProductType {
     category: string | number;
     images: Image[];
     thumbnail: string;
+    price: PriceType[];
     /*
    
     unit: string;
     size: string;
-    price: PriceType[];
+    
 
     */
 }
