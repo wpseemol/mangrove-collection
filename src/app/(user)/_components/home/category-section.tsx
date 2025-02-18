@@ -19,11 +19,7 @@ export default async function CategorySection() {
 
             {categories && (
                 <div
-                    className={`${
-                        categories.length <= 7
-                            ? 'md:flex justify-center items-center flex-wrap grid'
-                            : 'grid 2xl:grid-cols-8 xl:grid-cols-6 lg:grid-cols-5 items-center'
-                    } grid-cols-4 md:gap-2 gap-1 mt-5`}>
+                    className={`grid grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-x-2 gap-y-2 md:gap-y-5 mt-10`}>
                     {categories.map((category: Category) => {
                         return (
                             <Card

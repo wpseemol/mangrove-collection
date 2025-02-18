@@ -1,3 +1,5 @@
+import { Types } from 'mongoose';
+
 interface Price {
     variantId: string;
     price: number;

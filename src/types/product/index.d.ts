@@ -5,15 +5,21 @@
 export interface CardProductType {
     id: string | number;
     name: string;
+    slug: string;
 
     /**
      * category: category _id keep here
      */
     category: string | number;
-    slug: string;
+    images: Image[];
+    thumbnail: string;
+    /*
+   
     unit: string;
     size: string;
     price: PriceType[];
+
+    */
 }
 
 /**
@@ -37,4 +43,14 @@ export interface PriceType {
      * Indicates if the variant is selected.
      */
     select: boolean;
+}
+
+/**
+ * `Image` interface is type of Image
+ * - `id` string and number.
+ * - `imgUrl` string.
+ */
+export interface Image {
+    id: string | number;
+    imgUrl: string;
 }
