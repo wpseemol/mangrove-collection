@@ -1,5 +1,5 @@
 import { connectMongoDB } from '@/db/connections';
-import { Category } from '@/db/schemas/mongoose/category';
+import { Category } from '@/lib/schemas/mongoose/category';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
