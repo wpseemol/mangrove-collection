@@ -10,6 +10,7 @@ export interface CardProductType {
     images: Image[];
     thumbnail: string;
     price: PriceType[];
+    currency: string;
 }
 
 /**

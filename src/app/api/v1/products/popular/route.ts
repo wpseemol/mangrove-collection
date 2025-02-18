@@ -1,12 +1,13 @@
 import { connectMongoDB } from '@/db/connections';
 import { Product } from '@/lib/schemas/mongoose/product';
+import { SortOrder } from 'mongoose';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
     try {
         await connectMongoDB();
 
-        const sortOption = { popularity: -1 };
+        const sortOption: { [key: string]: SortOrder } = { popularity: -1 };
         const limitOption = 10;
         const showColumns = 'name slug images thumbnail currency price';
         // '';
