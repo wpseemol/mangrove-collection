@@ -8,9 +8,8 @@ export async function GET() {
 
         const sortOption = { popularity: -1 };
         const limitOption = 10;
-        const showColumns =
-            'name slug category images thumbnail currency price';
-        // '  offer   unit   shortDescription';
+        const showColumns = 'name slug images thumbnail currency price';
+        // '';
 
         const response = await Product.find({}, showColumns)
             .sort(sortOption)

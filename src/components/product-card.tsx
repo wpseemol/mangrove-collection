@@ -51,25 +51,27 @@ export default function ProductCard({ details }: { details: CardProductType }) {
                                 />
                             )}
                         </figure>
-                        <div className="animate-fade-up animate-once animate-duration-1000 sm:min-h-[90px] sm:max-h-[130px] max-h-[76px] w-full px-2 mt-1 flex flex-col items-center">
+                        <div className="animate-fade-up animate-once animate-duration-1000 w-full px-2 mt-1 flex flex-col items-center">
                             <h2 className="max-h-[63px] overflow-hidden font-normal md:text-lg text-base text-ellipsis text-center group-hover:text-primary-foreground capitalize group-hover:underline duration-150">
                                 {details.name.toLocaleLowerCase()}
                             </h2>
 
                             {displayPrice && (
-                                <p className="font-medium flex justify-center items-center gap-x-1 mb-2">
+                                <p className="font-normal flex justify-center items-center gap-x-1 ">
                                     {displayPrice.price.toFixed(2)}{' '}
                                     <CurrencyIcon currency={details.currency} />
                                 </p>
                             )}
                         </div>
                     </Link>
-                    <div className="sm:absolute group-hover:bottom-0 left-0 -bottom-20 flex justify-center items-center gap-x-2 w-full duration-700 backdrop-blur bg-green-700/5 border-t sm:p-4 p-3">
+                    <div className="  flex justify-center items-center gap-x-2 w-full duration-700   sm:p-4 p-3">
                         <Button
                             variant="default"
                             size="sm"
-                            className="text-neutral-100 hover:bg-primary-foreground ">
-                            <span className="hidden sm:inline">Buy Now</span>
+                            className="text-neutral-100 hover:bg-primary-foreground 
+                            group-hover:animate-jump animate-once animate-duration-[3000ms]
+                            shadow-xl">
+                            <span className="hidden sm:inline ">Buy Now</span>
                             <span className="sm:hidden">Buy</span>
                         </Button>{' '}
                         <Button

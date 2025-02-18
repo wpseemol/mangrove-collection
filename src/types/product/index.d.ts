@@ -7,20 +7,9 @@ export interface CardProductType {
     name: string;
     slug: string;
 
-    /**
-     * category: category _id keep here
-     */
-    category: string | number;
     images: Image[];
     thumbnail: string;
     price: PriceType[];
-    /*
-   
-    unit: string;
-    size: string;
-    
-
-    */
 }
 
 /**
