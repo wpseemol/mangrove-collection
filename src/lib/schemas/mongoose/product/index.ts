@@ -1,7 +1,7 @@
-import { Product } from '@/types/mongoose/product';
+import { ProductType } from '@/types/mongoose/product';
 import mongoose from 'mongoose';
 
-interface IProduct extends Product, mongoose.Document {}
+interface IProduct extends ProductType, mongoose.Document {}
 
 const productSchema = new mongoose.Schema<IProduct>({
     name: {

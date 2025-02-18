@@ -17,7 +17,7 @@ interface Variant {
     title: string;
 }
 
-export interface Product {
+export interface ProductType {
     _id?: Types.ObjectId;
     name: string;
     category: Types.ObjectId;
