@@ -1,24 +1,12 @@
 import { Card } from '@/components/ui/card';
+import { getCategory } from '@/server/category';
 import { Category } from '@/types/home';
 import Image from 'next/image';
 import Link from 'next/link';
 import HomeTitle from './home-title';
 
 export default async function CategorySection() {
-    let categories: Category[] | null = null;
-
-    try {
-        const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}api/v1/category`
-        );
-
-        if (response.ok) {
-            const { data } = await response.json();
-            categories = data;
-        }
-    } catch (error) {
-        console.error('category fetch:', error);
-    }
+    const categories = await getCategory();
 
     return (
         <section className="container mx-auto md:pb-10 pb-5 px-2 md:px-0">
