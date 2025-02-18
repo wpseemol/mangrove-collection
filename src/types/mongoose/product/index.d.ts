@@ -1,5 +1,3 @@
-import { Types } from 'mongoose';
-
 interface Price {
     variantId: string;
     price: number;
@@ -18,7 +16,6 @@ interface Variant {
 }
 
 export interface ProductType {
-    _id?: Types.ObjectId;
     name: string;
     category: Types.ObjectId;
     slug: string;

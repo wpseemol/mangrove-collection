@@ -11,9 +11,12 @@ export async function GET() {
         await connectMongoDB();
 
         const showColumns = 'name slug imgUrl';
-        const responseData = await Category.find({}, showColumns).lean();
+        const response = await Category.find({}, showColumns).lean();
 
-        const categories = responseData.map((item) => {
+        /**
+         * Array to mongodb `_id` replace `id`
+         */
+        const categories = response.map((item) => {
             const { _id, ...rest } = item;
             return {
                 id: _id,

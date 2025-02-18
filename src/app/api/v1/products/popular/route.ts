@@ -6,12 +6,31 @@ export async function GET() {
     try {
         await connectMongoDB();
 
-        const response = await Product.find({}).lean();
+        const sortOption = { popularity: -1 };
+        const limitOption = 10;
+        const showColumns = 'name';
+        // 'name slug offer images currency price unit thumbnail category shortDescription';
+
+        const response = await Product.find({}, showColumns)
+            .sort(sortOption)
+            .limit(limitOption)
+            .lean();
+
+        /**
+         * Array to mongodb `_id` replace `id`
+         */
+        const popularProducts = response.map((item) => {
+            const { _id, ...rest } = item;
+            return {
+                id: _id,
+                ...rest,
+            };
+        });
 
         return NextResponse.json(
             {
                 message: 'Popular Product get successful.',
-                data: response,
+                data: popularProducts,
             },
             {
                 status: 200,
