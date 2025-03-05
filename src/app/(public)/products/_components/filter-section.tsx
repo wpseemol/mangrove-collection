@@ -160,4 +160,7 @@ export default function FilterSection({
     );
 }
 
-const sizeArray: string[] = ['xs', 's', 'm', 'l', 'xl'];
+/**
+ * `sizeArray` ['xs', 's', 'm', 'l', 'xl']
+ */
+export const sizeArray: string[] = ['xs', 's', 'm', 'l', 'xl'];

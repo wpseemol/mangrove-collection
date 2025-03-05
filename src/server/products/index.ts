@@ -1,12 +1,22 @@
 'use server';
 
 import { CardProductType } from '@/types/product';
+import { revalidatePath } from 'next/cache';
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL!;
 
 export async function getProducts(searchParams) {
     try {
-        console.log(searchParams);
+        const response = await fetch(
+            `${baseUrl}api/v1/products${searchParams}`
+        );
+
+        if (response.ok) {
+            const { data } = await response.json();
+            revalidatePath('/products');
+
+            return data;
+        }
 
         return null;
     } catch (error) {

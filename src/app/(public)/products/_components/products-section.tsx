@@ -1,3 +1,4 @@
+import { getCategoryMongoId } from '@/server/category';
 import { getProducts } from '@/server/products';
 import { FilterSearchParamType } from '@/types/product';
 
@@ -6,17 +7,33 @@ export default async function ProductsSection({
 }: {
     searchParams: FilterSearchParamType;
 }) {
-    // const { category, price, size } = searchParams;
+    const { category, ...rest } = searchParams;
 
-    // let categoryIds: string[] | null = null;
+    let categoryIds: string | null = null;
 
-    // if (category) {
-    //     categoryIds = await getCategoryMongoId(`?category=${category}`);
-    // }
+    let paramsData = { ...rest };
 
-    const params = new URLSearchParams(searchParams);
+    if (category) {
+        const categoryIdArray = await getCategoryMongoId(
+            `?category=${category}`
+        );
+        if (categoryIdArray) {
+            categoryIds = categoryIdArray.join('|');
+            paramsData = {
+                ...paramsData,
+                category: categoryIds,
+            };
+        }
+    }
 
-    await getProducts(`?${params.toString()}`);
+    const params = new URLSearchParams(paramsData);
 
-    return <div>Products</div>;
+    const products = await getProducts(`?${params.toString()}`);
+
+    return (
+        <div>
+            Products
+            <p>{JSON.stringify(products)}</p>
+        </div>
+    );
 }
