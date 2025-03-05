@@ -1,6 +1,6 @@
 'use server';
 
-import { Category } from '@/types/home';
+import { Category, CategoryWithCount } from '@/types/home';
 
 /**
  * getCategory function return
@@ -10,6 +10,29 @@ export async function getCategory(): Promise<Category[] | null> {
     try {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL!;
         const response = await fetch(`${baseUrl}api/v1/category`);
+
+        if (response.ok) {
+            const { data } = await response.json();
+            return data;
+        }
+
+        return null;
+    } catch (error) {
+        console.error('category fetch:', error);
+        return null;
+    }
+}
+
+/**
+ * getCategoryWithCount function return
+ * @returns `CategoryWithCount[] | null`
+ */
+export async function getCategoryWithCount(): Promise<
+    CategoryWithCount[] | null
+> {
+    try {
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL!;
+        const response = await fetch(`${baseUrl}api/v1/category-with-count`);
 
         if (response.ok) {
             const { data } = await response.json();

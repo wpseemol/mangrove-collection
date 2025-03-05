@@ -1,11 +1,12 @@
 'use client';
 
+import { CategoryWithCount } from '@/types/home';
 import useFilterSection from './use-filter-section';
 
 export default function FilterSection({
-    allCategory,
+    categoryWithCount: categoryWithCount,
 }: {
-    allCategory: CategoryType;
+    categoryWithCount: CategoryWithCount[] | null;
 }) {
     const {
         handelChange,
@@ -23,37 +24,43 @@ export default function FilterSection({
                         Categories
                     </h3>
                     <div className="space-y-2">
-                        {allCategory?.map((category) => {
-                            const { id, name, slug, productCount } =
-                                category as CategoryWithCountType;
-                            return (
-                                <div
-                                    key={id}
-                                    className="flex items-center capitalize">
-                                    <input
-                                        onChange={(event) =>
-                                            handelChange(event, 'categories')
-                                        }
-                                        checked={selectCategory?.includes(slug)}
-                                        type="checkbox"
-                                        name={slug}
-                                        id={slug}
-                                        className="text-primary focus:ring-0 rounded-sm cursor-pointer"
-                                    />
-                                    <label
-                                        id={slug}
-                                        htmlFor={slug}
-                                        className="text-gray-600 dark:text-neutral-300 ml-3 cursor-pointer">
-                                        <span className="capitalize">
-                                            {name?.toLowerCase()}
-                                        </span>
-                                    </label>
-                                    <div className="ml-auto text-gray-600 dark:text-neutral-300 text-sm">
-                                        ({productCount})
+                        {categoryWithCount &&
+                            categoryWithCount.map((category) => {
+                                const { id, name, slug, productCount } =
+                                    category as CategoryWithCountType;
+                                return (
+                                    <div
+                                        key={id}
+                                        className="flex items-center capitalize">
+                                        <input
+                                            onChange={(event) =>
+                                                handelChange(
+                                                    event,
+                                                    'categories'
+                                                )
+                                            }
+                                            checked={selectCategory?.includes(
+                                                slug
+                                            )}
+                                            type="checkbox"
+                                            name={slug}
+                                            id={slug}
+                                            className="text-primary focus:ring-0 rounded-sm cursor-pointer"
+                                        />
+                                        <label
+                                            id={slug}
+                                            htmlFor={slug}
+                                            className="text-gray-600 dark:text-neutral-300 ml-3 cursor-pointer">
+                                            <span className="capitalize">
+                                                {name?.toLowerCase()}
+                                            </span>
+                                        </label>
+                                        <div className="ml-auto text-gray-600 dark:text-neutral-300 text-sm">
+                                            ({productCount})
+                                        </div>
                                     </div>
-                                </div>
-                            );
-                        })}
+                                );
+                            })}
                     </div>
                 </div>
 

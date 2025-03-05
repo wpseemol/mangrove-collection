@@ -6,8 +6,12 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { getCategoryWithCount } from '@/server/category';
+import FilterSection from './_components/filter-section';
 
-export default function ProductPage() {
+export default async function ProductPage() {
+    const categoryWithCount = await getCategoryWithCount();
+
     return (
         <main className="container mx-auto">
             {/* breadcrumb Product page*/}
@@ -26,6 +30,7 @@ export default function ProductPage() {
 
             <section className="grid lg:grid-cols-5 md:grid-cols-4 grid-cols-1 gap-6 pt-4 pb-16 items-start justify-center sm:mx-auto mx-2 ">
                 {/* filter section */}
+                <FilterSection categoryWithCount={categoryWithCount} />
             </section>
         </main>
     );

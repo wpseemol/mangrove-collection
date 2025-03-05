@@ -68,3 +68,19 @@ export interface Category {
     slug: string;
     imgUrl: string;
 }
+
+/**
+ * Represents a product category with an ID, name, slug, and an image URL.
+ *
+ * @interface Category
+ * @property {string | number} id - The unique identifier for the category. It can be either a string or a number.
+ * @property {string} name - The name of the category.
+ * @property {string} slug - The URL-friendly identifier for the category, typically used in web URLs.
+ * @property {number} productCount - Product total count.
+ */
+export interface CategoryWithCount {
+    id: string | number;
+    name: string;
+    slug: string;
+    productCount: number;
+}
