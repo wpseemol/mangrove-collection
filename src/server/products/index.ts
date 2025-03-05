@@ -5,7 +5,9 @@ import { revalidatePath } from 'next/cache';
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL!;
 
-export async function getProducts(searchParams) {
+export async function getProducts(
+    searchParams = ''
+): Promise<CardProductType[] | null> {
     try {
         const response = await fetch(
             `${baseUrl}api/v1/products${searchParams}`

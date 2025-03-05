@@ -42,7 +42,7 @@ export default function FilterSection({
                         {categoryWithCountArray &&
                             categoryWithCountArray.map((category) => {
                                 const { id, name, slug, productCount } =
-                                    category as CategoryWithCountType;
+                                    category as CategoryWithCount;
                                 return (
                                     <div
                                         key={id}

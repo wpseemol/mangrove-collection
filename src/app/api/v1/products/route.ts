@@ -1,4 +1,5 @@
 import { connectMongoDB } from '@/db/connections';
+import { Category } from '@/lib/schemas/mongoose/category';
 import { Product } from '@/lib/schemas/mongoose/product';
 import { replaceMongoIds } from '@/utils/replace-mongo-Ids';
 import { NextRequest, NextResponse } from 'next/server';
@@ -59,12 +60,16 @@ export async function GET(request: NextRequest) {
             };
         }
 
-        const showField = 'name';
+        const showField =
+            'name slug images thumbnail shortDescription currency price';
 
-        const mongodbResponse = await Product.find(
-            findOption,
-            showField
-        ).lean();
+        const mongodbResponse = await Product.find(findOption, showField)
+            .populate({
+                path: 'category',
+                model: Category,
+                select: 'name slug',
+            })
+            .lean();
 
         const products = replaceMongoIds(mongodbResponse);
 

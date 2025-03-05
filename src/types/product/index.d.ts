@@ -11,6 +11,11 @@ export interface CardProductType {
     thumbnail: string;
     price: PriceType[];
     currency: string;
+    shortDescription: string; // Added this field
+    category: {
+        name: string; // Added this field
+        slug: string; // Added this field
+    };
 }
 
 /**
