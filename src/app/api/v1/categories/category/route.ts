@@ -1,28 +1,28 @@
 import { connectMongoDB } from '@/db/connections';
-import { Product } from '@/lib/schemas/mongoose/product';
+import { Category } from '@/lib/schemas/mongoose/category';
 import { replaceMongoIds } from '@/utils/replace-mongo-Ids';
-import { SortOrder } from 'mongoose';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
     try {
+        /**
+         * connect mongodb use mongoose.
+         */
+
         await connectMongoDB();
 
-        const sortOption: { [key: string]: SortOrder } = { createdAt: -1 };
-        const limitOption = 6;
-        const showColumns = 'name slug images thumbnail currency price';
+        const showColumns = 'name slug imgUrl';
+        const mongodbResponse = await Category.find({}, showColumns).lean();
 
-        const response = await Product.find({}, showColumns)
-            .sort(sortOption)
-            .limit(limitOption)
-            .lean();
-
-        const newArrivalProducts = replaceMongoIds(response);
+        /**
+         * Array to mongodb `_id` replace `id`
+         */
+        const categories = replaceMongoIds(mongodbResponse);
 
         return NextResponse.json(
             {
-                message: 'Product get successful.',
-                data: newArrivalProducts,
+                message: 'Get category successful.',
+                data: categories,
             },
             { status: 200 }
         );

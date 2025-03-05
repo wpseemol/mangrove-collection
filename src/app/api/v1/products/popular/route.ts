@@ -1,6 +1,6 @@
 import { connectMongoDB } from '@/db/connections';
 import { Product } from '@/lib/schemas/mongoose/product';
-import { replaceMongoIds } from '@/utils/mongodb-array-id-remove';
+import { replaceMongoIds } from '@/utils/replace-mongo-Ids';
 import { SortOrder } from 'mongoose';
 import { NextResponse } from 'next/server';
 

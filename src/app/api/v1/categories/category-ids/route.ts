@@ -1,8 +1,8 @@
 import { connectMongoDB } from '@/db/connections';
 import { Category } from '@/lib/schemas/mongoose/category';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
     try {
         /**
          * connect mongodb use mongoose.
@@ -10,24 +10,34 @@ export async function GET() {
 
         await connectMongoDB();
 
-        const showColumns = 'name slug imgUrl';
-        const response = await Category.find({}, showColumns).lean();
+        let slugArray: string[] = [];
+        const searchParams = request.nextUrl.searchParams;
+        const query = searchParams.get('category');
+
+        if (query) {
+            const decodedCategory = decodeURI(query);
+            slugArray = decodedCategory.split('|');
+        }
+
+        const showColumns = '_id';
+        const mongodbResponse = await Category.find(
+            {
+                slug: { $in: slugArray },
+            },
+            showColumns
+        ).lean();
 
         /**
          * Array to mongodb `_id` replace `id`
          */
-        const categories = response.map((item) => {
-            const { _id, ...rest } = item;
-            return {
-                id: _id,
-                ...rest,
-            };
-        });
+        const categoriesIds = mongodbResponse.map(
+            (categoryId) => categoryId._id
+        );
 
         return NextResponse.json(
             {
                 message: 'Get category successful.',
-                data: categories,
+                data: categoriesIds,
             },
             { status: 200 }
         );
