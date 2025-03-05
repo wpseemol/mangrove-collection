@@ -41,6 +41,12 @@ export interface SliderContent {
     imgUrl: string;
 
     /**
+     * Product url
+     * - type: string
+     */
+    url: string;
+
+    /**
      * The name of the item.
      * - type: string
      */

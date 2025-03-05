@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import HeroSlickSlider from './hero-slick-slider';
 
 export default function HeroSection() {
@@ -13,27 +14,31 @@ export default function HeroSection() {
                 </div>
                 {/* right top section */}
                 <div className="lg:col-span-3 relative flex overflow-hidden justify-center items-center border border-black/10 dark:border-white/10 shadow-sm lg:rounded-tr-sm">
-                    <figure className="">
-                        <Image
-                            src="/assets/image/mangrove honey.jpg"
-                            alt="Honey Collection"
-                            className="object-cover object-center w-full h-auto hover:scale-105 duration-200 lg:w-min-[345px] lg:h-min-[215px] 2xl:w-min-[410px] 2xl:h-min-[245px]"
-                            width={501}
-                            height={300}
-                        />
-                    </figure>
+                    <Link href={'#product1'}>
+                        <figure className="">
+                            <Image
+                                src="/assets/image/mangrove honey.jpg"
+                                alt="Honey Collection"
+                                className="object-cover object-center w-full h-auto hover:scale-105 duration-200 lg:w-min-[345px] lg:h-min-[215px] 2xl:w-min-[410px] 2xl:h-min-[245px]"
+                                width={501}
+                                height={300}
+                            />
+                        </figure>
+                    </Link>
                 </div>
                 {/*right button section */}
                 <div className="lg:col-span-3 relative  border border-black/10 dark:border-white/10 shadow-sm lg:rounded-br-sm overflow-hidden flex justify-center items-center">
-                    <figure className="">
-                        <Image
-                            src="/assets/image/mangrove Fish.png"
-                            alt="Mangrove Fish"
-                            className="object-cover object-center hover:scale-105 duration-200 lg:w-min-[345px] lg:h-min-[215px] 2xl:w-min-[410px] 2xl:h-min-[245px]"
-                            width={400}
-                            height={245}
-                        />
-                    </figure>
+                    <Link href={'#product2'}>
+                        <figure className="">
+                            <Image
+                                src="/assets/image/mangrove Fish.png"
+                                alt="Mangrove Fish"
+                                className="object-cover object-center hover:scale-105 duration-200 lg:w-min-[345px] lg:h-min-[215px] 2xl:w-min-[410px] 2xl:h-min-[245px]"
+                                width={400}
+                                height={245}
+                            />
+                        </figure>
+                    </Link>
                 </div>
             </div>
             {/* hero slider section */}
