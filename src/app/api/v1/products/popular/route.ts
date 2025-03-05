@@ -1,5 +1,6 @@
 import { connectMongoDB } from '@/db/connections';
 import { Product } from '@/lib/schemas/mongoose/product';
+import { replaceMongoIds } from '@/utils/mongodb-array-id-remove';
 import { SortOrder } from 'mongoose';
 import { NextResponse } from 'next/server';
 
@@ -16,16 +17,7 @@ export async function GET() {
             .limit(limitOption)
             .lean();
 
-        /**
-         * Array to mongodb `_id` replace `id`
-         */
-        const popularProducts = response.map((item) => {
-            const { _id, ...rest } = item;
-            return {
-                id: _id,
-                ...rest,
-            };
-        });
+        const popularProducts = replaceMongoIds(response);
 
         return NextResponse.json(
             {
