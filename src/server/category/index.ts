@@ -27,12 +27,14 @@ export async function getCategory(): Promise<Category[] | null> {
  * getCategoryWithCount function return
  * @returns `CategoryWithCount[] | null`
  */
-export async function getCategoryWithCount(): Promise<
-    CategoryWithCount[] | null
-> {
+export async function getCategoryWithCount(
+    limit = ''
+): Promise<CategoryWithCount[] | null> {
     try {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL!;
-        const response = await fetch(`${baseUrl}api/v1/category-with-count`);
+        const response = await fetch(
+            `${baseUrl}api/v1/category-with-count${limit}`
+        );
 
         if (response.ok) {
             const { data } = await response.json();

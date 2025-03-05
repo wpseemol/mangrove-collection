@@ -1,6 +1,9 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
+import { getCategoryWithCount } from '@/server/category';
 import { CategoryWithCount } from '@/types/home';
+import { useState } from 'react';
 import useFilterSection from './use-filter-section';
 
 export default function FilterSection({
@@ -16,6 +19,18 @@ export default function FilterSection({
         clickToRemoveSize,
     } = useFilterSection();
 
+    const [categoryWithCountArray, setCategoryWithCountArray] =
+        useState(categoryWithCount);
+
+    const [isShow, setIsShow] = useState(false);
+
+    async function handelShow() {
+        setIsShow((prev) => !prev);
+        setCategoryWithCountArray(
+            await getCategoryWithCount(isShow ? '?limit=5' : '')
+        );
+    }
+
     return (
         <div className="col-span-1 content-center bg-white dark:bg-transparent dark:text-neutral-200 px-4 pb-6 shadow rounded overflow-hidden w-fit mx-auto">
             <div className="divide-y divide-gray-200 space-y-5 ">
@@ -24,8 +39,8 @@ export default function FilterSection({
                         Categories
                     </h3>
                     <div className="space-y-2">
-                        {categoryWithCount &&
-                            categoryWithCount.map((category) => {
+                        {categoryWithCountArray &&
+                            categoryWithCountArray.map((category) => {
                                 const { id, name, slug, productCount } =
                                     category as CategoryWithCountType;
                                 return (
@@ -61,6 +76,14 @@ export default function FilterSection({
                                     </div>
                                 );
                             })}
+
+                        <Button
+                            size="sm"
+                            variant="ghost"
+                            className="border w-full"
+                            onClick={handelShow}>
+                            {isShow ? 'See less..' : 'See more ...'}
+                        </Button>
                     </div>
                 </div>
 

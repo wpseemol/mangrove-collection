@@ -10,7 +10,7 @@ import { getCategoryWithCount } from '@/server/category';
 import FilterSection from './_components/filter-section';
 
 export default async function ProductPage() {
-    const categoryWithCount = await getCategoryWithCount();
+    const categoryWithCount = await getCategoryWithCount('?limit=5');
 
     return (
         <main className="container mx-auto">
