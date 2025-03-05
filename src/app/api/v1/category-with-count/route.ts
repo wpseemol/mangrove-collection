@@ -27,6 +27,9 @@ export async function GET() {
                     productCount: { $size: '$products' },
                 },
             },
+            {
+                $limit: 5,
+            },
         ]).exec();
 
         /**
