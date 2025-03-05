@@ -8,9 +8,8 @@ export async function GET() {
         await connectMongoDB();
 
         const sortOption: { [key: string]: SortOrder } = { popularity: -1 };
-        const limitOption = 10;
+        const limitOption = 12;
         const showColumns = 'name slug images thumbnail currency price';
-        // '';
 
         const response = await Product.find({}, showColumns)
             .sort(sortOption)
