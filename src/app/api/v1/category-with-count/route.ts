@@ -11,18 +11,33 @@ export async function GET() {
 
         await connectMongoDB();
 
-        const showColumns = 'name slug imgUrl';
-        const mongodbResponse = await Category.find({}, showColumns).lean();
+        const mongodbResponse = await Category.aggregate([
+            {
+                $lookup: {
+                    from: 'products',
+                    localField: '_id',
+                    foreignField: 'category',
+                    as: 'products',
+                },
+            },
+            {
+                $project: {
+                    name: 1,
+                    slug: 1,
+                    productCount: { $size: '$products' },
+                },
+            },
+        ]).exec();
 
         /**
          * Array to mongodb `_id` replace `id`
          */
-        const categories = replaceMongoIds(mongodbResponse);
+        const categoriesWithCount = replaceMongoIds(mongodbResponse);
 
         return NextResponse.json(
             {
                 message: 'Get category successful.',
-                data: categories,
+                data: categoriesWithCount,
             },
             { status: 200 }
         );
