@@ -1,6 +1,5 @@
 import { connectMongoDB } from '@/db/connections';
 import { Category } from '@/lib/schemas/mongoose/category';
-import { replaceMongoIds } from '@/utils/replace-mongo-Ids';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -31,7 +30,9 @@ export async function GET(request: NextRequest) {
         /**
          * Array to mongodb `_id` replace `id`
          */
-        const categoriesIds = replaceMongoIds(mongodbResponse);
+        const categoriesIds = mongodbResponse.map(
+            (categoryId) => categoryId._id
+        );
 
         return NextResponse.json(
             {

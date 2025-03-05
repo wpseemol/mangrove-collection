@@ -1,47 +1,22 @@
+import { getProducts } from '@/server/products';
 import { FilterSearchParamType } from '@/types/product';
 
-export default function ProductsSection({
+export default async function ProductsSection({
     searchParams,
 }: {
     searchParams: FilterSearchParamType;
 }) {
     // const { category, price, size } = searchParams;
 
-    // let categoryArray: string[] = [];
-    // const priceObj: PriceObjType = {
-    //     minPrice: null,
-    //     maxPrice: null,
-    // };
-    // let productSize: string | null = null;
+    // let categoryIds: string[] | null = null;
 
     // if (category) {
-    //     const decodedCategory = decodeURI(category);
-    //     categoryArray = decodedCategory?.split('|');
-    // }
-    // if (price) {
-    //     const priceArr = price?.split('-');
-    //     if (!isNaN(parseInt(priceArr[0]))) {
-    //         priceObj.minPrice = parseInt(priceArr[0]);
-    //     }
-    //     if (!isNaN(parseInt(priceArr[1]))) {
-    //         priceObj.maxPrice = parseInt(priceArr[1]);
-    //     }
+    //     categoryIds = await getCategoryMongoId(`?category=${category}`);
     // }
 
-    // if (size) {
-    //     if (sizeArray.includes(size)) productSize = size;
-    // }
+    const params = new URLSearchParams(searchParams);
 
-    //  const categoryIds: string[] | null = await getCategoryMongoId(
-    //      categoryArray
-    //  );
+    await getProducts(`?${params.toString()}`);
 
-    //  const allProduct = await getProducts(
-    //      'filter',
-    //      categoryIds,
-    //      priceObj,
-    //      productSize
-    //  );
-
-    return <div>{JSON.stringify(searchParams)}</div>;
+    return <div>Products</div>;
 }
