@@ -7,9 +7,15 @@ import {
     BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { getCategoryWithCount } from '@/server/category';
+import { FilterSearchParamType } from '@/types/product';
 import FilterSection from './_components/filter-section';
+import ProductsSection from './_components/products-section';
 
-export default async function ProductPage() {
+export default async function ProductPage({
+    searchParams,
+}: {
+    searchParams: FilterSearchParamType;
+}) {
     const categoryWithCount = await getCategoryWithCount('?limit=5');
 
     return (
@@ -31,6 +37,9 @@ export default async function ProductPage() {
             <section className="grid lg:grid-cols-5 md:grid-cols-4 grid-cols-1 gap-6 pt-4 pb-16 items-start justify-center sm:mx-auto mx-2 ">
                 {/* filter section */}
                 <FilterSection categoryWithCount={categoryWithCount} />
+
+                {/* product section */}
+                <ProductsSection searchParams={searchParams} />
             </section>
         </main>
     );

@@ -9,7 +9,7 @@ import { Category, CategoryWithCount } from '@/types/home';
 export async function getCategory(): Promise<Category[] | null> {
     try {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL!;
-        const response = await fetch(`${baseUrl}api/v1/category`);
+        const response = await fetch(`${baseUrl}api/v1/categories/category`);
 
         if (response.ok) {
             const { data } = await response.json();
@@ -33,7 +33,7 @@ export async function getCategoryWithCount(
     try {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL!;
         const response = await fetch(
-            `${baseUrl}api/v1/category-with-count${limit}`
+            `${baseUrl}api/v1/categories/category-with-count${limit}`
         );
 
         if (response.ok) {

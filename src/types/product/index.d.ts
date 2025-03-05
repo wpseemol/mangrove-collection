@@ -45,3 +45,23 @@ export interface Image {
     id: string | number;
     imgUrl: string;
 }
+
+/**
+ * `FilterSearchParamType` represents the search parameters for filtering products.
+ */
+interface FilterSearchParamType {
+    /**
+     * Optional category filter for searching products.
+     */
+    category?: string; // Optional filter for product category.
+
+    /**
+     * Optional price filter for searching products, typically a price range or specific price.
+     */
+    price?: string; // Optional filter for price, which could be a range or specific value.
+
+    /**
+     * Optional size filter for searching products.
+     */
+    size?: string; // Optional filter for product size.
+}
