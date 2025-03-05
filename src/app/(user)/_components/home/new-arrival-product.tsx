@@ -6,7 +6,7 @@ export default async function NewArrivalProduct() {
     const newArrivalProducts = await getNewArrivalProduct();
 
     return (
-        <section className="container mx-auto pb-10">
+        <section className="container mx-auto md:pb-10 pb-5 px-2 md:px-0">
             <HomeTitle>
                 <samp className="uppercase">TOP NEW ARRIVAL</samp>
             </HomeTitle>
