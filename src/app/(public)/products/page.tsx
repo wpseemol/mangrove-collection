@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/breadcrumb';
 import { getCategoryWithCount } from '@/server/category';
 import { FilterSearchParamType } from '@/types/product';
+import { Suspense } from 'react';
 import FilterSection from './_components/filter-section';
 import ProductsSection from './_components/products-section';
 
@@ -33,14 +34,15 @@ export default async function ProductPage({
                 </BreadcrumbList>
             </Breadcrumb>
             {/* breadcrumb Product page*/}
+            <Suspense fallback={<div>Loading...</div>}>
+                <section className="grid lg:grid-cols-5 md:grid-cols-4 grid-cols-1 gap-6 pt-4 pb-16 items-start justify-center sm:mx-auto mx-2 ">
+                    {/* filter section */}
+                    <FilterSection categoryWithCount={categoryWithCount} />
 
-            <section className="grid lg:grid-cols-5 md:grid-cols-4 grid-cols-1 gap-6 pt-4 pb-16 items-start justify-center sm:mx-auto mx-2 ">
-                {/* filter section */}
-                <FilterSection categoryWithCount={categoryWithCount} />
-
-                {/* product section */}
-                <ProductsSection searchParams={searchParams} />
-            </section>
+                    {/* product section */}
+                    <ProductsSection searchParams={searchParams} />
+                </section>
+            </Suspense>
         </main>
     );
 }

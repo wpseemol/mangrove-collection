@@ -1,3 +1,4 @@
+import { sizeArray } from '@/app/(public)/products/_components/filter-section';
 import { connectMongoDB } from '@/db/connections';
 import { Category } from '@/lib/schemas/mongoose/category';
 import { Product } from '@/lib/schemas/mongoose/product';
@@ -17,7 +18,7 @@ export async function GET(request: NextRequest) {
         const price = searchParams.get('price');
         const size = searchParams.get('size');
 
-        const priceObj: PriceObjType = {
+        const priceObj: PriceObj = {
             minPrice: null,
             maxPrice: null,
         };
@@ -93,4 +94,9 @@ export async function GET(request: NextRequest) {
             { status: 500 }
         );
     }
+}
+
+interface PriceObj {
+    minPrice: null | number;
+    maxPrice: null | number;
 }

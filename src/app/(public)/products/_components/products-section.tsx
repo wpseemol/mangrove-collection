@@ -29,7 +29,14 @@ export default async function ProductsSection({
         }
     }
 
-    const params = new URLSearchParams(paramsData);
+    const params = new URLSearchParams(
+        Object.fromEntries(
+            Object.entries(paramsData)
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                .filter(([key, value]) => value !== undefined) // Renamed _ to key
+                .map(([key, value]) => [key, String(value)])
+        )
+    );
 
     const products = await getProducts(`?${params.toString()}`);
 
