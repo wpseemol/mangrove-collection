@@ -4,6 +4,7 @@ import { sliderContent } from '@/db/home/sliderContent';
 import { SliderContent } from '@/types/home';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState } from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
@@ -62,27 +63,29 @@ function CustomSlide({ slidItem }: { slidItem: SliderContent }) {
     const scale = useTransform(scrollY, [0, 750], [1, 2]);
     return (
         <>
-            <figure className="w-full h-full overflow-hidden flex justify-center items-center bg-secondary">
-                <motion.span
-                    style={{ scale }}
-                    initial={{ scale: 1.5 }}
-                    animate={{ scale: 1 }}
-                    transition={{
-                        delay: 0.3,
-                        duration: 0.8,
-                        type: 'keyframes',
-                        stiffness: 50,
-                    }}
-                    className="w-full h-full">
-                    <Image
-                        className="object-cover object-center w-full 2xl:h-[515px] lg:h-[450px]"
-                        src={slidItem.imgUrl}
-                        alt={slidItem.name}
-                        width={965}
-                        height={514}
-                    />
-                </motion.span>
-            </figure>
+            <Link href={`${slidItem.url}`}>
+                <figure className="w-full h-full overflow-hidden flex justify-center items-center bg-secondary">
+                    <motion.span
+                        style={{ scale }}
+                        initial={{ scale: 1.5 }}
+                        animate={{ scale: 1 }}
+                        transition={{
+                            delay: 0.3,
+                            duration: 0.8,
+                            type: 'keyframes',
+                            stiffness: 50,
+                        }}
+                        className="w-full h-full">
+                        <Image
+                            className="object-cover object-center w-full 2xl:h-[515px] lg:h-[450px]"
+                            src={slidItem.imgUrl}
+                            alt={slidItem.name}
+                            width={965}
+                            height={514}
+                        />
+                    </motion.span>
+                </figure>
+            </Link>
         </>
     );
 }

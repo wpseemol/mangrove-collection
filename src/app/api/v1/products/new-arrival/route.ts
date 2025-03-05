@@ -8,8 +8,8 @@ export async function GET() {
     try {
         await connectMongoDB();
 
-        const sortOption: { [key: string]: SortOrder } = { popularity: -1 };
-        const limitOption = 12;
+        const sortOption: { [key: string]: SortOrder } = { createdAt: -1 };
+        const limitOption = 6;
         const showColumns = 'name slug images thumbnail currency price';
 
         const response = await Product.find({}, showColumns)
@@ -17,16 +17,14 @@ export async function GET() {
             .limit(limitOption)
             .lean();
 
-        const popularProducts = replaceMongoIds(response);
+        const newArrivalProducts = replaceMongoIds(response);
 
         return NextResponse.json(
             {
-                message: 'Popular Product get successful.',
-                data: popularProducts,
+                message: 'Product get successful.',
+                data: newArrivalProducts,
             },
-            {
-                status: 200,
-            }
+            { status: 200 }
         );
     } catch (error: unknown) {
         if (error instanceof Error) {
