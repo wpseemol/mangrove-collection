@@ -1,6 +1,6 @@
 'use server';
 
-import { ProductType } from '@/types/mongoose/product';
+import { ProductDetailsType } from '@/types/mongoose/product';
 import { CardProductType } from '@/types/product';
 import { revalidatePath } from 'next/cache';
 
@@ -23,7 +23,7 @@ export async function getProducts(
 
         return null;
     } catch (error) {
-        console.error('category fetch:', error);
+        console.error('fetch:', error);
         return null;
     }
 }
@@ -39,7 +39,7 @@ export async function getPopularProducts(): Promise<CardProductType[] | null> {
 
         return null;
     } catch (error) {
-        console.error('category fetch:', error);
+        console.error('fetch:', error);
         return null;
     }
 }
@@ -57,14 +57,14 @@ export async function getNewArrivalProduct(): Promise<
 
         return null;
     } catch (error) {
-        console.error('category fetch:', error);
+        console.error('fetch:', error);
         return null;
     }
 }
 
 export async function getProductDetails(
     slug: string
-): Promise<(ProductType & { id: string }) | null> {
+): Promise<ProductDetailsType | null> {
     try {
         const response = await fetch(`${baseUrl}api/v1/products/${slug}`);
 
@@ -75,7 +75,27 @@ export async function getProductDetails(
 
         return null;
     } catch (error) {
-        console.error('category fetch:', error);
+        console.error('fetch:', error);
+        return null;
+    }
+}
+
+export async function getRelatedProducts(
+    searchParams: string
+): Promise<CardProductType[] | null> {
+    try {
+        const response = await fetch(
+            `${baseUrl}api/v1/products/related-product${searchParams}`
+        );
+
+        if (response.ok) {
+            const { data } = await response.json();
+            return data;
+        }
+
+        return null;
+    } catch (error) {
+        console.error('fetch:', error);
         return null;
     }
 }
