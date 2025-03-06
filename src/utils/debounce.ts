@@ -1,9 +1,13 @@
-function debounce<T extends (...args: unknown[]) => void>(func: T, wait = 10) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function debounce<T extends (...args: any[]) => void>(
+    func: T,
+    wait = 10
+): (...args: Parameters<T>) => void {
     let timeout: ReturnType<typeof setTimeout> | undefined;
 
-    return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
+    return (...args: Parameters<T>) => {
         if (timeout !== undefined) clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(this, args), wait);
+        timeout = setTimeout(() => func(...args), wait);
     };
 }
 

@@ -14,9 +14,16 @@ export function replaceMongoIds<T extends { _id: unknown }>(
 }
 
 export function replaceMongodbId<T extends { _id: unknown }>(
-    obj: T | null
-): omit<T, '_id'> & { id: unknown } {
+    obj: T | T[] | null
+):
+    | (Omit<T, '_id'> & { id: unknown })
+    | (Omit<T, '_id'> & { id: unknown })[]
+    | null {
     if (!obj) return null;
+
+    if (Array.isArray(obj)) {
+        return obj.map(({ _id, ...rest }) => ({ id: _id, ...rest }));
+    }
 
     const { _id, ...rest } = obj;
     return { id: _id, ...rest };

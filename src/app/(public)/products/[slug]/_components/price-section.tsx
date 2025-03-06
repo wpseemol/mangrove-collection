@@ -1,7 +1,6 @@
 'use client';
 
 import { useVariantUpdate } from '@/hooks';
-import { PriceType } from '@/types/mongoose-models';
 import { useEffect, useState } from 'react';
 
 interface PriceSectionType {
@@ -15,7 +14,7 @@ export default function PriceSection({
 }: PriceSectionType) {
     const [price, setPrice] = useState<number>(displayPrice);
 
-    const { variantSelectId, setVariantSelectId } = useVariantUpdate();
+    const { variantSelectId } = useVariantUpdate();
 
     useEffect(() => {
         if (variantSelectId) {
@@ -28,4 +27,10 @@ export default function PriceSection({
     }, [variantSelectId, priceVariants]);
 
     return <>{price.toFixed(2)}</>;
+}
+
+interface PriceType {
+    variantId: string;
+    price: number;
+    select: boolean;
 }

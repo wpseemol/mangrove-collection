@@ -18,7 +18,7 @@ export default function ProductDetails({
         new Set(details.variants.map((item) => item.type))
     );
 
-    const category = details.category as Category;
+    const category = details.category as unknown as Category;
 
     return (
         <section>
@@ -62,6 +62,7 @@ export default function ProductDetails({
                         <span className="text-gray-800 font-semibold">
                             Category :{' '}
                         </span>
+
                         <Link href={`/products?category=${category.slug}`}>
                             <span className="text-gray-600 capitalize">
                                 {category.name.toLowerCase()}
@@ -136,7 +137,6 @@ export default function ProductDetails({
                         {/* bye button */}
                         {/* cart button */}
                         <Button
-                            productId={details.slug}
                             variant="outline"
                             size="sm"
                             className="px-5 sm:w-fit w-[60px]">

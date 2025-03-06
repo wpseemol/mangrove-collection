@@ -1,7 +1,6 @@
 'use client';
 
 import { useVariantUpdate } from '@/hooks';
-import { PriceType, VariantsType } from '@/types/mongoose-models';
 import { useEffect } from 'react';
 
 interface SelectedVariantType {
@@ -42,4 +41,16 @@ export default function SelectedVariant({
             {variant?.title}
         </button>
     ));
+}
+
+interface PriceType {
+    variantId: string;
+    price: number;
+    select: boolean;
+}
+
+interface VariantsType {
+    id: string;
+    type: string;
+    title: string;
 }
