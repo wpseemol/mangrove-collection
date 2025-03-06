@@ -1,6 +1,8 @@
 # Mangrove Collection
 
-Welcome to the **Mangrove Collection** project! This is an eCommerce platform built using **Next.js**, **Tailwind CSS**, **ShadCN**, **Framer Motion**, and **NextAuth**. The site showcases eco-friendly and sustainable products, with smooth animations and a sleek, responsive design.
+# Next.js app router.
+
+Welcome to the **Mangrove Collection** project! This is an eCommerce platform built using **Next.js App Router**, **Tailwind CSS**, **ShadCN**, **Framer Motion**, and **NextAuth**. The site showcases eco-friendly and sustainable products, with smooth animations and a sleek, responsive design.
 
 ## Features
 
