@@ -36,7 +36,7 @@ export default async function ProductPage({
             {/* breadcrumb Product page*/}
             <Suspense
                 fallback={
-                    <div className="h-[calc(100vh-15rem)] flex justify-center items-center">
+                    <div className="min-h-[calc(100vh-15rem)] flex justify-center items-center">
                         Loading...
                     </div>
                 }>
