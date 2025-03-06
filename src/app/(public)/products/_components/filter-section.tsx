@@ -32,7 +32,7 @@ export default function FilterSection({
     }
 
     return (
-        <div className="col-span-1 content-center bg-white dark:bg-transparent dark:text-neutral-200 px-4 pb-6 shadow rounded overflow-hidden w-fit mx-auto">
+        <div className="col-span-1 content-center bg-white dark:bg-transparent dark:text-neutral-200 px-4 pb-6 shadow rounded overflow-hidden w-fit mx-auto md:sticky top-28">
             <div className="divide-y divide-gray-200 space-y-5 ">
                 <div>
                     <h3 className="text-xl text-gray-800 dark:text-neutral-200 mb-3 uppercase font-medium">
