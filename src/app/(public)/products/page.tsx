@@ -34,7 +34,12 @@ export default async function ProductPage({
                 </BreadcrumbList>
             </Breadcrumb>
             {/* breadcrumb Product page*/}
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense
+                fallback={
+                    <div className="h-screen flex justify-center items-center">
+                        Loading...
+                    </div>
+                }>
                 <section className="grid lg:grid-cols-5 md:grid-cols-4 grid-cols-1 gap-6 pt-4 pb-16 items-start justify-center sm:mx-auto mx-2 ">
                     {/* filter section */}
                     <FilterSection categoryWithCount={categoryWithCount} />
