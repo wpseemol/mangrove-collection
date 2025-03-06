@@ -11,6 +11,12 @@ importers:
       '@radix-ui/react-slot':
         specifier: ^1.1.2
         version: 1.1.2(@types/react@18.3.18)(react@18.3.1)
+      '@types/react-medium-image-zoom':
+        specifier: ^3.0.3
+        version: 3.0.3
+      '@zoom-image/react':
+        specifier: ^0.5.2
+        version: 0.5.2(react@18.3.1)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -44,6 +50,9 @@ importers:
       react-icons:
         specifier: ^5.4.0
         version: 5.4.0(react@18.3.1)
+      react-image-zoom:
+        specifier: ^1.3.1
+        version: 1.3.1
       react-share:
         specifier: ^5.2.2
         version: 5.2.2(react@18.3.1)
@@ -152,6 +161,9 @@ packages:
 
   '@mongodb-js/saslprep@1.2.0':
     resolution: {integrity: sha512-+ywrb0AqkfaYuhHs6LxKWgqbh3I72EpEgESCw37o+9qPx9WTCkgDm2B+eMrwehGtHBWHFU4GXvnSCNiFhhausg==}
+
+  '@namnode/store@0.1.0':
+    resolution: {integrity: sha512-4NGTldxKcmY0UuZ7OEkvCjs8ZEoeYB6M2UwMu74pdLiFMKxXbj9HdNk1Qn213bxX1O7bY5h+PLh5DZsTURZkYA==}
 
   '@next/env@14.2.23':
     resolution: {integrity: sha512-CysUC9IO+2Bh0omJ3qrb47S8DtsTKbFidGm6ow4gXIG6reZybqxbkH2nhdEm1tC8SmgzDdpq3BIML0PWsmyUYA==}
@@ -277,6 +289,9 @@ packages:
     peerDependencies:
       '@types/react': ^18.0.0
 
+  '@types/react-medium-image-zoom@3.0.3':
+    resolution: {integrity: sha512-3FdtutR97whz27vLbJcty7t9yNSpo1gUElvUTC64dmrFxEXS+vF3Jp6H0FUffZcrb7CG7go9n9YChMtRkKW61Q==}
+
   '@types/react-slick@0.23.13':
     resolution: {integrity: sha512-bNZfDhe/L8t5OQzIyhrRhBr/61pfBcWaYJoq6UDqFtv5LMwfg4NsVDD2J8N01JqdAdxLjOt66OZEp6PX+dGs/A==}
 
@@ -338,6 +353,14 @@ packages:
 
   '@ungap/structured-clone@1.3.0':
     resolution: {integrity: sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==}
+
+  '@zoom-image/core@0.40.0':
+    resolution: {integrity: sha512-NsXhw7QCXu7390rs7AlcB3d8Vx6HnEB9gFHpF9yf5IfhB8wrv37IgIL1FC4QW+1id5FeGv2o62XyPL6vMz3EfA==}
+
+  '@zoom-image/react@0.5.2':
+    resolution: {integrity: sha512-hcc+q1c93bFqHoWzN/ywrbq9BsgkEPgD4UB7QWX++XLkzawBKJTqrhKNchkbV/Bn4EneQlkQxNqN6e1bhbTWWQ==}
+    peerDependencies:
+      react: ^18.0.0
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -1099,6 +1122,10 @@ packages:
   jquery@3.7.1:
     resolution: {integrity: sha512-m4avr8yL8kmFN8psrbFFFmB/If14iN5o9nw/NgnnM+kybDJpRsAynV2BsfpTYrTRysYUdADVD7CkUUizgkpLfg==}
 
+  js-image-zoom@0.7.0:
+    resolution: {integrity: sha512-csvn2FmRLjVz5O9AtXGRPKy0Khfcf5n2Vuyg1NyOVylcjzJ6IKN60JmZ/d5rVQvMya9V6tqAaCqj/c20PlUYpQ==}
+    engines: {node: '>=0.8.0'}
+
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
@@ -1470,6 +1497,9 @@ packages:
     resolution: {integrity: sha512-7eltJxgVt7X64oHh6wSWNwwbKTCtMfK35hcjvJS0yxEAhPM8oUKdS3+kqaW1vicIltw+kR2unHaa12S9pPALoQ==}
     peerDependencies:
       react: '*'
+
+  react-image-zoom@1.3.1:
+    resolution: {integrity: sha512-RSw64hMnrnezokenByljfIWVJX5vJQiCirMBJxVqQ3rbQFXk0KGKsoMzdr7cc0/YYStrag3xK8UQZH8KdlTbYQ==}
 
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
@@ -1920,6 +1950,8 @@ snapshots:
     dependencies:
       sparse-bitfield: 3.0.3
 
+  '@namnode/store@0.1.0': {}
+
   '@next/env@14.2.23': {}
 
   '@next/eslint-plugin-next@14.2.23':
@@ -2003,6 +2035,10 @@ snapshots:
   '@types/prop-types@15.7.14': {}
 
   '@types/react-dom@18.3.5(@types/react@18.3.18)':
+    dependencies:
+      '@types/react': 18.3.18
+
+  '@types/react-medium-image-zoom@3.0.3':
     dependencies:
       '@types/react': 18.3.18
 
@@ -2099,6 +2135,15 @@ snapshots:
       eslint-visitor-keys: 4.2.0
 
   '@ungap/structured-clone@1.3.0': {}
+
+  '@zoom-image/core@0.40.0':
+    dependencies:
+      '@namnode/store': 0.1.0
+
+  '@zoom-image/react@0.5.2(react@18.3.1)':
+    dependencies:
+      '@zoom-image/core': 0.40.0
+      react: 18.3.1
 
   acorn-jsx@5.3.2(acorn@8.14.0):
     dependencies:
@@ -3038,6 +3083,8 @@ snapshots:
 
   jquery@3.7.1: {}
 
+  js-image-zoom@0.7.0: {}
+
   js-tokens@4.0.0: {}
 
   js-yaml@4.1.0:
@@ -3388,6 +3435,11 @@ snapshots:
   react-icons@5.4.0(react@18.3.1):
     dependencies:
       react: 18.3.1
+
+  react-image-zoom@1.3.1:
+    dependencies:
+      js-image-zoom: 0.7.0
+      prop-types: 15.8.1
 
   react-is@16.13.1: {}
 
