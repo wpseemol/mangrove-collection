@@ -14,8 +14,8 @@ export default function MobileViewSlider({
 }: ZoomPreviewImageType) {
     return (
         <>
-            <Carousel className=" block md:hidden ">
-                <CarouselContent className="ml-0">
+            <Carousel className=" block md:hidden md:px-0 px-2">
+                <CarouselContent className="">
                     {allImage?.map((img, inx) => (
                         <CarouselItem key={img?.id} className="">
                             <Image
@@ -23,7 +23,7 @@ export default function MobileViewSlider({
                                 alt={productName + `-${inx + 1}`}
                                 width={500}
                                 height={500}
-                                className="sm:w-96 w-80 sm:h-96 h-80 object-cover object-center mx-auto rounded"
+                                className="sm:w-96 w-80 sm:h-96 h-56 object-cover object-center mx-auto rounded"
                             />
                         </CarouselItem>
                     ))}
