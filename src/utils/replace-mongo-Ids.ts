@@ -12,3 +12,12 @@ export function replaceMongoIds<T extends { _id: unknown }>(
         };
     });
 }
+
+export function replaceMongodbId<T extends { _id: unknown }>(
+    obj: T | null
+): omit<T, '_id'> & { id: unknown } {
+    if (!obj) return null;
+
+    const { _id, ...rest } = obj;
+    return { id: _id, ...rest };
+}
