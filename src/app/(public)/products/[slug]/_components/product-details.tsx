@@ -1,6 +1,6 @@
 import { CurrencyIcon } from '@/components/currency-icon';
 import { Button } from '@/components/ui/button';
-import { ProductType } from '@/types/mongoose/product';
+import { ProductDetailsType } from '@/types/mongoose/product';
 import Link from 'next/link';
 import ImagePreview from './image-preview';
 import PriceSection from './price-section';
@@ -10,15 +10,13 @@ import SocialShareBtn from './social-share-btn';
 export default function ProductDetails({
     details,
 }: {
-    details: ProductType & { id: string };
+    details: ProductDetailsType;
 }) {
     const displayPrice = details.price.find((item) => item.select);
 
     const displayVariant = Array.from(
         new Set(details.variants.map((item) => item.type))
     );
-
-    const category = details.category as unknown as Category;
 
     return (
         <section>
@@ -63,9 +61,10 @@ export default function ProductDetails({
                             Category :{' '}
                         </span>
 
-                        <Link href={`/products?category=${category.slug}`}>
+                        <Link
+                            href={`/products?category=${details.category.slug}`}>
                             <span className="text-gray-600 capitalize">
-                                {category.name.toLowerCase()}
+                                {details.category.name.toLowerCase()}
                             </span>
                         </Link>
                     </p>
@@ -200,12 +199,6 @@ export default function ProductDetails({
             {/* ./description */}
         </section>
     );
-}
-
-interface Category {
-    _id: string;
-    name: string;
-    slug: string;
 }
 
 interface ImageType {

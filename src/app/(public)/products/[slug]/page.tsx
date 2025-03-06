@@ -11,6 +11,7 @@ import { getProductDetails } from '@/server/products';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import ProductDetails from './_components/product-details';
+import RelatedProduct from './_components/related-product';
 
 export async function generateMetadata({
     params,
@@ -87,6 +88,10 @@ export default async function SingleProductPage({
             {/* product details */}
 
             {/* related products  */}
+            <RelatedProduct
+                skipId={productDetails.id}
+                categoryId={productDetails.category._id}
+            />
             {/* related products  */}
         </main>
     );

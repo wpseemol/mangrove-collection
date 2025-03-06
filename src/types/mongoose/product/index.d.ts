@@ -38,3 +38,32 @@ export interface ProductType {
     popularity?: number;
     tags?: string[];
 }
+
+export interface ProductDetailsType {
+    id: string;
+    name: string;
+    category: Category;
+    slug: string;
+    unit: string;
+    size?: string;
+    price: Price[];
+    currency: string;
+    offer?: number;
+    shortDescription?: string;
+    thumbnail: string;
+    description: string;
+    images: Image[];
+    variants: Variant[];
+    author: Types.ObjectId;
+    createdAt?: Date;
+    rating?: Types.ObjectId;
+    comment?: Types.ObjectId;
+    popularity?: number;
+    tags?: string[];
+}
+
+interface Category {
+    _id: string;
+    name: string;
+    slug: string;
+}
