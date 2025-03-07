@@ -16,7 +16,7 @@ export default async function Account() {
                         </h2>
 
                         <p className="text-sm hidden md:block text-muted group-hover:text-primary-foreground dark:text-neutral-300/90 duration-150">
-                            register or Login
+                            Register or Login
                         </p>
                     </div>
                 </div>
