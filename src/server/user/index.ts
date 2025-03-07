@@ -13,17 +13,17 @@ export async function userRegister(
         body: JSON.stringify(registerUser),
     });
 
-    const { message } = await response.json();
+    const isRegister = await response.json();
 
     if (response.ok) {
         return {
-            message,
+            message: isRegister?.message,
             redirect: true,
         };
     }
 
     return {
-        message,
+        message: isRegister?.message,
         redirect: false,
     };
 }

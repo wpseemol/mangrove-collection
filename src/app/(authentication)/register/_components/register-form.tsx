@@ -11,19 +11,20 @@ import {
     FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Toaster } from '@/components/ui/sonner';
 
 import { registerSchema } from '@/lib/schemas/zod/register-schema';
+import { userRegister } from '@/server/user';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { PiEyeClosedDuotone, PiEyeDuotone } from 'react-icons/pi';
-import { toast } from 'sonner';
+import { toast, Toaster } from 'sonner';
 import { z } from 'zod';
 
 export default function RegisterForm() {
-    // const router = useRouter();
+    const router = useRouter();
 
     const form = useForm<z.infer<typeof registerSchema>>({
         resolver: zodResolver(registerSchema),
@@ -39,19 +40,15 @@ export default function RegisterForm() {
 
     // 2. Define a submit handler.
     async function onSubmit(values: z.infer<typeof registerSchema>) {
-        // toast({
-        //     variant: 'destructive',
-        //     description: 'An unexpected error occurred.',
-        // });
+        const isRegister = await userRegister(values);
 
-        toast('Event has been created', {
-            description: 'Sunday, December 03, 2023 at 9:00 AM',
-            action: {
-                label: 'Undo',
-                onClick: () => console.log('Undo'),
-            },
-        });
-        console.log('register values:', values);
+        if (isRegister.redirect) {
+            toast.success(isRegister.message);
+            router.push('/login');
+            return;
+        }
+
+        toast.error(isRegister.message);
     }
 
     return (
@@ -136,7 +133,7 @@ export default function RegisterForm() {
                     </Link>
                 </div>
             </Form>
-            <Toaster />
+            <Toaster position="top-center" richColors closeButton />
         </>
     );
 }

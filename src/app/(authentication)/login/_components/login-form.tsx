@@ -20,6 +20,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { PiEyeClosedDuotone, PiEyeDuotone } from 'react-icons/pi';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 export default function LoginForm() {
@@ -35,37 +36,15 @@ export default function LoginForm() {
 
     // 2. Define a submit handler.
     async function onSubmit(values: z.infer<typeof loginSchema>) {
-        // try {
-        //     await loginAction(values);
-        //     const result = await signIn('credentials', {
-        //         redirect: false,
-        //         ...values,
-        //     });
+        toast('Event has been created', {
+            description: 'Sunday, December 03, 2023 at 9:00 AM',
+            action: {
+                label: 'Undo',
+                onClick: () => console.log('Undo'),
+            },
+        });
 
-        //     if (result?.error && result.error === 'CredentialsSignin') {
-        //         return;
-        //     }
-        //     router.refresh();
-        //     form.reset();
-
-        //     toast({
-        //         variant: 'success',
-        //         description: 'User login successful!',
-        //     });
-        // } catch (error) {
-        //     const errorType = error as AuthError;
-
-        //     toast({
-        //         variant: 'destructive',
-        //         title: 'Uh oh! Something went wrong.',
-        //         description: errorType?.message,
-        //         action: (
-        //             <ToastAction altText="Try again">Try again</ToastAction>
-        //         ),
-        //     });
-        // }
-
-        console.log(values);
+        console.log('login Form:', values);
     }
 
     return (
