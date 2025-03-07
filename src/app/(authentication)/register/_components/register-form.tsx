@@ -19,6 +19,7 @@ import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { PiEyeClosedDuotone, PiEyeDuotone } from 'react-icons/pi';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 export default function RegisterForm() {
@@ -38,65 +39,18 @@ export default function RegisterForm() {
 
     // 2. Define a submit handler.
     async function onSubmit(values: z.infer<typeof registerSchema>) {
-        // const { conformPass, ...regForm } = values;
+        // toast({
+        //     variant: 'destructive',
+        //     description: 'An unexpected error occurred.',
+        // });
 
-        // if (conformPass !== values.password) {
-        //     form.setError('conformPass', {
-        //         type: 'required',
-        //         message: 'Password and confirm password do not match.',
-        //     });
-
-        //     return;
-        // }
-
-        // try {
-        //     const response = await fetch('/api/v1/user/register', {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //         },
-        //         body: JSON.stringify(regForm),
-        //     });
-
-        //     if (!response.ok) {
-        //         const error = await response.json();
-        //         if (error.pattern === 'email') {
-        //             form.setError('email', {
-        //                 type: 'required',
-        //                 message: error.message,
-        //             });
-        //         } else if (error.pattern === 'phone') {
-        //             form.setError('phone', {
-        //                 type: 'required',
-        //                 message: error.message,
-        //             });
-        //         } else {
-        //             throw new Error(error.message);
-        //         }
-
-        //         return;
-        //     }
-
-        //     toast({
-        //         variant: 'success',
-        //         description: 'User registration is successful!',
-        //     });
-
-        //     router.push('/login');
-        // } catch (error) {
-        //     if (error instanceof Error) {
-        //         toast({
-        //             variant: 'destructive',
-        //             description: error.message,
-        //         });
-        //     } else {
-        //         // Handle unexpected error types
-        //         toast({
-        //             variant: 'destructive',
-        //             description: 'An unexpected error occurred.',
-        //         });
-        //     }
-        // }
+        toast('Event has been created', {
+            description: 'Sunday, December 03, 2023 at 9:00 AM',
+            action: {
+                label: 'Undo',
+                onClick: () => console.log('Undo'),
+            },
+        });
         console.log('register values:', values);
     }
 
