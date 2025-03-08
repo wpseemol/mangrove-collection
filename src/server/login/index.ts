@@ -34,5 +34,15 @@ interface LoginCredentialType {
 }
 
 interface LoginUserDetailsType {
+    message: string;
+    status: boolean;
+    data: UserType;
+}
+
+interface UserType {
     id: string;
+    fullName: string;
+    email: string;
+    role: 'admin' | 'user' | 'creator';
+    username: string;
 }

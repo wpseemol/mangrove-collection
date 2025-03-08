@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
         // );
         // password hash
 
-        const { email, password } = validatedData.data;
+        const { email } = validatedData.data;
 
         /**
          * connect mongodb use mongoose.
@@ -63,7 +63,10 @@ export async function POST(request: NextRequest) {
 
         const loginUserPassword = loginUser.password as string;
 
-        const passwordMatch = await bcrypt.compare(password, loginUserPassword);
+        const passwordMatch = await bcrypt.compare(
+            validatedData.data.password,
+            loginUserPassword
+        );
 
         if (!passwordMatch) {
             return NextResponse.json(
@@ -74,10 +77,13 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { password, ...user } = loginUser;
+
         return NextResponse.json(
             {
                 message: `User login successful.`,
-                data: loginUser,
+                data: user,
             },
             { status: 201 }
         );
