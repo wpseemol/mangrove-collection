@@ -5,7 +5,7 @@ import { FaRegUser } from 'react-icons/fa6';
 
 export default async function Account() {
     const session = await auth();
-
+    const firstName = session?.user?.name?.split(' ')[0] || 'Name';
     if (session) {
         return (
             <li className="text-white">
@@ -16,7 +16,7 @@ export default async function Account() {
                         </div>
                         <div>
                             <h2 className="sm:text-lg text-sm font-medium">
-                                name
+                                {firstName}
                             </h2>
 
                             <p className="text-sm hidden md:block text-muted group-hover:text-primary-foreground dark:text-neutral-300/90 duration-150">

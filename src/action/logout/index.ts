@@ -2,6 +2,6 @@
 
 import { signOut } from '@/auth';
 
-export async function logOut() {
+export async function logoutWithServer() {
     await signOut({ redirect: true, redirectTo: '/' });
 }

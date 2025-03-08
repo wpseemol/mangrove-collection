@@ -39,7 +39,7 @@ export default function LoginForm() {
     // 2. Define a submit handler.
     async function onSubmit(values: z.infer<typeof loginSchema>) {
         const loginUser = await signIn('credentials', {
-            redirect: false,
+            redirect: true,
             redirectTo: '/',
             ...values,
         });

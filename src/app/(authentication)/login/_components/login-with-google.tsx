@@ -1,18 +1,30 @@
 import { Button } from '@/components/ui/button';
 import { signIn } from 'next-auth/react';
+import { useSearchParams } from 'next/navigation';
+
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 export default function LoginWithGoogle() {
     const [loading, setLoading] = useState<boolean>(false);
 
+    const searchParams = useSearchParams();
+    const code = searchParams.get('code');
+
+    console.log(searchParams.get('code'));
+
     async function handelGoogleLogin() {
         setLoading(true);
-        const loginResponse = await signIn('google', {
+        await signIn('google', {
             redirect: true,
-            redirectTo: '/profile',
+            redirectTo: '/',
         });
         setLoading(false);
-        console.log('login Response', loginResponse);
+
+        if (code) {
+            toast.error(code);
+            return;
+        }
     }
 
     return (
