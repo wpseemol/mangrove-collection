@@ -38,21 +38,25 @@ export default function LoginForm() {
 
     // 2. Define a submit handler.
     async function onSubmit(values: z.infer<typeof loginSchema>) {
-        const loginUser = await signIn('credentials', {
-            redirect: true,
-            redirectTo: '/',
-            ...values,
-        });
+        try {
+            const loginUser = await signIn('credentials', {
+                redirect: true,
+                redirectTo: '/',
+                ...values,
+            });
 
-        if (!loginUser?.error) {
-            toast.success('Your are successful to login.');
-            router.push('/');
-            return;
-        }
+            if (!loginUser?.error) {
+                toast.success('Your are successful to login.');
+                router.push('/');
+                return;
+            }
 
-        if (loginUser?.code) {
-            toast.error(loginUser?.code);
-            return;
+            if (loginUser?.code) {
+                toast.error(loginUser?.code);
+                return;
+            }
+        } catch (error) {
+            console.log(error);
         }
     }
 

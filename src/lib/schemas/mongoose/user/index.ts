@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema<IUser>({
     },
     password: {
         type: String,
-        required: true,
+        required: false,
         default: null,
     },
     image: {
@@ -30,8 +30,7 @@ const userSchema = new mongoose.Schema<IUser>({
     },
     phone: {
         type: String,
-        required: true,
-        unique: true,
+        required: false,
         default: null,
     },
 

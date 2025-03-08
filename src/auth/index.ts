@@ -1,4 +1,5 @@
 import { userLogin } from '@/server/login';
+import { googolProviderUserCreate } from '@/server/user';
 import NextAuth, { CredentialsSignin } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import Google from 'next-auth/providers/google';
@@ -62,25 +63,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         async signIn({ user, account }) {
             if (account?.provider === 'google') {
                 // do some thing.
+
+                const googleLoginUser = await googolProviderUserCreate(user);
+                if (googleLoginUser) {
+                    user.id = googleLoginUser.id;
+                    user.role = googleLoginUser.role;
+                    return true;
+                }
+                throw new InvalidLoginError();
+                return false;
             }
 
-            console.log('--------------------------');
-            console.log('singIn user:', user);
-            // console.log('singIn account:', account);
-            // console.log('singIn profile:', profile);
-            // user.id = 'some text test';
-            console.log('--------------------------');
-            throw new InvalidLoginError();
-            return false;
+            return true;
         },
         // token, user, session, trigger
         async jwt({ token, user, session }) {
-            // console.log('----------------------------');
-            // console.log('jwt token:', token);
-            // console.log('jwt user:', user);
-            // console.log('jwt session:', session);
-            // console.log('----------------------------');
-
             if (user?.role) {
                 token.role = user.role;
             }
@@ -92,11 +89,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         },
 
         async session({ session, token }) {
-            // console.log('----------------------------');
-            // console.log('session session:', session);
-            // console.log('session token:', token);
-            // console.log('----------------------------');
-
             if (token.role) {
                 session.user.role = token.role;
             }

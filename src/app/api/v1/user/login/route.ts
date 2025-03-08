@@ -53,6 +53,13 @@ export async function POST(request: NextRequest) {
 
         const loginUser = replaceMongodbId(loginUserResponse) as LoginUser;
 
+        if (loginUser.provider === 'google') {
+            return NextResponse.json(
+                { message: 'You are already login with google' },
+                { status: 400 }
+            );
+        }
+
         /**
          * password match
          */
@@ -112,4 +119,4 @@ interface UserType {
     image: string | null;
 }
 
-type LoginUser = UserType & { password: string };
+type LoginUser = UserType & { password: string; provider: string };
