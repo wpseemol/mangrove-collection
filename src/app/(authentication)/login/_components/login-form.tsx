@@ -23,6 +23,7 @@ import { useForm, UseFormReturn } from 'react-hook-form';
 import { PiEyeClosedDuotone, PiEyeDuotone } from 'react-icons/pi';
 import { toast, Toaster } from 'sonner';
 import { z } from 'zod';
+import LoginWithGoogle from './login-with-google';
 
 export default function LoginForm() {
     const router = useRouter();
@@ -114,9 +115,9 @@ export default function LoginForm() {
                         Login {form.formState.isSubmitting && <ButtonLoading />}
                     </Button>
                 </form>
-                <Button variant="outline" className="w-full mt-4">
-                    Login with Google
-                </Button>
+                {/* login with google */}
+                <LoginWithGoogle />
+                {/* login with google */}
                 <div className="mt-4 text-center text-sm">
                     Don&apos;t have an account?{' '}
                     <Link href="/register" className="underline">
