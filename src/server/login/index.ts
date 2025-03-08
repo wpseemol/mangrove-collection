@@ -13,19 +13,22 @@ export async function userLogin(
         body: JSON.stringify(loginCredential),
     });
 
-    const isRegister = await response.json();
+    const loginUserInfo: LoginUserDetailsType = {
+        status: response.status,
+        data: null,
+    };
 
-    if (response.ok) {
-        return {
-            message: isRegister?.message,
-            redirect: true,
-        };
+    const responseData = await response.json();
+    if (responseData.message) {
+        const responseMessage = responseData.message as string;
+        loginUserInfo.message = responseMessage;
     }
 
-    return {
-        message: isRegister?.message,
-        redirect: false,
-    };
+    if (responseData.data) {
+        loginUserInfo.data = responseData.data;
+    }
+
+    return loginUserInfo;
 }
 
 interface LoginCredentialType {
@@ -34,9 +37,9 @@ interface LoginCredentialType {
 }
 
 interface LoginUserDetailsType {
-    message: string;
-    status: boolean;
-    data: UserType;
+    message?: string;
+    status: number | string;
+    data: UserType | null;
 }
 
 interface UserType {
@@ -44,5 +47,5 @@ interface UserType {
     fullName: string;
     email: string;
     role: 'admin' | 'user' | 'creator';
-    username: string;
+    image: string | null;
 }

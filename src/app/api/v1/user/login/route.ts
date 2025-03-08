@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
 
             return NextResponse.json(
                 {
-                    message: firstErrorMessage || 'Validation failed',
+                    message: firstErrorMessage || 'Validation failed.',
                     errors: formattedErrors,
                 },
                 { status: 400 }
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
         // );
         // password hash
 
-        const { email } = validatedData.data;
+        const { email, password } = validatedData.data;
 
         /**
          * connect mongodb use mongoose.
@@ -63,22 +63,24 @@ export async function POST(request: NextRequest) {
 
         const loginUserPassword = loginUser.password as string;
 
-        const passwordMatch = await bcrypt.compare(
-            validatedData.data.password,
-            loginUserPassword
-        );
+        const passwordMatch = await bcrypt.compare(password, loginUserPassword);
 
         if (!passwordMatch) {
             return NextResponse.json(
                 {
-                    message: 'Password is incorrect',
+                    message: 'Password is not correct.',
                 },
                 { status: 401 }
             );
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { password, ...user } = loginUser;
+        const user = {
+            id: loginUser.id,
+            fullName: loginUser.fullName,
+            email: loginUser.email,
+            role: loginUser.role,
+            image: loginUser.image,
+        };
 
         return NextResponse.json(
             {

@@ -11,20 +11,21 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Toaster } from '@/components/ui/sonner';
 
 import { loginSchema } from '@/lib/schemas/zod/login-schema';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { signIn } from 'next-auth/react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { PiEyeClosedDuotone, PiEyeDuotone } from 'react-icons/pi';
-import { toast } from 'sonner';
+import { toast, Toaster } from 'sonner';
 import { z } from 'zod';
 
 export default function LoginForm() {
-    // const router = useRouter();
+    const router = useRouter();
 
     const form = useForm<z.infer<typeof loginSchema>>({
         resolver: zodResolver(loginSchema),
@@ -36,15 +37,22 @@ export default function LoginForm() {
 
     // 2. Define a submit handler.
     async function onSubmit(values: z.infer<typeof loginSchema>) {
-        toast('Event has been created', {
-            description: 'Sunday, December 03, 2023 at 9:00 AM',
-            action: {
-                label: 'Undo',
-                onClick: () => console.log('Undo'),
-            },
+        const loginUser = await signIn('credentials', {
+            redirect: false,
+            redirectTo: '/',
+            ...values,
         });
 
-        console.log('login Form:', values);
+        if (!loginUser?.error) {
+            toast.success('Your are successful to login.');
+            router.push(loginUser?.url);
+            return;
+        }
+
+        if (loginUser?.code) {
+            toast.error(loginUser?.code);
+            return;
+        }
     }
 
     return (
@@ -105,27 +113,6 @@ export default function LoginForm() {
                         className="w-full text-white">
                         Login {form.formState.isSubmitting && <ButtonLoading />}
                     </Button>
-
-                    {/* <div className="space-y-2 w-full">
-                        <Button
-                            disabled={form.formState.isSubmitting}
-                            variant="default"
-                            className={`disabled:cursor-wait w-full bg-primary hover:bg-primary-foreground duration-100 text-neutral-100`}>
-                            Login
-                            {form.formState.isSubmitting && <ButtonLoading />}
-                        </Button>
-
-                        <p className="px-4 text-sm text-center dark:text-gray-600">
-                            {`Don't have an account yet?`}
-                            <Link
-                                rel="noopener noreferrer"
-                                href="/register"
-                                className="hover:underline text-primaryColor">
-                                Sign up
-                            </Link>
-                            .
-                        </p>
-                    </div> */}
                 </form>
                 <Button variant="outline" className="w-full mt-4">
                     Login with Google
@@ -137,7 +124,7 @@ export default function LoginForm() {
                     </Link>
                 </div>
             </Form>
-            <Toaster />
+            <Toaster position="top-center" richColors closeButton />
         </>
     );
 }
