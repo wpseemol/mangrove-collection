@@ -11,18 +11,20 @@ import {
     FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Toaster } from '@/components/ui/sonner';
 
 import { registerSchema } from '@/lib/schemas/zod/register-schema';
+import { userRegister } from '@/server/user';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { PiEyeClosedDuotone, PiEyeDuotone } from 'react-icons/pi';
+import { toast, Toaster } from 'sonner';
 import { z } from 'zod';
 
 export default function RegisterForm() {
-    // const router = useRouter();
+    const router = useRouter();
 
     const form = useForm<z.infer<typeof registerSchema>>({
         resolver: zodResolver(registerSchema),
@@ -38,66 +40,15 @@ export default function RegisterForm() {
 
     // 2. Define a submit handler.
     async function onSubmit(values: z.infer<typeof registerSchema>) {
-        // const { conformPass, ...regForm } = values;
+        const isRegister = await userRegister(values);
 
-        // if (conformPass !== values.password) {
-        //     form.setError('conformPass', {
-        //         type: 'required',
-        //         message: 'Password and confirm password do not match.',
-        //     });
+        if (isRegister.redirect) {
+            toast.success(isRegister.message);
+            router.push('/login');
+            return;
+        }
 
-        //     return;
-        // }
-
-        // try {
-        //     const response = await fetch('/api/v1/user/register', {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //         },
-        //         body: JSON.stringify(regForm),
-        //     });
-
-        //     if (!response.ok) {
-        //         const error = await response.json();
-        //         if (error.pattern === 'email') {
-        //             form.setError('email', {
-        //                 type: 'required',
-        //                 message: error.message,
-        //             });
-        //         } else if (error.pattern === 'phone') {
-        //             form.setError('phone', {
-        //                 type: 'required',
-        //                 message: error.message,
-        //             });
-        //         } else {
-        //             throw new Error(error.message);
-        //         }
-
-        //         return;
-        //     }
-
-        //     toast({
-        //         variant: 'success',
-        //         description: 'User registration is successful!',
-        //     });
-
-        //     router.push('/login');
-        // } catch (error) {
-        //     if (error instanceof Error) {
-        //         toast({
-        //             variant: 'destructive',
-        //             description: error.message,
-        //         });
-        //     } else {
-        //         // Handle unexpected error types
-        //         toast({
-        //             variant: 'destructive',
-        //             description: 'An unexpected error occurred.',
-        //         });
-        //     }
-        // }
-        console.log('register values:', values);
+        toast.error(isRegister.message);
     }
 
     return (
@@ -182,7 +133,7 @@ export default function RegisterForm() {
                     </Link>
                 </div>
             </Form>
-            <Toaster />
+            <Toaster position="top-center" richColors closeButton />
         </>
     );
 }

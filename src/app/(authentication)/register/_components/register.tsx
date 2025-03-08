@@ -11,8 +11,8 @@ export default function RegisterSection() {
     return (
         <Card className="mx-auto max-w-md md:min-w-[26rem]">
             <CardHeader>
-                <CardTitle className="text-xl">Sign Up</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-xl text-center">Sign Up</CardTitle>
+                <CardDescription className="text-center">
                     Enter your information to create an account
                 </CardDescription>
             </CardHeader>

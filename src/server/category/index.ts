@@ -6,9 +6,10 @@ import { Category, CategoryWithCount } from '@/types/home';
  * getCategory function return
  * @returns `Category[] | null`
  */
+
+const baseUrl = process.env.NEXT_PUBLIC_API_URL!;
 export async function getCategory(): Promise<Category[] | null> {
     try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL!;
         const response = await fetch(`${baseUrl}api/v1/categories/category`);
 
         if (response.ok) {
@@ -31,7 +32,6 @@ export async function getCategoryWithCount(
     limit = ''
 ): Promise<CategoryWithCount[] | null> {
     try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL!;
         const response = await fetch(
             `${baseUrl}api/v1/categories/category-with-count${limit}`
         );
@@ -56,7 +56,6 @@ export async function getCategoryMongoId(
     category = ''
 ): Promise<string[] | null> {
     try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL!;
         const response = await fetch(
             `${baseUrl}api/v1/categories/category-ids${category}`
         );
