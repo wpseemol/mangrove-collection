@@ -4,7 +4,7 @@ const loginSchema = z.object({
     email: z.string().min(1, {
         message: 'Must input the Email.',
     }),
-    password: z.string().min(1, {
+    password: z.string().min(4, {
         message: 'Please input password then try login.',
     }),
 });

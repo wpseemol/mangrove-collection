@@ -11,13 +11,20 @@ export async function POST(request: NextRequest) {
 
         const validatedData = registerSchema.safeParse(body);
         if (!validatedData.success) {
+            // Extract validation errors
+            const formattedErrors = validatedData.error.flatten().fieldErrors;
+
+            // Get the first error message from the object
+            const firstErrorMessage = Object.values(formattedErrors)
+                .flat()
+                .filter(Boolean)[0];
+
             return NextResponse.json(
                 {
-                    message: validatedData.error,
+                    message: firstErrorMessage || 'Validation failed',
+                    errors: formattedErrors,
                 },
-                {
-                    status: 422,
-                }
+                { status: 400 }
             );
         }
 
@@ -74,6 +81,7 @@ export async function POST(request: NextRequest) {
                 {
                     message,
                     pattern,
+                    errors: error,
                 },
                 { status: 409 }
             );
@@ -81,13 +89,16 @@ export async function POST(request: NextRequest) {
 
         if (error instanceof Error) {
             return NextResponse.json(
-                { message: error.message || 'Internal server error.', error },
+                {
+                    message: error.message || 'Internal server error.',
+                    errors: error,
+                },
                 { status: 500 }
             );
         }
 
         return NextResponse.json(
-            { message: 'An unknown error occurred.' },
+            { message: 'An unknown error occurred.', errors: error },
             { status: 500 }
         );
     }
