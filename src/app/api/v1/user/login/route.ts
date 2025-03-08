@@ -46,24 +46,21 @@ export async function POST(request: NextRequest) {
 
         if (!loginUserResponse) {
             return NextResponse.json(
-                {
-                    message: 'User not found.',
-                },
-                {
-                    status: 404,
-                }
+                { message: 'User not found or missing password field.' },
+                { status: 404 }
             );
         }
 
-        const loginUser = replaceMongodbId(loginUserResponse);
+        const loginUser = replaceMongodbId(loginUserResponse) as LoginUser;
 
         /**
          * password match
          */
 
-        const loginUserPassword = loginUser.password as string;
-
-        const passwordMatch = await bcrypt.compare(password, loginUserPassword);
+        const passwordMatch = await bcrypt.compare(
+            password,
+            loginUser.password
+        );
 
         if (!passwordMatch) {
             return NextResponse.json(
@@ -74,7 +71,7 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const user = {
+        const user: UserType = {
             id: loginUser.id,
             fullName: loginUser.fullName,
             email: loginUser.email,
@@ -106,3 +103,13 @@ export async function POST(request: NextRequest) {
         );
     }
 }
+
+interface UserType {
+    id: string;
+    fullName: string;
+    email: string;
+    role: 'admin' | 'user' | 'creator';
+    image: string | null;
+}
+
+type LoginUser = UserType & { password: string };

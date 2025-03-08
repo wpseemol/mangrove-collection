@@ -13,19 +13,15 @@ export async function userRegister(
         body: JSON.stringify(registerUser),
     });
 
-    const isRegister = await response.json();
+    // Parse response
+    const isRegister: { message?: string } = await response.json();
 
-    if (response.ok) {
-        return {
-            message: isRegister?.message,
-            redirect: true,
-        };
-    }
-
-    return {
-        message: isRegister?.message,
-        redirect: false,
+    const registerObj: UserRegister = {
+        message: isRegister.message || '',
+        redirect: response.status === 201,
     };
+
+    return registerObj;
 }
 
 interface RegisterUserType {
@@ -38,6 +34,6 @@ interface RegisterUserType {
 }
 
 interface UserRegister {
-    massage: string;
+    message: string;
     redirect: boolean;
 }

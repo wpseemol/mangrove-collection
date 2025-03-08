@@ -45,7 +45,7 @@ export default function LoginForm() {
 
         if (!loginUser?.error) {
             toast.success('Your are successful to login.');
-            router.push(loginUser?.url);
+            router.push('/');
             return;
         }
 

@@ -30,7 +30,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     | Partial<Record<'email' | 'password', unknown>>
                     | undefined
             ) {
-                if (!credentials.email || !credentials.password) {
+                if (!credentials?.email || !credentials?.password) {
                     return null;
                 }
 
@@ -46,7 +46,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     return response.data;
                 }
 
-                errorMessage = response.message;
+                if (response.message) errorMessage = response.message;
                 throw new InvalidLoginError();
             },
         }),
