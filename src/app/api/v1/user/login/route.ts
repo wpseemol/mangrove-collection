@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
 
         if (!loginUserResponse) {
             return NextResponse.json(
-                { message: 'User not found or missing password field.' },
+                { message: 'User not found.' },
                 { status: 404 }
             );
         }
