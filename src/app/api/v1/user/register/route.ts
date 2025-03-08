@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const fullName = `${validatedData.data.firstName} ${validatedData.data.lastName}`;
+        const name = `${validatedData.data.firstName} ${validatedData.data.lastName}`;
         // password hash
         const salt = await bcrypt.genSaltSync(10);
         const password = await bcrypt.hashSync(
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
         const { firstName, email, phone } = validatedData.data;
 
         const registerUser = {
-            fullName,
+            name,
             password,
             email,
             phone,

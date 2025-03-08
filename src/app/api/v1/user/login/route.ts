@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
 
         const user: UserType = {
             id: loginUser.id,
-            fullName: loginUser.fullName,
+            name: loginUser.name,
             email: loginUser.email,
             role: loginUser.role,
             image: loginUser.image,
@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
 
 interface UserType {
     id: string;
-    fullName: string;
+    name: string;
     email: string;
     role: 'admin' | 'user' | 'creator';
     image: string | null;

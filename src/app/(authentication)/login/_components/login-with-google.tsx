@@ -7,7 +7,10 @@ export default function LoginWithGoogle() {
 
     async function handelGoogleLogin() {
         setLoading(true);
-        const loginResponse = await signIn('google');
+        const loginResponse = await signIn('google', {
+            redirect: true,
+            redirectTo: '/profile',
+        });
         setLoading(false);
         console.log('login Response', loginResponse);
     }

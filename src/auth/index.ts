@@ -1,4 +1,6 @@
+import client from '@/lib/db';
 import { userLogin } from '@/server/login';
+import { MongoDBAdapter } from '@auth/mongodb-adapter';
 import NextAuth, { CredentialsSignin } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import Google from 'next-auth/providers/google';
@@ -16,7 +18,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     trustHost: true,
 
     secret: process.env.AUTH_SECRET,
-
+    adapter: MongoDBAdapter(client),
     providers: [
         Credentials({
             name: 'Credentials',

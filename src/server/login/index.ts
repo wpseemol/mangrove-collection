@@ -44,7 +44,7 @@ interface LoginUserDetailsType {
 
 interface UserType {
     id: string;
-    fullName: string;
+    name: string;
     email: string;
     role: 'admin' | 'user' | 'creator';
     image: string | null;
