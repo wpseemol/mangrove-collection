@@ -1,5 +1,6 @@
 import { connectMongoDB } from '@/db/connections';
 import { User } from '@/lib/schemas/mongoose/user';
+import { UserRole } from '@/types/mongoose/user';
 import { replaceMongodbId } from '@/utils/replace-mongo-Ids';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -19,7 +20,7 @@ export async function POST(request: NextRequest) {
 
         await connectMongoDB();
 
-        const showField = 'role email name image';
+        const showField = 'role email name image provider';
 
         const findUser = await User.findOne(
             { email: body.email },
@@ -27,7 +28,16 @@ export async function POST(request: NextRequest) {
         ).lean();
 
         if (findUser) {
-            const withUserId = replaceMongodbId(findUser);
+            const withUserId = replaceMongodbId(findUser) as FindUserType;
+
+            if (withUserId.provider !== 'google') {
+                return NextResponse.json(
+                    {
+                        message: `You are already login withe email and password. please try.`,
+                    },
+                    { status: 400 }
+                );
+            }
 
             return NextResponse.json(
                 {
@@ -88,5 +98,14 @@ interface CreateUserObjType {
     name: string;
     email: string;
     image: string | null;
+    provider: string;
+}
+
+interface FindUserType {
+    id: string;
+    name: string;
+    email: string;
+    image: string;
+    role: UserRole;
     provider: string;
 }
