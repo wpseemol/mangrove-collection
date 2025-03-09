@@ -9,11 +9,10 @@ export default async function ProfileLayout({
 }>) {
     const session = await auth();
 
-    if (session?.user.role === USER) {
+    if (session && session.user.role === USER) {
         return <>{children}</>;
     }
 
     notFound();
-
     return <></>;
 }

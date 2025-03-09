@@ -1,9 +1,18 @@
+import { auth } from '@/auth';
+import { notFound } from 'next/navigation';
 import React from 'react';
 
-export default function AuthenticationLayout({
+export default async function AuthenticationLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    return <>{children}</>;
+    const session = await auth();
+
+    if (!session) {
+        return <>{children}</>;
+    }
+
+    notFound();
+    return <></>;
 }

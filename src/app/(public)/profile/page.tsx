@@ -7,13 +7,21 @@ export default async function ProfilePage() {
     return (
         <div className=" flex items-center justify-center">
             <div className=" w-96 text-center my-10">
-                <Image
-                    className="w-24 h-24 mx-auto rounded-full border-4 border-gray-300"
-                    src={session?.user.image}
-                    width={100}
-                    height={100}
-                    alt="User Avatar"
-                />
+                {session?.user.image ? (
+                    <Image
+                        className="w-24 h-24 mx-auto rounded-full border-4 border-gray-300"
+                        src={session?.user.image}
+                        width={100}
+                        height={100}
+                        alt="User Avatar"
+                    />
+                ) : (
+                    <div className="w-24 h-24 mx-auto rounded-full border-4 border-gray-300 flex justify-center items-center">
+                        <h2 className="text-[70px] font-bold">
+                            {session?.user.name.split('')[0]}
+                        </h2>
+                    </div>
+                )}
                 <h2 className="mt-4 text-2xl font-semibold text-gray-800">
                     {session?.user.name}
                 </h2>
