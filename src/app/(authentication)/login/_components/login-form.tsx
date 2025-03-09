@@ -17,17 +17,13 @@ import { loginSchema } from '@/lib/schemas/zod/login-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { PiEyeClosedDuotone, PiEyeDuotone } from 'react-icons/pi';
-import { toast, Toaster } from 'sonner';
 import { z } from 'zod';
 import LoginWithGoogle from './login-with-google';
 
 export default function LoginForm() {
-    const router = useRouter();
-
     const form = useForm<z.infer<typeof loginSchema>>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
@@ -39,22 +35,11 @@ export default function LoginForm() {
     // 2. Define a submit handler.
     async function onSubmit(values: z.infer<typeof loginSchema>) {
         try {
-            const loginUser = await signIn('credentials', {
+            await signIn('credentials', {
                 redirect: true,
                 redirectTo: '/',
                 ...values,
             });
-
-            if (!loginUser?.error) {
-                toast.success('Your are successful to login.');
-                router.push('/');
-                return;
-            }
-
-            if (loginUser?.code) {
-                toast.error(loginUser?.code);
-                return;
-            }
         } catch (error) {
             console.log(error);
         }
@@ -129,7 +114,6 @@ export default function LoginForm() {
                     </Link>
                 </div>
             </Form>
-            <Toaster position="top-center" richColors closeButton />
         </>
     );
 }
