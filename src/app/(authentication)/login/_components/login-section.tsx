@@ -5,7 +5,9 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import Link from 'next/link';
 import LoginForm from './login-form';
+import LoginWithGoogle from './login-with-google';
 
 export default function LoginSection() {
     return (
@@ -18,6 +20,16 @@ export default function LoginSection() {
             </CardHeader>
             <CardContent>
                 <LoginForm />
+
+                {/* login with google */}
+                <LoginWithGoogle />
+                {/* login with google */}
+                <div className="mt-4 text-center text-sm">
+                    Don&apos;t have an account?{' '}
+                    <Link href="/register" className="underline">
+                        Sign up
+                    </Link>
+                </div>
             </CardContent>
         </Card>
     );
