@@ -1,18 +1,25 @@
 import { auth } from '@/auth';
 import CustomLink from '@/components/custom-link';
+import Image from 'next/image';
 
 import { FaRegUser } from 'react-icons/fa6';
 
 export default async function Account() {
     const session = await auth();
     const firstName = session?.user?.name?.split(' ')[0] || 'Name';
+
+    const picture = session?.user.image;
+
     if (session) {
         return (
             <li className="text-white">
                 <CustomLink href={'/profile'}>
                     <div className="flex md:flex-row flex-col items-center xl:gap-3 md:gap-2 gap-1 hover:text-primary-foreground duration-150 group">
                         <div className="text-primary-foreground lg:text-3xl text-xl">
-                            <FaRegUser />
+                            <ProfilePicture
+                                url={picture}
+                                name={session.user.name}
+                            />
                         </div>
                         <div>
                             <h2 className="sm:text-lg text-sm font-medium">
@@ -53,4 +60,20 @@ export default async function Account() {
             </>
         );
     }
+}
+
+function ProfilePicture({ url, name }: { url?: string | null; name: string }) {
+    if (url) {
+        return (
+            <figure className="w-[30px] h-[30px] rounded-full overflow-hidden">
+                <Image src={url} alt={name} width={30} height={30} />
+            </figure>
+        );
+    }
+
+    const nameFirstLetter = name.slice('')[0];
+
+    return (
+        <span className="w-[30px] h-[30px] font-bold ">{nameFirstLetter}</span>
+    );
 }
