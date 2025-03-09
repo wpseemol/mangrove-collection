@@ -1,5 +1,6 @@
 import { auth } from '@/auth';
 import CustomLink from '@/components/custom-link';
+import { ADMIN, CREATOR, USER } from '@/lib/constant';
 import Image from 'next/image';
 
 import { FaRegUser } from 'react-icons/fa6';
@@ -10,10 +11,27 @@ export default async function Account() {
 
     const picture = session?.user.image;
 
+    let accountUrl = '/login';
+
+    if (session?.user.role) {
+        switch (session?.user.role) {
+            case USER:
+                accountUrl = '/profile';
+                break;
+
+            case ADMIN:
+                accountUrl = '/dashboard';
+                break;
+            case CREATOR:
+                accountUrl = '/creator-dashboard';
+                break;
+        }
+    }
+
     if (session) {
         return (
             <li className="text-white">
-                <CustomLink href={'/profile'}>
+                <CustomLink href={accountUrl}>
                     <div className="flex md:flex-row flex-col items-center xl:gap-3 md:gap-2 gap-1 hover:text-primary-foreground duration-150 group">
                         <div className="text-primary-foreground lg:text-3xl text-xl">
                             <ProfilePicture
