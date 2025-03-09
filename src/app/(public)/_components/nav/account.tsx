@@ -89,7 +89,7 @@ function ProfilePicture({ url, name }: { url?: string | null; name: string }) {
         );
     }
 
-    const nameFirstLetter = name.slice('')[0];
+    const nameFirstLetter = name.split('')[0];
 
     return (
         <span className="w-[30px] h-[30px] font-bold ">{nameFirstLetter}</span>
