@@ -1,6 +1,6 @@
 export default function LoadingPage() {
     return (
-        <main className="flex justify-center items-center h-[calc(100vh-26.8rem)]">
+        <main className="flex justify-center items-center h-screen">
             <section>
                 <p>Loading...</p>
             </section>
