@@ -43,7 +43,12 @@ interface UserRegister {
 
 export async function googolProviderUserCreate(
     googleLoginUserInfo: User
-): Promise<GoogleUserType | null> {
+): Promise<GoogleUserType> {
+    const loginUserInfo: GoogleUserType = {
+        message: 'Some thing is wrong',
+        status: 500,
+        data: null,
+    };
     try {
         const response = await fetch(
             `${baseUrl}api/v1/user/google-provider-user-register`,
@@ -60,20 +65,33 @@ export async function googolProviderUserCreate(
             }
         );
 
-        if (response.ok) {
-            const { data } = await response.json();
-            return data;
+        loginUserInfo.status = response.status;
+
+        const responseData = await response.json();
+        if (responseData.message) {
+            const responseMessage = responseData.message as string;
+            loginUserInfo.message = responseMessage;
         }
 
-        return null;
+        if (responseData.data) {
+            loginUserInfo.data = responseData.data;
+        }
+
+        return loginUserInfo;
     } catch (error) {
         console.log('googolProviderUserCreate error:', error);
 
-        return null;
+        return loginUserInfo;
     }
 }
 
 interface GoogleUserType {
+    message: string;
+    status: number | string;
+    data: UserType | null;
+}
+
+interface UserType {
     id: string;
     name: string;
     email: string;

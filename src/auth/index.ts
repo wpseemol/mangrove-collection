@@ -48,7 +48,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     return response.data;
                 }
 
-                if (response.message) errorMessage = response.message;
+                errorMessage = response.message;
                 throw new InvalidLoginError();
             },
         }),
@@ -65,11 +65,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 // do some thing.
 
                 const googleLoginUser = await googolProviderUserCreate(user);
-                if (googleLoginUser) {
-                    user.id = googleLoginUser.id;
-                    user.role = googleLoginUser.role;
-                    return true;
+
+                if (
+                    googleLoginUser.status === 200 ||
+                    googleLoginUser.status === 201
+                ) {
+                    if (googleLoginUser.data) {
+                        user.id = googleLoginUser.data.id;
+                        user.role = googleLoginUser.data.role;
+                        return true;
+                    }
                 }
+
+                errorMessage = googleLoginUser.message;
                 throw new InvalidLoginError();
                 return false;
             }
