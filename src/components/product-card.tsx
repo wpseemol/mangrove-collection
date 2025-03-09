@@ -2,6 +2,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { CardProductType, PriceType } from '@/types/product';
 import Image from 'next/image';
 import Link from 'next/link';
+import CartButton from './cart-button';
 import { CurrencyIcon } from './currency-icon';
 import { Button } from './ui/button';
 
@@ -74,27 +75,9 @@ export default function ProductCard({ details }: { details: CardProductType }) {
                             <span className="hidden sm:inline ">Buy Now</span>
                             <span className="sm:hidden">Buy</span>
                         </Button>{' '}
-                        <Button
-                            variant="default"
-                            size="sm"
-                            className="text-neutral-100 hover:bg-primary-foreground">
-                            <span className="hidden sm:inline">
-                                Add to Cart
-                            </span>
-                            <span className="sm:hidden">Cart</span>
-                        </Button>{' '}
-                        {/* <CartButton
-                            productId={details.slug}
-                            variant="outline"
-                            size="sm"
-                            className="px-5 sm:w-fit w-[60px]">
-                            <>
-                                <span className="hidden sm:inline">
-                                    Add to Cart
-                                </span>
-                                <span className="sm:hidden">Cart</span>
-                            </>
-                        </CartButton> */}
+                        {/* cart button */}
+                        <CartButton productId={details.id} />
+                        {/* cart button */}
                     </div>
                 </CardContent>
             </Card>
