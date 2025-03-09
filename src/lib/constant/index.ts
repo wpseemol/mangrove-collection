@@ -10,3 +10,7 @@ export const CREATOR = 'creator';
  * User Constant value USER = "user".
  */
 export const USER = 'user';
+
+/**
+ * Enum for different user roles.
+ */

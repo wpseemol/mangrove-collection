@@ -1,6 +1,8 @@
 import { userLogin } from '@/server/login';
+import { googolProviderUserCreate } from '@/server/user';
 import NextAuth, { CredentialsSignin } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
+import Google from 'next-auth/providers/google';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     session: {
@@ -46,11 +48,66 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     return response.data;
                 }
 
-                if (response.message) errorMessage = response.message;
+                errorMessage = response.message;
                 throw new InvalidLoginError();
             },
         }),
+
+        Google({
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        }),
     ],
+
+    callbacks: {
+        async signIn({ user, account }) {
+            if (account?.provider === 'google') {
+                // do some thing.
+
+                const googleLoginUser = await googolProviderUserCreate(user);
+
+                if (
+                    googleLoginUser.status === 200 ||
+                    googleLoginUser.status === 201
+                ) {
+                    if (googleLoginUser.data) {
+                        user.id = googleLoginUser.data.id;
+                        user.role = googleLoginUser.data.role;
+                        return true;
+                    }
+                }
+
+                errorMessage = googleLoginUser.message;
+                throw new InvalidLoginError();
+                return false;
+            }
+
+            return true;
+        },
+        // token, user, session, trigger
+        async jwt({ token, user, session }) {
+            if (user?.role) {
+                token.role = user.role;
+            }
+            if (session?.role) {
+                token.role = session.role;
+            }
+
+            return token;
+        },
+
+        async session({ session, token }) {
+            if (token.role) {
+                session.user.role = token.role;
+            }
+
+            if (token.sub) {
+                session.user.id = token.sub;
+            }
+
+            return session;
+        },
+    },
 });
 
 let errorMessage = 'Some thing is wrong.';

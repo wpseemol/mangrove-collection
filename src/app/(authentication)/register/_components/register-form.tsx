@@ -123,9 +123,7 @@ export default function RegisterForm() {
                         {form.formState.isSubmitting && <ButtonLoading />}
                     </Button>
                 </form>
-                <Button variant="outline" className="w-full mt-4">
-                    Sign up with Google
-                </Button>
+
                 <div className="mt-4 text-center text-sm">
                     Already have an account?{' '}
                     <Link href="/login" className="underline">

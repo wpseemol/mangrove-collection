@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema<IUser>({
         default: () => crypto.randomUUID(),
         unique: true,
     },
-    fullName: {
+    name: {
         type: String,
         required: true,
     },
@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema<IUser>({
     },
     password: {
         type: String,
-        required: true,
+        required: false,
         default: null,
     },
     image: {
@@ -30,8 +30,7 @@ const userSchema = new mongoose.Schema<IUser>({
     },
     phone: {
         type: String,
-        required: true,
-        unique: true,
+        required: false,
         default: null,
     },
 
@@ -40,6 +39,11 @@ const userSchema = new mongoose.Schema<IUser>({
         required: true,
         enum: ['user', 'creator', 'admin'], // Use enum for restricted values
         default: 'user',
+    },
+    provider: {
+        type: String,
+        required: true,
+        default: 'credential',
     },
     registerAt: {
         type: Date,
