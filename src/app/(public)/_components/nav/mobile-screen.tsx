@@ -1,5 +1,5 @@
 import Account from './account';
-import { Card } from './card';
+import { Cart } from './cart';
 import { Logo } from './logo';
 import MenuBtn from './menu-btn';
 import { NavMenu } from './nav-menu';
@@ -35,7 +35,7 @@ export default function MobileScreen() {
                         <Offer />
 
                         {/* card */}
-                        <Card />
+                        <Cart />
 
                         {/* account */}
 

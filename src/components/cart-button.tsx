@@ -1,17 +1,24 @@
 'use client';
-import { cartSetProduct } from '@/server/cart/set';
 import { Button } from './ui/button';
 
 export default function CartButton({ productId }: { productId: string }) {
     async function handleCard() {
-        console.log('cart product:', productId);
-
-        const cardItem: CartItem = {
+        const cartItem: CartItem = {
             productId,
             quantity: 1,
         };
 
-        await cartSetProduct(cardItem);
+        const response = await fetch(`/api/v1/cart/set`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(cartItem),
+        });
+
+        // console.log('cart set product:', response);
+        const responseData = await response.json();
+        console.log('cart set product:', responseData);
     }
 
     return (

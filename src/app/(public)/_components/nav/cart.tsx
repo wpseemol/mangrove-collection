@@ -2,7 +2,7 @@ import CustomLink from '@/components/custom-link';
 import { FaCartFlatbed } from 'react-icons/fa6';
 import CartCount from './card-item-count';
 
-export function Card() {
+export async function Cart() {
     return (
         <li className="text-white">
             {' '}

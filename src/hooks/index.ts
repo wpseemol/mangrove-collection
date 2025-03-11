@@ -1,4 +1,4 @@
-import { VariantUpdateContext } from '@/contexts';
+import { CartContext, VariantUpdateContext } from '@/contexts';
 import { useContext } from 'react';
 
 /**
@@ -17,4 +17,18 @@ export const useVariantUpdate = function () {
     const { variantSelectId, setVariantSelectId } = context;
 
     return { variantSelectId, setVariantSelectId };
+};
+
+/**
+ * useCart hook pass cart item use {cart, setCart} object.
+ * @returns {cart, setCart}
+ */
+export const useCart = function () {
+    const context = useContext(CartContext);
+
+    if (!context) {
+        throw new Error('useCart muse be used within a CartProvider');
+    }
+
+    return context;
 };

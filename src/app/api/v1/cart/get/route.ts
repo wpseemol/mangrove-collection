@@ -1,20 +1,44 @@
-import { NextResponse } from 'next/server';
+import jwt from 'jsonwebtoken';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET() {
+interface CartItem {
+    productId: string;
+    quantity: number;
+}
+
+const SECRET_KEY = process.env.JWT_SECRET_KEY || 'your-secret-key'; // Use a secure key
+
+export async function GET(request: NextRequest) {
     try {
         // Retrieve cart from cookies
         const cartCookie = request.cookies.get('cart')?.value;
-        const cart: CartItem[] = cartCookie ? JSON.parse(cartCookie) : [];
+        let cart: CartItem[] = [];
+
+        // Decrypt the cart data if it exists
+        if (cartCookie) {
+            try {
+                const decoded = jwt.verify(cartCookie, SECRET_KEY) as {
+                    cart: CartItem[];
+                };
+                cart = decoded.cart;
+            } catch (error) {
+                console.error('Invalid JWT:', error);
+                return NextResponse.json(
+                    { message: 'Invalid cart data in JWT.' },
+                    { status: 400 }
+                );
+            }
+        }
 
         // Extract product IDs
         const productIds = cart.map((item) => item.productId);
 
         // Calculate total items in cart
-        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        const totalItems = cart.length;
 
         return NextResponse.json(
             {
-                message: 'Cart products get',
+                message: 'Cart retrieved successfully.',
                 success: true,
                 cart,
                 productIds,
@@ -35,9 +59,4 @@ export async function GET() {
             { status: 500 }
         );
     }
-}
-
-interface CartItem {
-    productId: string;
-    quantity: number;
 }

@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 
 import Account from './account';
-import { Card } from './card';
+import { Cart } from './cart';
 import { Logo } from './logo';
 import { NavMenu } from './nav-menu';
 import { Offer } from './offer';
@@ -23,7 +23,7 @@ export default async function FullScreen() {
                         <Offer />
 
                         {/* card */}
-                        <Card />
+                        <Cart />
 
                         {/* account */}
                         <Suspense fallback={<p>loading...</p>}>
