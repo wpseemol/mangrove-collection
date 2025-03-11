@@ -1,4 +1,4 @@
-import { CartContext, VariantUpdateContext } from '@/contexts';
+import { CartContext, PurchaseContext, VariantUpdateContext } from '@/contexts';
 import { useContext } from 'react';
 
 /**
@@ -28,6 +28,20 @@ export const useCart = function () {
 
     if (!context) {
         throw new Error('useCart muse be used within a CartProvider');
+    }
+
+    return context;
+};
+
+/**
+ * usePurchase hook pass cart item use `{buyProducts, setBuyProducts}` object.
+ * @returns {buyProducts, setBuyProducts}
+ */
+export const usePurchase = function () {
+    const context = useContext(PurchaseContext);
+
+    if (!context) {
+        throw new Error('usePurchase muse be used within a CartProvider');
     }
 
     return context;

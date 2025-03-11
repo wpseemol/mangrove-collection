@@ -4,26 +4,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import CartButton from './cart-button';
 import { CurrencyIcon } from './currency-icon';
-import { Button } from './ui/button';
+import PurchaseButton from './purchase-button';
 
 export default function ProductCard({ details }: { details: CardProductType }) {
     /**
      * selected price show.
      */
     const displayPrice = details.price.find((item: PriceType) => item.select);
-
-    /**
-     * image url random change every reload.
-     */
-    let imageUrl: string | null;
-    if (details.images && details.images.length > 0) {
-        const randomIndex: number = Math.floor(
-            Math.random() * details.images.length
-        );
-        imageUrl = details.images[randomIndex].imgUrl;
-    } else {
-        imageUrl = null;
-    }
 
     return (
         <>
@@ -38,19 +25,8 @@ export default function ProductCard({ details }: { details: CardProductType }) {
                                 alt={details.name}
                                 width={145}
                                 height={145}
-                                className={`${
-                                    imageUrl ? 'group-hover:z-[0]' : ''
-                                } object-cover object-center w-full h-full group-hover:scale-105 duration-500 z-[2] absolute top-0 left-0 bg-white`}
+                                className={`object-cover object-center w-full h-full group-hover:scale-105 duration-500 bg-white`}
                             />
-                            {imageUrl && (
-                                <Image
-                                    src={imageUrl}
-                                    alt={details.name}
-                                    width={145}
-                                    height={145}
-                                    className="object-cover object-center w-full h-full duration-500 group-hover:scale-105 absolute top-0 left-0 z-[1] bg-white"
-                                />
-                            )}
                         </figure>
                         <div className="animate-fade-up animate-once animate-duration-1000 w-full px-2 mt-1 flex flex-col items-center">
                             <h2 className="max-h-[63px] overflow-hidden font-normal md:text-lg text-base text-ellipsis text-center group-hover:text-primary-foreground capitalize group-hover:underline duration-150">
@@ -66,15 +42,7 @@ export default function ProductCard({ details }: { details: CardProductType }) {
                         </div>
                     </Link>
                     <div className="  flex justify-center items-center gap-x-2 w-full duration-700   sm:p-4 p-3">
-                        <Button
-                            variant="default"
-                            size="sm"
-                            className="text-neutral-100 hover:bg-primary-foreground 
-                            group-hover:animate-jump animate-once animate-duration-[3000ms]
-                            shadow-xl">
-                            <span className="hidden sm:inline ">Buy Now</span>
-                            <span className="sm:hidden">Buy</span>
-                        </Button>{' '}
+                        <PurchaseButton productId={details.id} />
                         {/* cart button */}
                         <CartButton productId={details.id} />
                         {/* cart button */}

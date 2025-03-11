@@ -1,7 +1,12 @@
 'use client';
+import { useCart } from '@/hooks';
 import { Button } from './ui/button';
 
 export default function CartButton({ productId }: { productId: string }) {
+    const { cart, setCart } = useCart();
+
+    const isAlreadyCard: boolean = cart.cartProductIds.includes(productId);
+
     async function handleCard() {
         const cartItem: CartItem = {
             productId,
@@ -17,18 +22,32 @@ export default function CartButton({ productId }: { productId: string }) {
         });
 
         // console.log('cart set product:', response);
-        const responseData = await response.json();
-        console.log('cart set product:', responseData);
+        if (response.ok) {
+            const responseData = await response.json();
+            if (responseData.success) {
+                setCart({
+                    cartCount: responseData.totalItems,
+                    cartProductIds: responseData.productIds,
+                });
+            }
+        }
     }
 
     return (
         <Button
-            onClick={handleCard}
+            onClick={() => {
+                if (!isAlreadyCard) handleCard();
+            }}
+            disabled={isAlreadyCard}
             variant="default"
             size="sm"
             className="text-neutral-100 hover:bg-primary-foreground">
-            <span className="hidden sm:inline">Add to Cart</span>
-            <span className="sm:hidden">Cart</span>
+            <span className="hidden sm:inline">
+                {isAlreadyCard ? 'Added' : 'Add to Cart'}
+            </span>
+            <span className="sm:hidden">
+                {isAlreadyCard ? 'Added' : 'Cart'}
+            </span>
         </Button>
     );
 }

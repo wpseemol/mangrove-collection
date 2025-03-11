@@ -68,6 +68,7 @@ export async function POST(request: NextRequest) {
         const response = NextResponse.json(
             {
                 message: 'Cart updated successfully.',
+                success: true,
                 cart,
                 productIds,
                 totalItems,

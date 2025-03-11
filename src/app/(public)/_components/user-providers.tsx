@@ -1,5 +1,7 @@
 import { ThemeProvider } from '@/components/theme-provider';
 import React from 'react';
+import CartProvider from './cart-provider';
+import PurchProvider from './purch-provider';
 
 export default function UserProviders({
     children,
@@ -14,7 +16,9 @@ export default function UserProviders({
                 themes={['green', 'dark', 'light']}
                 enableSystem
                 disableTransitionOnChange>
-                {children}
+                <CartProvider>
+                    <PurchProvider>{children}</PurchProvider>
+                </CartProvider>
             </ThemeProvider>
         </>
     );

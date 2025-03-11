@@ -1,36 +1,38 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCart } from '@/hooks';
+import { useEffect } from 'react';
 
 export default function CartCount() {
-    const [count, setCount] = useState<number | null>(0);
-
-    // const { cart } = useCart();
-
-    // if (cart.cartCount && cart.cartCount > 0) {
-    //     return <span>({cart.cartCount})</span>;
-    // }
+    const { cart, setCart } = useCart();
 
     useEffect(() => {
-        async function getCat() {
+        async function getCatFetch() {
             try {
                 const response = await fetch(`/api/v1/cart/get`);
 
-                const responseData = await response.json();
-
-                setCount(responseData.totalItems);
+                if (response.ok) {
+                    const responseData = await response.json();
+                    if (responseData.success) {
+                        setCart({
+                            cartCount: responseData.totalItems,
+                            cartProductIds: responseData.productIds,
+                        });
+                    }
+                }
             } catch (error) {
                 console.log(error);
-                setCount(0);
             }
         }
-        getCat();
-    }, []);
+        getCatFetch();
+    }, [setCart]);
 
     return (
-        <>
-            {' '}
-            <span>({count})</span>
-        </>
+        cart.cartCount && (
+            <>
+                {' '}
+                <span>({cart.cartCount})</span>
+            </>
+        )
     );
 }
