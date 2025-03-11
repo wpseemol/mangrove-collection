@@ -34,102 +34,104 @@ export function CheckoutForm() {
     };
 
     return (
-        <div className=" flex flex-col items-center justify-center bg-gray-100 py-8 pb-10 static top-[10rem]">
-            <div className="bg-blue-100 border-l-4 border-green-500 text-green-700 p-4 rounded-md shadow-md mb-4 md:mx-0 mx-2">
-                <p className="text-sm">{message}</p>
+        <div className="bg-gray-100">
+            <div className=" flex flex-col items-center  py-8 pb-10 sticky top-[4rem] h-fit">
+                <div className="bg-blue-100 border-l-4 border-green-500 text-green-700 p-4 rounded-md shadow-md mb-4 md:mx-0 mx-2">
+                    <p className="text-sm">{message}</p>
+                </div>
+
+                <h2 className="text-2xl font-bold mb-4">Payment Method</h2>
+
+                <div className="flex gap-2 py-3 md:px-0 px-2">
+                    <Button
+                        onClick={() => setPaymentMethond('cod')}
+                        variant={cod ? 'outline' : 'ghost'}>
+                        {cod ? <FcCheckmark /> : ''}
+                        Cash on Delevery
+                    </Button>
+                    <Button
+                        onClick={() => setPaymentMethond('online-payment')}
+                        variant={onlinePayment ? 'outline' : 'ghost'}>
+                        {onlinePayment ? <FcCheckmark /> : ''}
+                        Online Payment
+                    </Button>
+                </div>
+
+                <h2 className="text-2xl font-bold mb-4">Checkout</h2>
+
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="space-y-4 md:px-0 px-2">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                            Full Name
+                        </label>
+                        <input
+                            type="text"
+                            {...register('fullName')}
+                            className="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        />
+                        {errors.fullName && (
+                            <p className="text-red-500 text-sm">
+                                {errors.fullName.message}
+                            </p>
+                        )}
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                            Phone Number
+                        </label>
+                        <input
+                            type="tel"
+                            {...register('phoneNumber')}
+                            className="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        />
+                        {errors.phoneNumber && (
+                            <p className="text-red-500 text-sm">
+                                {errors.phoneNumber.message}
+                            </p>
+                        )}
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                            Full Address
+                        </label>
+                        <textarea
+                            {...register('fullAddress')}
+                            className="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                        {errors.fullAddress && (
+                            <p className="text-red-500 text-sm">
+                                {errors.fullAddress.message}
+                            </p>
+                        )}
+                    </div>
+                    <div className="flex items-center">
+                        <input
+                            type="checkbox"
+                            {...register('termsAccepted')}
+                            className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                        />
+                        <label className="ml-2 text-sm text-gray-600">
+                            I accept the{' '}
+                            <a href="#" className="text-indigo-600 underline">
+                                Terms and Conditions
+                            </a>{' '}
+                            and{' '}
+                            <a href="#" className="text-indigo-600 underline">
+                                Privacy Policy
+                            </a>
+                        </label>
+                    </div>
+                    {errors.termsAccepted && (
+                        <p className="text-red-500 text-sm">
+                            {errors.termsAccepted.message}
+                        </p>
+                    )}
+                    <Button type="submit" className=" text-white w-full">
+                        Place Order
+                    </Button>
+                </form>
             </div>
-
-            <h2 className="text-2xl font-bold mb-4">Payment Method</h2>
-
-            <div className="flex gap-2 py-3 md:px-0 px-2">
-                <Button
-                    onClick={() => setPaymentMethond('cod')}
-                    variant={cod ? 'outline' : 'ghost'}>
-                    {cod ? <FcCheckmark /> : ''}
-                    Cash on Delevery
-                </Button>
-                <Button
-                    onClick={() => setPaymentMethond('online-payment')}
-                    variant={onlinePayment ? 'outline' : 'ghost'}>
-                    {onlinePayment ? <FcCheckmark /> : ''}
-                    Online Payment
-                </Button>
-            </div>
-
-            <h2 className="text-2xl font-bold mb-4">Checkout</h2>
-
-            <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="space-y-4 md:px-0 px-2">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                        Full Name
-                    </label>
-                    <input
-                        type="text"
-                        {...register('fullName')}
-                        className="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                    />
-                    {errors.fullName && (
-                        <p className="text-red-500 text-sm">
-                            {errors.fullName.message}
-                        </p>
-                    )}
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                        Phone Number
-                    </label>
-                    <input
-                        type="tel"
-                        {...register('phoneNumber')}
-                        className="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                    />
-                    {errors.phoneNumber && (
-                        <p className="text-red-500 text-sm">
-                            {errors.phoneNumber.message}
-                        </p>
-                    )}
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                        Full Address
-                    </label>
-                    <textarea
-                        {...register('fullAddress')}
-                        className="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
-                    {errors.fullAddress && (
-                        <p className="text-red-500 text-sm">
-                            {errors.fullAddress.message}
-                        </p>
-                    )}
-                </div>
-                <div className="flex items-center">
-                    <input
-                        type="checkbox"
-                        {...register('termsAccepted')}
-                        className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-                    />
-                    <label className="ml-2 text-sm text-gray-600">
-                        I accept the{' '}
-                        <a href="#" className="text-indigo-600 underline">
-                            Terms and Conditions
-                        </a>{' '}
-                        and{' '}
-                        <a href="#" className="text-indigo-600 underline">
-                            Privacy Policy
-                        </a>
-                    </label>
-                </div>
-                {errors.termsAccepted && (
-                    <p className="text-red-500 text-sm">
-                        {errors.termsAccepted.message}
-                    </p>
-                )}
-                <Button type="submit" className=" text-white w-full">
-                    Place Order
-                </Button>
-            </form>
         </div>
     );
 }

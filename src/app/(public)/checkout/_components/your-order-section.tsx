@@ -3,31 +3,8 @@
 import Image from 'next/image';
 import { useState } from 'react';
 
-interface Product {
-    id: number;
-    name: string;
-    price: number;
-    quantity: number;
-    image: string;
-}
-
 export default function YourOrderSection() {
-    const [cart, setCart] = useState<Product[]>([
-        {
-            id: 1,
-            name: 'Product A',
-            price: 20,
-            quantity: 1,
-            image: '/assets/image/mangrove picture.jpg',
-        },
-        {
-            id: 2,
-            name: 'Product B',
-            price: 30,
-            quantity: 1,
-            image: '/assets/image/mangrove picture.jpg',
-        },
-    ]);
+    const [cart, setCart] = useState<Product[]>(products);
 
     const SHIPPING_CHARGE = 5; // Flat shipping charge
 
@@ -130,4 +107,260 @@ export default function YourOrderSection() {
             </div>
         </div>
     );
+}
+
+const products: Product = [
+    {
+        id: crypto.randomUUID(),
+        name: 'Product A',
+        price: 20,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+    {
+        id: crypto.randomUUID(),
+        name: 'Product B',
+        price: 30,
+        quantity: 1,
+        image: '/assets/image/mangrove picture.jpg',
+    },
+];
+
+interface Product {
+    id: number | string;
+    name: string;
+    price: number;
+    quantity: number;
+    image: string;
 }
