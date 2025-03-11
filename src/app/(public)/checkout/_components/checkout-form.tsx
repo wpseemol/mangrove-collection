@@ -42,7 +42,7 @@ export function CheckoutForm() {
                 <div className="mb-4">
                     <h2 className="text-2xl font-bold ">Payment Method</h2>
 
-                    <div className="flex gap-2 py-3 md:px-0 px-2">
+                    <div className="flex justify-center gap-2 py-3 md:px-0 px-2 ">
                         <Button
                             onClick={() => setPaymentMethond('cod')}
                             variant={cod ? 'outline' : 'ghost'}>
