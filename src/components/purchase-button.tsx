@@ -7,9 +7,18 @@ export default function PurchaseButton({ productId }: { productId: string }) {
     const router = useRouter();
 
     const { setBuyProducts } = usePurchase();
-    function handlePurchase() {
-        setBuyProducts([{ productId, quantity: 1 }]);
-        console.log('parchus productId:', productId);
+    async function handlePurchase() {
+        const purchaseItems: PurchaseItem[] = [{ productId, quantity: 1 }];
+
+        setBuyProducts(purchaseItems);
+
+        await fetch(`/api/v1/purchase/set`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(purchaseItems),
+        });
 
         router.push('/checkout');
     }
@@ -25,4 +34,9 @@ export default function PurchaseButton({ productId }: { productId: string }) {
             <span className="sm:hidden">Buy</span>
         </Button>
     );
+}
+
+interface PurchaseItem {
+    productId: string;
+    quantity: number;
 }
