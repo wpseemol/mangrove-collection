@@ -12,11 +12,31 @@
 Learning laravel and create api for my mangrove collection api devolapment.
 
 -   First Chack on my mation php, composer and mysql server is run.
+
+```sh
+    php --version
+    composer --version
+    laravel --version
+```
+
 -   chake my ubuntu mation use this command mysql is run and login root user.
 
 ```sh
-
+    mysql --version
     sudo systemctl status mysql
+    sudo systemctl start mysql
+    sudo systemctl restart mysql
+```
 
+-   Create your laravel project use the commend.
 
+```sh
+    laravel new project_name
+```
+
+-   Now, set env varable to Laravel database user and password.In my case, my user and passwod `root` or `Seemol@7246`.
+-   Then run you laravel project use the commend.
+
+```sh
+    php artisan serve
 ```
