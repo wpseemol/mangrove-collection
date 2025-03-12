@@ -2,14 +2,20 @@
 import { useCart } from '@/hooks';
 import { Button } from './ui/button';
 
-export default function CartButton({ productId }: { productId: string }) {
+export default function CartButton({
+    productId,
+}: {
+    productId: string | number;
+}) {
     const { cart, setCart } = useCart();
 
-    const isAlreadyCard: boolean = cart.cartProductIds.includes(productId);
+    const isAlreadyCard: boolean = cart.cartProductIds.includes(
+        productId.toString()
+    );
 
     async function handleCard() {
         const cartItem: CartItem = {
-            productId,
+            productId: productId.toString(),
             quantity: 1,
         };
 

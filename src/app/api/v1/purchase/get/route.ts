@@ -64,26 +64,26 @@ export async function GET(request: NextRequest) {
             );
             if (purchaseProduct) {
                 return {
-                    id: item.id,
+                    id: item.id.toString(),
                     name: item.name,
                     slug: item.slug,
                     thumbnail: item.thumbnail,
                     currency: item.currency,
-                    price: displayPrice?.price ? displayPrice.price : 0,
+                    price: displayPrice?.price || 0,
                     quantity: purchaseProduct.quantity,
                 };
             }
 
             return {
-                id: item.id,
+                id: item.id.toString(),
                 name: item.name,
                 slug: item.slug,
                 currency: item.currency,
                 thumbnail: item.thumbnail,
-                price: displayPrice?.price ? displayPrice.price : 0,
+                price: displayPrice?.price || 0,
                 quantity: 1,
             };
-        }) as PurchaseProductsType;
+        }) as PurchaseProductsType[];
 
         return NextResponse.json(
             {

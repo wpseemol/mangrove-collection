@@ -19,7 +19,7 @@ export default function YourOrderSection() {
 
     const SHIPPING_CHARGE = 5; // Flat shipping charge
 
-    const updateQuantity = (id: number, quantity: number) => {
+    const updateQuantity = (id: number | string, quantity: number) => {
         setPurcheseProducts((prevCart) =>
             prevCart.map((item) =>
                 item.id === id
@@ -34,7 +34,7 @@ export default function YourOrderSection() {
      * @param id
      */
 
-    const removeItem = async (id: number) => {
+    const removeItem = async (id: number | string) => {
         setPurcheseProducts((prev) => prev.filter((item) => item.id !== id));
         try {
             await fetch(`/api/v1/purchase/deleted`, {

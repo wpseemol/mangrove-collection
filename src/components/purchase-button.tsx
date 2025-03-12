@@ -3,12 +3,18 @@ import { usePurchase } from '@/hooks';
 import { useRouter } from 'next/navigation';
 import { Button } from './ui/button';
 
-export default function PurchaseButton({ productId }: { productId: string }) {
+export default function PurchaseButton({
+    productId,
+}: {
+    productId: string | number;
+}) {
     const router = useRouter();
 
     const { setBuyProducts } = usePurchase();
     async function handlePurchase() {
-        const purchaseItems: PurchaseItem[] = [{ productId, quantity: 1 }];
+        const purchaseItems: PurchaseItem[] = [
+            { productId: productId.toString(), quantity: 1 },
+        ];
 
         setBuyProducts(purchaseItems);
 
