@@ -6,15 +6,6 @@ import { useForm } from 'react-hook-form';
 import { FcCheckmark } from 'react-icons/fc';
 import { z } from 'zod';
 
-const checkoutSchema = z.object({
-    fullName: z.string().min(1, 'Full Name is required'),
-    phoneNumber: z.string().min(10, 'Phone Number is required'),
-    fullAddress: z.string().min(1, 'Full Address is required'),
-    termsAccepted: z.boolean().refine((val) => val === true, {
-        message: 'You must accept the terms and conditions',
-    }),
-});
-
 export function CheckoutForm() {
     const [paymentMethod, setPaymentMethond] = useState<string>('cod');
 
@@ -25,12 +16,12 @@ export function CheckoutForm() {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm({
+    } = useForm<z.infer<typeof checkoutSchema>>({
         resolver: zodResolver(checkoutSchema),
     });
 
-    const onSubmit = (data) => {
-        console.log('Form submitted', { ...data, cart });
+    const onSubmit = (values: z.infer<typeof checkoutSchema>) => {
+        console.log('Form submitted', values.fullAddress);
     };
 
     return (
@@ -141,5 +132,14 @@ export function CheckoutForm() {
     );
 }
 
-const message =
+const message: string =
     'অর্ডার সংক্রান্ত যেকোনো প্রয়োজনে কথা বলুন আমাদের সাথে - 01412345678';
+
+const checkoutSchema = z.object({
+    fullName: z.string().min(1, 'Full Name is required'),
+    phoneNumber: z.string().min(10, 'Phone Number is required'),
+    fullAddress: z.string().min(1, 'Full Address is required'),
+    termsAccepted: z.boolean().refine((val) => val === true, {
+        message: 'You must accept the terms and conditions',
+    }),
+});
