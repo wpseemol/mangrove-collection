@@ -3,14 +3,14 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const SECRET_KEY = process.env.JWT_SECRET_KEY || 'your-secret-key'; // Use a secure key
 
-export async function PATCH(request: NextRequest) {
+export async function DELETE(request: NextRequest) {
     try {
-        const body = (await request.json()) as PurchaseItem;
+        const body = (await request.json()) as PurchaseDeleteItem;
 
-        if (!body?.productId || !body?.quantity) {
+        if (!body?.productId) {
             return NextResponse.json(
                 {
-                    message: 'Product ID and quantity are required.',
+                    message: 'Product ID are required.',
                     success: false,
                 },
                 { status: 400 }
@@ -37,36 +37,33 @@ export async function PATCH(request: NextRequest) {
             }
         }
 
-        // Update cart
-        const existingItemIndex = purchase.findIndex(
-            (item) => item.productId === body.productId
-        );
-        if (existingItemIndex !== -1) {
-            purchase[existingItemIndex].quantity = body.quantity;
-        } else {
-            purchase.push(body);
-        }
-
-        // Encrypt the updated cart data with JWT
-        const token = jwt.sign({ purchase }, SECRET_KEY, {
-            expiresIn: '1y',
-        }); // Expires in 1 year
+        purchase = purchase.filter((item) => item.productId !== body.productId);
 
         // Store encrypted cart in cookies
         const response = NextResponse.json(
             {
-                message: 'Purchus Product updated successfully.',
+                message: 'Product deleted succes',
                 success: true,
                 date: purchase,
             },
-            { status: 201 }
+            { status: 200 }
         );
-        response.cookies.set('purchase', token, {
-            httpOnly: true,
-            secure: true, // Ensure cookies are sent over HTTPS
-            maxAge: 31536000, // 1 year in seconds
-            path: '/', // Available across the entire site
-        });
+
+        if (purchase.length > 0) {
+            // Encrypt the updated cart data with JWT
+            const token = jwt.sign({ purchase }, SECRET_KEY, {
+                expiresIn: '1y',
+            }); // Expires in 1 year
+
+            response.cookies.set('purchase', token, {
+                httpOnly: true,
+                secure: true, // Ensure cookies are sent over HTTPS
+                maxAge: 31536000, // 1 year in seconds
+                path: '/', // Available across the entire site
+            });
+        } else {
+            response.cookies.delete('purchase');
+        }
 
         return response;
     } catch (error: unknown) {
@@ -82,6 +79,10 @@ export async function PATCH(request: NextRequest) {
             { status: 500 }
         );
     }
+}
+
+interface PurchaseDeleteItem {
+    productId: string;
 }
 
 interface PurchaseItem {
