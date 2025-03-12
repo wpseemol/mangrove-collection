@@ -14,7 +14,7 @@ export default function YourOrderSection() {
     const [loading, setLoading] = useState<boolean>(true);
 
     const [purcheseProducts, setPurcheseProducts] = useState<
-        PurchaseProductsType[] | null
+        PurchaseProductsType[]
     >([]);
 
     const SHIPPING_CHARGE = 5; // Flat shipping charge
@@ -128,66 +128,77 @@ export default function YourOrderSection() {
                 </div>
             ) : (
                 <>
-                    {purcheseProducts.map((product) => {
-                        currency = product.currency;
+                    {purcheseProducts.length > 0 ? (
+                        purcheseProducts.map((product) => {
+                            currency = product.currency;
 
-                        return (
-                            <div
-                                key={product.id}
-                                className="flex items-center justify-between border-b border-green-200 py-3 last:border-none">
-                                <div className="flex items-center gap-4">
-                                    <Image
-                                        src={product.thumbnail}
-                                        alt={product.name}
-                                        width={50}
-                                        height={50}
-                                        className="rounded-md border border-green-400"
-                                    />
-                                    <div>
-                                        <Link
-                                            href={`/products/${product.slug}`}>
-                                            <p className="font-medium text-green-700">
-                                                {product.name}
+                            return (
+                                <div
+                                    key={product.id}
+                                    className="flex items-center justify-between border-b border-green-200 py-3 last:border-none">
+                                    <div className="flex items-center gap-4">
+                                        <Image
+                                            src={product.thumbnail}
+                                            alt={product.name}
+                                            width={50}
+                                            height={50}
+                                            className="rounded-md border border-green-400"
+                                        />
+                                        <div>
+                                            <Link
+                                                href={`/products/${product.slug}`}>
+                                                <p className="font-medium text-green-700">
+                                                    {product.name}
+                                                </p>
+                                            </Link>
+                                            <p className="text-sm text-gray-600">
+                                                {product.price}
+                                                <CurrencyIcon
+                                                    currency={product.currency}
+                                                />
                                             </p>
-                                        </Link>
-                                        <p className="text-sm text-gray-600">
-                                            {product.price}
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <input
+                                            type="number"
+                                            min="1"
+                                            value={product.quantity}
+                                            onChange={(e) => {
+                                                const value =
+                                                    parseInt(e.target.value) ||
+                                                    1;
+                                                debouncedUpdateQuantity(
+                                                    product.id,
+                                                    value
+                                                );
+                                            }}
+                                            className="w-16 p-1 border rounded text-center border-green-400 focus:ring-green-500"
+                                        />
+                                        <p className="font-medium text-green-700">
+                                            {product.price * product.quantity}
                                             <CurrencyIcon
                                                 currency={product.currency}
                                             />
                                         </p>
+                                        <button
+                                            onClick={() =>
+                                                removeItem(product.id)
+                                            }
+                                            className="text-red-500 hover:text-red-700 transition duration-200">
+                                            ✕
+                                        </button>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    <input
-                                        type="number"
-                                        min="1"
-                                        value={product.quantity}
-                                        onChange={(e) => {
-                                            const value =
-                                                parseInt(e.target.value) || 1;
-                                            debouncedUpdateQuantity(
-                                                product.id,
-                                                value
-                                            );
-                                        }}
-                                        className="w-16 p-1 border rounded text-center border-green-400 focus:ring-green-500"
-                                    />
-                                    <p className="font-medium text-green-700">
-                                        {product.price * product.quantity}
-                                        <CurrencyIcon
-                                            currency={product.currency}
-                                        />
-                                    </p>
-                                    <button
-                                        onClick={() => removeItem(product.id)}
-                                        className="text-red-500 hover:text-red-700 transition duration-200">
-                                        ✕
-                                    </button>
-                                </div>
-                            </div>
-                        );
-                    })}
+                            );
+                        })
+                    ) : (
+                        <div>
+                            <p className="text-center">
+                                No products found to buy.
+                            </p>
+                        </div>
+                    )}
 
                     {/* Summary Section */}
                     {purcheseProducts.length > 0 ? (
