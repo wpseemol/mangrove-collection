@@ -1,4 +1,9 @@
-import { CartContext, PurchaseContext, VariantUpdateContext } from '@/contexts';
+import {
+    CartContext,
+    CartProductsContext,
+    PurchaseContext,
+    VariantUpdateContext,
+} from '@/contexts';
 import { useContext } from 'react';
 
 /**
@@ -28,6 +33,22 @@ export const useCart = function () {
 
     if (!context) {
         throw new Error('useCart muse be used within a CartProvider');
+    }
+
+    return context;
+};
+
+/**
+ * useCartProducts hook pass cart item use `{loading,setLoading,cartProducts,setCartProducts}` object.
+ * @returns {loading,setLoading,cartProducts,setCartProducts}
+ */
+export const useCartProducts = function () {
+    const context = useContext(CartProductsContext);
+
+    if (!context) {
+        throw new Error(
+            'useCartProducts muse be used within a CartProductsContext'
+        );
     }
 
     return context;

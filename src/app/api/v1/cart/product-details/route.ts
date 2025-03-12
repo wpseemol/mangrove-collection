@@ -4,32 +4,26 @@ import { replaceMongoIds } from '@/utils/replace-mongo-Ids';
 import jwt from 'jsonwebtoken';
 import { NextRequest, NextResponse } from 'next/server';
 
+interface CartItem {
+    productId: string;
+    quantity: number;
+}
+
 const SECRET_KEY = process.env.JWT_SECRET_KEY || 'your-secret-key'; // Use a secure key
 
 export async function GET(request: NextRequest) {
     try {
         // Retrieve cart from cookies
-        const cartCookie = request.cookies.get('purchase')?.value;
-        let purchase: PurchaseItem[] = [];
-
-        if (!cartCookie) {
-            return NextResponse.json(
-                {
-                    message: 'Can not find any cookies',
-                    success: false,
-                },
-                { status: 400 }
-            );
-        }
+        const cartCookie = request.cookies.get('cart')?.value;
+        let cart: CartItem[] = [];
 
         // Decrypt the cart data if it exists
         if (cartCookie) {
             try {
                 const decoded = jwt.verify(cartCookie, SECRET_KEY) as {
-                    purchase: PurchaseItem[];
+                    cart: CartItem[];
                 };
-
-                purchase = decoded.purchase;
+                cart = decoded.cart;
             } catch (error) {
                 console.error('Invalid JWT:', error);
                 return NextResponse.json(
@@ -40,7 +34,10 @@ export async function GET(request: NextRequest) {
         }
 
         // Extract product IDs
-        const productIds = purchase.map((item) => item.productId);
+        const productIds = cart.map((item) => item.productId);
+
+        // Calculate total items in cart
+        const totalItems = cart.length;
 
         await connectMongoDB();
 
@@ -54,15 +51,15 @@ export async function GET(request: NextRequest) {
 
         const products = replaceMongoIds(productResponse) as ProductType[];
 
-        const purchaseProducts = products.map((item) => {
+        const cartProducts = products.map((item) => {
             const displayPrice = item.price.find(
                 (item: PriceType) => item.select
             );
 
-            const purchaseProduct = purchase.find(
+            const cartProduct = cart.find(
                 (purchaseItem) => purchaseItem.productId === item.id.toString()
             );
-            if (purchaseProduct) {
+            if (cartProduct) {
                 return {
                     id: item.id.toString(),
                     name: item.name,
@@ -70,7 +67,7 @@ export async function GET(request: NextRequest) {
                     thumbnail: item.thumbnail,
                     currency: item.currency,
                     price: displayPrice?.price || 0,
-                    quantity: purchaseProduct.quantity,
+                    quantity: cartProduct.quantity,
                 };
             }
 
@@ -83,13 +80,14 @@ export async function GET(request: NextRequest) {
                 price: displayPrice?.price || 0,
                 quantity: 1,
             };
-        }) as PurchaseProductsType[];
+        }) as CartProductsType[];
 
         return NextResponse.json(
             {
-                message: 'Purchase item retrieved successfully.',
+                message: 'Cart retrieved successfully.',
                 success: true,
-                data: purchaseProducts,
+                data: cartProducts,
+                cart,
             },
             { status: 200 }
         );
@@ -106,11 +104,6 @@ export async function GET(request: NextRequest) {
             { status: 500 }
         );
     }
-}
-
-interface PurchaseItem {
-    productId: string;
-    quantity: number;
 }
 
 interface ProductType {
@@ -139,11 +132,11 @@ interface PriceType {
     select: boolean;
 }
 
-interface PurchaseProductsType {
+interface CartProductsType {
     quantity: number;
     price: number;
     slug: string;
-    id: string | number;
+    id: string;
     currency: string;
     name: string;
     thumbnail: string;
