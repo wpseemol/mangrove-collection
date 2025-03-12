@@ -32,10 +32,10 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { useCartProducts } from '@/hooks';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaTrash } from 'react-icons/fa6';
+import CartItemRemove from './cart-item-remove';
+import CartQuantity from './cart-quantity';
 
 export const columns: ColumnDef<CartProductsType>[] = [
     {
@@ -77,6 +77,7 @@ export const columns: ColumnDef<CartProductsType>[] = [
                             width={100}
                             height={100}
                             alt={productName}
+                            priority={true}
                             className="w-full h-full object-cover object-center "
                         />
                     </Link>
@@ -119,108 +120,14 @@ export const columns: ColumnDef<CartProductsType>[] = [
     {
         accessorKey: 'quantity',
         header: () => <div className="">Quantity</div>,
-        cell: ({ row }) => {
-            const { setCartProducts } = useCartProducts();
-            const quantity = row.original.quantity;
-
-            const productId = row.original.id;
-
-            const decrease = () => {
-                if (quantity > 1) {
-                    setCartProducts((prevData) =>
-                        prevData.map((item) =>
-                            item.id === productId
-                                ? { ...item, quantity: quantity - 1 }
-                                : item
-                        )
-                    );
-                }
-            };
-
-            const increase = () => {
-                setCartProducts((prevData) =>
-                    prevData.map((item) =>
-                        item.id === productId
-                            ? { ...item, quantity: quantity + 1 }
-                            : item
-                    )
-                );
-            };
-
-            return (
-                <div className="font-medium w-fit flex items-center space-x-4 border-t border-b rounded-lg ml-auto">
-                    <button
-                        disabled={!(quantity > 1)}
-                        onClick={decrease}
-                        className="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-300 bg-gray-100 text-gray-700 hover:bg-gray-200 transition">
-                        <svg
-                            className="w-4 h-4 text-gray-800 dark:text-white"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            fill="none"
-                            viewBox="0 0 24 24">
-                            <path
-                                stroke="currentColor"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M5 12h14"
-                            />
-                        </svg>
-                    </button>
-                    <span>{quantity}</span>
-
-                    <button
-                        onClick={increase}
-                        className="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-300 bg-gray-100 text-gray-700 hover:bg-gray-200 transition">
-                        <svg
-                            className="w-4 h-4 text-gray-800 dark:text-white"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            fill="none"
-                            viewBox="0 0 24 24">
-                            <path
-                                stroke="currentColor"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M5 12h14m-7 7V5"
-                            />
-                        </svg>
-                    </button>
-                </div>
-            );
-        },
+        cell: ({ row }) => <CartQuantity row={row} />,
     },
     {
         accessorKey: 'action',
         header: () => (
             <div className="text-right font-medium pr-10">Action</div>
         ),
-        cell: ({ row }) => {
-            const { setCartProducts } = useCartProducts();
-
-            const productId = row.original.id;
-            function handelRemove() {
-                setCartProducts((prevData) =>
-                    prevData.filter((item) => item.id !== productId)
-                );
-
-                console.log('click deletet');
-            }
-
-            return (
-                <div className="text-right font-medium pr-12">
-                    <button onClick={handelRemove} className="">
-                        <FaTrash className="text-red-600/80 group-hover:scale-125 duration-200" />
-                    </button>
-                </div>
-            );
-        },
+        cell: ({ row }) => <CartItemRemove row={row} />,
     },
 ];
 
@@ -345,7 +252,7 @@ export function CartProductTable({ data }: { data: CartProductsType[] }) {
                                 <TableCell
                                     colSpan={columns.length}
                                     className="h-24 text-center">
-                                    No results.
+                                    Cart is empty now
                                 </TableCell>
                             </TableRow>
                         )}
@@ -378,7 +285,7 @@ export function CartProductTable({ data }: { data: CartProductsType[] }) {
     );
 }
 
-interface CartProductsType {
+export interface CartProductsType {
     quantity: number;
     price: number;
     slug: string;
