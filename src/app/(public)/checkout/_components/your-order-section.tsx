@@ -4,10 +4,13 @@ import { CurrencyIcon } from '@/components/currency-icon';
 import debounce from '@/utils/debounce';
 import Image from 'next/image';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 
 export default function YourOrderSection() {
+    const router = useRouter();
+
     const [loading, setLoading] = useState<boolean>(true);
 
     const [purcheseProducts, setPurcheseProducts] = useState<
@@ -32,8 +35,6 @@ export default function YourOrderSection() {
         );
     };
 
-    console.log(purcheseProducts);
-
     const subtotal = purcheseProducts.reduce(
         (sum, item) => sum + item.price * (item.quantity ? item.quantity : 1),
         0
@@ -44,9 +45,20 @@ export default function YourOrderSection() {
     /**
      * set debounce function
      */
-    const debouncedUpdateQuantity = debounce((id: number, quantity: number) => {
-        updateQuantity(id, quantity);
-    }, 1);
+    const debouncedUpdateQuantity = debounce(
+        async (id: number | string, quantity: number) => {
+            updateQuantity(id, quantity);
+
+            await fetch(`/api/v1/purchase/patch`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ productId: id, quantity: quantity }),
+            });
+        },
+        350
+    );
 
     useEffect(() => {
         async function getPurchaseFetch() {
@@ -56,21 +68,53 @@ export default function YourOrderSection() {
 
                 if (response.ok) {
                     const responseData = await response.json();
+
                     if (responseData.success) {
                         setPurcheseProducts(responseData.data);
                     } else {
-                        notFound();
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'You have not product sellection.',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        }).then((result) => {
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                router.push('/');
+                            }
+                        });
                     }
+                } else {
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'You have not product sellection.',
+                        showConfirmButton: false,
+                        timer: 1500,
+                    }).then((result) => {
+                        if (result.dismiss === Swal.DismissReason.timer) {
+                            router.push('/');
+                        }
+                    });
                 }
             } catch (error) {
                 console.log(error);
-                notFound();
+                Swal.fire({
+                    icon: 'info',
+                    title: 'You have not product sellection.',
+                    showConfirmButton: false,
+                    timer: 1500,
+                }).then((result) => {
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                        router.push('/');
+                    }
+                });
             } finally {
                 setLoading(false);
             }
         }
         getPurchaseFetch();
-    }, []);
+    }, [router]);
+
+    console.log(purcheseProducts);
 
     return (
         <div className="  md:py-8 py-4 pb-10 bg-white shadow-xl md:px-5 px-2 border-l border-green-300">
@@ -100,7 +144,8 @@ export default function YourOrderSection() {
                                         className="rounded-md border border-green-400"
                                     />
                                     <div>
-                                        <Link href="/">
+                                        <Link
+                                            href={`/products/${product.slug}`}>
                                             <p className="font-medium text-green-700">
                                                 {product.name}
                                             </p>
@@ -191,6 +236,7 @@ interface PurchaseProductsType {
     id: string | number;
     name: string;
     thumbnail: string;
+    slug: string;
     currency: string;
     price: number;
     quantity: number;

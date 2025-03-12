@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
 
         await connectMongoDB();
 
-        const showColumns = 'name thumbnail price currency';
+        const showColumns = 'name thumbnail slug price currency';
         const productResponse = await Product.find(
             {
                 _id: { $in: [productIds] },
@@ -60,12 +60,13 @@ export async function GET(request: NextRequest) {
             );
 
             const purchaseProduct = purchase.find(
-                (purchaseItem) => purchaseItem.productId === item.id
+                (purchaseItem) => purchaseItem.productId === item.id.toString()
             );
             if (purchaseProduct) {
                 return {
                     id: item.id,
                     name: item.name,
+                    slug: item.slug,
                     thumbnail: item.thumbnail,
                     currency: item.currency,
                     price: displayPrice?.price ? displayPrice.price : 0,
@@ -76,6 +77,7 @@ export async function GET(request: NextRequest) {
             return {
                 id: item.id,
                 name: item.name,
+                slug: item.slug,
                 currency: item.currency,
                 thumbnail: item.thumbnail,
                 price: displayPrice?.price ? displayPrice.price : 0,
@@ -114,6 +116,7 @@ interface PurchaseItem {
 interface ProductType {
     id: string | number;
     name: string;
+    slug: string;
     currency: string;
     thumbnail: string;
     price: PriceType[];
@@ -139,6 +142,7 @@ interface PriceType {
 interface PurchaseProductsType {
     quantity: number;
     price: number;
+    slug: string;
     id: string | number;
     currency: string;
     name: string;
