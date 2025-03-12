@@ -27,12 +27,5 @@ export default function CartCount() {
         getCatFetch();
     }, [setCart]);
 
-    return (
-        cart.cartCount && (
-            <>
-                {' '}
-                <span>({cart.cartCount})</span>
-            </>
-        )
-    );
+    return <>{cart.cartCount ? <span>({cart.cartCount})</span> : ''}</>;
 }
