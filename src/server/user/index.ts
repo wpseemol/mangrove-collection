@@ -79,7 +79,7 @@ export async function googolProviderUserCreate(
 
         return loginUserInfo;
     } catch (error) {
-        console.log('googolProviderUserCreate error:', error);
+        console.error('googolProviderUserCreate error:', error);
 
         return loginUserInfo;
     }

@@ -21,7 +21,6 @@ export default function CartButton({ productId }: { productId: string }) {
             body: JSON.stringify(cartItem),
         });
 
-        // console.log('cart set product:', response);
         if (response.ok) {
             const responseData = await response.json();
             if (responseData.success) {

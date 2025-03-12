@@ -29,16 +29,38 @@ export default function YourOrderSection() {
         );
     };
 
-    const removeItem = (id: number) => {
-        setPurcheseProducts((prevCart) =>
-            prevCart.filter((item) => item.id !== id)
-        );
+    /**
+     * remove frome Array
+     * @param id
+     */
+
+    const removeItem = async (id: number) => {
+        setPurcheseProducts((prev) => prev.filter((item) => item.id !== id));
+        try {
+            await fetch(`/api/v1/purchase/deleted`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ productId: id }),
+            });
+        } catch (error) {
+            console.error('Purchus DELETE error:', error);
+        }
     };
+
+    /**
+     * sub totla
+     */
 
     const subtotal = purcheseProducts.reduce(
         (sum, item) => sum + item.price * (item.quantity ? item.quantity : 1),
         0
     );
+
+    /**
+     * Price totle
+     */
     const total =
         subtotal + (purcheseProducts.length > 0 ? SHIPPING_CHARGE : 0);
 
@@ -49,13 +71,17 @@ export default function YourOrderSection() {
         async (id: number | string, quantity: number) => {
             updateQuantity(id, quantity);
 
-            await fetch(`/api/v1/purchase/patch`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ productId: id, quantity: quantity }),
-            });
+            try {
+                await fetch(`/api/v1/purchase/patch`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ productId: id, quantity: quantity }),
+                });
+            } catch (error) {
+                console.error('Purchus Patch error:', error);
+            }
         },
         350
     );
@@ -96,7 +122,7 @@ export default function YourOrderSection() {
                     });
                 }
             } catch (error) {
-                console.log(error);
+                console.error('Checkout get data Error:', error);
                 Swal.fire({
                     icon: 'info',
                     title: 'You have not product sellection.',
@@ -113,8 +139,6 @@ export default function YourOrderSection() {
         }
         getPurchaseFetch();
     }, [router]);
-
-    console.log(purcheseProducts);
 
     return (
         <div className="  md:py-8 py-4 pb-10 bg-white shadow-xl md:px-5 px-2 border-l border-green-300">
@@ -182,9 +206,9 @@ export default function YourOrderSection() {
                                             />
                                         </p>
                                         <button
-                                            onClick={() =>
-                                                removeItem(product.id)
-                                            }
+                                            onClick={() => {
+                                                removeItem(product.id);
+                                            }}
                                             className="text-red-500 hover:text-red-700 transition duration-200">
                                             ✕
                                         </button>

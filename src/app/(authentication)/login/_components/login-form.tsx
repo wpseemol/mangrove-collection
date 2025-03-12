@@ -40,7 +40,7 @@ export default function LoginForm() {
                 ...values,
             });
         } catch (error) {
-            console.log(error);
+            console.error('Login error:', error);
         }
     }
 

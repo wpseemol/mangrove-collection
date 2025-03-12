@@ -14,7 +14,7 @@ export default function LoginWithGoogle() {
                 callbackUrl: '/',
             });
         } catch (error) {
-            console.log(error);
+            console.error('Login withe google error:', error);
         } finally {
             setLoading(false);
         }

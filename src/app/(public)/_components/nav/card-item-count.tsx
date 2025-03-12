@@ -21,7 +21,7 @@ export default function CartCount() {
                     }
                 }
             } catch (error) {
-                console.log(error);
+                console.error('Cart count fetch error:', error);
             }
         }
         getCatFetch();

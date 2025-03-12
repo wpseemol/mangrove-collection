@@ -34,7 +34,7 @@ export async function userLogin(
 
         return loginUserInfo;
     } catch (error) {
-        console.log('Login error:', error);
+        console.error('Login error:', error);
         return loginUserInfo;
     }
 }
