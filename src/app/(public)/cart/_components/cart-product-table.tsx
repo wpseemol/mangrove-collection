@@ -32,7 +32,10 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { useCartProducts } from '@/hooks';
 import Image from 'next/image';
+import Link from 'next/link';
+import { FaTrash } from 'react-icons/fa6';
 
 export const columns: ColumnDef<CartProductsType>[] = [
     {
@@ -68,13 +71,15 @@ export const columns: ColumnDef<CartProductsType>[] = [
 
             return (
                 <figure className="w-14 h-14 overflow-hidden bg-neutral-600/55 rounded-sm">
-                    <Image
-                        src={imgUrl}
-                        width={100}
-                        height={100}
-                        alt={productName}
-                        className="w-full h-full object-cover object-center "
-                    />
+                    <Link href={`/products/${row.original.slug}`}>
+                        <Image
+                            src={imgUrl}
+                            width={100}
+                            height={100}
+                            alt={productName}
+                            className="w-full h-full object-cover object-center "
+                        />
+                    </Link>
                 </figure>
             );
         },
@@ -94,37 +99,58 @@ export const columns: ColumnDef<CartProductsType>[] = [
             );
         },
         cell: ({ row }) => (
-            <div className="lowercase">{row.getValue('name')}</div>
+            <div className="lowercase">
+                <Link href={`/products/${row.original.slug}`}>
+                    {row.getValue('name')}
+                </Link>
+            </div>
         ),
     },
+
     {
         accessorKey: 'price',
-        header: 'Price',
+        header: () => <div className="text-right font-medium">Price</div>,
         cell: ({ row }) => {
             const price = row.getValue('price');
 
-            return <div className="text-right font-medium pr-8">{price}</div>;
+            return <div className="text-right font-medium">{price}</div>;
         },
     },
     {
         accessorKey: 'quantity',
-        header: () => <div className="text-right pr-8">Quantity</div>,
+        header: () => <div className="">Quantity</div>,
         cell: ({ row }) => {
-            const quantity = row.getValue('quantity');
+            const { setCartProducts } = useCartProducts();
+            const quantity = row.original.quantity;
 
-            const [quantityState, setQuantityState] = React.useState(quantity);
+            const productId = row.original.id;
 
             const decrease = () => {
-                if (quantityState > 1) setQuantityState(quantityState - 1);
+                if (quantity > 1) {
+                    setCartProducts((prevData) =>
+                        prevData.map((item) =>
+                            item.id === productId
+                                ? { ...item, quantity: quantity - 1 }
+                                : item
+                        )
+                    );
+                }
             };
 
             const increase = () => {
-                setQuantityState(quantityState + 1);
+                setCartProducts((prevData) =>
+                    prevData.map((item) =>
+                        item.id === productId
+                            ? { ...item, quantity: quantity + 1 }
+                            : item
+                    )
+                );
             };
 
             return (
-                <div className="font-medium w-fit flex items-center space-x-4 border-t border-b rounded-lg">
+                <div className="font-medium w-fit flex items-center space-x-4 border-t border-b rounded-lg ml-auto">
                     <button
+                        disabled={!(quantity > 1)}
                         onClick={decrease}
                         className="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-300 bg-gray-100 text-gray-700 hover:bg-gray-200 transition">
                         <svg
@@ -144,7 +170,7 @@ export const columns: ColumnDef<CartProductsType>[] = [
                             />
                         </svg>
                     </button>
-                    <span>{quantityState}</span>
+                    <span>{quantity}</span>
 
                     <button
                         onClick={increase}
@@ -165,6 +191,32 @@ export const columns: ColumnDef<CartProductsType>[] = [
                                 d="M5 12h14m-7 7V5"
                             />
                         </svg>
+                    </button>
+                </div>
+            );
+        },
+    },
+    {
+        accessorKey: 'action',
+        header: () => (
+            <div className="text-right font-medium pr-10">Action</div>
+        ),
+        cell: ({ row }) => {
+            const { setCartProducts } = useCartProducts();
+
+            const productId = row.original.id;
+            function handelRemove() {
+                setCartProducts((prevData) =>
+                    prevData.filter((item) => item.id !== productId)
+                );
+
+                console.log('click deletet');
+            }
+
+            return (
+                <div className="text-right font-medium pr-12">
+                    <button onClick={handelRemove} className="">
+                        <FaTrash className="text-red-600/80 group-hover:scale-125 duration-200" />
                     </button>
                 </div>
             );
@@ -198,6 +250,12 @@ export function CartProductTable({ data }: { data: CartProductsType[] }) {
             rowSelection,
         },
     });
+
+    const selectedOrgenalRows: CartProductsType[] = table
+        .getSelectedRowModel()
+        .rows.map((itme) => itme.original);
+
+    console.log('selected table:', selectedOrgenalRows);
 
     return (
         <div className="w-full">
@@ -234,7 +292,9 @@ export function CartProductTable({ data }: { data: CartProductsType[] }) {
                                         onCheckedChange={(value) =>
                                             column.toggleVisibility(!!value)
                                         }>
-                                        {column.id}
+                                        {column.id === 'thumbnail'
+                                            ? 'Image'
+                                            : column.id}
                                     </DropdownMenuCheckboxItem>
                                 );
                             })}
@@ -317,13 +377,6 @@ export function CartProductTable({ data }: { data: CartProductsType[] }) {
         </div>
     );
 }
-
-//  type Payment = {
-//     id: string;
-//     amount: number;
-//     thumbnail: string;
-//     productName: string;
-// };
 
 interface CartProductsType {
     quantity: number;
