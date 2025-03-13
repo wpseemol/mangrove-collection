@@ -32,6 +32,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { useCartProducts } from '@/hooks';
 import Image from 'next/image';
 import Link from 'next/link';
 import CartItemRemove from './cart-item-remove';
@@ -119,7 +120,7 @@ export const columns: ColumnDef<CartProductsType>[] = [
     },
     {
         accessorKey: 'quantity',
-        header: () => <div className="">Quantity</div>,
+        header: () => <div className="flex justify-end pr-8">Quantity</div>,
         cell: ({ row }) => <CartQuantity row={row} />,
     },
     {
@@ -138,6 +139,8 @@ export function CartProductTable({ data }: { data: CartProductsType[] }) {
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
+
+    const { setCartSelectedProducts, cartProducts } = useCartProducts();
 
     const table = useReactTable({
         data,
@@ -158,11 +161,24 @@ export function CartProductTable({ data }: { data: CartProductsType[] }) {
         },
     });
 
-    const selectedOrgenalRows: CartProductsType[] = table
-        .getSelectedRowModel()
-        .rows.map((itme) => itme.original);
+    React.useEffect(() => {
+        const selectedOrgenalRows: CartProductsType[] = table
+            .getSelectedRowModel()
+            .rows.map((itme) => itme.original);
 
-    console.log('selected table:', selectedOrgenalRows);
+        if (selectedOrgenalRows.length > 0) {
+            setCartSelectedProducts(
+                selectedOrgenalRows.map((item) => ({
+                    id: item.id,
+                    quantity: item.quantity,
+                    price: item.price,
+                    currency: item.currency,
+                }))
+            );
+        } else {
+            setCartSelectedProducts(null);
+        }
+    }, [setCartSelectedProducts, rowSelection, table, cartProducts]);
 
     return (
         <div className="w-full">

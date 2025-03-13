@@ -39,7 +39,7 @@ export const useCart = function () {
 };
 
 /**
- * useCartProducts hook pass cart item use `{loading,setLoading,cartProducts,setCartProducts}` object.
+ * useCartProducts hook pass cart item use `{loading,setLoading,cartProducts,setCartProducts, cartSelectedPrducts, setCartSelectedProducts}` object.
  * @returns {loading,setLoading,cartProducts,setCartProducts}
  */
 export const useCartProducts = function () {

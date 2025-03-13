@@ -28,6 +28,10 @@ interface CartProductsContextType {
     setLoading: Dispatch<SetStateAction<boolean>>;
     cartProducts: CartProductsType[] | null;
     setCartProducts: Dispatch<SetStateAction<CartProductsType[] | null>>;
+    cartSelectedPrducts: CartSelectedPrductsType[];
+    setCartSelectedProducts: Dispatch<
+        SetStateAction<CartSelectedPrductsType[] | null>
+    >;
 }
 
 interface CartProductsType {
@@ -38,6 +42,13 @@ interface CartProductsType {
     currency: string;
     name: string;
     thumbnail: string;
+}
+
+interface CartSelectedPrductsType {
+    id: string;
+    quantity: number;
+    currency: string;
+    price: number;
 }
 
 export const PurchaseContext = createContext<PurchaseContextType | null>(null);

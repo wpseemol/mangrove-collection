@@ -3,12 +3,20 @@ import { Card, CardHeader } from '@/components/ui/card';
 import { useEffect } from 'react';
 
 import { useCartProducts } from '@/hooks';
+import CartEmptyComponent from './cart-empty';
 import CartLoading from './cart-loading';
+import CartOrderSummary from './cart-order-summary';
 import { CartProductTable } from './cart-product-table';
+import MultiDeleted from './multi-deleted';
 
 export default function CartItems() {
-    const { loading, setLoading, cartProducts, setCartProducts } =
-        useCartProducts();
+    const {
+        loading,
+        setLoading,
+        cartProducts,
+        setCartProducts,
+        cartSelectedPrducts,
+    } = useCartProducts();
 
     useEffect(() => {
         async function getCartProduct() {
@@ -32,14 +40,22 @@ export default function CartItems() {
         }
 
         getCartProduct();
-    }, []);
+    }, [setLoading, setCartProducts]);
 
+    console.log('cartSelectedPrducts', cartSelectedPrducts);
+
+    if (!loading && !cartProducts) {
+        {
+            return <CartEmptyComponent />;
+        }
+    }
     return (
         <>
-            <section className={`md:my-10 my-5 w-full flex gap-2`}>
+            <section
+                className={`md:my-10 my-5 w-full flex md:flex-row flex-col gap-2`}>
                 <Card
                     className={`${
-                        false ? 'w-[70%]' : 'w-full'
+                        cartSelectedPrducts ? 'md:w-[70%] w-full' : 'w-full'
                     } p-5 duration-300`}>
                     <CardHeader className="p-0 font-medium">
                         Shopping Cart
@@ -48,21 +64,23 @@ export default function CartItems() {
                     {loading ? (
                         <CartLoading />
                     ) : (
-                        cartProducts && <CartProductTable data={cartProducts} />
+                        cartProducts && (
+                            <>
+                                <CartProductTable data={cartProducts} />
+                                <MultiDeleted />
+                            </>
+                        )
                     )}
                 </Card>
+                {cartSelectedPrducts && (
+                    <section
+                        className={`${
+                            cartSelectedPrducts ? 'md:w-[30%] w-full' : 'w-full'
+                        } duration-300 overflow-hidden h-fit sticky top-[6rem]`}>
+                        <CartOrderSummary />
+                    </section>
+                )}
             </section>
-            {/* <CartEmptyComponent /> */}
         </>
     );
-}
-
-interface CartProductsType {
-    quantity: number;
-    price: number;
-    slug: string;
-    id: string;
-    currency: string;
-    name: string;
-    thumbnail: string;
 }

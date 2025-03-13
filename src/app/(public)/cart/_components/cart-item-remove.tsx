@@ -1,4 +1,4 @@
-import { useCartProducts } from '@/hooks';
+import { useCart, useCartProducts } from '@/hooks';
 import { Row } from '@tanstack/react-table';
 import { FaTrash } from 'react-icons/fa6';
 import { CartProductsType } from './cart-product-table';
@@ -9,14 +9,31 @@ export default function CartItemRemove({
     row: Row<CartProductsType>;
 }) {
     const { setCartProducts } = useCartProducts();
+    const { setCart } = useCart();
 
     const productId = row.original.id;
     function handelRemove() {
-        setCartProducts((prevData) =>
-            prevData.filter((item) => item.id !== productId)
-        );
+        setCartProducts((prevData) => {
+            const removeProduct = prevData.filter(
+                (item) => ![productId].includes(item.id)
+            );
 
-        console.log('click deletet');
+            if (removeProduct.length > 0) {
+                return removeProduct;
+            }
+            return null;
+        });
+
+        setCart((prev) => {
+            const removeProduct = prev.cartProductIds.filter(
+                (item) => ![productId].includes(item)
+            );
+            const cartCount = removeProduct.length;
+            return {
+                cartCount,
+                cartProductIds: removeProduct,
+            };
+        });
     }
 
     return (

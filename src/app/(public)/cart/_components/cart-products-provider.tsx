@@ -13,11 +13,17 @@ export default function CartProductsProvider({
         null
     );
 
+    const [cartSelectedPrducts, setCartSelectedProducts] = useState<
+        CartSelectedPrductsType[] | null
+    >(null);
+
     const value: CartProductsContextType = {
         loading,
         setLoading,
         cartProducts,
         setCartProducts,
+        cartSelectedPrducts,
+        setCartSelectedProducts,
     };
 
     return (
@@ -44,4 +50,11 @@ interface CartProductsType {
     currency: string;
     name: string;
     thumbnail: string;
+}
+
+interface CartSelectedPrductsType {
+    id: string;
+    quantity: number;
+    currency: string;
+    price: number;
 }
