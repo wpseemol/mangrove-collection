@@ -7,7 +7,7 @@ export async function DELETE(request: NextRequest) {
     try {
         const body = (await request.json()) as string[];
 
-        if (!body.length > 0) {
+        if (!(body.length > 0)) {
             return NextResponse.json(
                 {
                     message: 'Product IDs array are required.',
@@ -38,8 +38,6 @@ export async function DELETE(request: NextRequest) {
         }
 
         cart = cart.filter((item) => !body.includes(item.productId));
-
-        console.log('cart after deleted', cart);
 
         // Store encrypted cart in cookies
         const response = NextResponse.json(

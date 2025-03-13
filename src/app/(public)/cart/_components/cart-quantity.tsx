@@ -37,13 +37,14 @@ export default function CartQuantity({ row }: { row: Row<CartProductsType> }) {
     const decrease = () => {
         if (quantity > 1) {
             const updateQuantity = quantity - 1;
-            setCartProducts((prevData) =>
-                prevData.map((item) =>
+            setCartProducts((prevData) => {
+                if (!prevData) return null;
+                return prevData.map((item) =>
                     item.id === productId
                         ? { ...item, quantity: updateQuantity }
                         : item
-                )
-            );
+                );
+            });
 
             debouncedUpdateQuantity(productId, updateQuantity);
         }
@@ -51,13 +52,14 @@ export default function CartQuantity({ row }: { row: Row<CartProductsType> }) {
 
     const increase = () => {
         const updateQuantity = quantity + 1;
-        setCartProducts((prevData) =>
-            prevData.map((item) =>
+        setCartProducts((prevData) => {
+            if (!prevData) return null;
+            return prevData.map((item) =>
                 item.id === productId
                     ? { ...item, quantity: updateQuantity }
                     : item
-            )
-        );
+            );
+        });
 
         debouncedUpdateQuantity(productId, updateQuantity);
     };

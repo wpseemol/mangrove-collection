@@ -5,11 +5,13 @@ import { useCart, useCartProducts } from '@/hooks';
 import Swal from 'sweetalert2';
 
 export default function MultiDeleted() {
-    const { cartSelectedPrducts, setCartProducts } = useCartProducts();
+    const { cartSelectedProducts, setCartProducts } = useCartProducts();
     const { setCart } = useCart();
 
     async function handelMultiDeleted() {
-        const deletedItemsIds = cartSelectedPrducts.map((item) => item.id);
+        const deletedItemsIds = (cartSelectedProducts ?? []).map(
+            (item) => item.id
+        );
 
         Swal.fire({
             title: 'Are you sure?',
@@ -30,6 +32,7 @@ export default function MultiDeleted() {
                 });
 
                 setCartProducts((prevData) => {
+                    if (!prevData) return null;
                     const removeProduct = prevData.filter(
                         (item) => !deletedItemsIds.includes(item.id)
                     );
@@ -68,12 +71,12 @@ export default function MultiDeleted() {
     }
 
     return (
-        cartSelectedPrducts && (
+        cartSelectedProducts && (
             <Button onClick={handelMultiDeleted} className="text-white">
                 Deleted (
-                {cartSelectedPrducts.length > 1
-                    ? cartSelectedPrducts.length + ' items'
-                    : cartSelectedPrducts.length + ' item'}
+                {cartSelectedProducts.length > 1
+                    ? cartSelectedProducts.length + ' items'
+                    : cartSelectedProducts.length + ' item'}
                 )
             </Button>
         )

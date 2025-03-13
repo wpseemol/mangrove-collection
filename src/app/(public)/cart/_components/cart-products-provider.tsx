@@ -1,7 +1,7 @@
 'use client';
 
 import { CartProductsContext } from '@/contexts';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 export default function CartProductsProvider({
     children,
@@ -13,8 +13,8 @@ export default function CartProductsProvider({
         null
     );
 
-    const [cartSelectedPrducts, setCartSelectedProducts] = useState<
-        CartSelectedPrductsType[] | null
+    const [cartSelectedProducts, setCartSelectedProducts] = useState<
+        CartSelectedProductsType[] | null
     >(null);
 
     const value: CartProductsContextType = {
@@ -22,7 +22,7 @@ export default function CartProductsProvider({
         setLoading,
         cartProducts,
         setCartProducts,
-        cartSelectedPrducts,
+        cartSelectedProducts,
         setCartSelectedProducts,
     };
 
@@ -40,6 +40,10 @@ interface CartProductsContextType {
     setLoading: Dispatch<SetStateAction<boolean>>;
     cartProducts: CartProductsType[] | null;
     setCartProducts: Dispatch<SetStateAction<CartProductsType[] | null>>;
+    cartSelectedProducts: CartSelectedProductsType[] | null;
+    setCartSelectedProducts: Dispatch<
+        SetStateAction<CartSelectedProductsType[] | null>
+    >;
 }
 
 interface CartProductsType {
@@ -52,7 +56,7 @@ interface CartProductsType {
     thumbnail: string;
 }
 
-interface CartSelectedPrductsType {
+interface CartSelectedProductsType {
     id: string;
     quantity: number;
     currency: string;

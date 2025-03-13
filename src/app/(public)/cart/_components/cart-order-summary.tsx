@@ -7,16 +7,15 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function CartOrderSummary() {
-    const { cartSelectedPrducts, setCartProducts } = useCartProducts();
+    const { cartSelectedProducts, setCartProducts } = useCartProducts();
     const { setCart } = useCart();
 
     const [loading, setLoading] = useState(false);
 
     const router = useRouter();
 
-    const subTotal = cartSelectedPrducts.reduce((acc, curr) => {
+    const subTotal = (cartSelectedProducts ?? []).reduce((acc, curr) => {
         const multiplyPrice = curr.price * curr.quantity;
-
         return acc + multiplyPrice;
     }, 0);
 
@@ -26,7 +25,7 @@ export default function CartOrderSummary() {
 
     const totalPrice = subTotal + shippingFee + voucherCode;
 
-    const totalCount = cartSelectedPrducts.reduce((acc, curr) => {
+    const totalCount = (cartSelectedProducts ?? []).reduce((acc, curr) => {
         const count = curr.quantity + acc;
         return count;
     }, 0);
@@ -37,7 +36,7 @@ export default function CartOrderSummary() {
             /**
              * [{productId:string , quantity: number}]
              */
-            const purchaseItems = cartSelectedPrducts.map((item) => ({
+            const purchaseItems = (cartSelectedProducts ?? []).map((item) => ({
                 productId: item.id,
                 quantity: item.quantity,
             })) as PurchaseItemType[];
@@ -52,9 +51,12 @@ export default function CartOrderSummary() {
             console.error('Product bye error:', error);
         }
 
-        const deletedItemsIds = cartSelectedPrducts.map((item) => item.id);
+        const deletedItemsIds = (cartSelectedProducts ?? []).map(
+            (item) => item.id
+        );
 
         setCartProducts((prevData) => {
+            if (!prevData) return null;
             const removeProduct = prevData.filter(
                 (item) => !deletedItemsIds.includes(item.id)
             );
@@ -94,7 +96,7 @@ export default function CartOrderSummary() {
         router.push('/checkout');
     }
 
-    return cartSelectedPrducts ? (
+    return cartSelectedProducts ? (
         <Card className={`p-5 h-fit `}>
             <CardHeader className="p-0 font-medium">Order Summary</CardHeader>
             <CardContent className="px-0">

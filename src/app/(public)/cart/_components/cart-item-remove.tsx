@@ -14,6 +14,7 @@ export default function CartItemRemove({
     const productId = row.original.id;
     async function handelRemove() {
         setCartProducts((prevData) => {
+            if (!prevData) return null;
             const removeProduct = prevData.filter(
                 (item) => ![productId].includes(item.id)
             );

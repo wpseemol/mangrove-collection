@@ -36,9 +36,6 @@ export async function GET(request: NextRequest) {
         // Extract product IDs
         const productIds = cart.map((item) => item.productId);
 
-        // Calculate total items in cart
-        const totalItems = cart.length;
-
         await connectMongoDB();
 
         const showColumns = 'name thumbnail slug price currency';

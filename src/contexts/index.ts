@@ -28,9 +28,9 @@ interface CartProductsContextType {
     setLoading: Dispatch<SetStateAction<boolean>>;
     cartProducts: CartProductsType[] | null;
     setCartProducts: Dispatch<SetStateAction<CartProductsType[] | null>>;
-    cartSelectedPrducts: CartSelectedPrductsType[];
+    cartSelectedProducts: CartSelectedProductsType[] | null;
     setCartSelectedProducts: Dispatch<
-        SetStateAction<CartSelectedPrductsType[] | null>
+        SetStateAction<CartSelectedProductsType[] | null>
     >;
 }
 
@@ -44,7 +44,7 @@ interface CartProductsType {
     thumbnail: string;
 }
 
-interface CartSelectedPrductsType {
+interface CartSelectedProductsType {
     id: string;
     quantity: number;
     currency: string;

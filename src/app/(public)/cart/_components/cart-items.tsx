@@ -15,7 +15,7 @@ export default function CartItems() {
         setLoading,
         cartProducts,
         setCartProducts,
-        cartSelectedPrducts,
+        cartSelectedProducts,
     } = useCartProducts();
 
     useEffect(() => {
@@ -57,7 +57,7 @@ export default function CartItems() {
                 className={`md:my-10 my-5 w-full flex md:flex-row flex-col gap-2`}>
                 <Card
                     className={`${
-                        cartSelectedPrducts ? 'md:w-[70%] w-full' : 'w-full'
+                        cartSelectedProducts ? 'md:w-[70%] w-full' : 'w-full'
                     } p-5 duration-300`}>
                     <CardHeader className="p-0 font-medium">
                         Shopping Cart
@@ -74,10 +74,12 @@ export default function CartItems() {
                         )
                     )}
                 </Card>
-                {cartSelectedPrducts && (
+                {cartSelectedProducts && (
                     <section
                         className={`${
-                            cartSelectedPrducts ? 'md:w-[30%] w-full' : 'w-full'
+                            cartSelectedProducts
+                                ? 'md:w-[30%] w-full'
+                                : 'w-full'
                         } duration-300 overflow-hidden h-fit sticky top-[6rem]`}>
                         <CartOrderSummary />
                     </section>

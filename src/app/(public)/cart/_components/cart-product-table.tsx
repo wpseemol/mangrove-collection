@@ -67,8 +67,8 @@ export const columns: ColumnDef<CartProductsType>[] = [
         accessorKey: 'thumbnail',
         header: 'Image',
         cell: ({ row }) => {
-            const imgUrl: string = row.getValue('thumbnail');
-            const productName: string = row.getValue('name');
+            const imgUrl = row.original.thumbnail;
+            const productName = row.original.name;
 
             return (
                 <figure className="w-14 h-14 overflow-hidden bg-neutral-600/55 rounded-sm">
@@ -113,7 +113,7 @@ export const columns: ColumnDef<CartProductsType>[] = [
         accessorKey: 'price',
         header: () => <div className="text-right font-medium">Price</div>,
         cell: ({ row }) => {
-            const price = row.getValue('price');
+            const price = row.original.price;
 
             return <div className="text-right font-medium">{price}</div>;
         },
