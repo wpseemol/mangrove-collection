@@ -1,4 +1,5 @@
 import { useCartProducts } from '@/hooks';
+import debounce from '@/utils/debounce';
 import { Row } from '@tanstack/react-table';
 import { CartProductsType } from './cart-product-table';
 
@@ -8,26 +9,57 @@ export default function CartQuantity({ row }: { row: Row<CartProductsType> }) {
 
     const productId = row.original.id;
 
+    /**
+     * set debounce function
+     */
+    const debouncedUpdateQuantity = debounce(
+        async (id: string, updateQuantity: number) => {
+            try {
+                const response = await fetch(`/api/v1/cart/patch`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        productId: id,
+                        quantity: updateQuantity,
+                    }),
+                });
+                console.log('update response:', response);
+                console.log('data:', await response.json());
+            } catch (error) {
+                console.error('Purchus Patch error:', error);
+            }
+        },
+        350
+    );
+
     const decrease = () => {
         if (quantity > 1) {
+            const updateQuantity = quantity - 1;
             setCartProducts((prevData) =>
                 prevData.map((item) =>
                     item.id === productId
-                        ? { ...item, quantity: quantity - 1 }
+                        ? { ...item, quantity: updateQuantity }
                         : item
                 )
             );
+
+            debouncedUpdateQuantity(productId, updateQuantity);
         }
     };
 
     const increase = () => {
+        const updateQuantity = quantity + 1;
         setCartProducts((prevData) =>
             prevData.map((item) =>
                 item.id === productId
-                    ? { ...item, quantity: quantity + 1 }
+                    ? { ...item, quantity: updateQuantity }
                     : item
             )
         );
+
+        debouncedUpdateQuantity(productId, updateQuantity);
     };
 
     return (
