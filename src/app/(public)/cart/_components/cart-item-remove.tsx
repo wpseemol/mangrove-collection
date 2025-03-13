@@ -12,7 +12,7 @@ export default function CartItemRemove({
     const { setCart } = useCart();
 
     const productId = row.original.id;
-    function handelRemove() {
+    async function handelRemove() {
         setCartProducts((prevData) => {
             const removeProduct = prevData.filter(
                 (item) => ![productId].includes(item.id)
@@ -34,6 +34,18 @@ export default function CartItemRemove({
                 cartProductIds: removeProduct,
             };
         });
+
+        try {
+            await fetch(`/api/v1/cart/deleted`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify([productId]),
+            });
+        } catch (error) {
+            console.error('Cart DELETE error:', error);
+        }
     }
 
     return (

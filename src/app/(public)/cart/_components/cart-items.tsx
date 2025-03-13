@@ -29,7 +29,11 @@ export default function CartItems() {
                 if (response.ok) {
                     const responseData = await response.json();
                     if (responseData.success) {
-                        setCartProducts(responseData.data);
+                        if (responseData.data.length > 0) {
+                            setCartProducts(responseData.data);
+                        } else {
+                            setCartProducts(null);
+                        }
                     }
                 }
             } catch (error) {
