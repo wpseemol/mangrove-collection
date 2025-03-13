@@ -46,8 +46,6 @@ export default function CartItems() {
         getCartProduct();
     }, [setLoading, setCartProducts]);
 
-    console.log('cartSelectedPrducts', cartSelectedPrducts);
-
     if (!loading && !cartProducts) {
         {
             return <CartEmptyComponent />;

@@ -2,11 +2,15 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { useCartProducts } from '@/hooks';
+import { useCart, useCartProducts } from '@/hooks';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function CartOrderSummary() {
-    const { cartSelectedPrducts } = useCartProducts();
+    const { cartSelectedPrducts, setCartProducts } = useCartProducts();
+    const { setCart } = useCart();
+
+    const [loading, setLoading] = useState(false);
 
     const router = useRouter();
 
@@ -27,8 +31,65 @@ export default function CartOrderSummary() {
         return count;
     }, 0);
 
-    function handelShipping() {
-        console.log('order product:', cartSelectedPrducts);
+    async function handelShipping() {
+        setLoading(true);
+        try {
+            /**
+             * [{productId:string , quantity: number}]
+             */
+            const purchaseItems = cartSelectedPrducts.map((item) => ({
+                productId: item.id,
+                quantity: item.quantity,
+            })) as PurchaseItemType[];
+            await fetch(`/api/v1/purchase/set`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(purchaseItems),
+            });
+        } catch (error) {
+            console.error('Product bye error:', error);
+        }
+
+        const deletedItemsIds = cartSelectedPrducts.map((item) => item.id);
+
+        setCartProducts((prevData) => {
+            const removeProduct = prevData.filter(
+                (item) => !deletedItemsIds.includes(item.id)
+            );
+
+            if (removeProduct.length > 0) {
+                return removeProduct;
+            }
+            return null;
+        });
+
+        setCart((prev) => {
+            const removeProduct = prev.cartProductIds.filter(
+                (item) => !deletedItemsIds.includes(item)
+            );
+
+            const cartCount = removeProduct.length;
+            return {
+                cartCount,
+                cartProductIds: removeProduct,
+            };
+        });
+
+        try {
+            await fetch(`/api/v1/cart/deleted`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(deletedItemsIds),
+            });
+        } catch (error) {
+            console.error('Cart DELETE error:', error);
+        }
+
+        setLoading(false);
 
         router.push('/checkout');
     }
@@ -72,7 +133,7 @@ export default function CartOrderSummary() {
             <Button
                 onClick={() => handelShipping()}
                 className="w-full text-white">
-                Proceed to Pay ({totalCount})
+                {loading ? 'Waiting...' : `Proceed to Pay (${totalCount})`}
             </Button>
         </Card>
     ) : (
@@ -80,4 +141,9 @@ export default function CartOrderSummary() {
             <CardContent>No data found.</CardContent>
         </Card>
     );
+}
+
+interface PurchaseItemType {
+    productId: string;
+    quantity: number;
 }

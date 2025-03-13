@@ -18,13 +18,20 @@ export default function PurchaseButton({
 
         setBuyProducts(purchaseItems);
 
-        await fetch(`/api/v1/purchase/set`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(purchaseItems),
-        });
+        try {
+            /**
+             * [{productId:string , quantity: number}]
+             */
+            await fetch(`/api/v1/purchase/set`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(purchaseItems),
+            });
+        } catch (error) {
+            console.error('Product bye error:', error);
+        }
 
         router.push('/checkout');
     }
