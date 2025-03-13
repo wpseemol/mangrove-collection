@@ -39,6 +39,8 @@ export async function DELETE(request: NextRequest) {
 
         cart = cart.filter((item) => !body.includes(item.productId));
 
+        console.log('cart after deleted', cart);
+
         // Store encrypted cart in cookies
         const response = NextResponse.json(
             {

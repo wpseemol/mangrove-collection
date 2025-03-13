@@ -58,7 +58,7 @@ export default function MultiDeleted() {
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify([deletedItemsIds]),
+                        body: JSON.stringify(deletedItemsIds),
                     });
                 } catch (error) {
                     console.error('Cart DELETE error:', error);
