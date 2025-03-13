@@ -30,10 +30,10 @@ export default async function Account() {
 
     if (session) {
         return (
-            <li className="text-white">
+            <li className="text-white group">
                 <CustomLink href={accountUrl}>
                     <div className="flex md:flex-row flex-col items-center xl:gap-3 md:gap-2 gap-1 hover:text-primary-foreground duration-150 group">
-                        <div className="text-primary-foreground lg:text-3xl text-xl">
+                        <div className="text-primary-foreground lg:text-3xl text-xl group-hover:scale-125 duration-200">
                             <ProfilePicture
                                 url={picture}
                                 name={session.user.name}
@@ -57,10 +57,10 @@ export default async function Account() {
     if (!session) {
         return (
             <>
-                <li className="text-white">
+                <li className="text-white group">
                     <CustomLink href={'/login'}>
                         <div className="flex md:flex-row flex-col items-center xl:gap-3 md:gap-2 gap-1 hover:text-primary-foreground duration-150 group">
-                            <div className="text-primary-foreground lg:text-3xl text-xl">
+                            <div className="text-primary-foreground lg:text-3xl text-xl group-hover:scale-125 duration-200">
                                 <FaRegUser />
                             </div>
                             <div>

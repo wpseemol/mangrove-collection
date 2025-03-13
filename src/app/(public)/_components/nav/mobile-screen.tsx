@@ -3,6 +3,7 @@ import { Cart } from './cart';
 import { Logo } from './logo';
 import MenuBtn from './menu-btn';
 import { NavMenu } from './nav-menu';
+import NavOrderMenu from './nav-order-menu';
 import { Offer } from './offer';
 import { Search } from './search';
 import SearchBtn from './search-btn';
@@ -36,6 +37,9 @@ export default function MobileScreen() {
 
                         {/* card */}
                         <Cart />
+
+                        {/* my order */}
+                        <NavOrderMenu />
 
                         {/* account */}
 

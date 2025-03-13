@@ -4,13 +4,13 @@ import CartCount from './card-item-count';
 
 export async function Cart() {
     return (
-        <li className="text-white">
+        <li className="text-white group">
             {' '}
             <CustomLink href="/cart">
                 <div
                     className="flex md:flex-row flex-col items-center xl:gap-3 md:gap-2 gap-1
                 hover:text-primary-foreground duration-150 group">
-                    <div className="text-primary-foreground xl:text-3xl md:text-2xl text-xl">
+                    <div className="text-primary-foreground xl:text-3xl md:text-2xl text-xl group-hover:scale-125 duration-200">
                         <FaCartFlatbed />
                     </div>
                     <div>

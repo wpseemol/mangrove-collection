@@ -4,6 +4,7 @@ import Account from './account';
 import { Cart } from './cart';
 import { Logo } from './logo';
 import { NavMenu } from './nav-menu';
+import NavOrderMenu from './nav-order-menu';
 import { Offer } from './offer';
 import { Search } from './search';
 
@@ -24,6 +25,9 @@ export default async function FullScreen() {
 
                         {/* card */}
                         <Cart />
+
+                        {/* my order */}
+                        <NavOrderMenu />
 
                         {/* account */}
                         <Suspense fallback={<p>loading...</p>}>
