@@ -9,15 +9,16 @@ import {
 import MyOrderPageContent from './_components/my-order-page-content';
 import MyOrderPageMenu from './_components/my-order-page-menu';
 
-export default async function MyOrderPage(
-    params: Promise<{ searchParams: SearchParams }>
-) {
+export default async function MyOrderPage(params: {
+    searchParams: SearchParams;
+}) {
     const searchParams = await (await params).searchParams;
 
     return (
         <main className="container mx-auto">
             <section className="flex md:flex-row flex-col">
                 <section className="md:w-[25%] w-full bg-green-950/10 py-4 pt-0 px-2 md:rounded-l-lg shadow-xl md:border-r border-green-800/80">
+                    {/* breadcrumd  */}
                     <Breadcrumb className="pb-4">
                         <BreadcrumbList>
                             <BreadcrumbItem>
@@ -30,6 +31,8 @@ export default async function MyOrderPage(
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
+                    {/* breadcrumd  */}
+                    {/* order menu */}
                     <MyOrderPageMenu />
                 </section>
                 <section className="md:w-[75%] w-full py-3 px-2">
@@ -41,5 +44,5 @@ export default async function MyOrderPage(
 }
 
 interface SearchParams {
-    section: string;
+    section?: string;
 }

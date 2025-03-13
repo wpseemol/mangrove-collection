@@ -36,15 +36,12 @@ export default function AddNewAddressForm() {
     });
 
     const onSubmit = async (data: AddressFormData) => {
-        setIsLoading(true);
         try {
             console.log('Submitting address:', data);
             toast.success('Address added successfully!');
             reset();
         } catch (error) {
-            toast.error('Add Addres went error:', error);
-        } finally {
-            setIsLoading(false);
+            console.error('Add Addres went error:', error);
         }
     };
 

@@ -23,5 +23,5 @@ export default async function MyOrderPageContent({
 }
 
 interface SearchParams {
-    section: string;
+    section?: string;
 }

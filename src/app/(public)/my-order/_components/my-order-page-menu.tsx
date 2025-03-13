@@ -13,7 +13,7 @@ export default function MyOrderPageMenu() {
             <h3 className="text-xl font-medium text-neutral-950/90 dark:text-white/90">
                 Manage My Details
             </h3>
-            <div className="ml-4">
+            <div className="pl-4 flex flex-col w-full items-start">
                 <Button
                     variant="link"
                     className={`${
@@ -28,7 +28,7 @@ export default function MyOrderPageMenu() {
             <h3 className="text-xl font-medium text-neutral-950/90 dark:text-white/90">
                 My Order
             </h3>
-            <div className="pl-4 flex flex-col w-full border items-start">
+            <div className="pl-4 flex flex-col w-full items-start">
                 <Button
                     variant="link"
                     className={`${
