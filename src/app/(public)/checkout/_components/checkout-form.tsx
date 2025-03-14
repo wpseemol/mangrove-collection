@@ -1,13 +1,15 @@
 'use client';
 import { Button } from '@/components/ui/button';
+import debounce from '@/utils/debounce';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FcCheckmark } from 'react-icons/fc';
 import { z } from 'zod';
 
 export function CheckoutForm() {
     const [paymentMethod, setPaymentMethond] = useState<string>('cod');
+    const [isDefaultValue, setIsDefaultValue] = useState<boolean>(false);
 
     const cod = paymentMethod === 'cod';
     const onlinePayment = paymentMethod === 'online-payment';
@@ -16,12 +18,72 @@ export function CheckoutForm() {
         register,
         handleSubmit,
         formState: { errors },
+        watch,
+        reset,
     } = useForm<z.infer<typeof checkoutSchema>>({
         resolver: zodResolver(checkoutSchema),
     });
 
-    const onSubmit = (values: z.infer<typeof checkoutSchema>) => {
-        console.log('Form submitted', values.fullAddress);
+    /**
+     * ferch data phone number inpute strat
+     */
+    const phoneNumber = watch('phoneNumber');
+
+    const delayDebounce = debounce(async (inputNumber: string) => {
+        const response = await fetch(
+            `/api/v1/place-order/search-get?input-phone-number=${inputNumber}`
+        );
+        if (response.ok) {
+            const responseData = await response.json();
+
+            const defaultData = responseData.data as CheckoutDefaultValus;
+
+            if (responseData.success) {
+                reset({
+                    fullName: defaultData.name,
+                    fullAddress: defaultData.fullAddress,
+                    phoneNumber: inputNumber,
+                });
+                setIsDefaultValue(true);
+            } else {
+                setCheckoutDefaultValus(null);
+            }
+        }
+    }, 400);
+
+    useEffect(() => {
+        if (!phoneNumber || phoneNumber.length < 10 || isDefaultValue) return;
+
+        try {
+            delayDebounce(phoneNumber);
+        } catch (error) {
+            console.error('Checkout Form get error:', error);
+        }
+    }, [phoneNumber, delayDebounce, isDefaultValue]);
+    /**
+     * ferch data phone number inpute strat
+     */
+
+    const onSubmit = async (values: z.infer<typeof checkoutSchema>) => {
+        try {
+            const response = await fetch('/api/v1/place-order/set', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    phone: values.phoneNumber,
+                    fullName: values.fullName,
+                    fullAddress: values.fullAddress,
+                    termsAccepted: values.termsAccepted,
+                }),
+            });
+
+            console.log('place Order response:', response);
+            console.log('response Data:', await response.json());
+        } catch (error) {
+            console.error('Place Order Error:', error);
+        }
     };
 
     return (
@@ -55,6 +117,22 @@ export function CheckoutForm() {
                         className="space-y-4 md:px-0 px-2">
                         <div>
                             <label className="block text-sm font-medium text-gray-700">
+                                Phone Number
+                            </label>
+                            <input
+                                type="tel"
+                                placeholder="01XXXXXXXXX"
+                                {...register('phoneNumber')}
+                                className="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                            />
+                            {errors.phoneNumber && (
+                                <p className="text-red-500 text-sm">
+                                    {errors.phoneNumber.message}
+                                </p>
+                            )}
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">
                                 Full Name
                             </label>
                             <input
@@ -68,27 +146,14 @@ export function CheckoutForm() {
                                 </p>
                             )}
                         </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">
-                                Phone Number
-                            </label>
-                            <input
-                                type="tel"
-                                {...register('phoneNumber')}
-                                className="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                            />
-                            {errors.phoneNumber && (
-                                <p className="text-red-500 text-sm">
-                                    {errors.phoneNumber.message}
-                                </p>
-                            )}
-                        </div>
+
                         <div>
                             <label className="block text-sm font-medium text-gray-700">
                                 Full Address
                             </label>
                             <textarea
                                 {...register('fullAddress')}
+                                placeholder="Street, City, ZIP Code"
                                 className="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
                             {errors.fullAddress && (
                                 <p className="text-red-500 text-sm">
@@ -143,3 +208,19 @@ const checkoutSchema = z.object({
         message: 'You must accept the terms and conditions',
     }),
 });
+
+interface AddressType {
+    name: string;
+    email: string | null;
+    phone: string;
+    landmark?: string;
+    region: string | null;
+    city: string | null;
+    fullAddress: string;
+    isSelected: boolean;
+    zone: string | null;
+}
+
+type CheckoutDefaultValus = AddressType & {
+    id: string;
+};
