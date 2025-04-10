@@ -1,4 +1,4 @@
-export default function UserLayout({
+export default function PublicLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
