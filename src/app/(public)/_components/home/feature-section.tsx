@@ -16,7 +16,7 @@ export default function FeatureSection() {
                 {otherInfo.map((info) => (
                     <Card
                         key={info.id}
-                        className="bg-card px-5 py-2 rounded-sm group cursor-pointer">
+                        className="bg-card px-5 py-2 rounded-sm group cursor-pointer border border-neutral-800/20">
                         <div className="flex gap-4 items-center">
                             <div className="w-12 h-12 rounded-full bg-primary text-neutral-200 flex justify-center items-center text-xl group-hover:scale-110 duration-200">
                                 {info.icon}

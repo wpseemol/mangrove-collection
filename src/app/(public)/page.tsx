@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Metadata } from "next";
 import HeroSection from "./_components/home/hero-section";
+import FeatureSection from "./_components/home/feature-section";
+import CategorySection from "./_components/home/category-section";
 
 
 /**
@@ -67,6 +69,8 @@ export default function HomePage() {
   return (
     <main>
        <HeroSection /> 
+       <FeatureSection />
+       <CategorySection />
       
 
     
