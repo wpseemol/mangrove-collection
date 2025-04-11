@@ -1,5 +1,6 @@
 import Footer from "./_components/footer";
 import Header from "./_components/header";
+import PublicProviders from "./_components/public-providers";
 
 export default function PublicLayout({
     children,
@@ -8,9 +9,12 @@ export default function PublicLayout({
 }>) {
     return (
         <>
-            <Header />
-            {children}
-            <Footer />
+            <PublicProviders>
+                <Header />
+                {children}
+                <Footer />
+            </PublicProviders>
+
         </>
     );
 }

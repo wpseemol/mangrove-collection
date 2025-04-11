@@ -23,24 +23,14 @@ export default function FullScreenWraper({
   }, []);
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={false}
-        animate={{
-          position: showFixed ? "fixed" : "relative",
-          top: showFixed ? 0 : undefined,
-          left: showFixed ? 0 : undefined,
-          width: showFixed ? "100%" : undefined,
-          zIndex: showFixed ? 30 : undefined,
-        }}
-        transition={{ type: "tween", ease: "easeInOut", duration: 0.4 }}
-        className={cn(
-          `transition-all duration-500 ${showFixed ? "shadow-2xs bg-black/85 animate-fade-down" : "bg-black"}`,
-          className
-        )}
-      >
-        {children}
-      </motion.div>
-    </AnimatePresence>
+    <div
+      className={cn(
+        `${showFixed ? "shadow-2xs bg-black/90 animate-delay-300 animate-fade-down fixed top-0 left-0 w-full z-50" : "bg-black"}`,
+        className
+      )}
+    >
+      {children}
+    </div>
+
   );
 }
