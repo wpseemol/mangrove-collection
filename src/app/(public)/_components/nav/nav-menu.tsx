@@ -1,6 +1,6 @@
 import CustomLink from '@/components/custom-link';
 
-import { MenuItem } from '@/types/nav';
+// import { MenuItem } from '@/types/nav';
 import Link from 'next/link';
 import CategoryMenus from './category-menus';
 
@@ -11,7 +11,7 @@ export function NavMenu() {
                 return (
                     <li
                         key={items.id}
-                        className={`capitalize hover:text-primary-foreground duration-200 border-b border-border md:py-3 md:border-none p-2 group/menu last:border-none dark:border-neutral-200/20 ${
+                        className={`capitalize hover:text-primary duration-200 border-b border-border md:py-3 md:border-none p-2 group/menu last:border-none dark:border-neutral-200/20 ${
                             items.id === 'category'
                                 ? 'group/category relative duration-500 origin-top'
                                 : ''
@@ -45,3 +45,10 @@ const menuArray: MenuItem[] = [
     { id: 'contact', href: '/#contact', label: 'contact' },
     { id: 'about', href: '/#about', label: 'about' },
 ];
+
+
+interface MenuItem {
+    id: string;
+    href: string;
+    label: string;
+}

@@ -29,7 +29,7 @@ export default function CustomLink({
             className={`${
                 isActive
                     ? pathName === href
-                        ? 'text-primary-foreground'
+                        ? 'text-primary'
                         : ''
                     : ''
             } ${className}`}

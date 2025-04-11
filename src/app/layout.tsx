@@ -18,10 +18,10 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" className="scroll-smooth green">
+        <html lang="en" suppressHydrationWarning>
             <body
                 className={`${poppins.className} ${roboto.className}`}
-                suppressHydrationWarning={true}>
+                >
                 {children}
             </body>
         </html>

@@ -10,11 +10,11 @@ export default function PublicProviders({
     return (
         <>
             <ThemeProvider
-                attribute="class"
-                defaultTheme="green"
-                themes={['green', 'dark', 'light']}
-                enableSystem
-                disableTransitionOnChange>
+                 attribute="class"
+                 defaultTheme="green"
+                 themes={['green', 'dark', 'light']}
+                 enableSystem
+                 disableTransitionOnChange>
                 {children}
             </ThemeProvider>
         </>
