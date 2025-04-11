@@ -24,7 +24,7 @@ export default function FullScreenWraper({
   return (
     <div
       className={cn(
-        `${showFixed ? "shadow-2xs bg-black/90 animate-delay-300 animate-fade-down fixed top-0 left-0 w-full z-50" : "bg-black"}`,
+        `${showFixed ? "shadow-2xs bg-black/90 animate-duration-700 animate-fade-down fixed top-0 left-0 w-full z-50" : "bg-black"}`,
         className
       )}
     >
