@@ -11,7 +11,7 @@ export default async function Account() {
 
     // const picture = session?.user.image;
 
-    let accountUrl = '/login';
+    // let accountUrl = '/login';
 
     // if (session?.user.role) {
     //     switch (session?.user.role) {

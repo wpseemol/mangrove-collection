@@ -1,7 +1,7 @@
 'use client';
 
 // import { useCart } from '@/hooks';
-import { useEffect } from 'react';
+// import { useEffect } from 'react';
 
 export default function CartCount() {
     // const { cart, setCart } = useCart();
