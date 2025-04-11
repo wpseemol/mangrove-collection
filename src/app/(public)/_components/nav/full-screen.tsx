@@ -37,7 +37,7 @@ export default async function FullScreen() {
                     </ul>
                 </FullScreenWraper>
                 
-            <div className="border-b shadow">
+            <div className="border-b border-black/15 shadow-2xs">
                 <ul className="w-fit text-base font-medium flex items-center mx-auto gap-5 ">
                     <NavMenu />
                 </ul>

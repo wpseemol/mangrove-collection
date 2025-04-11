@@ -66,7 +66,7 @@ export default function HomePage() {
  
   return (
     <main>
-      {/* <HeroSection /> */}
+       <HeroSection /> 
       
 
     

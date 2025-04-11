@@ -1,0 +1,11 @@
+{
+
+      // Ignore unknown @rules in CSS (like @custom-variant from Tailwind v4)
+  "css.lint.unknownAtRules": "ignore",
+
+  // Ignore unknown @rules in SCSS files
+  "scss.lint.unknownAtRules": "ignore",
+
+  // Ignore unknown @rules in LESS files
+  "less.lint.unknownAtRules": "ignore"
+}
