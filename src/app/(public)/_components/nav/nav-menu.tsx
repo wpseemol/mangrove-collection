@@ -3,6 +3,8 @@ import CustomLink from '@/components/custom-link';
 // import { MenuItem } from '@/types/nav';
 import Link from 'next/link';
 import CategoryMenus from './category-menus';
+import { div } from 'framer-motion/client';
+import SubMenu from './sub-menu';
 
 export function NavMenu() {
     return (
@@ -11,27 +13,33 @@ export function NavMenu() {
                 return (
                     <li
                         key={items.id}
-                        className={`capitalize hover:text-primary duration-200 border-b border-border md:py-3 md:border-none p-2 group/menu last:border-none dark:border-neutral-200/20 ${
-                            items.id === 'category'
-                                ? 'group/category relative duration-500 origin-top'
-                                : ''
-                        }`}>
-                        {items.id === 'contact' || items.id === 'about' ? (
-                            <Link
-                                href={items.href}
-                                className="group-hover/menu:md:pl-0 group-hover/menu:pl-2 duration-150">
-                                {items.label}
-                            </Link>
-                        ) : (
-                            <CustomLink
-                                isActive={items.id !== 'category'}
-                                href={items.href}
-                                className="group-hover/menu:md:pl-0 group-hover/menu:pl-2 duration-150">
-                                {items.label}
-                            </CustomLink>
-                        )}
+                        className={`capitalize hover:text-primary duration-200 border-b border-border md:py-3 md:border-none p-2 group/menu last:border-none dark:border-neutral-200/20 group/test $`}>
 
-                        {items.id === 'category' && <CategoryMenus />}
+                        {
+                            items.subMenu ?
+                                (
+                                    /**
+                                     * f the menu item is a sub menu then show the sub menu
+                                     * lse show the link
+                                     */
+                                    items.id === 'category' && <SubMenu menuItme={items} SubMenuContent={<CategoryMenus />} />
+                                )
+
+                                : (<CustomLink
+                                    isActive={items.id !== 'category'}
+                                    href={items.href}
+                                    className="group-hover/menu:md:pl-0 group-hover/menu:pl-2 duration-150">
+                                    {items.label}
+                                </CustomLink>)
+
+                        }
+
+
+                        {/* {items.id === 'category' && <CategoryMenus />} */}
+
+
+
+
                     </li>
                 );
             })}
@@ -40,15 +48,16 @@ export function NavMenu() {
 }
 
 const menuArray: MenuItem[] = [
-    { id: 'category', href: '#', label: 'Category' },
-    { id: 'products', href: '/products', label: 'products' },
-    { id: 'contact', href: '/#contact', label: 'contact' },
-    { id: 'about', href: '/#about', label: 'about' },
+    { id: 'category', href: '#', label: 'Category', subMenu: true },
+    { id: 'products', href: '/products', label: 'products', subMenu: false },
+    { id: 'contact', href: '/#contact', label: 'contact', subMenu: false },
+    { id: 'about', href: '/#about', label: 'about', subMenu: false },
 ];
 
 
-interface MenuItem {
+export interface MenuItem {
     id: string;
     href: string;
     label: string;
+    subMenu: boolean
 }
