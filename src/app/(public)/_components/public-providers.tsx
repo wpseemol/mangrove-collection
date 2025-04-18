@@ -11,8 +11,7 @@ export default function PublicProviders({
         <>
             <ThemeProvider
                  attribute="class"
-                 defaultTheme="green"
-                 themes={['green', 'dark', 'light']}
+                 defaultTheme="light"
                  enableSystem
                  disableTransitionOnChange>
                 {children}

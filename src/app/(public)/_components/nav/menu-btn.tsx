@@ -50,7 +50,7 @@ export default function MenuBtn({ children }: { children: React.ReactNode }) {
                             duration: 0.3,
                             ease: [0.25, 0.1, 0.25, 1]
                         }}
-                        className="absolute top-[3rem] z-40 -left-7 border rounded-sm text-xl font-normal text-secondary-foreground sm:min-w-[calc(100vw-8rem)] min-w-[calc(100vw-5rem)] min-h-[calc(100vh-4.8rem)] bg-gray-100 dark:bg-slate-900"
+                        className="absolute top-[3rem] z-40 -left-7 border rounded-sm text-xl font-normal text-secondary-foreground sm:min-w-[calc(100vw-8rem)] min-w-[calc(100vw-5rem)] min-h-[calc(100vh-4.8rem)] bg-gray-100 dark:bg-slate-900 overflow-y-auto"
                     >
                         {children}
                     </motion.ul>
