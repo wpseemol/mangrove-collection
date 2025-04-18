@@ -13,7 +13,7 @@ export function NavMenu() {
                 return (
                     <li
                         key={items.id}
-                        className={`capitalize hover:text-primary duration-200 border-b border-border md:py-3 md:border-none p-2 group/menu last:border-none dark:border-neutral-200/20 group/test $`}>
+                        className={`capitalize hover:text-primary duration-200 border-b border-border md:border-none group/menu last:border-none dark:border-neutral-200/20 relative p-2 py-3 md:p-0`}>
 
                         {
                             items.subMenu ?
@@ -22,20 +22,20 @@ export function NavMenu() {
                                      * f the menu item is a sub menu then show the sub menu
                                      * lse show the link
                                      */
-                                    items.id === 'category' && <SubMenu menuItme={items} SubMenuContent={<CategoryMenus />} />
+                                    items.id === 'category' && (
+                                    <SubMenu menuItme={items} SubMenuContent={<CategoryMenus />} />)
                                 )
 
                                 : (<CustomLink
                                     isActive={items.id !== 'category'}
                                     href={items.href}
-                                    className="group-hover/menu:md:pl-0 group-hover/menu:pl-2 duration-150">
+                                    className="group-hover/menu:pl-2 md:py-3 p-2">
                                     {items.label}
                                 </CustomLink>)
 
                         }
 
 
-                        {/* {items.id === 'category' && <CategoryMenus />} */}
 
 
 
