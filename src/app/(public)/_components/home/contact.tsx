@@ -29,7 +29,7 @@ export default function Contact() {
                                 <label htmlFor="fName">First Name *</label>{' '}
                                 <br />
                                 <input
-                                    className="text-[#666697] rounded px-3 py-2 w-full"
+                                    className="text-white bg-green-950 rounded px-3 py-2 w-full"
                                     type="text"
                                     name="fName"
                                     id="fName"
@@ -40,7 +40,7 @@ export default function Contact() {
                                 <label htmlFor="lName">Last Name *</label>{' '}
                                 <br />
                                 <input
-                                    className="text-[#666697] rounded px-3 py-2 w-full"
+                                    className="text-white bg-green-950 rounded px-3 py-2 w-full"
                                     type="text"
                                     name="lName"
                                     id="lName"
@@ -50,7 +50,7 @@ export default function Contact() {
                             <div className="w-full px-2 md:px-0">
                                 <label htmlFor="email">Email *</label> <br />
                                 <input
-                                    className="text-[#666697] rounded px-3 py-2 w-full"
+                                    className="text-white bg-green-950 rounded px-3 py-2 w-full"
                                     type="text"
                                     name="email"
                                     id="email"
@@ -65,7 +65,7 @@ export default function Contact() {
                                 <label htmlFor="pdCod">Product Code </label>{' '}
                                 <br />
                                 <input
-                                    className="text-[#666697] md:font-normal rounded px-3 py-2 w-full"
+                                    className="text-white md:font-normal rounded bg-green-950 px-3 py-2 w-full"
                                     type="text"
                                     name="pdCod"
                                     id="pdCod"
@@ -77,7 +77,7 @@ export default function Contact() {
                                 <label htmlFor="massage">Your Massage *</label>{' '}
                                 <br />
                                 <input
-                                    className="text-[#666697] md:font-normal rounded px-3 py-2 w-full"
+                                    className="text-white md:font-normal rounded px-3 py-2 w-full bg-green-950"
                                     type="text"
                                     name="massage"
                                     id="massage"

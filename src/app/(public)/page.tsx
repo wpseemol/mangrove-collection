@@ -3,6 +3,10 @@ import { Metadata } from "next";
 import HeroSection from "./_components/home/hero-section";
 import FeatureSection from "./_components/home/feature-section";
 import CategorySection from "./_components/home/category-section";
+import PopularProductSection from "./_components/home/popular-product-section";
+import NewArrivalProduct from "./_components/home/new-arrival-product";
+import Contact from "./_components/home/contact";
+import OtherDetails from "./_components/home/other-details";
 
 
 /**
@@ -71,6 +75,10 @@ export default function HomePage() {
        <HeroSection /> 
        <FeatureSection />
        <CategorySection />
+       <PopularProductSection />
+       <NewArrivalProduct />
+       <Contact />
+       <OtherDetails />
       
 
     

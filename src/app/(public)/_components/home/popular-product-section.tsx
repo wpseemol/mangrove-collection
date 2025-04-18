@@ -1,6 +1,8 @@
+
+
 import ProductCard from '@/components/product-card';
-import { getPopularProducts } from '@/server/products';
 import HomeTitle from './home-title';
+import { getPopularProducts } from '@/lib/server/get-populer-products';
 
 export default async function PopularProductSection() {
     const popularProducts = await getPopularProducts();
@@ -10,7 +12,7 @@ export default async function PopularProductSection() {
             <HomeTitle>
                 <samp className="uppercase">POPULAR PRODUCTS🔥</samp>
             </HomeTitle>
-            {popularProducts && (
+            {(popularProducts.length > 0) && (
                 <div
                     className={`mt-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 md:gap-3 gap-2`}>
                     {popularProducts.map((product) => (
