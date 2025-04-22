@@ -21,7 +21,7 @@ export default function CustoNotFoundPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 }}
                 >
-                    Oops! The page you're looking for doesn't exist.
+                    Oops! The page you&apos;re looking for doesn&apos;t exist.
                 </motion.p>
                 <motion.div
                     className="mt-8"

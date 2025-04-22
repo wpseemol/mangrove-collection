@@ -1,11 +1,47 @@
 {
-
-      // Ignore unknown @rules in CSS (like @custom-variant from Tailwind v4)
+  // Ignore unknown @rules in CSS (like @custom-variant from Tailwind v4)
   "css.lint.unknownAtRules": "ignore",
 
   // Ignore unknown @rules in SCSS files
   "scss.lint.unknownAtRules": "ignore",
 
   // Ignore unknown @rules in LESS files
-  "less.lint.unknownAtRules": "ignore"
+  "less.lint.unknownAtRules": "ignore",
+
+  "editor.fontSize": 22,
+  "terminal.integrated.cursorStyle": "line",
+  "terminal.integrated.fontSize": 20,
+  "editor.wordWrap": "on",
+  "editor.overtypeCursorStyle": "line-thin",
+  "explorer.confirmDelete": false,
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "workbench.colorTheme": "Learn with Sumit - Peace of the eye",
+
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.tslint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "eslint.run": "onSave",
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+  },
+  "path-autocomplete.extensionOnImport": true,
+  "path-autocomplete.excludedItems": {
+    "*/.js": {
+      "when": "**"
+    },
+    "*/.jsx": {
+      "when": "**"
+    },
+    "*/.tsx": {
+      "when": "**"
+    }
+  },
+  "javascript.validate.enable": false,
+  "typescript.validate.enable": false
 }
