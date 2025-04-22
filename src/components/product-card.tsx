@@ -17,11 +17,11 @@ export default function ProductCard({ details }: { details: CardProductType }) {
     return (
         <>
             <Card
-                className={` h-fit w-full border border-neutral-800/10 justify-self-center rounded group relative overflow-hidden`}>
+                className={` h-fit w-full border-none justify-self-center rounded group relative overflow-hidden`}>
                 <CardContent className="h-fit p-0">
                     <Link href={`/products/${details.slug}`}>
                         <figure
-                            className={` w-full sm:h-[190px] h-[145px] mx-auto rounded-t overflow-hidden relative animate-fade animate-duration-1000 border border-b`}>
+                            className={` w-full sm:h-[190px] h-[145px] mx-auto rounded-t overflow-hidden relative animate-fade animate-duration-1000 border border-neutral-800/10 border-b`}>
                             <Image
                                 src={details.thumbnail}
                                 alt={details.name}

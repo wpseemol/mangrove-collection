@@ -18,8 +18,6 @@ export default function SubMenu({
     setMenuShow(!menuShow);
   }
 
-  console.log(isHover)
-
   return (
     <>
       <button
