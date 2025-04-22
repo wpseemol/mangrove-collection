@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { Metadata } from "next";
 import HeroSection from "./_components/home/hero-section";
 import FeatureSection from "./_components/home/feature-section";

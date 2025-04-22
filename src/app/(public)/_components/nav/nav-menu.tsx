@@ -1,9 +1,9 @@
 import CustomLink from '@/components/custom-link';
 
-// import { MenuItem } from '@/types/nav';
-import Link from 'next/link';
+
+
 import CategoryMenus from './category-menus';
-import { div } from 'framer-motion/client';
+
 import SubMenu from './sub-menu';
 
 export function NavMenu() {

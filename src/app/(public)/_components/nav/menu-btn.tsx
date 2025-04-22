@@ -1,7 +1,6 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
-import { pre } from 'framer-motion/client';
 import { useEffect, useRef, useState } from 'react';
 import { FaBars, FaX } from 'react-icons/fa6';
 
