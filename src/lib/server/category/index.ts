@@ -3,7 +3,7 @@
 import { connectMongoDB } from "@/db/connections";
 import { Category } from "@/lib/schemas/mongoose/category";
 import { replaceMongoIds } from "@/utils/replace";
-import { Types } from "mongoose";
+import { PipelineStage, Types } from "mongoose";
 
 export async function getCategory(): Promise<Categories[]> {
      try {
@@ -24,24 +24,19 @@ export async function getCategory(): Promise<Categories[]> {
      }
 }
 
-interface Categories {
-     id: string;
-     name: string;
-     slug: string;
-     imgUrl: string;
-}
-
 export async function getCategoryNameFromSlug(cateogyrSlug: string[]) {
      try {
           await connectMongoDB();
 
           const showColumns = "name";
-          const mongodbResponse = await Category.find(
+          const mongodbResponse = (await Category.find(
                {
                     slug: { $in: cateogyrSlug },
                },
                showColumns
-          ).lean();
+          ).lean()) as { name: string }[];
+          const categoryName = mongodbResponse.map((category) => category.name);
+          return categoryName;
      } catch (error) {
           console.log("get category name form category slug error:", error);
           return [];
@@ -83,8 +78,6 @@ export async function getCategoryids(categorySlguArray: string[]): string[] {
 interface CategoryIdsType {
      _id: Types.ObjectId;
 }
-
-import { PipelineStage } from "mongoose";
 
 export async function getCategoryWithCount(
      limit: Limit = 5
@@ -145,4 +138,21 @@ export interface CategoryWithCount {
      name: string;
      slug: string;
      productCount: number;
+}
+/**
+ *
+ *
+ * Represents a category entity.
+ *
+ * @interface Categories
+ * @property {string} id - The unique identifier for the category.
+ * @property {string} name - The name of the category.
+ * @property {string} slug - The URL-friendly identifier for the category, typically used in web URLs.
+ * @property {string} imgUrl - The URL of the image associated with the category.
+ */
+interface Categories {
+     id: string;
+     name: string;
+     slug: string;
+     imgUrl: string;
 }

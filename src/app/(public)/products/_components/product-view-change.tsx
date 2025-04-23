@@ -1,5 +1,6 @@
 "use client";
 
+import { getCategoryNameFromSlug } from "@/lib/server/category";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -26,7 +27,42 @@ export default function ProductViewChange({
      }, []);
 
      const searchParams = useSearchParams();
-     const selectedCategory = searchParams.get("category");
+     const categoryParams = searchParams.get("category");
+     const priceParams = searchParams.get("price");
+     const sizeParams = searchParams.get("size");
+
+     const [categoryName, setCategoryName] = useState<string>("");
+
+     useEffect(() => {
+          if (categoryParams) {
+               const categorySlug = decodeURI(categoryParams).split("|");
+
+               getCategoryName(categorySlug);
+          }
+
+          async function getCategoryName(slugArray: string[]) {
+               const categoryNameArray = await getCategoryNameFromSlug(
+                    slugArray
+               );
+               const categoryName = categoryNameArray.join(",");
+               setCategoryName(categoryName);
+          }
+     }, [categoryParams]);
+
+     let filterMessage = "Products show in";
+
+     if (categoryParams) {
+          filterMessage += ` category <b>${categoryName}</b>`;
+     }
+     if (priceParams) {
+          filterMessage += ` price <b>${priceParams}</b>`;
+     }
+     if (sizeParams) {
+          filterMessage += ` size <b>${sizeParams}</b>`;
+     }
+     filterMessage += `.`;
+
+     console.log(categoryName, priceParams, sizeParams);
 
      return (
           <section className="col-span-4">
@@ -62,7 +98,24 @@ export default function ProductViewChange({
                     </button>
                </div>
                {/* grid button end */}
-               some text here
+
+               {/* filst title section here */}
+               {!isEmpty && (
+                    <AnimatePresence>
+                         {(categoryParams || priceParams || sizeParams) && (
+                              <motion.div
+                                   initial={{ x: 100, opacity: 0 }}
+                                   animate={{ x: 0, opacity: 1 }}
+                                   transition={{ duration: 0.5 }}
+                                   dangerouslySetInnerHTML={{
+                                        __html: filterMessage,
+                                   }}
+                              ></motion.div>
+                         )}
+                    </AnimatePresence>
+               )}
+               {/* filst title section here */}
+
                {/* empty cart here */}
                <AnimatePresence>
                     {isEmpty && (
@@ -93,9 +146,16 @@ export default function ProductViewChange({
                               </motion.h2>
 
                               <motion.p className="mb-8 text-gray-600">
-                                   {selectedCategory
-                                        ? `No products available in ${selectedCategory}`
-                                        : "No products found"}
+                                   {categoryParams ? (
+                                        <>
+                                             No products available in{" "}
+                                             <b className="capitalize">
+                                                  {categoryName.toLowerCase()}
+                                             </b>
+                                        </>
+                                   ) : (
+                                        "No products found"
+                                   )}
                               </motion.p>
                          </motion.div>
                     )}
@@ -183,4 +243,23 @@ const pageVariants = {
      hidden: { opacity: 0, y: 20 },
      visible: { opacity: 1, y: 0 },
      exit: { opacity: 0, y: -20 },
+};
+
+const sentenceVariants = {
+     hidden: { opacity: 1 },
+     visible: {
+          opacity: 1,
+          transition: {
+               staggerChildren: 0.08,
+          },
+     },
+};
+
+const letterVariants = {
+     hidden: { x: 50, opacity: 0 },
+     visible: {
+          x: 0,
+          opacity: 1,
+          transition: { type: "spring", stiffness: 120 },
+     },
 };

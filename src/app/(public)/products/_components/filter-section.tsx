@@ -48,9 +48,9 @@ export default function FilterSection({
      } = useFilterSection();
 
      return (
-          <>
+          <div>
                <Button
-                    className="md:hidden inline-block w-fit text-white"
+                    className="md:hidden block w-fit text-white"
                     onClick={() => setFilterShow((prev) => !prev)}
                >
                     <motion.span
@@ -66,10 +66,21 @@ export default function FilterSection({
                <AnimatePresence mode="popLayout">
                     {filterShow && (
                          <motion.div
-                              initial={{ opacity: 0, height: 0, scale: 0.95 }}
-                              animate={{ opacity: 1, height: "auto", scale: 1 }}
+                              initial={{
+                                   opacity: 0,
+                                   height: 0,
+                                   scale: 0.95,
+                              }}
+                              animate={{
+                                   opacity: 1,
+                                   height: "auto",
+                                   scale: 1,
+                              }}
                               exit={{ opacity: 0, height: 0, scale: 0.95 }}
-                              transition={{ duration: 0.3, ease: "easeInOut" }}
+                              transition={{
+                                   duration: 0.3,
+                                   ease: "easeInOut",
+                              }}
                               className={`col-span-1 content-center bg-white dark:bg-transparent dark:text-neutral-200 px-4 pb-6 shadow rounded overflow-hidden md:w-fit w-full mx-auto inline-block ${
                                    filterShow ? "" : "hidden"
                               } md:sticky top-28`}
@@ -171,9 +182,15 @@ export default function FilterSection({
                                                                  ? "less"
                                                                  : "more"
                                                        }
-                                                       initial={{ opacity: 0 }}
-                                                       animate={{ opacity: 1 }}
-                                                       exit={{ opacity: 0 }}
+                                                       initial={{
+                                                            opacity: 0,
+                                                       }}
+                                                       animate={{
+                                                            opacity: 1,
+                                                       }}
+                                                       exit={{
+                                                            opacity: 0,
+                                                       }}
                                                   >
                                                        {loading ? (
                                                             <motion.span
@@ -212,7 +229,9 @@ export default function FilterSection({
                                         >
                                              {/* Price inputs with hover effects */}
                                              <motion.input
-                                                  whileHover={{ scale: 1.02 }}
+                                                  whileHover={{
+                                                       scale: 1.02,
+                                                  }}
                                                   onChange={(event) =>
                                                        handelChange(
                                                             event,
@@ -230,7 +249,9 @@ export default function FilterSection({
                                                   -
                                              </span>
                                              <motion.input
-                                                  whileHover={{ scale: 1.02 }}
+                                                  whileHover={{
+                                                       scale: 1.02,
+                                                  }}
                                                   onChange={(event) =>
                                                        handelChange(
                                                             event,
@@ -285,7 +306,9 @@ export default function FilterSection({
                                                        whileHover={{
                                                             scale: 1.1,
                                                        }}
-                                                       whileTap={{ scale: 0.9 }}
+                                                       whileTap={{
+                                                            scale: 0.9,
+                                                       }}
                                                   >
                                                        <input
                                                             onChange={(event) =>
@@ -344,7 +367,7 @@ export default function FilterSection({
                          </motion.div>
                     )}
                </AnimatePresence>
-          </>
+          </div>
      );
 }
 
