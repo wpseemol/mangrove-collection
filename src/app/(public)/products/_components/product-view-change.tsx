@@ -52,7 +52,7 @@ export default function ProductViewChange({
      let filterMessage = "Products show in";
 
      if (categoryParams) {
-          filterMessage += ` category <b>${categoryName}</b>`;
+          filterMessage += ` category <b class='capitalize'> ${categoryName.toLowerCase()}</b>`;
      }
      if (priceParams) {
           filterMessage += ` price <b>${priceParams}</b>`;
@@ -62,7 +62,18 @@ export default function ProductViewChange({
      }
      filterMessage += `.`;
 
-     console.log(categoryName, priceParams, sizeParams);
+     let emptyMessage = "No products available in";
+
+     if (categoryParams) {
+          emptyMessage += ` category <b class='capitalize'>${categoryName.toLowerCase()}</b>`;
+     }
+     if (priceParams) {
+          emptyMessage += ` price <b>${priceParams}</b>`;
+     }
+     if (sizeParams) {
+          emptyMessage += ` size <b>${sizeParams}</b>`;
+     }
+     emptyMessage += `.`;
 
      return (
           <section className="col-span-4">
@@ -146,12 +157,21 @@ export default function ProductViewChange({
                               </motion.h2>
 
                               <motion.p className="mb-8 text-gray-600">
-                                   {categoryParams ? (
+                                   {categoryParams ||
+                                   priceParams ||
+                                   sizeParams ? (
                                         <>
-                                             No products available in{" "}
-                                             <b className="capitalize">
-                                                  {categoryName.toLowerCase()}
-                                             </b>
+                                             <span
+                                                  initial={{
+                                                       x: 100,
+                                                       opacity: 0,
+                                                  }}
+                                                  animate={{ x: 0, opacity: 1 }}
+                                                  transition={{ duration: 0.5 }}
+                                                  dangerouslySetInnerHTML={{
+                                                       __html: filterMessage,
+                                                  }}
+                                             ></span>
                                         </>
                                    ) : (
                                         "No products found"
