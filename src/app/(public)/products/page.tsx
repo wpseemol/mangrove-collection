@@ -6,7 +6,8 @@ import {
      BreadcrumbPage,
      BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { getCategoryWithCount } from "@/lib/server/category-with-count";
+
+import { getCategoryWithCount } from "@/lib/server/category";
 import FilterSection from "./_components/filter-section";
 import ProductSection from "./_components/products-section";
 
