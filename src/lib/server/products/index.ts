@@ -173,3 +173,44 @@ export async function getProductsDetails(slug: string) {
           return null;
      }
 }
+
+export async function getRelatedProducts(
+     skipId: string,
+     categoryId: string
+): Promise<CardProductType[]> {
+     try {
+          if (!categoryId) {
+               console.error("Category id is rewired.");
+               return [];
+          }
+          if (!skipId) {
+               console.error("Skip product id.");
+               return [];
+          }
+
+          await connectMongoDB();
+
+          const limitOption = 6;
+          const showField =
+               "name slug images thumbnail shortDescription currency price";
+          const findOption = {
+               category: categoryId,
+               _id: { $ne: skipId },
+          };
+
+          const relatedProductResponse = await Product.find(
+               findOption,
+               showField
+          )
+               .limit(limitOption)
+               .lean();
+
+          const relatedProducts = replaceMongoIds(
+               relatedProductResponse
+          ) as CardProductType[];
+          return relatedProducts;
+     } catch (error) {
+          console.log("get related product error:", error);
+          return [];
+     }
+}

@@ -9,6 +9,9 @@ import {
 import { getProductsDetails } from "@/lib/server/products";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import ProductDetails from "./_components/product-details";
+import RelatedProduct from "./_components/related-product";
+import VariantContentUpdateProvider from "./_components/varient-update-provider";
 
 export async function generateMetadata({
      params,
@@ -119,6 +122,14 @@ export default async function ProductDetailsPage({
                     </BreadcrumbList>
                </Breadcrumb>
                {/* breadcrumb Product page*/}
+
+               <VariantContentUpdateProvider>
+                    <ProductDetails details={productDetails} />
+               </VariantContentUpdateProvider>
+               <RelatedProduct
+                    categoryId={productDetails.category._id}
+                    skipId={productDetails.id}
+               />
           </main>
      );
 }

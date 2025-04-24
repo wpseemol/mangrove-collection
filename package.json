@@ -11,8 +11,10 @@
   "dependencies": {
     "@midudev/tailwind-animations": "^0.2.0",
     "@radix-ui/react-slot": "^1.2.0",
+    "@zoom-image/react": "^0.5.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.6.3",
     "lucide-react": "^0.487.0",
     "mongoose": "^8.13.2",
