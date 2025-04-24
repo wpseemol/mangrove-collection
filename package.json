@@ -17,6 +17,7 @@
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.6.3",
+    "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.487.0",
     "mongoose": "^8.13.2",
     "next": "15.3.0",

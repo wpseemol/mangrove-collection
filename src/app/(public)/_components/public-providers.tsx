@@ -1,21 +1,21 @@
-import { ThemeProvider } from '@/components/theme-provider';
-import React from 'react';
-
+import { ThemeProvider } from "@/components/theme-provider";
+import React from "react";
 
 export default function PublicProviders({
-    children,
+     children,
 }: Readonly<{
-    children: React.ReactNode;
+     children: React.ReactNode;
 }>) {
-    return (
-        <>
-            <ThemeProvider
-                 attribute="class"
-                 defaultTheme="light"
-                 enableSystem
-                 disableTransitionOnChange>
-                {children}
-            </ThemeProvider>
-        </>
-    );
+     return (
+          <>
+               <ThemeProvider
+                    attribute="class"
+                    defaultTheme="light"
+                    enableSystem
+                    disableTransitionOnChange
+               >
+                    {children}
+               </ThemeProvider>
+          </>
+     );
 }

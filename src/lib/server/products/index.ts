@@ -179,12 +179,8 @@ export async function getRelatedProducts(
      categoryId: string
 ): Promise<CardProductType[]> {
      try {
-          if (!categoryId) {
-               console.error("Category id is rewired.");
-               return [];
-          }
-          if (!skipId) {
-               console.error("Skip product id.");
+          if (!categoryId || !skipId) {
+               console.error("CategoryId skip product id is rewired.");
                return [];
           }
 

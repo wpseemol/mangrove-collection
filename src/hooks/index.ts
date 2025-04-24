@@ -19,9 +19,7 @@ export const useVariantUpdate = function () {
           );
      }
 
-     const { variantSelectId, setVariantSelectId } = context;
-
-     return { variantSelectId, setVariantSelectId };
+     return context;
 };
 
 /**
