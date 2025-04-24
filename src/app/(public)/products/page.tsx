@@ -8,8 +8,13 @@ import {
 } from "@/components/ui/breadcrumb";
 
 import { getCategoryWithCount } from "@/lib/server/category";
+import { Metadata } from "next";
 import FilterSection from "./_components/filter-section";
 import ProductSection from "./_components/products-section";
+
+export const metadata: Metadata = {
+     title: "Products | Mangrove Collection",
+};
 
 export default async function ProductsPage({
      searchParams,

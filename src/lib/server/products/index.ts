@@ -3,6 +3,7 @@
 import { connectMongoDB } from "@/db/connections";
 import { Category } from "@/lib/schemas/mongoose/category";
 import { Product } from "@/lib/schemas/mongoose/product";
+import { ProductDetailsType } from "@/types/mongoose/product";
 import { CardProductType } from "@/types/product";
 import { replaceMongoIds } from "@/utils/replace";
 /**
@@ -143,5 +144,32 @@ export async function getPopularProducts(): Promise<CardProductType[]> {
      } catch (error) {
           console.error("Error fetching popular products:", error);
           return [];
+     }
+}
+
+export async function getProductsDetails(slug: string) {
+     try {
+          await connectMongoDB();
+
+          if (!slug) {
+               return null;
+          }
+
+          const productDetailsResponse = await Product.findOne({ slug })
+               .populate({
+                    path: "category",
+                    model: Category,
+                    select: "name slug",
+               })
+               .lean();
+
+          const productDetails = replaceMongoIds(
+               productDetailsResponse
+          ) as ProductDetailsType;
+
+          return productDetails;
+     } catch (error) {
+          console.error("get product details error:", error);
+          return null;
      }
 }
