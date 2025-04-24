@@ -1,6 +1,11 @@
+import { CurrencyIcon } from "@/components/currency-icon";
 import { ProductDetailsType } from "@/types/mongoose/product";
 import Link from "next/link";
+import "../_components/quill-content-css.css";
+import ImagePreview from "./image-preview";
+import PriceSection from "./price-section";
 import QuantityCounter from "./quntity-counter";
+import SelectedVariant from "./selected-variant";
 import SocialShareBtn from "./social-share-btn";
 
 export default function ProductDetails({
@@ -18,17 +23,17 @@ export default function ProductDetails({
           <section>
                <div
                     key={details.id}
-                    className="flex md:flex-nowrap justify-center flex-wrap gap-6 group relative md:text-start text-center md:mx-14 mt-6"
+                    className="flex md:flex-nowrap justify-center flex-wrap gap-6 group relative md:text-start text-center md:mx-14 mt-6  "
                >
                     {/* image preview component */}
                     {/* allImage function return array and input a single image url and images array */}
-                    {/* <ImagePreview
+                    <ImagePreview
                          allImage={allImageArray(
                               details.thumbnail,
                               details.images
                          )}
                          productName={details.name}
-                    /> */}
+                    />
                     <div className="flex flex-col gap-y-3 w-full ">
                          <h2 className="md:text-3xl text-xl font-medium capitalize group-hover:underline group-hover:underline-offset-4 group-hover:text-primary-foreground duration-200">
                               {details.name}
@@ -36,15 +41,15 @@ export default function ProductDetails({
 
                          {/* price section */}
                          <div className="flex md:justify-start justify-center items-baseline font-roboto">
-                              {/* <p className="text-xl text-primary font-semibold">
+                              <p className="text-xl text-primary font-semibold">
                                    {displayPrice && (
-                                        // <PriceSection
-                                        //      displayPrice={displayPrice.price}
-                                        //      priceVariants={details.price}
-                                        // />
+                                        <PriceSection
+                                             displayPrice={displayPrice.price}
+                                             priceVariants={details.price}
+                                        />
                                    )}
                                    <CurrencyIcon currency={details.currency} />{" "}
-                              </p> */}
+                              </p>
 
                               {/*
                             offer price
@@ -70,22 +75,21 @@ export default function ProductDetails({
                          </p>
                          {/* category section */}
 
-                         {/* 
-                    <div className="flex items-center mb-4">
-                        <div
-                            className="flex gap-1 text-sm text-yellow-400"
-                            title={`rating Number ${productDetails?.rating}`}>
-                            {ratingArrayGenerate(productDetails?.rating)?.map(
-                                (item) => (
-                                    <FaStar key={item} />
-                                )
-                            )}
-                        </div>
-                         <div className="text-xs text-gray-500 ml-3">
-                            (150 Reviews)
-                        </div> 
-                    </div>
-                    */}
+                         {/* <div className="flex items-center mb-4">
+                              <div
+                                   className="flex gap-1 text-sm text-yellow-400"
+                                   title={`rating Number ${productDetails?.rating}`}
+                              >
+                                   {ratingArrayGenerate(
+                                        productDetails?.rating
+                                   )?.map((item) => (
+                                        <FaStar key={item} />
+                                   ))}
+                              </div>
+                              <div className="text-xs text-gray-500 ml-3">
+                                   (150 Reviews)
+                              </div>
+                         </div> */}
 
                          <p className="text-gray-800 font-semibold space-x-2">
                               <span>Unit:</span>
@@ -100,11 +104,11 @@ export default function ProductDetails({
                                         <span className="text-gray-800 font-semibold capitalize">
                                              {variant}:
                                         </span>
-                                        {/* <SelectedVariant
+                                        <SelectedVariant
                                              type={variant}
                                              variants={details.variants}
                                              displayPrice={displayPrice}
-                                        /> */}
+                                        />
                                    </p>
                               ))}
                          {/* variant section */}
@@ -178,7 +182,7 @@ export default function ProductDetails({
                     </h3>
                     <div className=" mx-4 pt-6 text-gray-600 md:mx-0 sm:mx-auto">
                          <div
-                              className="quill-content"
+                              className="quill-content "
                               dangerouslySetInnerHTML={{
                                    __html: details.description,
                               }}
