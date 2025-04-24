@@ -1,27 +1,27 @@
 import {
-    CartContext,
-    CartProductsContext,
-    PurchaseContext,
-    VariantUpdateContext,
-} from '@/contexts';
-import { useContext } from 'react';
+     CartContext,
+     CartProductsContext,
+     PurchaseContext,
+     VariantUpdateContext,
+} from "@/contexts";
+import { useContext } from "react";
 
 /**
  * useVariantUpdate hook return { variantSelectId, setVariantSelectId } return
  * @returns { variantSelectId, setVariantSelectId }
  */
 export const useVariantUpdate = function () {
-    const context = useContext(VariantUpdateContext);
+     const context = useContext(VariantUpdateContext);
 
-    if (!context) {
-        throw new Error(
-            'useVariantUpdate muse be used within a VariantUpdateProvider'
-        );
-    }
+     if (!context) {
+          throw new Error(
+               "useVariantUpdate muse be used within a VariantUpdateProvider"
+          );
+     }
 
-    const { variantSelectId, setVariantSelectId } = context;
+     const { variantSelectId, setVariantSelectId } = context;
 
-    return { variantSelectId, setVariantSelectId };
+     return { variantSelectId, setVariantSelectId };
 };
 
 /**
@@ -29,13 +29,13 @@ export const useVariantUpdate = function () {
  * @returns {cart, setCart}
  */
 export const useCart = function () {
-    const context = useContext(CartContext);
+     const context = useContext(CartContext);
 
-    if (!context) {
-        throw new Error('useCart muse be used within a CartProvider');
-    }
+     if (!context) {
+          throw new Error("useCart muse be used within a CartProvider");
+     }
 
-    return context;
+     return context;
 };
 
 /**
@@ -43,15 +43,15 @@ export const useCart = function () {
  * @returns {loading,setLoading,cartProducts,setCartProducts}
  */
 export const useCartProducts = function () {
-    const context = useContext(CartProductsContext);
+     const context = useContext(CartProductsContext);
 
-    if (!context) {
-        throw new Error(
-            'useCartProducts muse be used within a CartProductsContext'
-        );
-    }
+     if (!context) {
+          throw new Error(
+               "useCartProducts muse be used within a CartProductsContext"
+          );
+     }
 
-    return context;
+     return context;
 };
 
 /**
@@ -59,11 +59,11 @@ export const useCartProducts = function () {
  * @returns {buyProducts,setBuyProducts,shippingCost,setShippingCost,paymentMethod, setPaymentMethod}
  */
 export const usePurchase = function () {
-    const context = useContext(PurchaseContext);
+     const context = useContext(PurchaseContext);
 
-    if (!context) {
-        throw new Error('usePurchase muse be used within a CartProvider');
-    }
+     if (!context) {
+          throw new Error("usePurchase muse be used within a CartProvider");
+     }
 
-    return context;
+     return context;
 };

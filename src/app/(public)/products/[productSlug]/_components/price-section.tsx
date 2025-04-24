@@ -1,36 +1,36 @@
-'use client';
+"use client";
 
-import { useVariantUpdate } from '@/hooks';
-import { useEffect, useState } from 'react';
+import { useVariantUpdate } from "@/hooks";
+import { useEffect, useState } from "react";
 
 interface PriceSectionType {
-    displayPrice: number;
-    priceVariants: PriceType[];
+     displayPrice: number;
+     priceVariants: PriceType[];
 }
 
 export default function PriceSection({
-    displayPrice,
-    priceVariants,
+     displayPrice,
+     priceVariants,
 }: PriceSectionType) {
-    const [price, setPrice] = useState<number>(displayPrice);
+     const [price, setPrice] = useState<number>(displayPrice);
 
-    const { variantSelectId } = useVariantUpdate();
+     const { variantSelectId } = useVariantUpdate();
 
-    useEffect(() => {
-        if (variantSelectId) {
-            const selectedPrice = priceVariants.find(
-                (price) => price.variantId === variantSelectId
-            );
+     useEffect(() => {
+          if (variantSelectId) {
+               const selectedPrice = priceVariants.find(
+                    (price) => price.variantId === variantSelectId
+               );
 
-            if (selectedPrice?.price) setPrice(selectedPrice?.price);
-        }
-    }, [variantSelectId, priceVariants]);
+               if (selectedPrice?.price) setPrice(selectedPrice?.price);
+          }
+     }, [variantSelectId, priceVariants]);
 
-    return <>{price.toFixed(2)}</>;
+     return <>{price.toFixed(2)}</>;
 }
 
 interface PriceType {
-    variantId: string;
-    price: number;
-    select: boolean;
+     variantId: string;
+     price: number;
+     select: boolean;
 }

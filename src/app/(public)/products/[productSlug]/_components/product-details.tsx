@@ -1,12 +1,6 @@
-import { CurrencyIcon } from "@/components/currency-icon";
 import { ProductDetailsType } from "@/types/mongoose/product";
 import Link from "next/link";
-import DetailsBuyBtn from "./details-buy-btn";
-import DetailsCartBtn from "./details-cart-btn";
-import ImagePreview from "./image-preview";
-import PriceSection from "./price-section";
 import QuantityCounter from "./quntity-counter";
-import SelectedVariant from "./selected-variant";
 import SocialShareBtn from "./social-share-btn";
 
 export default function ProductDetails({
@@ -22,20 +16,19 @@ export default function ProductDetails({
 
      return (
           <section>
-               {/* image and product withe category section */}
-               <section
+               <div
                     key={details.id}
                     className="flex md:flex-nowrap justify-center flex-wrap gap-6 group relative md:text-start text-center md:mx-14 mt-6"
                >
                     {/* image preview component */}
                     {/* allImage function return array and input a single image url and images array */}
-                    <ImagePreview
+                    {/* <ImagePreview
                          allImage={allImageArray(
                               details.thumbnail,
                               details.images
                          )}
                          productName={details.name}
-                    />
+                    /> */}
                     <div className="flex flex-col gap-y-3 w-full ">
                          <h2 className="md:text-3xl text-xl font-medium capitalize group-hover:underline group-hover:underline-offset-4 group-hover:text-primary-foreground duration-200">
                               {details.name}
@@ -43,15 +36,15 @@ export default function ProductDetails({
 
                          {/* price section */}
                          <div className="flex md:justify-start justify-center items-baseline font-roboto">
-                              <p className="text-xl text-primary font-semibold">
+                              {/* <p className="text-xl text-primary font-semibold">
                                    {displayPrice && (
-                                        <PriceSection
-                                             displayPrice={displayPrice.price}
-                                             priceVariants={details.price}
-                                        />
+                                        // <PriceSection
+                                        //      displayPrice={displayPrice.price}
+                                        //      priceVariants={details.price}
+                                        // />
                                    )}
                                    <CurrencyIcon currency={details.currency} />{" "}
-                              </p>
+                              </p> */}
 
                               {/*
                             offer price
@@ -107,11 +100,11 @@ export default function ProductDetails({
                                         <span className="text-gray-800 font-semibold capitalize">
                                              {variant}:
                                         </span>
-                                        <SelectedVariant
+                                        {/* <SelectedVariant
                                              type={variant}
                                              variants={details.variants}
                                              displayPrice={displayPrice}
-                                        />
+                                        /> */}
                                    </p>
                               ))}
                          {/* variant section */}
@@ -139,10 +132,10 @@ export default function ProductDetails({
 
                          <div className="flex items-center justify-center md:justify-start gap-4 mt-4">
                               {/* bye button */}
-                              <DetailsBuyBtn productId={details.id} />
+                              {/* <DetailsBuyBtn productId={details.id} /> */}
                               {/* bye button */}
                               {/* cart button */}
-                              <DetailsCartBtn productId={details.id} />
+                              {/* <DetailsCartBtn productId={details.id} /> */}
                               {/* cart button */}
                          </div>
 
@@ -176,8 +169,7 @@ export default function ProductDetails({
                               description={details.description}
                          />
                     </div>
-               </section>
-               {/* image and product withe category section */}
+               </div>
 
                {/*  description  */}
                <div className="pb-16 mt-2">
@@ -193,7 +185,7 @@ export default function ProductDetails({
                          />
                     </div>
                </div>
-               {/* ./description */}
+               {/* description */}
           </section>
      );
 }
