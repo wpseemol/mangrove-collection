@@ -1,32 +1,32 @@
-'use client';
+"use client";
 
-import { CartContext } from '@/contexts';
-import { useState } from 'react';
+import { CartContext } from "@/contexts";
+import { useState } from "react";
 
 export default function CartProvider({
-    children,
+     children,
 }: Readonly<{
-    children: React.ReactNode;
+     children: React.ReactNode;
 }>) {
-    const [cart, setCart] = useState<Cart>(catStatet);
+     const [cart, setCart] = useState<Cart>(catStatet);
 
-    const value = { cart, setCart };
+     const value = { cart, setCart };
 
-    return (
-        <>
-            <CartContext.Provider value={value}>
-                {children}
-            </CartContext.Provider>
-        </>
-    );
+     return (
+          <>
+               <CartContext.Provider value={value}>
+                    {children}
+               </CartContext.Provider>
+          </>
+     );
 }
 
 interface Cart {
-    cartCount: number | null;
-    cartProductIds: string[];
+     cartCount: number | null;
+     cartProductIds: string[];
 }
 
 const catStatet: Cart = {
-    cartCount: null,
-    cartProductIds: [],
+     cartCount: null,
+     cartProductIds: [],
 };

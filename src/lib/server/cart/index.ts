@@ -52,7 +52,10 @@ export async function setCartData(
                path: "/",
           });
 
+          const cartProductIds = cart.map((item) => item.productId);
+
           return {
+               cartProductIds: cartProductIds,
                cartItem: cart,
                carTotalItems: cart.length,
           };
@@ -75,7 +78,12 @@ export async function getCartData() {
                     cart: CartItemType[];
                };
 
+               const cartProductIds = cartItem.cart.map(
+                    (item) => item.productId
+               );
+
                return {
+                    cartProductIds,
                     cartItem: cartItem.cart,
                     carTotalItems: cartItem.cart.length,
                };

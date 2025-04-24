@@ -1,5 +1,6 @@
 "use client";
 
+import { useCart } from "@/hooks";
 import { setCartData } from "@/lib/server/cart";
 import { useState } from "react";
 import { Button } from "./ui/button";
@@ -13,11 +14,21 @@ export default function CartBtn({
 }) {
      const [loading, setLoading] = useState<boolean>(false);
 
+     const { cart, setCart } = useCart();
+
      async function handleCard(id) {
           setLoading(true);
           try {
                const isCart = await setCartData(productId, selectedPriceId, 1);
-               console.log("is cart data:", isCart);
+               if (isCart) {
+                    setCart({
+                         cartCount: isCart.carTotalItems,
+                         cartProductIds: isCart.cartProductIds,
+                    });
+               }
+
+               console.log("cart hook:", cart);
+               console.log("cart productids:", isCart.cartProductIds);
           } catch (error) {
                console.error("cart button error:", error);
           } finally {
@@ -25,7 +36,7 @@ export default function CartBtn({
           }
      }
 
-     const isAlreadyCard = false;
+     const isAlreadyCard = cart.cartProductIds.includes(productId);
      return (
           <Button
                onClick={() => {
