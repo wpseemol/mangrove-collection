@@ -26,7 +26,7 @@ export default async function ProductsPage({
      const searchParamsData = await searchParams;
 
      return (
-          <main className="container mx-auto">
+          <main className="container mx-auto min-h-[calc(100vh-25.45rem)]">
                {/* breadcrumb Product page*/}
                <Breadcrumb>
                     <BreadcrumbList>

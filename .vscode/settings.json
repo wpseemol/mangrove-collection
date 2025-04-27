@@ -44,5 +44,7 @@
      },
      "javascript.validate.enable": false,
      "typescript.validate.enable": false,
-     "prettier.tabWidth": 5
+     "prettier.tabWidth": 5,
+     "typescript.tsserver.experimental.enableProjectDiagnostics": true,
+     "typescript.tsserver.experimental.diagnostics.enableUnusedVariable": true
 }
