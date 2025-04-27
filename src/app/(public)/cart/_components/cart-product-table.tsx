@@ -15,6 +15,7 @@ import {
 import { ArrowUpDown, ChevronDown } from "lucide-react";
 import * as React from "react";
 
+import { CurrencyIcon } from "@/components/currency-icon";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -119,7 +120,12 @@ export const columns: ColumnDef<CartProductsType>[] = [
           cell: ({ row }) => {
                const price = row.original.price;
 
-               return <div className="text-right font-medium">{price}</div>;
+               return (
+                    <div className="text-right font-medium">
+                         {price.toFixed(2)}{" "}
+                         <CurrencyIcon currency={row.original.currency} />
+                    </div>
+               );
           },
      },
      {

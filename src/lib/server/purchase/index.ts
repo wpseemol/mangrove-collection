@@ -1,6 +1,13 @@
 "use server";
 
-import { PurchaseItemType } from "@/types/purchase";
+import { connectMongoDB } from "@/db/connections";
+import { Product } from "@/lib/schemas/mongoose/product";
+import {
+     ProductType,
+     PurchaseItemType,
+     PurchaseProductsType,
+} from "@/types/purchase";
+import { replaceMongoIds } from "@/utils/replace";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 
@@ -24,7 +31,15 @@ export async function setPurchaseData(
                return false;
           }
 
-          const purchases = purchaseItem;
+          const previcePurchaseItem = await getPurchaseData();
+
+          let purchases: PurchaseItemType[] = [];
+          if (previcePurchaseItem) {
+               purchases = [...previcePurchaseItem, ...purchaseItem];
+          } else {
+               purchases = purchaseItem;
+          }
+
           const token = jwt.sign({ purchases }, SECRET_KEY_PURCHASES, {
                expiresIn: "1y",
           }) as string;
@@ -139,6 +154,80 @@ export async function purchaseQuantityUpdate(
      }
 }
 
+/**
+ * getPurchaseProductData function
+ * @description
+ * 1. get purchase data from cookie
+ * 2. get product data from database
+ * 3. return purchase product data
+ * 4. return null if no purchase data found
+ */
+export async function getPurchaseProductData(): Promise<
+     PurchaseProductsType[] | null
+> {
+     try {
+          const purchaseData = await getPurchaseData();
+          if (!purchaseData) {
+               return null;
+          }
+
+          const purchaseProductIds = purchaseData.map((item) => item.productId);
+
+          await connectMongoDB();
+
+          const showColumns = "name thumbnail slug price currency";
+          const productResponse = await Product.find(
+               {
+                    _id: { $in: purchaseProductIds },
+               },
+               showColumns
+          ).lean();
+
+          const purchaseProductData = replaceMongoIds(
+               productResponse
+          ) as ProductType[];
+
+          const purchaseProductDataWithQuantity = purchaseProductData.map(
+               (item) => {
+                    const purchaseItem = purchaseData.find(
+                         (purchaseItem) => purchaseItem.productId === item.id
+                    );
+
+                    const quantity = purchaseItem ? purchaseItem.quantity : 1;
+                    const selectePriceId = purchaseItem
+                         ? purchaseItem.selectePriceId
+                         : "";
+                    const findPrice = item.price.find(
+                         (price) =>
+                              price.variantId === purchaseItem?.selectePriceId
+                    );
+
+                    const price = findPrice ? findPrice.price : 0;
+
+                    return {
+                         ...item,
+                         quantity: quantity,
+                         price: price,
+                         selectePriceId,
+                    };
+               }
+          ) as PurchaseProductsType[];
+
+          return purchaseProductDataWithQuantity;
+     } catch (error) {
+          console.error("Error getting purchase product data:", error);
+          return null;
+     }
+}
+
+/**
+ *
+ * @param productId | string
+ * @description
+ * 1. delete purchase data from cookie
+ * 2. return true if success
+ * 3. return false if error or no purchase data found
+ */
 export async function purchaseDataDelete(productId: string): Promise<boolean> {
      if (!productId) {
           console.log("productId is empty.");

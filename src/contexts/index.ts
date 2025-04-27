@@ -54,9 +54,16 @@ interface PurchaseContextType {
      setBuyProducts: Dispatch<SetStateAction<Products[] | null>>;
 }
 
+/**
+ * @description Products is used to define the structure of a product in the purchase context.
+ * @property {string} productId - The ID of the product.
+ * @property {number} quantity - The quantity of the product purchased.
+ * @property {string} selectePriceId - The selected price ID for the product.
+ */
 interface Products {
      productId: string;
      quantity: number;
+     selectePriceId: string;
 }
 
 type PaymentMethod = "cod" | "online-payment" | "card";
