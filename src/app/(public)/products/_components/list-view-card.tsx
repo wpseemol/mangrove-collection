@@ -1,4 +1,6 @@
+import CartBtn from "@/components/cart-btn";
 import { CurrencyIcon } from "@/components/currency-icon";
+import PurchaseBtn from "@/components/purchase-btn";
 import { CardProductType, PriceType } from "@/types/product";
 
 import Image from "next/image";
@@ -66,9 +68,19 @@ export default function ListViewProductCard({
                          </Link>
 
                          <div className="flex items-center gap-3 ">
-                              {/* <PurchaseButton productId={details.id} /> */}
+                              {displayPrice && (
+                                   <PurchaseBtn
+                                        productId={details.id}
+                                        selectedPriceId={displayPrice.variantId}
+                                   />
+                              )}
                               {/* cart button */}
-                              {/* <CartButton productId={details.id} /> */}
+                              {displayPrice && (
+                                   <CartBtn
+                                        productId={details.id}
+                                        selectedPriceId={displayPrice.variantId}
+                                   />
+                              )}
                               {/* cart button */}
                          </div>
                     </div>

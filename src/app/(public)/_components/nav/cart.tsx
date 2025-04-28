@@ -1,8 +1,10 @@
 import CustomLink from "@/components/custom-link";
+import { getCartData } from "@/lib/server/cart";
 import { FaCartFlatbed } from "react-icons/fa6";
 import CartCount from "./card-item-count";
 
 export async function Cart() {
+     const data = await getCartData();
      return (
           <li className="text-white group">
                {" "}
@@ -17,7 +19,7 @@ export async function Cart() {
                          <div>
                               <h2 className="sm:text-lg text-sm font-medium duration-150 group-hover:text-primary-foreground">
                                    Cart
-                                   <CartCount />
+                                   <CartCount data={data} />
                               </h2>
                               <p className="text-sm hidden md:block text-muted dark:text-neutral-300/90 group-hover:text-primary-foreground duration-150">
                                    Add items

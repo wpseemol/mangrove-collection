@@ -9,7 +9,7 @@ export default function PublicProviders({
 }>) {
      return (
           <>
-               <CartProvider cartCount="Some text for test">
+               <CartProvider>
                     <ThemeProvider
                          attribute="class"
                          defaultTheme="light"

@@ -2,6 +2,8 @@ import { CurrencyIcon } from "@/components/currency-icon";
 import { ProductDetailsType } from "@/types/mongoose/product";
 import Link from "next/link";
 import "../_components/quill-content-css.css";
+import DetailsBuyBtn from "./details-buy-btn";
+import DetailsCartBtn from "./details-cart-btn";
 import ImagePreview from "./image-preview";
 import PriceSection from "./price-section";
 import QuantityCounter from "./quntity-counter";
@@ -136,10 +138,20 @@ export default function ProductDetails({
 
                          <div className="flex items-center justify-center md:justify-start gap-4 mt-4">
                               {/* bye button */}
-                              {/* <DetailsBuyBtn productId={details.id} /> */}
+                              {displayPrice && (
+                                   <DetailsBuyBtn
+                                        productId={details.id}
+                                        selectedPriceId={displayPrice.variantId}
+                                   />
+                              )}
                               {/* bye button */}
                               {/* cart button */}
-                              {/* <DetailsCartBtn productId={details.id} /> */}
+                              {displayPrice && (
+                                   <DetailsCartBtn
+                                        productId={details.id}
+                                        selectedPriceId={displayPrice.variantId}
+                                   />
+                              )}
                               {/* cart button */}
                          </div>
 

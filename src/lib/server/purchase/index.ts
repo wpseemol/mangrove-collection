@@ -31,14 +31,7 @@ export async function setPurchaseData(
                return false;
           }
 
-          const previcePurchaseItem = await getPurchaseData();
-
-          let purchases: PurchaseItemType[] = [];
-          if (previcePurchaseItem) {
-               purchases = [...previcePurchaseItem, ...purchaseItem];
-          } else {
-               purchases = purchaseItem;
-          }
+          const purchases = purchaseItem;
 
           const token = jwt.sign({ purchases }, SECRET_KEY_PURCHASES, {
                expiresIn: "1y",
@@ -194,12 +187,12 @@ export async function getPurchaseProductData(): Promise<
                     );
 
                     const quantity = purchaseItem ? purchaseItem.quantity : 1;
-                    const selectePriceId = purchaseItem
-                         ? purchaseItem.selectePriceId
+                    const selectedPriceId = purchaseItem
+                         ? purchaseItem.selectedPriceId
                          : "";
                     const findPrice = item.price.find(
                          (price) =>
-                              price.variantId === purchaseItem?.selectePriceId
+                              price.variantId === purchaseItem?.selectedPriceId
                     );
 
                     const price = findPrice ? findPrice.price : 0;
@@ -208,7 +201,7 @@ export async function getPurchaseProductData(): Promise<
                          ...item,
                          quantity: quantity,
                          price: price,
-                         selectePriceId,
+                         selectedPriceId,
                     };
                }
           ) as PurchaseProductsType[];

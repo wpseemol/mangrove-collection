@@ -35,13 +35,13 @@ export default function CartOrderSummary() {
           setLoading(true);
           try {
                /**
-                * [{productId:string , quantity: number,selectePriceId:string}]
+                * [{productId:string , quantity: number,selectedPriceId:string}]
                 */
                const purchaseItems = (cartSelectedProducts ?? []).map(
                     (item) => ({
                          productId: item.id,
                          quantity: item.quantity,
-                         selectePriceId: item.selectePriceId,
+                         selectedPriceId: item.selectedPriceId,
                     })
                ) as PurchaseItemType[];
 

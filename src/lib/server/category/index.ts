@@ -29,13 +29,21 @@ export async function getCategoryNameFromSlug(cateogyrSlug: string[]) {
           await connectMongoDB();
 
           const showColumns = "name";
-          const mongodbResponse = (await Category.find(
+          const mongodbResponse = await Category.find(
                {
                     slug: { $in: cateogyrSlug },
                },
                showColumns
-          ).lean()) as { name: string }[];
-          const categoryName = mongodbResponse.map((category) => category.name);
+          ).lean();
+          const replaceMongoIdsCategoryResponse = replaceMongoIds(
+               mongodbResponse
+          ) as {
+               name: string;
+               id: string;
+          }[];
+          const categoryName = replaceMongoIdsCategoryResponse.map(
+               (category) => category.name
+          );
           return categoryName;
      } catch (error) {
           console.log("get category name form category slug error:", error);
@@ -49,23 +57,25 @@ export async function getCategoryNameFromSlug(cateogyrSlug: string[]) {
  * @returns string array
  * return string array of categoryids
  */
-export async function getCategoryids(categorySlguArray: string[]): string[] {
+export async function getCategoryids(
+     categorySlguArray: string[]
+): Promise<string[]> {
      try {
           await connectMongoDB();
 
           const showColumns = "_id";
-          const mongodbResponse = (await Category.find(
+          const mongodbResponse = await Category.find(
                {
                     slug: { $in: categorySlguArray },
                },
                showColumns
-          ).lean()) as CategoryIdsType[];
+          ).lean();
 
           /**
            * Array to mongodb `_id` replace `id`
            */
           const categoriesIds = mongodbResponse.map((categoryId) =>
-               categoryId._id.toString()
+               (categoryId._id as Types.ObjectId).toString()
           );
 
           return categoriesIds;
@@ -73,10 +83,6 @@ export async function getCategoryids(categorySlguArray: string[]): string[] {
           console.error("get category ids error:", error);
           return [];
      }
-}
-
-interface CategoryIdsType {
-     _id: Types.ObjectId;
 }
 
 export async function getCategoryWithCount(

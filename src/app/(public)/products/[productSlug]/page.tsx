@@ -16,7 +16,7 @@ import VariantContentUpdateProvider from "./_components/varient-update-provider"
 export async function generateMetadata({
      params,
 }: {
-     params: ParamsType;
+     params: Promise<{ productSlug: string }>;
 }): Promise<Metadata> {
      const productSlug = (await params).productSlug;
 
@@ -89,7 +89,7 @@ function stripHtml(html: string): string {
 export default async function ProductDetailsPage({
      params,
 }: {
-     params: Promise<ParamsType>;
+     params: Promise<{ productSlug: string }>;
 }) {
      const productSlug = (await params).productSlug;
 
@@ -132,8 +132,4 @@ export default async function ProductDetailsPage({
                />
           </main>
      );
-}
-
-interface ParamsType {
-     productSlug: string;
 }

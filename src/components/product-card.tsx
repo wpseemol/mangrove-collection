@@ -6,6 +6,7 @@ import Link from "next/link";
 import { CardProductType, PriceType } from "@/types/product";
 import CartBtn from "./cart-btn";
 import { CurrencyIcon } from "./currency-icon";
+import PurchaseBtn from "./purchase-btn";
 
 export default function ProductCard({ details }: { details: CardProductType }) {
      /**
@@ -47,12 +48,19 @@ export default function ProductCard({ details }: { details: CardProductType }) {
                               </div>
                          </Link>
                          <div className="  flex justify-center items-center gap-x-2 w-full duration-700   sm:p-4 p-3">
-                              {/* <PurchaseButton productId={details.id} /> */}
+                              {displayPrice && (
+                                   <PurchaseBtn
+                                        productId={details.id}
+                                        selectedPriceId={displayPrice.variantId}
+                                   />
+                              )}
                               {/* cart button */}
-                              <CartBtn
-                                   productId={details.id}
-                                   selectedPriceId={displayPrice?.variantId}
-                              />
+                              {displayPrice && (
+                                   <CartBtn
+                                        productId={details.id}
+                                        selectedPriceId={displayPrice.variantId}
+                                   />
+                              )}
                               {/* cart button */}
                          </div>
                     </CardContent>

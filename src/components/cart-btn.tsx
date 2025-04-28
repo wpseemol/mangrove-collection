@@ -10,13 +10,13 @@ export default function CartBtn({
      selectedPriceId,
 }: {
      productId: string;
-     selectedPriceId: string | undefined;
+     selectedPriceId: string;
 }) {
      const [loading, setLoading] = useState<boolean>(false);
 
      const { cart, setCart } = useCart();
 
-     async function handleCard(id) {
+     async function handleCard() {
           setLoading(true);
           try {
                const isCart = await setCartData(productId, selectedPriceId, 1);
@@ -26,9 +26,6 @@ export default function CartBtn({
                          cartProductIds: isCart.cartProductIds,
                     });
                }
-
-               console.log("cart hook:", cart);
-               console.log("cart productids:", isCart.cartProductIds);
           } catch (error) {
                console.error("cart button error:", error);
           } finally {
@@ -40,7 +37,7 @@ export default function CartBtn({
      return (
           <Button
                onClick={() => {
-                    if (!isAlreadyCard) handleCard(productId);
+                    if (!isAlreadyCard) handleCard();
                }}
                disabled={isAlreadyCard}
                variant="default"

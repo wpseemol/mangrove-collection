@@ -2,12 +2,12 @@
  * @description PurchaseItemType is used to define the structure of a purchase item.
  * @property {string} productId - The ID of the product being purchased.
  * @property {number} quantity - The quantity of the product being purchased.
- * @property {string} selectePriceId - The selected price ID for the product.
+ * @property {string} selectedPriceId - The selected price ID for the product.
  */
 export interface PurchaseItemType {
      productId: string;
      quantity: number;
-     selectePriceId: string;
+     selectedPriceId: string;
 }
 
 /**
@@ -19,7 +19,7 @@ export interface PurchaseItemType {
  * @property {string} currency - The currency of the product price.
  * @property {number} price - The price of the product.
  * @property {number} quantity - The quantity of the product purchased.
- * @property {string} selectePriceId - The selected price ID for the product.
+ * @property {string} selectedPriceId - The selected price ID for the product.
  */
 export interface PurchaseProductsType {
      id: string;
@@ -29,7 +29,7 @@ export interface PurchaseProductsType {
      currency: string;
      price: number;
      quantity: number;
-     selectePriceId: string;
+     selectedPriceId: string;
 }
 
 /**

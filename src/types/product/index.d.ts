@@ -3,19 +3,19 @@
  *
  */
 export interface CardProductType {
-    id: string | number;
-    name: string;
-    slug: string;
+     id: string;
+     name: string;
+     slug: string;
 
-    images: Image[];
-    thumbnail: string;
-    price: PriceType[];
-    currency: string;
-    shortDescription: string; // Added this field
-    category: {
-        name: string; // Added this field
-        slug: string; // Added this field
-    };
+     images: Image[];
+     thumbnail: string;
+     price: PriceType[];
+     currency: string;
+     shortDescription: string; // Added this field
+     category: {
+          name: string; // Added this field
+          slug: string; // Added this field
+     };
 }
 
 /**
@@ -25,20 +25,20 @@ export interface CardProductType {
  * - `select`: Boolean indicating if this variant is selected.
  */
 export interface PriceType {
-    /**
-     * Identifier for the variant.
-     */
-    variantId: string;
+     /**
+      * Identifier for the variant.
+      */
+     variantId: string;
 
-    /**
-     * Price for the variant.
-     */
-    price: number;
+     /**
+      * Price for the variant.
+      */
+     price: number;
 
-    /**
-     * Indicates if the variant is selected.
-     */
-    select: boolean;
+     /**
+      * Indicates if the variant is selected.
+      */
+     select: boolean;
 }
 
 /**
@@ -47,26 +47,26 @@ export interface PriceType {
  * - `imgUrl` string.
  */
 export interface Image {
-    id: string | number;
-    imgUrl: string;
+     id: string | number;
+     imgUrl: string;
 }
 
 /**
  * `FilterSearchParamType` represents the search parameters for filtering products.
  */
 interface FilterSearchParamType {
-    /**
-     * Optional category filter for searching products.
-     */
-    category?: string; // Optional filter for product category.
+     /**
+      * Optional category filter for searching products.
+      */
+     category?: string; // Optional filter for product category.
 
-    /**
-     * Optional price filter for searching products, typically a price range or specific price.
-     */
-    price?: string; // Optional filter for price, which could be a range or specific value.
+     /**
+      * Optional price filter for searching products, typically a price range or specific price.
+      */
+     price?: string; // Optional filter for price, which could be a range or specific value.
 
-    /**
-     * Optional size filter for searching products.
-     */
-    size?: string; // Optional filter for product size.
+     /**
+      * Optional size filter for searching products.
+      */
+     size?: string; // Optional filter for product size.
 }

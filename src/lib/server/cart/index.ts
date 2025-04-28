@@ -9,7 +9,7 @@ import { cookies } from "next/headers";
 /**
  *
  * @param productId | string
- * @param selectePriceId | string
+ * @param selectedPriceId | string
  * @param quantity | number
  * @returns void
  * @description
@@ -18,22 +18,22 @@ import { cookies } from "next/headers";
  * 3. if cart data not exist then create new cart data
  * 4. return cart data
  * 5. return null if error occurs
- * 6. return null if productId or selectePriceId or quantity is not provided
+ * 6. return null if productId or selectedPriceId or quantity is not provided
  * 7. return null if cart data is not found
  */
 export async function setCartData(
      productId: string,
-     selectePriceId: string,
+     selectedPriceId: string,
      quantity: number
 ) {
-     if (!productId || !selectePriceId || !quantity) {
+     if (!productId || !selectedPriceId || !quantity) {
           console.error("Please ProdcutId and selectedPriceId are required");
           return;
      }
 
      const cartItem = {
           productId,
-          selectePriceId,
+          selectedPriceId,
           quantity,
      };
 
@@ -128,9 +128,9 @@ export async function getCartData() {
      }
 }
 
-interface CartItemType {
+export interface CartItemType {
      productId: string;
-     selectePriceId: string;
+     selectedPriceId: string;
      quantity: number;
 }
 
@@ -175,10 +175,11 @@ export async function getCartProductDetails(): Promise<
                );
 
                const quantity = cartProductDetails?.quantity || 1;
-               const selectePriceId = cartProductDetails?.selectePriceId || "";
+               const selectedPriceId =
+                    cartProductDetails?.selectedPriceId || "";
                const findPrice = pItem.price.find(
                     (item) =>
-                         item.variantId === cartProductDetails?.selectePriceId
+                         item.variantId === cartProductDetails?.selectedPriceId
                );
                const price = findPrice?.price || 0;
 
@@ -188,7 +189,7 @@ export async function getCartProductDetails(): Promise<
                     slug: pItem.slug,
                     thumbnail: pItem.thumbnail,
                     currency: pItem.currency,
-                    selectePriceId,
+                    selectedPriceId,
                     quantity,
                     price,
                };
@@ -229,7 +230,7 @@ interface PriceType {
 
 export interface CartProductsType {
      quantity: number;
-     selectePriceId: string;
+     selectedPriceId: string;
      price: number;
      slug: string;
      id: string;

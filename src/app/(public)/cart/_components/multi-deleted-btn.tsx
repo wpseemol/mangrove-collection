@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { useCart, useCartProducts } from "@/hooks";
 import { cartProductDelete } from "@/lib/server/cart";
-import { notFound } from "next/navigation";
 import Swal from "sweetalert2";
 
 export default function MultiDeletedBtn() {
@@ -42,13 +41,8 @@ export default function MultiDeletedBtn() {
                          if (removeProduct.length > 0) {
                               return removeProduct;
                          }
-                         /**
-                          * If no products left, set cartProducts to null
-                          * to trigger the notFound() in the parent component
-                          */
 
-                         notFound();
-                         return null;
+                         return [];
                     });
 
                     setCart((prev) => {

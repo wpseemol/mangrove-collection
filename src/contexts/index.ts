@@ -40,7 +40,7 @@ interface CartSelectedProductsType {
      quantity: number;
      currency: string;
      price: number;
-     selectePriceId: string;
+     selectedPriceId: string;
 }
 
 export const PurchaseContext = createContext<PurchaseContextType | null>(null);
@@ -58,12 +58,12 @@ interface PurchaseContextType {
  * @description Products is used to define the structure of a product in the purchase context.
  * @property {string} productId - The ID of the product.
  * @property {number} quantity - The quantity of the product purchased.
- * @property {string} selectePriceId - The selected price ID for the product.
+ * @property {string} selectedPriceId - The selected price ID for the product.
  */
 interface Products {
      productId: string;
      quantity: number;
-     selectePriceId: string;
+     selectedPriceId: string;
 }
 
 type PaymentMethod = "cod" | "online-payment" | "card";

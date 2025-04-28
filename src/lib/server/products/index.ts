@@ -1,5 +1,6 @@
 "use server";
 
+import { sizeArray } from "@/app/(public)/products/_components/filter-section";
 import { connectMongoDB } from "@/db/connections";
 import { Category } from "@/lib/schemas/mongoose/category";
 import { Product } from "@/lib/schemas/mongoose/product";

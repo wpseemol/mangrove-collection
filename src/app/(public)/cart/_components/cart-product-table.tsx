@@ -12,6 +12,7 @@ import {
      getSortedRowModel,
      useReactTable,
 } from "@tanstack/react-table";
+import { motion } from "framer-motion";
 import { ArrowUpDown, ChevronDown } from "lucide-react";
 import * as React from "react";
 
@@ -189,7 +190,7 @@ export function CartProductTable({ data }: { data: CartProductsType[] }) {
                          quantity: item.quantity,
                          price: item.price,
                          currency: item.currency,
-                         selectePriceId: item.selectePriceId,
+                         selectedPriceId: item.selectedPriceId,
                     }))
                );
           } else {
@@ -301,7 +302,25 @@ export function CartProductTable({ data }: { data: CartProductsType[] }) {
                                              colSpan={columns.length}
                                              className="h-24 text-center"
                                         >
-                                             Cart is empty now
+                                             <div className="h-24 flex items-center justify-center">
+                                                  <motion.div
+                                                       initial={{
+                                                            opacity: 0,
+                                                            y: -10,
+                                                       }}
+                                                       animate={{
+                                                            opacity: 1,
+                                                            y: 0,
+                                                       }}
+                                                       exit={{
+                                                            opacity: 0,
+                                                            y: 10,
+                                                       }}
+                                                       className="text-muted-foreground"
+                                                  >
+                                                       Your cart is empty.
+                                                  </motion.div>
+                                             </div>
                                         </TableCell>
                                    </TableRow>
                               )}

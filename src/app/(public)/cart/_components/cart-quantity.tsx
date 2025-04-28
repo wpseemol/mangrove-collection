@@ -1,9 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { useCartProducts } from "@/hooks";
-import { cartQuantityUpdate } from "@/lib/server/cart";
+import { CartProductsType, cartQuantityUpdate } from "@/lib/server/cart";
 import debounce from "@/utils/debounce";
 import { Row } from "@tanstack/react-table";
-import { CartProductsType } from "./cart-product-table";
 
 export default function CartQuantity({ row }: { row: Row<CartProductsType> }) {
      const { setCartProducts } = useCartProducts();

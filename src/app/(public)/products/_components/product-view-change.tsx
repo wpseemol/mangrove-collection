@@ -161,7 +161,7 @@ export default function ProductViewChange({
                                    priceParams ||
                                    sizeParams ? (
                                         <>
-                                             <span
+                                             <motion.span
                                                   initial={{
                                                        x: 100,
                                                        opacity: 0,
@@ -169,9 +169,9 @@ export default function ProductViewChange({
                                                   animate={{ x: 0, opacity: 1 }}
                                                   transition={{ duration: 0.5 }}
                                                   dangerouslySetInnerHTML={{
-                                                       __html: filterMessage,
+                                                       __html: emptyMessage,
                                                   }}
-                                             ></span>
+                                             ></motion.span>
                                         </>
                                    ) : (
                                         "No products found"
@@ -190,7 +190,7 @@ export default function ProductViewChange({
                               animate="visible"
                               exit={{ opacity: 0 }}
                               variants={gridViewVariants}
-                              className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-4 print:mt-4 print:sm:grid-cols-5 print:gap-1 mt-4"
+                              className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 print:mt-4 print:sm:grid-cols-5 print:gap-1 mt-4"
                          >
                               {React.Children.map(children, (child) => (
                                    <motion.div variants={itemVariants} layout>
@@ -243,43 +243,8 @@ const itemVariants = {
      visible: { opacity: 1, y: 0 },
 };
 
-const emptyCartVariants = {
-     hidden: { opacity: 0 },
-     visible: {
-          opacity: 1,
-          transition: {
-               delayChildren: 0.3,
-               staggerChildren: 0.2,
-          },
-     },
-};
-
-const itemVariantsEmptCart = {
-     hidden: { y: 20, opacity: 0 },
-     visible: { y: 0, opacity: 1 },
-};
-
 const pageVariants = {
      hidden: { opacity: 0, y: 20 },
      visible: { opacity: 1, y: 0 },
      exit: { opacity: 0, y: -20 },
-};
-
-const sentenceVariants = {
-     hidden: { opacity: 1 },
-     visible: {
-          opacity: 1,
-          transition: {
-               staggerChildren: 0.08,
-          },
-     },
-};
-
-const letterVariants = {
-     hidden: { x: 50, opacity: 0 },
-     visible: {
-          x: 0,
-          opacity: 1,
-          transition: { type: "spring", stiffness: 120 },
-     },
 };

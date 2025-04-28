@@ -1,43 +1,38 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { useVariantUpdate } from "@/hooks";
 import { setPurchaseData } from "@/lib/server/purchase";
 import { PurchaseItemType } from "@/types/purchase";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Button } from "./ui/button";
 
-export default function DetailsBuyBtn({
+export default function PurchaseBtn({
      productId,
      selectedPriceId,
 }: {
      productId: string;
      selectedPriceId: string;
 }) {
-     const searchParams = useSearchParams();
      const router = useRouter();
-     const quantity = parseInt(searchParams.get("quantity") ?? "1", 10);
-
      const [loading, setLoading] = useState<boolean>(false);
-
-     const { variantSelectId } = useVariantUpdate();
 
      async function handlePurchase() {
           setLoading(true);
-          const purchaseProduct: PurchaseItemType[] = [
+          const purchaseItems: PurchaseItemType[] = [
                {
-                    productId,
-                    quantity,
-                    selectedPriceId: variantSelectId || selectedPriceId,
+                    productId: productId.toString(),
+                    quantity: 1,
+                    selectedPriceId: selectedPriceId,
                },
           ];
+
           try {
                /**
                 * [{productId:string , quantity: number,selectedPriceId:string}] }]
                 */
-               await setPurchaseData(purchaseProduct);
+               await setPurchaseData(purchaseItems);
           } catch (error) {
-               console.error("Details page Purchus error:", error);
+               console.error("Product bye error:", error);
           } finally {
                setLoading(false);
           }
@@ -47,10 +42,13 @@ export default function DetailsBuyBtn({
 
      return (
           <Button
-               onClick={() => handlePurchase()}
+               disabled={loading}
+               onClick={handlePurchase}
                variant="default"
                size="sm"
-               className="text-neutral-100 hover:bg-primary-foreground px-5"
+               className="text-neutral-100 hover:bg-primary-foreground 
+                     group-hover:animate-jump animate-once animate-duration-[3000ms]
+                     shadow-xl"
           >
                <span className="hidden sm:inline ">
                     {loading ? "Buy..." : "Buy Now"}{" "}

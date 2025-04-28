@@ -112,7 +112,7 @@ export default function YourOrderSection({
                });
           }
           setLoading(false);
-     }, [router, setShippingCost, setLoading]);
+     }, [router, setShippingCost, setLoading, data, setPurcheseProducts]);
 
      /**
       * set buyProducts data set
@@ -121,7 +121,7 @@ export default function YourOrderSection({
           const buyProducts = purcheseProducts.map((item) => ({
                productId: item.id,
                quantity: item.quantity,
-               selectePriceId: item.selectePriceId,
+               selectedPriceId: item.selectedPriceId,
           }));
 
           setBuyProducts(buyProducts);

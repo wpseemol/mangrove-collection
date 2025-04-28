@@ -1,9 +1,7 @@
 import { useCart, useCartProducts } from "@/hooks";
-import { cartProductDelete } from "@/lib/server/cart";
+import { cartProductDelete, CartProductsType } from "@/lib/server/cart";
 import { Row } from "@tanstack/react-table";
-import { notFound } from "next/navigation";
 import { FaTrash } from "react-icons/fa6";
-import { CartProductsType } from "./cart-product-table";
 
 export default function CartItemRemove({
      row,
@@ -24,12 +22,8 @@ export default function CartItemRemove({
                if (removeProduct.length > 0) {
                     return removeProduct;
                }
-               /**
-                * If no products left, set cartProducts to null
-                * to trigger the notFound() in the parent component
-                */
-               notFound();
-               return null;
+
+               return [];
           });
 
           setCart((prev) => {
