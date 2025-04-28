@@ -11,7 +11,7 @@ export default function Footer() {
      const currentYear = date.getFullYear();
 
      return (
-          <footer className=" divide-y bg-black/95 dark:bg-neutral-900/90 dark:border-y dark:border-neutral-800 text-gray-100 md:pb-0 pb-20 relative">
+          <footer className=" divide-y bg-black/95 dark:bg-neutral-900/90 dark:border-y dark:border-neutral-800 text-gray-100 md:pb-0 pb-20">
                <div className="w-fit lg:container grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1  justify-items-stretch md:px-16 py-10 mx-auto space-y-8 lg:space-y-0 xl:gap-0 gap-x-16">
                     {/* footer logo section for table mod */}
 
@@ -36,7 +36,7 @@ export default function Footer() {
                                         href="https://www.facebook.com/mangrove.collection"
                                         target="_blank"
                                         title="Facebook"
-                                        className="flex items-center p-1 hover:text-primary-foreground duration-150  group"
+                                        className="flex items-center p-1 hover:text-primary-foreground duration-150 relative group"
                                    >
                                         <svg
                                              xmlns="http://www.w3.org/2000/svg"
@@ -46,17 +46,16 @@ export default function Footer() {
                                         >
                                              <path d="M32 16c0-8.839-7.167-16-16-16-8.839 0-16 7.161-16 16 0 7.984 5.849 14.604 13.5 15.803v-11.177h-4.063v-4.625h4.063v-3.527c0-4.009 2.385-6.223 6.041-6.223 1.751 0 3.584 0.312 3.584 0.312v3.937h-2.021c-1.984 0-2.604 1.235-2.604 2.5v3h4.437l-0.713 4.625h-3.724v11.177c7.645-1.199 13.5-7.819 13.5-15.803z"></path>
                                         </svg>
-                                        <div className="absolute bottom-4 left-1 z-10 w-[400px] h-[500px] group-hover:md:inline-block opacity-0 hidden  group-hover:md:opacity-100 ">
+                                        <div className="absolute -bottom-16 right-[calc(100%-10px)] z-10 w-[400px] h-[500px] hidden opacity-0 group-hover:inline-block group-hover:opacity-100 transition-all duration-300">
                                              <iframe
-                                                  className=""
-                                                  src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fmangrove.collection&tabs=timeline&width=400&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId"
-                                                  width="400"
+                                                  src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fmangrove.collection&tabs=timeline&width=500&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId"
+                                                  width="500"
                                                   height="500"
                                                   style={{
                                                        border: "none",
                                                        overflow: "hidden",
                                                   }}
-                                                  scrolling="yes"
+                                                  scrolling="no"
                                                   frameBorder="0"
                                                   allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
                                                   allowFullScreen
