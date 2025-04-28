@@ -1,92 +1,136 @@
-import Link from 'next/link';
+import * as motion from "motion/react-client";
+import Link from "next/link";
 
 export default function OtherDetails() {
-    return (
-        <section className="container mx-auto mb-10 px-4 md:px-0" id="about">
-            <div className="mb-5">
-                <h2 className="text-3xl">
-                    <samp className="text-primary-foreground">
-                        Experience the Finest{' '}
-                        <Link href="https://en.wikipedia.org/wiki/Sundarbans">
-                            Sundarbans
-                        </Link>{' '}
-                        Delights at <Link href="/">Mangrove Collection</Link> .
-                    </samp>
-                </h2>
-            </div>
-            <div>
-                <p className="text-base">
-                    We are living in a time where natural products and
-                    sustainability are gaining immense popularity. From dawn to
-                    dusk, every moment of our lives is influenced by our choices
-                    regarding natural and sustainable products. In Bangladesh,
-                    Mangrove Collection stands out as a top-tier shop
-                    specializing in natural products sourced from the{' '}
-                    <Link
-                        className="underline"
-                        href="https://en.wikipedia.org/wiki/Sundarbans">
-                        Sundarbans
-                    </Link>
-                    . Mangrove Collection offers consumers a diverse range of
-                    items including honey, fish, and other natural products from
-                    the{' '}
-                    <Link
-                        className="underline"
-                        href="https://en.wikipedia.org/wiki/Sundarbans">
-                        Sundarbans
-                    </Link>
-                    . Mangrove Collection has become a trustworthy name in
-                    Dhaka, Bangladesh, serving both online and offline
-                    customers, with multiple outlets across the city. Their
-                    commitment to quality and excellent customer service makes
-                    them a favorite among those seeking authentic{' '}
-                    <Link
-                        className="underline"
-                        href="https://en.wikipedia.org/wiki/Sundarbans">
-                        Sundarbans
-                    </Link>{' '}
-                    products.
-                </p>
-            </div>
-            <div className="my-5">
-                <h2 className="text-3xl">
-                    <samp className="text-primary-foreground">
-                        Discover the Best{' '}
-                        <Link href="https://en.wikipedia.org/wiki/Sundarbans">
-                            Sundarbans
-                        </Link>{' '}
-                        Products at <Link href="/">Mangrove Collection</Link> in
-                        Bangladesh
-                    </samp>
-                </h2>
-            </div>
-            <div>
-                <p className="text-base">
-                    From morning tea with honey to a delicious fish dinner,
-                    natural products from the{' '}
-                    <Link
-                        className="underline"
-                        href="https://en.wikipedia.org/wiki/Sundarbans">
-                        Sundarbans
-                    </Link>{' '}
-                    play a vital role in our daily lives. The challenge,
-                    however, lies in finding a reliable source for these
-                    authentic items. Mangrove Collection has established itself
-                    as a trusted name in Bangladesh when it comes to natural
-                    products from the{' '}
-                    <Link
-                        className="underline"
-                        href="https://en.wikipedia.org/wiki/Sundarbans">
-                        Sundarbans
-                    </Link>{' '}
-                    . Their outlets are well-stocked with a wide variety of
-                    items including honey, various types of fish, and other
-                    natural treasures from the mangroves. Whether you need honey
-                    for your tea, fresh fish for your meals or other natural
-                    products, Mangrove Collection ensures you get the best, both
-                    online and offline.
-                </p>
-            </div>
-        </section>
-    );
+     return (
+          <motion.section
+               className="container mx-auto mb-10 px-4 md:px-0"
+               id="about"
+               initial={{ opacity: 0, y: 50 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true }}
+               transition={{ duration: 0.6 }}
+          >
+               <motion.div
+                    className="mb-5"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.2 }}
+               >
+                    <h2 className="text-3xl font-bold">
+                         <span className="text-primary-foreground">
+                              Discover Authentic{" "}
+                              <Link
+                                   href="https://en.wikipedia.org/wiki/Sundarbans"
+                                   className="underline"
+                              >
+                                   Sundarbans
+                              </Link>{" "}
+                              Treasures at{" "}
+                              <Link href="/" className="underline">
+                                   Mangrove Collection
+                              </Link>
+                         </span>
+                    </h2>
+               </motion.div>
+
+               <motion.div
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.4 }}
+               >
+                    <p className="text-base leading-7">
+                         Welcome to Mangrove Collection — your trusted
+                         destination for authentic natural products from the
+                         heart of the{" "}
+                         <Link
+                              href="https://en.wikipedia.org/wiki/Sundarbans"
+                              className="underline"
+                         >
+                              Sundarbans
+                         </Link>
+                         . We believe in the power of nature and bring you
+                         premium items like raw honey, fresh fish, and organic
+                         resources sourced responsibly from the mangrove
+                         forests.
+                    </p>
+               </motion.div>
+
+               <motion.div
+                    className="my-5"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.6 }}
+               >
+                    <h2 className="text-3xl font-bold">
+                         <span className="text-primary-foreground">
+                              Why Choose{" "}
+                              <Link href="/" className="underline">
+                                   Mangrove Collection
+                              </Link>
+                              ?
+                         </span>
+                    </h2>
+               </motion.div>
+
+               <motion.div
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.8 }}
+               >
+                    <p className="text-base leading-7">
+                         In today&apos;s world, choosing natural, sustainable
+                         products is more important than ever. At Mangrove
+                         Collection, we are committed to offering you the
+                         highest quality goods, sourced directly from the{" "}
+                         <Link
+                              href="https://en.wikipedia.org/wiki/Sundarbans"
+                              className="underline"
+                         >
+                              Sundarbans
+                         </Link>
+                         , supporting local communities, and preserving the
+                         beauty of nature. Whether you&apos;re looking for pure
+                         honey, wild-caught fish, or unique Sundarbans products,
+                         we ensure authenticity and excellence in every item.
+                    </p>
+               </motion.div>
+
+               <motion.div
+                    className="my-5"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 1.0 }}
+               >
+                    <h2 className="text-3xl font-bold">
+                         <span className="text-primary-foreground">
+                              Visit Us Online or In-Store
+                         </span>
+                    </h2>
+               </motion.div>
+
+               <motion.div
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 1.2 }}
+               >
+                    <p className="text-base leading-7">
+                         Whether you prefer shopping from the comfort of your
+                         home or visiting one of our physical outlets in Dhaka,{" "}
+                         <Link href="/" className="underline">
+                              Mangrove Collection
+                         </Link>{" "}
+                         is here to serve you. Browse our wide range of
+                         Sundarbans treasures online and experience the richness
+                         of nature, delivered straight to your doorstep.
+                    </p>
+               </motion.div>
+          </motion.section>
+     );
 }
