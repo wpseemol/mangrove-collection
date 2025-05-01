@@ -1,7 +1,8 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { usePurchase } from "@/hooks";
-import { getSearchAddressBookData } from "@/lib/server/address-book";
+import { getSearchAddressBookDataPhoneNumber } from "@/lib/server/address-book";
+import { AddressType } from "@/types/address-book";
 import debounce from "@/utils/debounce";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -10,7 +11,7 @@ import { FcCheckmark } from "react-icons/fc";
 import { z } from "zod";
 
 export function CheckoutForm() {
-     const [paymentMethod, setPaymentMethond] =
+     const [paymentMethod, setPaymentMethod] =
           useState<PaymentMethodType>("cod");
 
      const { buyProducts, shippingCost } = usePurchase();
@@ -20,12 +21,11 @@ export function CheckoutForm() {
      const cod = paymentMethod === "cod";
      const onlinePayment = paymentMethod === "online-payment";
 
-     //  reset
      const {
           register,
           handleSubmit,
+          reset,
           formState: { errors },
-
           formState,
      } = useForm<z.infer<typeof checkoutSchema>>({
           resolver: zodResolver(checkoutSchema),
@@ -47,12 +47,33 @@ export function CheckoutForm() {
      };
 
      /**
-      * ferch data phone number inpute strat
+      * @description
+      * 1. get the address book data from server
+      * 2. if data is found, set the data to the form
+      * 3. if data is not found, set the data to the form
       */
-
      const delayDebounce = debounce(async (inputNumber: string) => {
-          const response = await getSearchAddressBookData(inputNumber);
-          console.log("response:", response);
+          const response = await getSearchAddressBookDataPhoneNumber(
+               inputNumber
+          );
+
+          if (!response) {
+               return;
+          }
+
+          const address = JSON.parse(response) as AddressType[];
+
+          const defaultData = address.find(
+               (item) => item.phone === inputNumber
+          );
+          if (defaultData) {
+               reset({
+                    phoneNumber: defaultData.phone,
+                    fullName: defaultData.name,
+                    fullAddress: defaultData.fullAddress,
+               });
+               return;
+          }
      }, 400);
 
      async function handelPhoneChange(phoneNumber: string) {
@@ -63,9 +84,6 @@ export function CheckoutForm() {
                console.error("Checkout Form get error:", error);
           }
      }
-     /**
-      * ferch data phone number inpute strat
-      */
 
      return (
           <div className="bg-gray-100">
@@ -78,20 +96,20 @@ export function CheckoutForm() {
 
                          <div className="flex justify-center gap-2 py-3 md:px-0 px-2 ">
                               <Button
-                                   onClick={() => setPaymentMethond("cod")}
+                                   onClick={() => setPaymentMethod("cod")}
                                    variant={cod ? "outline" : "ghost"}
                               >
                                    {cod ? <FcCheckmark /> : ""}
-                                   Cash on Delevery
+                                   Cash on Delivery
                               </Button>
                               <Button
                                    disabled={true}
                                    onClick={() =>
-                                        setPaymentMethond("online-payment")
+                                        setPaymentMethod("online-payment")
                                    }
                                    variant={onlinePayment ? "outline" : "ghost"}
                                    className="disabled:cursor-not-allowed"
-                                   title="Online Payment comming soon!"
+                                   title="Online Payment coming soon!"
                               >
                                    {onlinePayment ? <FcCheckmark /> : ""}
                                    Online Payment
