@@ -17,9 +17,9 @@ export default function ProductCard({ details }: { details: CardProductType }) {
      return (
           <>
                <Card
-                    className={` h-fit w-full border-none justify-self-center rounded group relative overflow-hidden`}
+                    className={`w-full border-none justify-self-start items-start rounded group relative overflow-hidden py-0 pb-3`}
                >
-                    <CardContent className="h-fit p-0">
+                    <CardContent className="h-fit p-0 w-full">
                          <Link href={`/products/${details.slug}`}>
                               <figure
                                    className={` w-full sm:h-[190px] h-[145px] mx-auto rounded-t overflow-hidden relative animate-fade animate-duration-1000 border border-neutral-800/10 border-b`}
