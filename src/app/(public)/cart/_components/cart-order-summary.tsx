@@ -135,8 +135,13 @@ export default function CartOrderSummary() {
                </CardContent>
 
                <Button
+                    disabled={loading}
                     onClick={() => handelShipping()}
-                    className="w-full text-white"
+                    className={`w-full text-white  disabled:pointer-events-auto cursor-pointer ${
+                         loading
+                              ? "disabled:cursor-progress"
+                              : "disabled:cursor-not-allowed"
+                    }`}
                >
                     {loading ? "Waiting..." : `Proceed to Pay (${totalCount})`}
                </Button>

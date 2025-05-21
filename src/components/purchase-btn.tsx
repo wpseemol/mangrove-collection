@@ -46,9 +46,13 @@ export default function PurchaseBtn({
                onClick={handlePurchase}
                variant="default"
                size="sm"
-               className="text-neutral-100 hover:bg-primary-foreground 
+               className={`text-neutral-100 hover:bg-primary-foreground 
                      group-hover:animate-jump animate-once animate-duration-[3000ms]
-                     shadow-xl"
+                     shadow-xl disabled:pointer-events-auto cursor-pointer ${
+                          loading
+                               ? "disabled:cursor-progress"
+                               : "disabled:cursor-not-allowed"
+                     }`}
           >
                <span className="hidden sm:inline ">
                     {loading ? "Buy..." : "Buy Now"}{" "}

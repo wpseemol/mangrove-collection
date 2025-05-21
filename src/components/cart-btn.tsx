@@ -39,10 +39,14 @@ export default function CartBtn({
                onClick={() => {
                     if (!isAlreadyCard) handleCard();
                }}
-               disabled={isAlreadyCard}
+               disabled={isAlreadyCard || loading}
                variant="default"
                size="sm"
-               className="text-neutral-100 hover:bg-primary-foreground"
+               className={`text-neutral-100 hover:bg-primary-foreground disabled:pointer-events-auto cursor-pointer ${
+                    loading
+                         ? "disabled:cursor-progress"
+                         : "disabled:cursor-not-allowed"
+               }`}
           >
                {isAlreadyCard ? (
                     "Added"
