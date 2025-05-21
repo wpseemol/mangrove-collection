@@ -20,7 +20,7 @@ export default function ListViewProductCard({
           details && (
                <div
                     className="md:w-full sm:w-80 w-72 md:mx-0 mx-auto shadow hover:shadow-lg flex md:flex-row flex-col items-center gap-4 lg:h-[15.5rem] md:h-[12rem] h-fit
-        duration-200 border border-neutral-700/10 group
+        duration-200 border border-neutral-700/10 group rounded overflow-hidden
         "
                >
                     <Link
