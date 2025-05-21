@@ -4,12 +4,13 @@ import { OrderAcceptType } from "@/app/(public)/checkout/_components/checkout-fo
 import OrderModel, { Order, OrderItem } from "@/lib/schemas/mongoose/order";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
+
 import {
      COOKIE_KEY_ADDRESS_BOOK,
+     COOKIE_KEY_PURCHASES,
      SECRET_KEY_ADDRESS_BOOK,
-} from "../address-book";
+} from "@/lib/constant";
 import { getOrderProductsDetails } from "../products";
-import { COOKIE_KEY_PURCHASES } from "../purchase";
 
 /**
  * Confirms an order by processing the provided order details.

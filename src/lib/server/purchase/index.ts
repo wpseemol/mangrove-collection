@@ -1,6 +1,7 @@
 "use server";
 
 import { connectMongoDB } from "@/db/connections";
+import { COOKIE_KEY_PURCHASES, SECRET_KEY_PURCHASES } from "@/lib/constant";
 import { Product } from "@/lib/schemas/mongoose/product";
 import {
      ProductType,
@@ -263,7 +264,3 @@ export async function purchaseDataDelete(productId: string): Promise<boolean> {
           return false;
      }
 }
-
-const SECRET_KEY_PURCHASES = "DKFLKELKksjdfje2443jljdfssldkjf";
-
-export const COOKIE_KEY_PURCHASES = "__purchase";

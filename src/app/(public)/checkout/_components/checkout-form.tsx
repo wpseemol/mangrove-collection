@@ -7,9 +7,11 @@ import { OrderConfirm } from "@/lib/server/order-confirm";
 import { AddressType } from "@/types/address-book";
 import debounce from "@/utils/debounce";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FcCheckmark } from "react-icons/fc";
+import Swal from "sweetalert2";
 import { z } from "zod";
 
 export function CheckoutForm() {
@@ -18,7 +20,7 @@ export function CheckoutForm() {
 
      const { buyProducts, shippingCost } = usePurchase();
 
-     //  const router = useRouter();
+     const router = useRouter();
 
      const cod = paymentMethod === "cod";
      const onlinePayment = paymentMethod === "online-payment";
@@ -47,6 +49,17 @@ export function CheckoutForm() {
           };
 
           const isConfirm = await OrderConfirm(JSON.stringify(orderData));
+          if (isConfirm) {
+               Swal.fire({
+                    position: "center",
+                    icon: "success",
+
+                    title: "Successful your product checkout.",
+                    showConfirmButton: false,
+                    timer: 1500,
+               });
+               router.push("/my-order");
+          }
      };
 
      /**
