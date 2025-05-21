@@ -50,7 +50,7 @@ interface PurchaseContextType {
      setPaymentMethod: Dispatch<SetStateAction<PaymentMethod | null>>;
      shippingCost: number | null;
      setShippingCost: Dispatch<SetStateAction<number | null>>;
-     buyProducts: Products[] | null;
+     buyProducts: PurchaseProducts[] | null;
      setBuyProducts: Dispatch<SetStateAction<Products[] | null>>;
 }
 
@@ -60,10 +60,10 @@ interface PurchaseContextType {
  * @property {number} quantity - The quantity of the product purchased.
  * @property {string} selectedPriceId - The selected price ID for the product.
  */
-interface Products {
+export interface PurchaseProducts {
      productId: string;
      quantity: number;
      selectedPriceId: string;
 }
 
-type PaymentMethod = "cod" | "online-payment" | "card";
+export type PaymentMethod = "cod" | "online-payment" | "card";

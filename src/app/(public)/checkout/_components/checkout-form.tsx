@@ -1,7 +1,9 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { PaymentMethod, PurchaseProducts } from "@/contexts";
 import { usePurchase } from "@/hooks";
 import { getSearchAddressBookDataPhoneNumber } from "@/lib/server/address-book";
+import { OrderConfirm } from "@/lib/server/order-confirm";
 import { AddressType } from "@/types/address-book";
 import debounce from "@/utils/debounce";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -43,7 +45,7 @@ export function CheckoutForm() {
                shippingCost: shippingCost,
           };
 
-          console.log("orderData:", orderData);
+          const isConfirm = await OrderConfirm(JSON.stringify(orderData));
      };
 
      /**
@@ -71,6 +73,7 @@ export function CheckoutForm() {
                     phoneNumber: defaultData.phone,
                     fullName: defaultData.name,
                     fullAddress: defaultData.fullAddress,
+                    termsAccepted: false,
                });
                return;
           }
@@ -204,7 +207,11 @@ export function CheckoutForm() {
                               <Button
                                    disabled={formState.isSubmitting}
                                    type="submit"
-                                   className=" text-white w-full"
+                                   className={`text-white w-full disabled:pointer-events-auto cursor-pointer ${
+                                        formState.isSubmitting
+                                             ? "disabled:cursor-progress"
+                                             : "disabled:cursor-not-allowed"
+                                   }`}
                               >
                                    {formState.isSubmitting
                                         ? "Order..."
@@ -229,35 +236,12 @@ const checkoutSchema = z.object({
      }),
 });
 
-// interface AddressType {
-//      name: string;
-//      email: string | null;
-//      phone: string;
-//      landmark?: string;
-//      region: string | null;
-//      city: string | null;
-//      fullAddress: string;
-//      isSelected: boolean;
-//      zone: string | null;
-// }
-
-// type CheckoutDefaultValus = AddressType & {
-//      id: string;
-// };
-
-interface OrderAcceptType {
+export interface OrderAcceptType {
      phone: string;
      fullName: string;
      fullAddress: string;
      termsAccepted: boolean;
-     products: BuyProductType[];
-     paymentMethod: PaymentMethodType;
+     products: PurchaseProducts[];
+     paymentMethod: PaymentMethod;
      shippingCost: number;
-}
-
-type PaymentMethodType = "cod" | "online-payment" | "card";
-
-interface BuyProductType {
-     productId: string;
-     quantity: number;
 }
