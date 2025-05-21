@@ -4,7 +4,7 @@ import { sizeArray } from "@/app/(public)/products/_components/filter-section";
 import { connectMongoDB } from "@/db/connections";
 import { Category } from "@/lib/schemas/mongoose/category";
 import { Product } from "@/lib/schemas/mongoose/product";
-import { ProductDetailsType } from "@/types/mongoose/product";
+import { ProductDetailsType, ProductType } from "@/types/mongoose/product";
 import { CardProductType } from "@/types/product";
 import { replaceMongoIds } from "@/utils/replace";
 /**
@@ -209,5 +209,41 @@ export async function getRelatedProducts(
      } catch (error) {
           console.log("get related product error:", error);
           return [];
+     }
+}
+
+/**
+ * getOrderProductsDetails function params ids
+ * @param ids string array string you mast pass JSON.string method
+ * @returns products details array object .
+ *
+ */
+export async function getOrderProductsDetails(ids: string): Promise<
+     | null
+     | (ProductType & {
+            id: string;
+       })[]
+> {
+     if (!ids) {
+          console.error("get Order Products Details:", ids);
+          return null;
+     }
+
+     const productIds = JSON.parse(ids) as string[];
+
+     try {
+          await connectMongoDB();
+
+          const response = await Product.find({
+               _id: { $in: productIds },
+          }).lean();
+
+          const productsDetails = replaceMongoIds(response) as (ProductType & {
+               id: string;
+          })[];
+          return productsDetails;
+     } catch (error) {
+          console.error("get Order Products Details:", error);
+          return null;
      }
 }

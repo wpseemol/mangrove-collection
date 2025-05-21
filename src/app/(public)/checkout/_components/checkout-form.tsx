@@ -36,6 +36,7 @@ export function CheckoutForm() {
      const onSubmit = async (values: z.infer<typeof checkoutSchema>) => {
           if (!buyProducts || !shippingCost) return;
           const orderData: OrderAcceptType = {
+               userId: null,
                phone: values.phoneNumber,
                fullName: values.fullName,
                fullAddress: values.fullAddress,
@@ -237,6 +238,7 @@ const checkoutSchema = z.object({
 });
 
 export interface OrderAcceptType {
+     userId: string | null;
      phone: string;
      fullName: string;
      fullAddress: string;

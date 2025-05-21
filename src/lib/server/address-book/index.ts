@@ -43,3 +43,7 @@ export async function getSearchAddressBookDataPhoneNumber(
           return null;
      }
 }
+
+export const SECRET_KEY_ADDRESS_BOOK = "DKFLKELKksjjfsdfasedujjw";
+
+export const COOKIE_KEY_ADDRESS_BOOK = "__address_book";

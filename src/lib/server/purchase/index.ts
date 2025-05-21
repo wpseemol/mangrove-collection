@@ -266,4 +266,4 @@ export async function purchaseDataDelete(productId: string): Promise<boolean> {
 
 const SECRET_KEY_PURCHASES = "DKFLKELKksjdfje2443jljdfssldkjf";
 
-const COOKIE_KEY_PURCHASES = "__purchase";
+export const COOKIE_KEY_PURCHASES = "__purchase";
