@@ -146,14 +146,16 @@ export default function PrintInvoiceBtn({
                          Print Invoice
                     </Button>
                </AlertDialogTrigger>
-               <AlertDialogContent className=" bg-gray-100 border-gray-900/20 shadow-2xl h-full sm:max-w-screen rounded-none pt-0">
+               <AlertDialogContent className=" bg-gray-100 border-gray-900/20 shadow-2xl h-full sm:max-w-screen max-w-screen rounded-none pt-0">
                     <AlertDialogHeader className="">
-                         <AlertDialogTitle>Invoice View</AlertDialogTitle>
+                         <AlertDialogTitle className="text-left">
+                              Invoice View
+                         </AlertDialogTitle>
 
                          {/* Invoice Content */}
                          <div
                               ref={invoiceRef}
-                              className="bg-white text-black p-8 rounded shadow invoice-style w-3/5 mx-auto h-full"
+                              className="bg-white text-black p-8 rounded shadow invoice-style md:w-3/5 mx-auto h-full w-[30rem] overflow-auto"
                          >
                               <div className="invoice-header">
                                    <h1>Invoice</h1>
