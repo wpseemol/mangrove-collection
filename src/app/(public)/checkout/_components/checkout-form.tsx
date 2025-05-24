@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { PaymentMethod, PurchaseProducts } from "@/contexts";
 import { usePurchase } from "@/hooks";
 import { getSearchAddressBookDataPhoneNumber } from "@/lib/server/address-book";
-import { OrderConfirm } from "@/lib/server/order-confirm";
+import { orderConfirm } from "@/lib/server/order-confirm";
 import { AddressType } from "@/types/address-book";
 import debounce from "@/utils/debounce";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -48,7 +48,7 @@ export function CheckoutForm() {
                shippingCost: shippingCost,
           };
 
-          const isConfirm = await OrderConfirm(JSON.stringify(orderData));
+          const isConfirm = await orderConfirm(JSON.stringify(orderData));
           if (isConfirm) {
                Swal.fire({
                     position: "center",
