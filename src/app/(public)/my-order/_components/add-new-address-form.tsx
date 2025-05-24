@@ -231,6 +231,6 @@ interface AddressType {
      zone: string | null;
 }
 
-type CheckoutDefaultValus = AddressType & {
-     id: string;
-};
+// type CheckoutDefaultValus = AddressType & {
+//      id: string;
+// };

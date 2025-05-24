@@ -94,7 +94,8 @@ export async function orderConfirm(details: string) {
                orderStatus: "processing",
           } as Order;
 
-          const order = await OrderModel.create(orderObj);
+          // save order
+          await OrderModel.create(orderObj);
 
           const cookieStore = await cookies();
           cookieStore.delete(COOKIE_KEY_PURCHASES);
