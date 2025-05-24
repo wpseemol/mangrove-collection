@@ -53,6 +53,8 @@ export type OrderProductType = {
      id: string;
      userId: string | null;
      products: OrderProduct[];
+     totalAmount: number;
+     shippingCost: number;
      address: {
           name: string;
           email?: string | null;

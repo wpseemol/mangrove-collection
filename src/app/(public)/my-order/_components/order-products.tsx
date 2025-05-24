@@ -1,5 +1,4 @@
 import { CurrencyIcon } from "@/components/currency-icon";
-import { Button } from "@/components/ui/button";
 import {
      Table,
      TableBody,
@@ -13,6 +12,7 @@ import { formatDate } from "@/utils/format-date";
 import { Row } from "@tanstack/react-table";
 import Image from "next/image";
 import Link from "next/link";
+import PrintInvoiceBtn from "./print-invoice-btn";
 
 export default function OrderProducts({ row }: { row: Row<OrderProductType> }) {
      const date = formatDate(row.original.createdAt);
@@ -88,9 +88,7 @@ export default function OrderProducts({ row }: { row: Row<OrderProductType> }) {
                          ))}
                     </Table>
                </section>
-               <Button className="text-white ml-auto block mt-3 mb-5 mr-3">
-                    Print Invoice
-               </Button>
+               <PrintInvoiceBtn row={row} />
           </>
      );
 }
