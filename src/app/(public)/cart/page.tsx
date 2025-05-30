@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import CartItems from "./_components/cart-items";
 import CartProductsProvider from "./_components/cart-products-provider";
 
+export const dynamic = "force-dynamic";
+
 export default async function CartPage() {
      const cartProducts = await getCartProductDetails();
      if (!cartProducts || cartProducts.length < 1) {

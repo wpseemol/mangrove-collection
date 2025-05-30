@@ -46,7 +46,7 @@ export async function getCategoryNameFromSlug(cateogyrSlug: string[]) {
           );
           return categoryName;
      } catch (error) {
-          console.log("get category name form category slug error:", error);
+          console.error("get category name form category slug error:", error);
           return [];
      }
 }

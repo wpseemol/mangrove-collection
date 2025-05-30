@@ -1,27 +1,25 @@
 "use client";
 import { useCart } from "@/hooks";
-import { CartItemType } from "@/lib/server/cart";
+import { getCartData } from "@/lib/server/cart";
 import { useEffect } from "react";
 
-export default function CartCount({
-     data,
-}: {
-     data: {
-          cartProductIds: string[];
-          cartItem: CartItemType[];
-          carTotalItems: number;
-     } | null;
-}) {
+export default function CartCount() {
      const { cart, setCart } = useCart();
 
      useEffect(() => {
-          if (data) {
-               setCart({
-                    cartCount: data.carTotalItems,
-                    cartProductIds: data.cartProductIds,
-               });
+          async function updateCart() {
+               const data = await getCartData();
+
+               if (data) {
+                    setCart({
+                         cartCount: data.carTotalItems,
+                         cartProductIds: data.cartProductIds,
+                    });
+               }
           }
-     }, [data, setCart]);
+
+          updateCart();
+     }, [setCart]);
 
      return <>{cart.cartCount ? <span>({cart.cartCount})</span> : ""}</>;
 }

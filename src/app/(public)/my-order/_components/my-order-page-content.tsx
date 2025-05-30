@@ -1,6 +1,5 @@
 import { getOrderProducts } from "@/lib/server/order-confirm";
 import { OrderProductType } from "@/types/my-order";
-import AddNewAddressForm from "./add-new-address-form";
 import EmptyProducts from "./empty-product";
 import OrderAddressBookComponent from "./order-address-book-component";
 import OrderTable from "./order-table";
@@ -32,9 +31,7 @@ export default async function MyOrderPageContent({
      if (searchParams.section === "address-book") {
           return <OrderAddressBookComponent />;
      }
-     if (searchParams.section === "add-new-address") {
-          return <AddNewAddressForm />;
-     }
+
      return <>Not found.</>;
 }
 

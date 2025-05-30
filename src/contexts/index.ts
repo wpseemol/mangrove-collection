@@ -51,7 +51,7 @@ interface PurchaseContextType {
      shippingCost: number | null;
      setShippingCost: Dispatch<SetStateAction<number | null>>;
      buyProducts: PurchaseProducts[] | null;
-     setBuyProducts: Dispatch<SetStateAction<Products[] | null>>;
+     setBuyProducts: Dispatch<SetStateAction<PurchaseProducts[] | null>>;
 }
 
 /**

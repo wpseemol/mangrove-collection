@@ -9,6 +9,8 @@ import {
 import MyOrderPageContent from "./_components/my-order-page-content";
 import MyOrderPageMenu from "./_components/my-order-page-menu";
 
+export const dynamic = "force-dynamic";
+
 export default async function MyOrderPage({
      searchParams,
 }: {

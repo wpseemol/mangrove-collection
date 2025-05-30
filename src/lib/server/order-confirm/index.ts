@@ -12,6 +12,7 @@ import {
      SECRET_KEY_ADDRESS_BOOK,
 } from "@/lib/constant";
 import { replaceMongoIds } from "@/utils/replace";
+import { Types } from "mongoose";
 import { getOrderProductsDetails } from "../products";
 
 /**
@@ -58,7 +59,7 @@ export async function orderConfirm(details: string) {
                );
                const price = priceFind?.price || 0;
                const obj = {
-                    productId: product.id,
+                    productId: new Types.ObjectId(product.id),
                     name: product.name,
                     slug: product.slug,
                     image: product.thumbnail,
@@ -120,8 +121,12 @@ export async function orderConfirm(details: string) {
           return false;
      }
 }
-
-export async function getAddressBookData() {
+/**
+ *
+ * @returns Returns the phone number from the address book data stored in cookies.
+ * If the address book data is not found or the JWT is invalid, it returns null.
+ */
+export async function getAddressBookDataCookies() {
      try {
           const cookieStore = await cookies();
           const addressBookDataToken = cookieStore.get(
@@ -153,7 +158,7 @@ export async function getAddressBookData() {
 
 export async function getOrderProducts() {
      try {
-          const addressBookPhone = await getAddressBookData();
+          const addressBookPhone = await getAddressBookDataCookies();
           if (!addressBookPhone) {
                console.error("not found phone number.");
                return null;

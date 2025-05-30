@@ -3,6 +3,8 @@ import { CheckoutForm } from "./_components/checkout-form";
 import PurchProvider from "./_components/purch-provider";
 import YourOrderSection from "./_components/your-order-section";
 
+export const dynamic = "force-dynamic";
+
 export default async function CheckoutPage() {
      const purchasesProducts = await getPurchaseProductData();
 

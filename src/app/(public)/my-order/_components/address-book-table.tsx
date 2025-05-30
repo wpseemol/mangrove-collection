@@ -19,8 +19,6 @@ import {
      getFilteredRowModel,
      getSortedRowModel,
 } from "@tanstack/react-table";
-import Link from "next/link";
-import { FaEdit } from "react-icons/fa";
 
 export const columns: ColumnDef<Address>[] = [
      {
@@ -75,10 +73,6 @@ export const columns: ColumnDef<Address>[] = [
                                    ? "Selected"
                                    : "Deselected"}
                          </span>
-                         <span>|</span>
-                         <Button className="text-white">
-                              <FaEdit />
-                         </Button>
                     </div>
                );
           },
@@ -173,13 +167,13 @@ export default function AddressBookTable({ data }: { data: AddressBook }) {
                          </TableBody>
                     </Table>
                </div>
-               <div className="flex items-center justify-end space-x-2 py-4">
+               {/* <div className="flex items-center justify-end space-x-2 py-4">
                     <Button className="text-white">
                          <Link href={"/my-order?section=add-new-address"}>
                               Add New Address
                          </Link>
                     </Button>
-               </div>
+               </div> */}
                <div className="flex items-center justify-end space-x-2 py-4">
                     <div className="flex-1 text-sm text-muted-foreground">
                          {table.getFilteredSelectedRowModel().rows.length} of{" "}

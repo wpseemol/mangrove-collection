@@ -42,7 +42,7 @@ export default function MyOrderPageMenu() {
                               Address Book
                          </Link>
                     </Button>
-                    <Button
+                    {/* <Button
                          variant="link"
                          className={`${
                               section === "add-new-address"
@@ -53,7 +53,7 @@ export default function MyOrderPageMenu() {
                          <Link href="/my-order?section=add-new-address">
                               Add Address
                          </Link>
-                    </Button>
+                    </Button> */}
                </div>
           </div>
      );
