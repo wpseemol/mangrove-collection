@@ -9,22 +9,23 @@ export default async function MyOrderPageContent({
 }: {
      searchParams: SearchParams;
 }) {
-     const orderProductsString = await getOrderProducts();
-     const orderProducts = JSON.parse(
-          orderProductsString || ""
-     ) as OrderProductType[];
-
      if (!searchParams?.section) {
+          const orderProductsString = await getOrderProducts();
+
+          if (!orderProductsString) {
+               return <EmptyProducts />;
+          }
+
+          const orderProducts = JSON.parse(
+               orderProductsString
+          ) as OrderProductType[];
+
           return (
                /**
                 * base url without search params
                 */
                <>
-                    {orderProductsString ? (
-                         <OrderTable orderProducts={orderProducts} />
-                    ) : (
-                         <EmptyProducts />
-                    )}
+                    <OrderTable orderProducts={orderProducts} />
                </>
           );
      }

@@ -18,7 +18,7 @@ export default function CartQuantity({ row }: { row: Row<CartProductsType> }) {
                try {
                     await cartQuantityUpdate(id, updateQuantity);
                } catch (error) {
-                    console.error("Purchus Patch error:", error);
+                    console.log("Purchus Patch error:", error);
                }
           },
           350

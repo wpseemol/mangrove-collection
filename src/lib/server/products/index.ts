@@ -119,7 +119,7 @@ export async function getNewArrivalProducts(): Promise<CardProductType[]> {
           ) as CardProductType[];
           return newArrivalProducts;
      } catch (error) {
-          console.error("Error fetching new arrival products:", error);
+          console.log("Error fetching new arrival products:", error);
           return [];
      }
 }
@@ -143,7 +143,7 @@ export async function getPopularProducts(): Promise<CardProductType[]> {
 
           return popularProducts;
      } catch (error) {
-          console.error("Error fetching popular products:", error);
+          console.log("Error fetching popular products:", error);
           return [];
      }
 }
@@ -170,7 +170,7 @@ export async function getProductsDetails(slug: string) {
 
           return productDetails;
      } catch (error) {
-          console.error("get product details error:", error);
+          console.log("get product details error:", error);
           return null;
      }
 }
@@ -181,7 +181,7 @@ export async function getRelatedProducts(
 ): Promise<CardProductType[]> {
      try {
           if (!categoryId || !skipId) {
-               console.error("CategoryId skip product id is rewired.");
+               console.log("CategoryId skip product id is rewired.");
                return [];
           }
 
@@ -225,7 +225,7 @@ export async function getOrderProductsDetails(ids: string): Promise<
        })[]
 > {
      if (!ids) {
-          console.error("get Order Products Details:", ids);
+          console.log("get Order Products Details:", ids);
           return null;
      }
 
@@ -243,7 +243,7 @@ export async function getOrderProductsDetails(ids: string): Promise<
           })[];
           return productsDetails;
      } catch (error) {
-          console.error("get Order Products Details:", error);
+          console.log("get Order Products Details:", error);
           return null;
      }
 }

@@ -26,7 +26,7 @@ export default function FilterSection({
                const data = await getCategoryWithCount(isShow ? 5 : "ALL");
                setCategoryWithCountArray(data);
           } catch (error) {
-               console.error("handel count error:", error);
+               console.log("handel count error:", error);
           } finally {
                setLoading(false);
           }

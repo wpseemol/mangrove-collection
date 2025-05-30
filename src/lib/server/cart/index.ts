@@ -27,7 +27,7 @@ export async function setCartData(
      quantity: number
 ) {
      if (!productId || !selectedPriceId || !quantity) {
-          console.error("Please ProdcutId and selectedPriceId are required");
+          console.log("Please ProdcutId and selectedPriceId are required");
           return;
      }
 
@@ -119,11 +119,11 @@ export async function getCartData() {
                     carTotalItems: cartItem.cart.length,
                };
           } catch (error) {
-               console.error("Invalid JWT:", error);
+               console.log("Invalid JWT:", error);
                return null;
           }
      } catch (error) {
-          console.error("get cart data error:", error);
+          console.log("get cart data error:", error);
           return null;
      }
 }
@@ -197,7 +197,7 @@ export async function getCartProductDetails(): Promise<
 
           return cartProduct;
      } catch (error) {
-          console.error("get cart data product details error:", error);
+          console.log("get cart data product details error:", error);
           return null;
      }
 }
@@ -257,7 +257,7 @@ export async function cartQuantityUpdate(
      quantity: number
 ): Promise<boolean> {
      if (!productId || !quantity) {
-          console.error("Please ProdcutId and quantity are required");
+          console.log("Please ProdcutId and quantity are required");
           return false;
      }
 
@@ -292,7 +292,7 @@ export async function cartQuantityUpdate(
 
           return true;
      } catch (error) {
-          console.error("cart quantity update error:", error);
+          console.log("cart quantity update error:", error);
           return false;
      }
 }
@@ -310,7 +310,7 @@ export async function cartQuantityUpdate(
  */
 export async function cartProductDelete(productIds: string[] | string) {
      if (!productIds) {
-          console.error("Please ProdcutId are required");
+          console.log("Please ProdcutId are required");
           return false;
      }
 
@@ -354,7 +354,7 @@ export async function cartProductDelete(productIds: string[] | string) {
           });
           return true;
      } catch (error) {
-          console.error("cart product delete error:", error);
+          console.log("cart product delete error:", error);
           return false;
      }
 }

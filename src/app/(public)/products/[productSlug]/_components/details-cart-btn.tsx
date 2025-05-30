@@ -39,7 +39,7 @@ export default function DetailsCartBtn({
                     });
                }
           } catch (error) {
-               console.error("Details page Cart error:", error);
+               console.log("Details page Cart error:", error);
           } finally {
                setLoading(false);
           }

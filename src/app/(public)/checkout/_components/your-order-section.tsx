@@ -52,7 +52,7 @@ export default function YourOrderSection({
           try {
                await purchaseDataDelete(id);
           } catch (error) {
-               console.error("Purchus DELETE error:", error);
+               console.log("Purchus DELETE error:", error);
           }
      };
 
@@ -84,7 +84,7 @@ export default function YourOrderSection({
                try {
                     await purchaseQuantityUpdate(id, quantity);
                } catch (error) {
-                    console.error("Purchus Patch error:", error);
+                    console.log("Purchus Patch error:", error);
                }
           },
           350

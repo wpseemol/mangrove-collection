@@ -40,7 +40,7 @@ export default function CartItemRemove({
           try {
                await cartProductDelete(productId);
           } catch (error) {
-               console.error("Cart DELETE error:", error);
+               console.log("Cart DELETE error:", error);
           }
      }
 

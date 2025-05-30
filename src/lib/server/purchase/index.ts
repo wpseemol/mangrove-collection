@@ -46,7 +46,7 @@ export async function setPurchaseData(
           });
           return true;
      } catch (error) {
-          console.error("Error setting purchase data:", error);
+          console.log("Error setting purchase data:", error);
           return false;
      }
 }
@@ -82,11 +82,11 @@ export async function getPurchaseData(): Promise<PurchaseItemType[] | null> {
 
                return purchaseItem.purchases;
           } catch (error) {
-               console.error("Error verifying purchase data:", error);
+               console.log("Error verifying purchase data:", error);
                return null;
           }
      } catch (error) {
-          console.error("Error getting purchase data:", error);
+          console.log("Error getting purchase data:", error);
           return null;
      }
 }
@@ -143,7 +143,7 @@ export async function purchaseQuantityUpdate(
 
           return true;
      } catch (error) {
-          console.error("Error updating purchase quantity:", error);
+          console.log("Error updating purchase quantity:", error);
           return false;
      }
 }
@@ -209,7 +209,7 @@ export async function getPurchaseProductData(): Promise<
 
           return purchaseProductDataWithQuantity;
      } catch (error) {
-          console.error("Error getting purchase product data:", error);
+          console.log("Error getting purchase product data:", error);
           return null;
      }
 }
@@ -260,7 +260,7 @@ export async function purchaseDataDelete(productId: string): Promise<boolean> {
           });
           return true;
      } catch (error) {
-          console.error("Error deleting purchase data:", error);
+          console.log("Error deleting purchase data:", error);
           return false;
      }
 }

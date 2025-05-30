@@ -133,7 +133,7 @@ export default function PrintInvoiceBtn({
                link.click();
                document.body.removeChild(link); // Clean up
           } catch (error) {
-               console.error("Image genarate:", error);
+               console.log("Image genarate:", error);
                return;
           }
      };

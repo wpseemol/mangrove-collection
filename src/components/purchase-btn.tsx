@@ -32,7 +32,7 @@ export default function PurchaseBtn({
                 */
                await setPurchaseData(purchaseItems);
           } catch (error) {
-               console.error("Product bye error:", error);
+               console.log("Product bye error:", error);
           } finally {
                setLoading(false);
           }

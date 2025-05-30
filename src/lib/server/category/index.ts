@@ -19,7 +19,7 @@ export async function getCategory(): Promise<Categories[]> {
           const categories = replaceMongoIds(mongodbResponse) as Categories[];
           return categories;
      } catch (error) {
-          console.error("Error fetching categories:", error);
+          console.log("Error fetching categories:", error);
           return [];
      }
 }
@@ -46,7 +46,7 @@ export async function getCategoryNameFromSlug(cateogyrSlug: string[]) {
           );
           return categoryName;
      } catch (error) {
-          console.error("get category name form category slug error:", error);
+          console.log("get category name form category slug error:", error);
           return [];
      }
 }
@@ -80,7 +80,7 @@ export async function getCategoryids(
 
           return categoriesIds;
      } catch (error) {
-          console.error("get category ids error:", error);
+          console.log("get category ids error:", error);
           return [];
      }
 }
@@ -122,7 +122,7 @@ export async function getCategoryWithCount(
           ) as CategoryWithCount[];
           return categoriesWithCount;
      } catch (error) {
-          console.error("get category with count error:", error);
+          console.log("get category with count error:", error);
           return [];
      }
 }

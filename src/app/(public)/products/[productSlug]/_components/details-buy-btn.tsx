@@ -37,7 +37,7 @@ export default function DetailsBuyBtn({
                 */
                await setPurchaseData(purchaseProduct);
           } catch (error) {
-               console.error("Details page Purchus error:", error);
+               console.log("Details page Purchus error:", error);
           } finally {
                setLoading(false);
           }

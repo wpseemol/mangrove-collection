@@ -97,7 +97,7 @@ export function CheckoutForm() {
           try {
                delayDebounce(phoneNumber);
           } catch (error) {
-               console.error("Checkout Form get error:", error);
+               console.log("Checkout Form get error:", error);
           }
      }
 

@@ -27,7 +27,7 @@ export default function CartBtn({
                     });
                }
           } catch (error) {
-               console.error("cart button error:", error);
+               console.log("cart button error:", error);
           } finally {
                setLoading(false);
           }

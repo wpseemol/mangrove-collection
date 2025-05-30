@@ -41,7 +41,7 @@ export async function orderConfirm(details: string) {
           );
 
           if (!productDetails) {
-               console.error("Please selected Product then bye.");
+               console.log("Please selected Product then bye.");
                return false;
           }
 
@@ -117,7 +117,7 @@ export async function orderConfirm(details: string) {
           });
           return true;
      } catch (error) {
-          console.error("Order confirm error:", error);
+          console.log("Order confirm error:", error);
           return false;
      }
 }
@@ -133,8 +133,8 @@ export async function getAddressBookDataCookies() {
                COOKIE_KEY_ADDRESS_BOOK
           )?.value;
           if (!addressBookDataToken) {
-               console.error("address book data not found.");
-               return null;
+               console.log("address book data not found.");
+               return false;
           }
 
           try {
@@ -147,12 +147,12 @@ export async function getAddressBookDataCookies() {
 
                return cartItem.phone;
           } catch (error) {
-               console.error("Invalid JWT:", error);
-               return null;
+               console.log("Invalid JWT:", error);
+               return false;
           }
      } catch (error) {
-          console.error("address book data:", error);
-          return null;
+          console.log("address book data:", error);
+          return false;
      }
 }
 
@@ -160,7 +160,7 @@ export async function getOrderProducts() {
      try {
           const addressBookPhone = await getAddressBookDataCookies();
           if (!addressBookPhone) {
-               console.error("not found phone number.");
+               console.log("not found phone number.");
                return null;
           }
 
@@ -180,7 +180,7 @@ export async function getOrderProducts() {
 
           return JSON.stringify(orderProduct);
      } catch (error) {
-          console.error("get order product error:", error);
+          console.log("get order product error:", error);
           return null;
      }
 }

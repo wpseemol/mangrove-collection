@@ -60,7 +60,7 @@ export default function MultiDeletedBtn() {
                     try {
                          await cartProductDelete(deletedItemsIds);
                     } catch (error) {
-                         console.error("Cart DELETE error:", error);
+                         console.log("Cart DELETE error:", error);
                     }
                }
           });

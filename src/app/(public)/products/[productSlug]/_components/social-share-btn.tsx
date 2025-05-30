@@ -32,7 +32,7 @@ export default function SocialShareBtn({
                setCopied(true);
                setTimeout(() => setCopied(false), 2000); // Reset after 2s
           } catch (err) {
-               console.error("Failed to copy: ", err);
+               console.log("Failed to copy: ", err);
           }
      };
 
