@@ -60,7 +60,6 @@ export default function EmptyProducts() {
                     Looks like you haven&apos;t any Order completed now.
                </p>
                <motion.button
-                    href="/products"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.97 }}
                     className="px-6 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 transition"

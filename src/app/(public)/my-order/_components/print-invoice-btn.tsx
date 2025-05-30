@@ -118,7 +118,7 @@ export default function PrintInvoiceBtn({
 
      const handleSaveAsImage = async () => {
           try {
-               if (!invoiceRef.current) null;
+               if (!invoiceRef.current) return;
 
                const canvas = await html2canvas(invoiceRef.current, {
                     scale: 2, // Higher quality

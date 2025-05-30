@@ -43,7 +43,7 @@ export default function AddNewAddressForm() {
                toast.success("Address added successfully!");
                reset();
           } catch (error) {
-               console.error("Add Addres went error:", error);
+               console.error("Add address went error:", error);
           }
      };
 
@@ -70,9 +70,9 @@ export default function AddNewAddressForm() {
           );
           if (defaultData) {
                reset({
-                    phoneNumber: defaultData.phone,
+                    phone: defaultData.phone,
                     fullName: defaultData.name,
-                    fullAddress: defaultData.fullAddress,
+                    address: defaultData.fullAddress,
                });
                return;
           }

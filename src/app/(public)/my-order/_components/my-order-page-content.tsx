@@ -12,7 +12,7 @@ export default async function MyOrderPageContent({
 }) {
      const orderProductsString = await getOrderProducts();
      const orderProducts = JSON.parse(
-          orderProductsString
+          orderProductsString || ""
      ) as OrderProductType[];
 
      if (!searchParams?.section) {

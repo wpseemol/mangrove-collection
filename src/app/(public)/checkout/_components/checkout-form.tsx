@@ -15,8 +15,7 @@ import Swal from "sweetalert2";
 import { z } from "zod";
 
 export function CheckoutForm() {
-     const [paymentMethod, setPaymentMethod] =
-          useState<PaymentMethodType>("cod");
+     const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cod");
 
      const { buyProducts, shippingCost } = usePurchase();
 
