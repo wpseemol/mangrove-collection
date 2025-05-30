@@ -1,12 +1,7 @@
-export default function AuthencationLayout({
-    children,
+export default function AuthenticationLayout({
+     children,
 }: Readonly<{
-    children: React.ReactNode;
+     children: React.ReactNode;
 }>) {
-    return (
-        <>
-            <p>this is Authencation layout</p>
-            {children}
-        </>
-    );
+     return <>{children}</>;
 }
