@@ -2,22 +2,14 @@
 
 import ButtonLoading from "@/components/button-loading";
 import { Button } from "@/components/ui/button";
-import {
-     Form,
-     FormControl,
-     FormField,
-     FormItem,
-     FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 
 import { loginSchema } from "@/lib/schemas/zod/login-schema";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
-import { useForm, UseFormReturn } from "react-hook-form";
-import { PiEyeClosedDuotone, PiEyeDuotone } from "react-icons/pi";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 export default function LoginForm() {
@@ -175,52 +167,6 @@ export default function LoginForm() {
                          </div>
                     </form>
                </Form>
-          </>
-     );
-}
-
-type PasswordFieldProps = {
-     form: UseFormReturn<z.infer<typeof loginSchema>>;
-};
-
-function PasswordField({ form }: PasswordFieldProps) {
-     const [isHidden, setIsHidden] = useState(false);
-
-     return (
-          <>
-               <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field, fieldState }) => (
-                         <FormItem className="relative">
-                              <FormControl>
-                                   <Input
-                                        id="password"
-                                        type={isHidden ? "text" : "password"}
-                                        {...field}
-                                        className="w-full bg-transparent border border-neutral-500/20
-                                            p-3 focus:outline-none  focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] rounded"
-                                        placeholder={
-                                             isHidden ? "Password" : "********"
-                                        }
-                                   />
-                              </FormControl>
-                              <span
-                                   onClick={() => setIsHidden((prev) => !prev)}
-                                   className="absolute right-4 top-1"
-                              >
-                                   {isHidden ? (
-                                        <PiEyeDuotone />
-                                   ) : (
-                                        <PiEyeClosedDuotone />
-                                   )}
-                              </span>
-                              <FormMessage className="text-red-500">
-                                   {fieldState.error?.message}
-                              </FormMessage>
-                         </FormItem>
-                    )}
-               />
           </>
      );
 }
