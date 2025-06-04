@@ -1,37 +1,27 @@
 "use client";
 
 import ButtonLoading from "@/components/button-loading";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import {
-     Form,
-     FormControl,
-     FormField,
-     FormItem,
-     FormLabel,
-     FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { registerSchema } from "@/lib/schemas/zod/register-schema";
-import { userRegister } from "@/lib/server/user";
-
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
-import { useForm, UseFormReturn } from "react-hook-form";
-import { PiEyeClosedDuotone, PiEyeDuotone } from "react-icons/pi";
-import { toast, Toaster } from "sonner";
+import { AlertCircle, CheckCircle2, Eye, EyeOff, X } from "lucide-react";
+import { useEffect, useState } from "react";
+
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 export default function RegisterForm() {
-     const router = useRouter();
+     const [showPassword, setShowPassword] = useState(false);
+     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+     const [passwordRequirements, setPasswordRequirements] =
+          useState<PasswordRequirements | null>(null);
 
      const form = useForm<z.infer<typeof registerSchema>>({
           resolver: zodResolver(registerSchema),
           defaultValues: {
-               firstName: "",
-               lastName: "",
+               fullname: "",
                email: "",
                phone: "",
                password: "",
@@ -39,299 +29,370 @@ export default function RegisterForm() {
           },
      });
 
-     // 2. Define a submit handler.
      async function onSubmit(values: z.infer<typeof registerSchema>) {
-          const isRegister = await userRegister(values);
+          console.log("Form submitted with values:", values);
+     }
 
-          if (isRegister.redirect) {
-               toast.success(isRegister.message);
-               router.push("/login");
+     /**
+      * check password strength and requirements
+      * - At least 8 characters
+      * - At least one uppercase letter
+      * - At least one lowercase letter
+      * - At least one number
+      * - At least one special character
+      * This effect runs whenever the password value changes.
+      */
+     const passwordValue = form.watch("password");
+     useEffect(() => {
+          if (!passwordValue) return;
+
+          const requirements: PasswordRequirements = {
+               length: passwordValue.length >= 8,
+               uppercase: /[A-Z]/.test(passwordValue),
+               lowercase: /[a-z]/.test(passwordValue),
+               number: /\d/.test(passwordValue),
+               special: /[!@#$%^&*(),.?":{}|<>]/.test(passwordValue),
+          };
+
+          const strength = Object.values(requirements).filter(Boolean).length;
+
+          if (strength > 4) {
+               setPasswordRequirements(null);
                return;
           }
 
-          toast.error(isRegister.message);
-     }
-
-     return (
-          <>
-               <Form {...form}>
-                    <form
-                         onSubmit={form.handleSubmit(onSubmit)}
-                         className="grid gap-4 -mt-2"
-                    >
-                         {/* input email */}
-
-                         {/* first name and last name */}
-
-                         <div className="grid grid-cols-2 gap-4">
-                              <div className="grid gap-2">
-                                   <div className="w-full">
-                                        <InputField
-                                             form={form}
-                                             name="firstName"
-                                             type="text"
-                                             label="First name*"
-                                             placeholder="Max"
-                                        />
-                                   </div>
-                              </div>
-                              <div className="grid gap-2">
-                                   <div className="w-full">
-                                        <InputField
-                                             form={form}
-                                             name="lastName"
-                                             type="text"
-                                             label="Last name*"
-                                             placeholder="Robinson"
-                                        />
-                                   </div>
-                              </div>
-                         </div>
-
-                         {/* first name and last name */}
-
-                         <div className="grid gap-2">
-                              <InputField
-                                   form={form}
-                                   name="email"
-                                   type="email"
-                                   label="Email address*"
-                                   placeholder="leroy@jenkins.com"
-                              />
-                         </div>
-                         <div className="grid gap-2">
-                              <InputField
-                                   form={form}
-                                   name="phone"
-                                   type="text"
-                                   label="Phone*"
-                                   placeholder="+8801711111122"
-                              />
-                         </div>
-
-                         {/* input email */}
-
-                         {/* input password */}
-
-                         <PasswordOrConfirmPassField form={form} />
-
-                         {/* input  password */}
-
-                         <Button
-                              disabled={form.formState.isSubmitting}
-                              type="submit"
-                              className="w-full text-white"
-                         >
-                              Create an account
-                              {form.formState.isSubmitting && <ButtonLoading />}
-                         </Button>
-                    </form>
-
-                    <div className="mt-4 text-center text-sm">
-                         Already have an account?{" "}
-                         <Link href="/login" className="underline">
-                              Sign in
-                         </Link>
-                    </div>
-               </Form>
-               <Toaster position="top-center" richColors closeButton />
-          </>
-     );
-}
-
-type InputFieldProps = {
-     form: UseFormReturn<z.infer<typeof registerSchema>>;
-     name:
-          | "firstName"
-          | "lastName"
-          | "email"
-          | "password"
-          | "conformPass"
-          | "phone";
-     label: string;
-     placeholder: string;
-     type: string;
-};
-
-function InputField({
-     form,
-     name,
-     label,
-     placeholder,
-     type = "text",
-}: InputFieldProps) {
-     return (
-          <FormField
-               control={form.control}
-               name={name}
-               render={({ field, fieldState }) => (
-                    <FormItem>
-                         <FormLabel htmlFor={name} className="">
-                              {label}
-                         </FormLabel>
-
-                         <FormControl>
-                              <Input
-                                   id={name}
-                                   type={type}
-                                   {...field}
-                                   className="w-full bg-transparent border border-neutral-500/20
-                                            p-3 focus:outline-none  focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] rounded "
-                                   placeholder={placeholder}
-                              />
-                         </FormControl>
-                         <FormMessage className="text-red-500">
-                              {fieldState.error?.message}
-                         </FormMessage>
-                    </FormItem>
-               )}
-          />
-     );
-}
-
-type PasswordOrConfirmPassFieldProps = {
-     form: UseFormReturn<z.infer<typeof registerSchema>>;
-};
-
-// password label check there.
-function PasswordOrConfirmPassField({ form }: PasswordOrConfirmPassFieldProps) {
-     const [isHidden, setIsHidden] = useState(false);
-     const [passwordValue, setPasswordValue] = useState("");
-
-     const [strengthLevel, setStrengthLevel] = useState<string | null>(null);
-
-     // Memoize the password strength calculation
-     const strengthScore = useMemo(() => {
-          const containsUpperCase = /[A-Z]/.test(passwordValue);
-          const containsLowerCase = /[a-z]/.test(passwordValue);
-          const containsNumber = /[0-9]/.test(passwordValue);
-          const containsSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(
-               passwordValue
-          );
-          return (
-               (containsSpecial ? 1 : 0) +
-               (containsUpperCase ? 1 : 0) +
-               (containsLowerCase ? 1 : 0) +
-               (containsNumber ? 1 : 0)
-          );
+          setPasswordRequirements(requirements);
      }, [passwordValue]);
 
-     // Set password strength level based on the score
-     useEffect(() => {
-          if (passwordValue.length > 5) {
-               switch (strengthScore) {
-                    case 1:
-                    case 2:
-                         setStrengthLevel("Weak");
-                         style = "text-[#ff2323]";
-                         break;
-                    case 3:
-                         setStrengthLevel("Medium");
-                         style = "text-[#fecf02]";
-                         break;
-                    case 4:
-                         setStrengthLevel("Strong");
-                         style = "text-[#0dc547]";
-                         break;
-                    default:
-                         setStrengthLevel(null);
-               }
-          } else {
-               setStrengthLevel(null);
-               style = "";
-          }
-     }, [strengthScore, passwordValue]);
-
-     // Clear the strength level after 5 seconds
-     useEffect(() => {
-          if (strengthLevel) {
-               const timer = setTimeout(() => {
-                    setStrengthLevel(null);
-                    style = "";
-               }, 5000);
-
-               return () => clearTimeout(timer); // Cleanup on unmount or on strengthLevel change
-          }
-     }, [strengthLevel]);
-
-     const password = form.watch("password");
-
-     useEffect(() => {
-          setPasswordValue(password);
-     }, [password]);
-
      return (
-          <>
-               <div className="grid gap-2">
-                    <FormField
-                         control={form.control}
-                         name="password"
-                         render={({ field, fieldState }) => (
-                              <FormItem className="relative">
-                                   <FormLabel className="">Password*</FormLabel>
-                                   {strengthLevel && (
-                                        <p className={`${style}`}>
-                                             {strengthLevel} password!
-                                        </p>
+          <Form {...form}>
+               <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-6"
+               >
+                    <div className="bg-white py-8 px-6 shadow-sm rounded-lg border border-gray-200">
+                         <div className="space-y-6">
+                              {/* Full Name Field */}
+                              <FormField
+                                   control={form.control}
+                                   name="fullname"
+                                   render={({ field, fieldState }) => (
+                                        <FormItem>
+                                             <label
+                                                  htmlFor="fullname"
+                                                  className="block text-sm font-medium text-gray-700 mb-1"
+                                             >
+                                                  Full Name
+                                             </label>
+                                             <FormControl>
+                                                  <input
+                                                       id="fullname"
+                                                       type="text"
+                                                       {...field}
+                                                       className={`w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-0  ${
+                                                            fieldState.error
+                                                                 ? "border-red-500"
+                                                                 : "border-gray-300"
+                                                       }`}
+                                                       placeholder="Enter your full name"
+                                                  />
+                                             </FormControl>
+                                             {fieldState.error?.message && (
+                                                  <p className="mt-1 text-sm text-red-600 flex items-center">
+                                                       <AlertCircle className="w-4 h-4 mr-1" />
+                                                       {
+                                                            fieldState.error
+                                                                 .message
+                                                       }
+                                                  </p>
+                                             )}
+                                        </FormItem>
                                    )}
+                              />
 
-                                   <FormControl>
-                                        <Input
-                                             type={
-                                                  isHidden ? "text" : "password"
-                                             }
-                                             {...field}
-                                             className="w-full bg-transparent border border-neutral-500/20
-                                            p-3 focus:outline-none  focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] rounded "
-                                             placeholder={
-                                                  isHidden
-                                                       ? "Password"
-                                                       : "********"
-                                             }
-                                        />
-                                   </FormControl>
+                              {/* Email Field */}
+                              <FormField
+                                   control={form.control}
+                                   name="email"
+                                   render={({ field, fieldState }) => (
+                                        <FormItem>
+                                             <label
+                                                  htmlFor="email"
+                                                  className="block text-sm font-medium text-gray-700 mb-1"
+                                             >
+                                                  Email Address
+                                             </label>
+                                             <FormControl>
+                                                  <input
+                                                       id="email"
+                                                       type="email"
+                                                       {...field}
+                                                       className={`w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-0  ${
+                                                            fieldState.error
+                                                                 ? "border-red-500"
+                                                                 : "border-gray-300"
+                                                       }`}
+                                                       placeholder="Enter your email"
+                                                  />
+                                             </FormControl>
+                                             {fieldState.error?.message && (
+                                                  <p className="mt-1 text-sm text-red-600 flex items-center">
+                                                       <AlertCircle className="w-4 h-4 mr-1" />
+                                                       {
+                                                            fieldState.error
+                                                                 .message
+                                                       }
+                                                  </p>
+                                             )}
+                                        </FormItem>
+                                   )}
+                              />
 
-                                   <span
-                                        onClick={() =>
-                                             setIsHidden((prev) => !prev)
-                                        }
-                                        className={`absolute right-4  ${
-                                             strengthLevel
-                                                  ? "top-[67px]"
-                                                  : "top-8"
-                                        }`}
-                                   >
-                                        {isHidden ? (
-                                             <PiEyeDuotone />
-                                        ) : (
-                                             <PiEyeClosedDuotone />
-                                        )}
-                                   </span>
+                              {/* Phone Field */}
+                              <FormField
+                                   control={form.control}
+                                   name="phone"
+                                   render={({ field, fieldState }) => (
+                                        <FormItem>
+                                             <label
+                                                  htmlFor="phone"
+                                                  className="block text-sm font-medium text-gray-700 mb-1"
+                                             >
+                                                  Phone Number
+                                             </label>
+                                             <FormControl>
+                                                  <input
+                                                       id="phone"
+                                                       type="text"
+                                                       {...field}
+                                                       className={`w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-0  ${
+                                                            fieldState.error
+                                                                 ? "border-red-500"
+                                                                 : "border-gray-300"
+                                                       }`}
+                                                       placeholder="Enter your phone number"
+                                                  />
+                                             </FormControl>
+                                             {fieldState.error?.message && (
+                                                  <p className="mt-1 text-sm text-red-600 flex items-center">
+                                                       <AlertCircle className="w-4 h-4 mr-1" />
+                                                       {
+                                                            fieldState.error
+                                                                 .message
+                                                       }
+                                                  </p>
+                                             )}
+                                        </FormItem>
+                                   )}
+                              />
 
-                                   <FormMessage className="text-red-500">
-                                        {fieldState.error?.message}
-                                   </FormMessage>
-                              </FormItem>
-                         )}
-                    />
-               </div>
-               <div className="grid gap-2 relative">
-                    <span
-                         onClick={() => setIsHidden((prev) => !prev)}
-                         className="absolute right-4 top-8"
-                    >
-                         {isHidden ? <PiEyeDuotone /> : <PiEyeClosedDuotone />}
-                    </span>
-                    <InputField
-                         form={form}
-                         name="conformPass"
-                         type={isHidden ? "text" : "password"}
-                         label="Conform password*"
-                         placeholder={isHidden ? "Password" : "********"}
-                    />
-               </div>
-          </>
+                              {/* Password Field */}
+                              <FormField
+                                   control={form.control}
+                                   name="password"
+                                   render={({ field, fieldState }) => (
+                                        <FormItem>
+                                             <label
+                                                  htmlFor="password"
+                                                  className="block text-sm font-medium text-gray-700 mb-1"
+                                             >
+                                                  Password
+                                             </label>
+                                             <div className="relative">
+                                                  <FormControl>
+                                                       <input
+                                                            id="password"
+                                                            type={
+                                                                 showPassword
+                                                                      ? "text"
+                                                                      : "password"
+                                                            }
+                                                            {...field}
+                                                            className={`w-full px-3 py-2 pr-10 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-0  ${
+                                                                 fieldState.error
+                                                                      ? "border-red-500"
+                                                                      : "border-gray-300"
+                                                            }`}
+                                                            placeholder="Enter your password"
+                                                       />
+                                                  </FormControl>
+                                                  <button
+                                                       type="button"
+                                                       onClick={() =>
+                                                            setShowPassword(
+                                                                 !showPassword
+                                                            )
+                                                       }
+                                                       className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                                                  >
+                                                       {showPassword ? (
+                                                            <EyeOff className="w-4 h-4" />
+                                                       ) : (
+                                                            <Eye className="w-4 h-4" />
+                                                       )}
+                                                  </button>
+                                             </div>
+                                             {fieldState.error?.message && (
+                                                  <p className="mt-1 text-sm text-red-600 flex items-center">
+                                                       <AlertCircle className="w-4 h-4 mr-1" />
+                                                       {
+                                                            fieldState.error
+                                                                 .message
+                                                       }
+                                                  </p>
+                                             )}
+
+                                             <PasswordStrengthIndicator
+                                                  requirements={
+                                                       passwordRequirements
+                                                  }
+                                             />
+                                        </FormItem>
+                                   )}
+                              />
+
+                              {/* Confirm Password Field */}
+                              <FormField
+                                   control={form.control}
+                                   name="conformPass"
+                                   render={({ field, fieldState }) => (
+                                        <FormItem>
+                                             <label
+                                                  htmlFor="conformPass"
+                                                  className="block text-sm font-medium text-gray-700 mb-1"
+                                             >
+                                                  Confirm Password
+                                             </label>
+                                             <div className="relative">
+                                                  <FormControl>
+                                                       <input
+                                                            id="conformPass"
+                                                            type={
+                                                                 showConfirmPassword
+                                                                      ? "text"
+                                                                      : "password"
+                                                            }
+                                                            {...field}
+                                                            className={`w-full px-3 py-2 pr-10 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-0  ${
+                                                                 fieldState.error
+                                                                      ? "border-red-500"
+                                                                      : "border-gray-300"
+                                                            }`}
+                                                            placeholder="Confirm your password"
+                                                       />
+                                                  </FormControl>
+                                                  <button
+                                                       type="button"
+                                                       onClick={() =>
+                                                            setShowConfirmPassword(
+                                                                 !showConfirmPassword
+                                                            )
+                                                       }
+                                                       className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                                                  >
+                                                       {showConfirmPassword ? (
+                                                            <EyeOff className="w-4 h-4" />
+                                                       ) : (
+                                                            <Eye className="w-4 h-4" />
+                                                       )}
+                                                  </button>
+                                             </div>
+                                             {fieldState.error?.message && (
+                                                  <p className="mt-1 text-sm text-red-600 flex items-center">
+                                                       <AlertCircle className="w-4 h-4 mr-1" />
+                                                       {
+                                                            fieldState.error
+                                                                 .message
+                                                       }
+                                                  </p>
+                                             )}
+                                        </FormItem>
+                                   )}
+                              />
+
+                              {/* Terms Notice */}
+                              <Alert className="border-gray-200">
+                                   <AlertCircle className="h-4 w-4" />
+                                   <AlertDescription className="text-sm">
+                                        By creating an account, you agree to our
+                                        Terms of Service and Privacy Policy.
+                                   </AlertDescription>
+                              </Alert>
+
+                              {/* Submit Button */}
+                              <Button
+                                   type="submit"
+                                   className="text-white w-full"
+                                   disabled={form.formState.isSubmitting}
+                              >
+                                   {form.formState.isSubmitting ? (
+                                        <>
+                                             <ButtonLoading />
+                                             Creating Account...
+                                        </>
+                                   ) : (
+                                        "Create Account"
+                                   )}
+                              </Button>
+                         </div>
+                    </div>
+               </form>
+          </Form>
      );
 }
 
-let style = "";
+type PasswordRequirements = {
+     length: boolean;
+     uppercase: boolean;
+     lowercase: boolean;
+     number: boolean;
+     special: boolean;
+};
+
+const PasswordStrengthIndicator = ({
+     requirements,
+}: {
+     requirements: PasswordRequirements | null;
+}) => {
+     if (!requirements) return null;
+
+     const indicators = [
+          { key: "length", text: "At least 8 characters" },
+          { key: "uppercase", text: "One uppercase letter" },
+          { key: "lowercase", text: "One lowercase letter" },
+          { key: "number", text: "One number" },
+          { key: "special", text: "One special character" },
+     ];
+
+     return (
+          <div className="mt-2 p-3 bg-gray-50 rounded-md border border-gray-200">
+               <p className="text-sm font-medium text-gray-700 mb-2">
+                    Password must contain:
+               </p>
+               <div className="space-y-1">
+                    {indicators.map(({ key, text }) => (
+                         <div key={key} className="flex items-center text-sm">
+                              {requirements[
+                                   key as keyof PasswordRequirements
+                              ] ? (
+                                   <CheckCircle2 className="w-4 h-4 text-green-500 mr-2" />
+                              ) : (
+                                   <X className="w-4 h-4 text-red-500 mr-2" />
+                              )}
+                              <span
+                                   className={
+                                        requirements[
+                                             key as keyof PasswordRequirements
+                                        ]
+                                             ? "text-green-700"
+                                             : "text-red-700"
+                                   }
+                              >
+                                   {text}
+                              </span>
+                         </div>
+                    ))}
+               </div>
+          </div>
+     );
+};

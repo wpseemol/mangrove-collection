@@ -10,19 +10,18 @@ import {
      FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
 import { loginSchema } from "@/lib/schemas/zod/login-schema";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signIn } from "next-auth/react";
-import Link from "next/link";
+import { AlertCircle, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { PiEyeClosedDuotone, PiEyeDuotone } from "react-icons/pi";
 import { z } from "zod";
 
 export default function LoginForm() {
+     const [showPassword, setShowPassword] = useState(false);
      const form = useForm<z.infer<typeof loginSchema>>({
           resolver: zodResolver(loginSchema),
           defaultValues: {
@@ -33,15 +32,7 @@ export default function LoginForm() {
 
      // 2. Define a submit handler.
      async function onSubmit(values: z.infer<typeof loginSchema>) {
-          try {
-               await signIn("credentials", {
-                    redirect: true,
-                    redirectTo: "/",
-                    ...values,
-               });
-          } catch (error) {
-               console.error("Login error:", error);
-          }
+          console.log("Form submitted with values:", values);
      }
 
      return (
@@ -49,65 +40,139 @@ export default function LoginForm() {
                <Form {...form}>
                     <form
                          onSubmit={form.handleSubmit(onSubmit)}
-                         className="grid gap-y-4 -mt-2"
+                         className="space-y-6"
                     >
-                         {/* input email */}
+                         <div className="bg-white py-8 px-6 shadow-sm rounded-lg border border-gray-200">
+                              <div className="space-y-6">
+                                   {/* Email Field */}
+                                   <FormField
+                                        control={form.control}
+                                        name="email"
+                                        render={({ field, fieldState }) => (
+                                             <FormItem>
+                                                  <label
+                                                       htmlFor="email"
+                                                       className="block text-sm font-medium text-gray-700 mb-1"
+                                                  >
+                                                       Email Address
+                                                  </label>
+                                                  <FormControl>
+                                                       <input
+                                                            id="email"
+                                                            type="email"
+                                                            {...field}
+                                                            className={`w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-0  ${
+                                                                 fieldState.error
+                                                                      ? "border-red-500"
+                                                                      : "border-gray-300"
+                                                            }`}
+                                                            placeholder="Enter your email"
+                                                       />
+                                                  </FormControl>
+                                                  {fieldState.error
+                                                       ?.message && (
+                                                       <p className="mt-1 text-sm text-red-600 flex items-center">
+                                                            <AlertCircle className="w-4 h-4 mr-1" />
+                                                            {
+                                                                 fieldState
+                                                                      .error
+                                                                      .message
+                                                            }
+                                                       </p>
+                                                  )}
+                                             </FormItem>
+                                        )}
+                                   />
 
-                         <div className="grid gap-2">
-                              <FormField
-                                   control={form.control}
-                                   name="email"
-                                   render={({ field, fieldState }) => (
-                                        <FormItem>
-                                             <Label htmlFor="email">
-                                                  Email
-                                             </Label>
+                                   {/* Password Field */}
+                                   <FormField
+                                        control={form.control}
+                                        name="password"
+                                        render={({ field, fieldState }) => (
+                                             <FormItem>
+                                                  <div className="flex justify-between items-center">
+                                                       <label
+                                                            htmlFor="password"
+                                                            className="block text-sm font-medium text-gray-700 mb-1"
+                                                       >
+                                                            Password
+                                                       </label>
+                                                       <button
+                                                            type="button"
+                                                            className="text-sm text-blue-600 hover:text-blue-500"
+                                                            onClick={() => {
+                                                                 /* Add forgot password logic */
+                                                            }}
+                                                       >
+                                                            Forgot password?
+                                                       </button>
+                                                  </div>
+                                                  <div className="relative">
+                                                       <FormControl>
+                                                            <input
+                                                                 id="password"
+                                                                 type={
+                                                                      showPassword
+                                                                           ? "text"
+                                                                           : "password"
+                                                                 }
+                                                                 {...field}
+                                                                 className={`w-full px-3 py-2 pr-10 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-0  ${
+                                                                      fieldState.error
+                                                                           ? "border-red-500"
+                                                                           : "border-gray-300"
+                                                                 }`}
+                                                                 placeholder="Enter your password"
+                                                            />
+                                                       </FormControl>
+                                                       <button
+                                                            type="button"
+                                                            onClick={() =>
+                                                                 setShowPassword(
+                                                                      !showPassword
+                                                                 )
+                                                            }
+                                                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                                                       >
+                                                            {showPassword ? (
+                                                                 <EyeOff className="w-4 h-4" />
+                                                            ) : (
+                                                                 <Eye className="w-4 h-4" />
+                                                            )}
+                                                       </button>
+                                                  </div>
+                                                  {fieldState.error
+                                                       ?.message && (
+                                                       <p className="mt-1 text-sm text-red-600 flex items-center">
+                                                            <AlertCircle className="w-4 h-4 mr-1" />
+                                                            {
+                                                                 fieldState
+                                                                      .error
+                                                                      .message
+                                                            }
+                                                       </p>
+                                                  )}
+                                             </FormItem>
+                                        )}
+                                   />
 
-                                             <FormControl>
-                                                  <Input
-                                                       id="email"
-                                                       type="email"
-                                                       {...field}
-                                                       className="w-full bg-transparent border border-neutral-500/20
-                                            p-3 focus:outline-none  focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] rounded"
-                                                       placeholder="leroy@jenkins.com"
-                                                  />
-                                             </FormControl>
-                                             <FormMessage className="text-red-500">
-                                                  {fieldState.error?.message}
-                                             </FormMessage>
-                                        </FormItem>
-                                   )}
-                              />
-                         </div>
-
-                         {/* input email */}
-
-                         {/* input password */}
-                         <div className="grid gap-2">
-                              {/* if forget password */}
-                              <div className="flex items-center">
-                                   <Label htmlFor="password">Password</Label>
-                                   <Link
-                                        href="#"
-                                        className="ml-auto inline-block text-sm underline"
+                                   {/* Submit Button */}
+                                   <Button
+                                        type="submit"
+                                        className="w-full text-white"
+                                        disabled={form.formState.isSubmitting}
                                    >
-                                        Forgot your password?
-                                   </Link>
+                                        {form.formState.isSubmitting ? (
+                                             <>
+                                                  <ButtonLoading />
+                                                  Signing in...
+                                             </>
+                                        ) : (
+                                             "Sign In"
+                                        )}
+                                   </Button>
                               </div>
-                              <PasswordField form={form} />
                          </div>
-
-                         {/* input  password */}
-
-                         <Button
-                              disabled={form.formState.isSubmitting}
-                              type="submit"
-                              className="w-full text-white"
-                         >
-                              Login{" "}
-                              {form.formState.isSubmitting && <ButtonLoading />}
-                         </Button>
                     </form>
                </Form>
           </>
