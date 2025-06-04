@@ -22,7 +22,11 @@ export default function LoginForm() {
           },
      });
 
-     // 2. Define a submit handler.
+     /**
+      * @param values - The values submitted from the form.
+      * Handles the form submission logic.
+      * This function can be used to send the login request to the server.
+      */
      async function onSubmit(values: z.infer<typeof loginSchema>) {
           console.log("Form submitted with values:", values);
      }

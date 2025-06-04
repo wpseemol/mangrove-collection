@@ -5,10 +5,13 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { registerSchema } from "@/lib/schemas/zod/register-schema";
+import { userRegister } from "@/lib/server/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle, CheckCircle2, Eye, EyeOff, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast, Toaster } from "sonner";
 
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -17,6 +20,8 @@ export default function RegisterForm() {
      const [showConfirmPassword, setShowConfirmPassword] = useState(false);
      const [passwordRequirements, setPasswordRequirements] =
           useState<PasswordRequirements | null>(null);
+
+     const router = useRouter();
 
      const form = useForm<z.infer<typeof registerSchema>>({
           resolver: zodResolver(registerSchema),
@@ -29,8 +34,27 @@ export default function RegisterForm() {
           },
      });
 
+     /**
+      * Handle form submission
+      * This function will be called when the form is submitted and all validations pass.
+      * You can replace the console.log with your actual form submission logic.
+      */
      async function onSubmit(values: z.infer<typeof registerSchema>) {
-          console.log("Form submitted with values:", values);
+          const response = await userRegister(JSON.stringify(values));
+          if (!response.success) {
+               toast.error(response.message || "Registration failed");
+               return;
+          }
+
+          if (response.success) {
+               console.log("Form submitted successfully response:", response);
+               toast.success(response.message);
+               setTimeout(() => {
+                    router.push("/login");
+               }, 2000);
+               form.reset();
+               return;
+          }
      }
 
      /**
@@ -65,279 +89,293 @@ export default function RegisterForm() {
      }, [passwordValue]);
 
      return (
-          <Form {...form}>
-               <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    className="space-y-6"
-               >
-                    <div className="bg-white py-8 px-6 shadow-sm rounded-lg border border-gray-200">
-                         <div className="space-y-6">
-                              {/* Full Name Field */}
-                              <FormField
-                                   control={form.control}
-                                   name="fullname"
-                                   render={({ field, fieldState }) => (
-                                        <FormItem>
-                                             <label
-                                                  htmlFor="fullname"
-                                                  className="block text-sm font-medium text-gray-700 mb-1"
-                                             >
-                                                  Full Name
-                                             </label>
-                                             <FormControl>
-                                                  <input
-                                                       id="fullname"
-                                                       type="text"
-                                                       {...field}
-                                                       className={`w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-0  ${
-                                                            fieldState.error
-                                                                 ? "border-red-500"
-                                                                 : "border-gray-300"
-                                                       }`}
-                                                       placeholder="Enter your full name"
-                                                  />
-                                             </FormControl>
-                                             {fieldState.error?.message && (
-                                                  <p className="mt-1 text-sm text-red-600 flex items-center">
-                                                       <AlertCircle className="w-4 h-4 mr-1" />
-                                                       {
-                                                            fieldState.error
-                                                                 .message
-                                                       }
-                                                  </p>
-                                             )}
-                                        </FormItem>
-                                   )}
-                              />
-
-                              {/* Email Field */}
-                              <FormField
-                                   control={form.control}
-                                   name="email"
-                                   render={({ field, fieldState }) => (
-                                        <FormItem>
-                                             <label
-                                                  htmlFor="email"
-                                                  className="block text-sm font-medium text-gray-700 mb-1"
-                                             >
-                                                  Email Address
-                                             </label>
-                                             <FormControl>
-                                                  <input
-                                                       id="email"
-                                                       type="email"
-                                                       {...field}
-                                                       className={`w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-0  ${
-                                                            fieldState.error
-                                                                 ? "border-red-500"
-                                                                 : "border-gray-300"
-                                                       }`}
-                                                       placeholder="Enter your email"
-                                                  />
-                                             </FormControl>
-                                             {fieldState.error?.message && (
-                                                  <p className="mt-1 text-sm text-red-600 flex items-center">
-                                                       <AlertCircle className="w-4 h-4 mr-1" />
-                                                       {
-                                                            fieldState.error
-                                                                 .message
-                                                       }
-                                                  </p>
-                                             )}
-                                        </FormItem>
-                                   )}
-                              />
-
-                              {/* Phone Field */}
-                              <FormField
-                                   control={form.control}
-                                   name="phone"
-                                   render={({ field, fieldState }) => (
-                                        <FormItem>
-                                             <label
-                                                  htmlFor="phone"
-                                                  className="block text-sm font-medium text-gray-700 mb-1"
-                                             >
-                                                  Phone Number
-                                             </label>
-                                             <FormControl>
-                                                  <input
-                                                       id="phone"
-                                                       type="text"
-                                                       {...field}
-                                                       className={`w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-0  ${
-                                                            fieldState.error
-                                                                 ? "border-red-500"
-                                                                 : "border-gray-300"
-                                                       }`}
-                                                       placeholder="Enter your phone number"
-                                                  />
-                                             </FormControl>
-                                             {fieldState.error?.message && (
-                                                  <p className="mt-1 text-sm text-red-600 flex items-center">
-                                                       <AlertCircle className="w-4 h-4 mr-1" />
-                                                       {
-                                                            fieldState.error
-                                                                 .message
-                                                       }
-                                                  </p>
-                                             )}
-                                        </FormItem>
-                                   )}
-                              />
-
-                              {/* Password Field */}
-                              <FormField
-                                   control={form.control}
-                                   name="password"
-                                   render={({ field, fieldState }) => (
-                                        <FormItem>
-                                             <label
-                                                  htmlFor="password"
-                                                  className="block text-sm font-medium text-gray-700 mb-1"
-                                             >
-                                                  Password
-                                             </label>
-                                             <div className="relative">
+          <>
+               <Form {...form}>
+                    <form
+                         onSubmit={form.handleSubmit(onSubmit)}
+                         className="space-y-6"
+                    >
+                         <div className="bg-white py-8 px-6 shadow-sm rounded-lg border border-gray-200">
+                              <div className="space-y-6">
+                                   {/* Full Name Field */}
+                                   <FormField
+                                        control={form.control}
+                                        name="fullname"
+                                        render={({ field, fieldState }) => (
+                                             <FormItem>
+                                                  <label
+                                                       htmlFor="fullname"
+                                                       className="block text-sm font-medium text-gray-700 mb-1"
+                                                  >
+                                                       Full Name
+                                                  </label>
                                                   <FormControl>
                                                        <input
-                                                            id="password"
-                                                            type={
-                                                                 showPassword
-                                                                      ? "text"
-                                                                      : "password"
-                                                            }
+                                                            id="fullname"
+                                                            type="text"
                                                             {...field}
-                                                            className={`w-full px-3 py-2 pr-10 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-0  ${
+                                                            className={`w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-0  ${
                                                                  fieldState.error
                                                                       ? "border-red-500"
                                                                       : "border-gray-300"
                                                             }`}
-                                                            placeholder="Enter your password"
+                                                            placeholder="Enter your full name"
                                                        />
                                                   </FormControl>
-                                                  <button
-                                                       type="button"
-                                                       onClick={() =>
-                                                            setShowPassword(
-                                                                 !showPassword
-                                                            )
-                                                       }
-                                                       className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                                                  {fieldState.error
+                                                       ?.message && (
+                                                       <p className="mt-1 text-sm text-red-600 flex items-center">
+                                                            <AlertCircle className="w-4 h-4 mr-1" />
+                                                            {
+                                                                 fieldState
+                                                                      .error
+                                                                      .message
+                                                            }
+                                                       </p>
+                                                  )}
+                                             </FormItem>
+                                        )}
+                                   />
+
+                                   {/* Email Field */}
+                                   <FormField
+                                        control={form.control}
+                                        name="email"
+                                        render={({ field, fieldState }) => (
+                                             <FormItem>
+                                                  <label
+                                                       htmlFor="email"
+                                                       className="block text-sm font-medium text-gray-700 mb-1"
                                                   >
-                                                       {showPassword ? (
-                                                            <EyeOff className="w-4 h-4" />
-                                                       ) : (
-                                                            <Eye className="w-4 h-4" />
-                                                       )}
-                                                  </button>
-                                             </div>
-                                             {fieldState.error?.message && (
-                                                  <p className="mt-1 text-sm text-red-600 flex items-center">
-                                                       <AlertCircle className="w-4 h-4 mr-1" />
-                                                       {
-                                                            fieldState.error
-                                                                 .message
-                                                       }
-                                                  </p>
-                                             )}
-
-                                             <PasswordStrengthIndicator
-                                                  requirements={
-                                                       passwordRequirements
-                                                  }
-                                             />
-                                        </FormItem>
-                                   )}
-                              />
-
-                              {/* Confirm Password Field */}
-                              <FormField
-                                   control={form.control}
-                                   name="conformPass"
-                                   render={({ field, fieldState }) => (
-                                        <FormItem>
-                                             <label
-                                                  htmlFor="conformPass"
-                                                  className="block text-sm font-medium text-gray-700 mb-1"
-                                             >
-                                                  Confirm Password
-                                             </label>
-                                             <div className="relative">
+                                                       Email Address
+                                                  </label>
                                                   <FormControl>
                                                        <input
-                                                            id="conformPass"
-                                                            type={
-                                                                 showConfirmPassword
-                                                                      ? "text"
-                                                                      : "password"
-                                                            }
+                                                            id="email"
+                                                            type="email"
                                                             {...field}
-                                                            className={`w-full px-3 py-2 pr-10 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-0  ${
+                                                            className={`w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-0  ${
                                                                  fieldState.error
                                                                       ? "border-red-500"
                                                                       : "border-gray-300"
                                                             }`}
-                                                            placeholder="Confirm your password"
+                                                            placeholder="Enter your email"
                                                        />
                                                   </FormControl>
-                                                  <button
-                                                       type="button"
-                                                       onClick={() =>
-                                                            setShowConfirmPassword(
-                                                                 !showConfirmPassword
-                                                            )
-                                                       }
-                                                       className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                                                  {fieldState.error
+                                                       ?.message && (
+                                                       <p className="mt-1 text-sm text-red-600 flex items-center">
+                                                            <AlertCircle className="w-4 h-4 mr-1" />
+                                                            {
+                                                                 fieldState
+                                                                      .error
+                                                                      .message
+                                                            }
+                                                       </p>
+                                                  )}
+                                             </FormItem>
+                                        )}
+                                   />
+
+                                   {/* Phone Field */}
+                                   <FormField
+                                        control={form.control}
+                                        name="phone"
+                                        render={({ field, fieldState }) => (
+                                             <FormItem>
+                                                  <label
+                                                       htmlFor="phone"
+                                                       className="block text-sm font-medium text-gray-700 mb-1"
                                                   >
-                                                       {showConfirmPassword ? (
-                                                            <EyeOff className="w-4 h-4" />
-                                                       ) : (
-                                                            <Eye className="w-4 h-4" />
-                                                       )}
-                                                  </button>
-                                             </div>
-                                             {fieldState.error?.message && (
-                                                  <p className="mt-1 text-sm text-red-600 flex items-center">
-                                                       <AlertCircle className="w-4 h-4 mr-1" />
-                                                       {
-                                                            fieldState.error
-                                                                 .message
+                                                       Phone Number
+                                                  </label>
+                                                  <FormControl>
+                                                       <input
+                                                            id="phone"
+                                                            type="text"
+                                                            {...field}
+                                                            className={`w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-0  ${
+                                                                 fieldState.error
+                                                                      ? "border-red-500"
+                                                                      : "border-gray-300"
+                                                            }`}
+                                                            placeholder="Enter your phone number"
+                                                       />
+                                                  </FormControl>
+                                                  {fieldState.error
+                                                       ?.message && (
+                                                       <p className="mt-1 text-sm text-red-600 flex items-center">
+                                                            <AlertCircle className="w-4 h-4 mr-1" />
+                                                            {
+                                                                 fieldState
+                                                                      .error
+                                                                      .message
+                                                            }
+                                                       </p>
+                                                  )}
+                                             </FormItem>
+                                        )}
+                                   />
+
+                                   {/* Password Field */}
+                                   <FormField
+                                        control={form.control}
+                                        name="password"
+                                        render={({ field, fieldState }) => (
+                                             <FormItem>
+                                                  <label
+                                                       htmlFor="password"
+                                                       className="block text-sm font-medium text-gray-700 mb-1"
+                                                  >
+                                                       Password
+                                                  </label>
+                                                  <div className="relative">
+                                                       <FormControl>
+                                                            <input
+                                                                 id="password"
+                                                                 type={
+                                                                      showPassword
+                                                                           ? "text"
+                                                                           : "password"
+                                                                 }
+                                                                 {...field}
+                                                                 className={`w-full px-3 py-2 pr-10 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-0  ${
+                                                                      fieldState.error
+                                                                           ? "border-red-500"
+                                                                           : "border-gray-300"
+                                                                 }`}
+                                                                 placeholder="Enter your password"
+                                                            />
+                                                       </FormControl>
+                                                       <button
+                                                            type="button"
+                                                            onClick={() =>
+                                                                 setShowPassword(
+                                                                      !showPassword
+                                                                 )
+                                                            }
+                                                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                                                       >
+                                                            {showPassword ? (
+                                                                 <EyeOff className="w-4 h-4" />
+                                                            ) : (
+                                                                 <Eye className="w-4 h-4" />
+                                                            )}
+                                                       </button>
+                                                  </div>
+                                                  {fieldState.error
+                                                       ?.message && (
+                                                       <p className="mt-1 text-sm text-red-600 flex items-center">
+                                                            <AlertCircle className="w-4 h-4 mr-1" />
+                                                            {
+                                                                 fieldState
+                                                                      .error
+                                                                      .message
+                                                            }
+                                                       </p>
+                                                  )}
+
+                                                  <PasswordStrengthIndicator
+                                                       requirements={
+                                                            passwordRequirements
                                                        }
-                                                  </p>
-                                             )}
-                                        </FormItem>
-                                   )}
-                              />
+                                                  />
+                                             </FormItem>
+                                        )}
+                                   />
 
-                              {/* Terms Notice */}
-                              <Alert className="border-gray-200">
-                                   <AlertCircle className="h-4 w-4" />
-                                   <AlertDescription className="text-sm">
-                                        By creating an account, you agree to our
-                                        Terms of Service and Privacy Policy.
-                                   </AlertDescription>
-                              </Alert>
+                                   {/* Confirm Password Field */}
+                                   <FormField
+                                        control={form.control}
+                                        name="conformPass"
+                                        render={({ field, fieldState }) => (
+                                             <FormItem>
+                                                  <label
+                                                       htmlFor="conformPass"
+                                                       className="block text-sm font-medium text-gray-700 mb-1"
+                                                  >
+                                                       Confirm Password
+                                                  </label>
+                                                  <div className="relative">
+                                                       <FormControl>
+                                                            <input
+                                                                 id="conformPass"
+                                                                 type={
+                                                                      showConfirmPassword
+                                                                           ? "text"
+                                                                           : "password"
+                                                                 }
+                                                                 {...field}
+                                                                 className={`w-full px-3 py-2 pr-10 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-0  ${
+                                                                      fieldState.error
+                                                                           ? "border-red-500"
+                                                                           : "border-gray-300"
+                                                                 }`}
+                                                                 placeholder="Confirm your password"
+                                                            />
+                                                       </FormControl>
+                                                       <button
+                                                            type="button"
+                                                            onClick={() =>
+                                                                 setShowConfirmPassword(
+                                                                      !showConfirmPassword
+                                                                 )
+                                                            }
+                                                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                                                       >
+                                                            {showConfirmPassword ? (
+                                                                 <EyeOff className="w-4 h-4" />
+                                                            ) : (
+                                                                 <Eye className="w-4 h-4" />
+                                                            )}
+                                                       </button>
+                                                  </div>
+                                                  {fieldState.error
+                                                       ?.message && (
+                                                       <p className="mt-1 text-sm text-red-600 flex items-center">
+                                                            <AlertCircle className="w-4 h-4 mr-1" />
+                                                            {
+                                                                 fieldState
+                                                                      .error
+                                                                      .message
+                                                            }
+                                                       </p>
+                                                  )}
+                                             </FormItem>
+                                        )}
+                                   />
 
-                              {/* Submit Button */}
-                              <Button
-                                   type="submit"
-                                   className="text-white w-full"
-                                   disabled={form.formState.isSubmitting}
-                              >
-                                   {form.formState.isSubmitting ? (
-                                        <>
-                                             <ButtonLoading />
-                                             Creating Account...
-                                        </>
-                                   ) : (
-                                        "Create Account"
-                                   )}
-                              </Button>
+                                   {/* Terms Notice */}
+                                   <Alert className="border-gray-200">
+                                        <AlertCircle className="h-4 w-4" />
+                                        <AlertDescription className="text-sm">
+                                             By creating an account, you agree
+                                             to our Terms of Service and Privacy
+                                             Policy.
+                                        </AlertDescription>
+                                   </Alert>
+
+                                   {/* Submit Button */}
+                                   <Button
+                                        type="submit"
+                                        className="text-white w-full"
+                                        disabled={form.formState.isSubmitting}
+                                   >
+                                        {form.formState.isSubmitting ? (
+                                             <>
+                                                  <ButtonLoading />
+                                                  Creating Account...
+                                             </>
+                                        ) : (
+                                             "Create Account"
+                                        )}
+                                   </Button>
+                              </div>
                          </div>
-                    </div>
-               </form>
-          </Form>
+                    </form>
+               </Form>
+               <Toaster position="top-center" richColors closeButton />
+          </>
      );
 }
 
