@@ -3,16 +3,19 @@
 import ButtonLoading from "@/components/button-loading";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
-
 import { loginSchema } from "@/lib/schemas/zod/login-schema";
-
+import { signInServer } from "@/lib/server/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle, Eye, EyeOff } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast, Toaster } from "sonner";
 import { z } from "zod";
 
 export default function LoginForm() {
+     const router = useRouter();
+
      const [showPassword, setShowPassword] = useState(false);
      const form = useForm<z.infer<typeof loginSchema>>({
           resolver: zodResolver(loginSchema),
@@ -28,7 +31,22 @@ export default function LoginForm() {
       * This function can be used to send the login request to the server.
       */
      async function onSubmit(values: z.infer<typeof loginSchema>) {
-          console.log("Form submitted with values:", values);
+          const response = await signInServer(JSON.stringify(values));
+          if (!response?.success) {
+               toast.error(
+                    response.message || "Login failed. Please try again."
+               );
+               return;
+          }
+
+          if (response.success) {
+               toast.success(response.message || "Login successful!");
+               setTimeout(() => {
+                    router.push("/");
+               }, 1000);
+               form.reset();
+               return;
+          }
      }
 
      return (
@@ -158,19 +176,16 @@ export default function LoginForm() {
                                         className="w-full text-white"
                                         disabled={form.formState.isSubmitting}
                                    >
-                                        {form.formState.isSubmitting ? (
-                                             <>
-                                                  <ButtonLoading />
-                                                  Signing in...
-                                             </>
-                                        ) : (
-                                             "Sign In"
+                                        Sign In{" "}
+                                        {form.formState.isSubmitting && (
+                                             <ButtonLoading />
                                         )}
                                    </Button>
                               </div>
                          </div>
                     </form>
                </Form>
+               <Toaster position="top-center" richColors closeButton />
           </>
      );
 }

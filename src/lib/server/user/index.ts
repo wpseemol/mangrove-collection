@@ -1,7 +1,9 @@
 "use server";
 
+import { signIn } from "@/auth";
 import { User } from "@/lib/schemas/mongoose/user";
-import { RegisterUser, UserLoginInfo } from "@/types/user";
+import { RegisterUser, UserLoginInfo, UserLoginResponse } from "@/types/user";
+import { replaceMongoIds } from "@/utils/replace";
 import bcrypt from "bcryptjs";
 import { MongoServerError } from "mongodb";
 
@@ -83,6 +85,23 @@ export async function userRegister(loginInfo: string | null) {
      }
 }
 
+export async function googolProviderUserCreate(googleUser: string | null) {
+     if (!googleUser) {
+          return {
+               success: false,
+               message: "No Google user information provided.",
+          };
+     }
+     try {
+     } catch (error) {
+          return {
+               success: false,
+               message: "An error occurred while creating the Google user.",
+               error: JSON.stringify(error),
+          };
+     }
+}
+
 /**
  * Logs in a user with the provided login information.
  *
@@ -106,26 +125,42 @@ export async function userLogin(loginInfo: string | null) {
           }
 
           const projection = "name email role image provider password";
-          const user = await User.findOne({ email }, projection).lean();
+          const response = await User.findOne({ email }, projection).lean();
 
-          if (!user) {
+          if (!response) {
                console.log("Login User: User not found.");
                return { success: false, message: "User not found." };
+          }
+
+          const user = replaceMongoIds(response) as UserLoginResponse;
+
+          if (user.provider === "google") {
+               return {
+                    success: false,
+                    message: "You are already login with google",
+               };
           }
 
           const isPasswordValid = await bcrypt.compare(password, user.password);
 
           if (!isPasswordValid) {
                console.log("Login User: Invalid password.");
-               return { success: false, message: "Invalid password." };
+               return { success: false, message: "Password is not correct." };
           }
 
           return {
                success: true,
                message: "User logged in successfully.",
-               response: JSON.stringify(user),
+               user: {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    image: user.image,
+                    role: user.role,
+               },
           };
      } catch (error) {
+          console.log("Error in userLogin:", error);
           if (error instanceof Error) {
                return {
                     success: false,
@@ -133,5 +168,47 @@ export async function userLogin(loginInfo: string | null) {
                     error: JSON.stringify(error),
                };
           }
+     }
+}
+
+/**
+ * Signs in a user using the NextAuth.js credentials provider.
+ *
+ * @param loginInfo - A JSON string containing user login details.
+ * @returns An object indicating success or failure and a message.
+ */
+
+export async function signInServer(loginInfo: string | null) {
+     if (!loginInfo) {
+          console.log("No login information provided.");
+          return {
+               success: false,
+               message: "No login information provided.",
+          };
+     }
+     const { email, password } = JSON.parse(loginInfo) as UserLoginInfo;
+
+     if (!email || !password) {
+          console.log("Login User: Missing required fields.");
+          return { success: false, message: "Missing required fields." };
+     }
+
+     try {
+          await signIn("credentials", {
+               redirect: false,
+               email,
+               password,
+          });
+          return {
+               success: true,
+               message: "User logged in successfully.",
+          };
+     } catch (error) {
+          console.log(error);
+          return {
+               success: false,
+               message: (error?.code as string) || "Internal server error.",
+               error: JSON.stringify(error),
+          };
      }
 }

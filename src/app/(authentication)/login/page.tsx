@@ -1,19 +1,11 @@
 import SocialLogin from "../_components/social-login";
 import TabNavigation from "../_components/tab-navigation";
-import AlertMessage from "./_components/alert-message";
 import LoginForm from "./_components/login-form";
 
-export default async function LoginPage({
-     searchParams,
-}: {
-     searchParams: Promise<SearchParams>;
-}) {
-     const searchParamsCode = (await searchParams).code;
-
+export default async function LoginPage() {
      return (
-          <main className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+          <main className="min-h-screen bg-gray-50 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
                {" "}
-               {searchParamsCode && <AlertMessage message={searchParamsCode} />}
                <section className="max-w-md w-full space-y-8">
                     <header className="text-center">
                          <h2 className="text-3xl font-bold text-gray-900">
@@ -32,9 +24,4 @@ export default async function LoginPage({
                </section>
           </main>
      );
-}
-
-interface SearchParams {
-     code?: string;
-     error?: string;
 }
