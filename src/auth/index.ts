@@ -1,5 +1,5 @@
-import { userLogin } from "@/lib/server/user";
-
+import { googolProviderUserCreate, userLogin } from "@/lib/server/user";
+import type { User } from "next-auth";
 import NextAuth, { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
@@ -8,16 +8,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
      session: {
           strategy: "jwt",
      },
-
      pages: {
           signIn: "/login",
-          error: "/login/error",
+          error: "/login",
      },
-
      trustHost: true,
-
      secret: process.env.AUTH_SECRET,
-
      providers: [
           Credentials({
                name: "Credentials",
@@ -31,7 +27,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     credentials:
                          | Partial<Record<"email" | "password", unknown>>
                          | undefined
-               ) {
+               ): Promise<User | null> {
                     if (!credentials?.email || !credentials?.password) {
                          errorMessage =
                               "Email and Password are required for login.";
@@ -54,34 +50,34 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           Google({
                clientId: process.env.GOOGLE_CLIENT_ID,
                clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+               authorization: {
+                    params: {
+                         prompt: "consent",
+                         access_type: "offline",
+                         response_type: "code",
+                    },
+               },
           }),
      ],
 
      callbacks: {
           async signIn({ user, account }) {
-               // just for testing.
-               return true;
                if (account?.provider === "google") {
                     // do some thing.
 
                     const googleLoginUser = await googolProviderUserCreate(
-                         user
+                         JSON.stringify(user)
                     );
 
-                    if (
-                         googleLoginUser.status === 200 ||
-                         googleLoginUser.status === 201
-                    ) {
-                         if (googleLoginUser.data) {
-                              user.id = googleLoginUser.data.id;
-                              user.role = googleLoginUser.data.role;
-                              return true;
-                         }
+                    if (googleLoginUser.success && googleLoginUser.user) {
+                         user.id = googleLoginUser.user.id;
+                         user.role = googleLoginUser.user.role;
+
+                         return true;
                     }
 
                     errorMessage = googleLoginUser.message;
-                    throw new InvalidLoginError();
-                    return false;
+                    throw new InvalidGoogleLogin(googleLoginUser.message);
                }
 
                return true;
@@ -115,10 +111,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 let errorMessage = "Some thing is wrong.";
 
 class InvalidLoginError extends CredentialsSignin {
-     message = errorMessage;
+     type = "CredentialsSignin" as const;
      code = errorMessage;
-     name = errorMessage;
-     stack?: string | undefined = errorMessage;
-     cause?: (Record<string, unknown> & { err?: Error }) | undefined =
-          errorMessage;
+     cause = {
+          ...(errorMessage && { message: errorMessage }), // Only include if exists
+          err: new Error(errorMessage), // Actual Error object
+     };
+}
+
+class InvalidGoogleLogin extends CredentialsSignin {
+     type = "AccessDenied" as const;
+     code = errorMessage;
+     cause = {
+          ...(errorMessage && { message: errorMessage }), // Only include if exists
+          err: new Error(errorMessage), // Actual Error object
+     };
 }

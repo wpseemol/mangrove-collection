@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import LogoutBtn from "./_components/logout-btn";
 
 export default async function ProfilePage() {
      const session = await auth();
@@ -31,6 +32,9 @@ export default async function ProfilePage() {
                          <pre className="bg-gray-100 p-4 rounded-md">
                               {JSON.stringify(session, null, 2)}
                          </pre>
+                    </div>
+                    <div className="mt-6">
+                         <LogoutBtn />
                     </div>
                </section>
           </main>

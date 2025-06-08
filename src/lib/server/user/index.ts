@@ -2,7 +2,13 @@
 
 import { signIn } from "@/auth";
 import { User } from "@/lib/schemas/mongoose/user";
-import { RegisterUser, UserLoginInfo, UserLoginResponse } from "@/types/user";
+import {
+     RegisterUser,
+     UserGoogleRegister,
+     UserLoginInfo,
+     UserLoginResponse,
+} from "@/types/user";
+import { getErrorMessage } from "@/utils/error";
 import { replaceMongoIds } from "@/utils/replace";
 import bcrypt from "bcryptjs";
 import { MongoServerError } from "mongodb";
@@ -93,6 +99,41 @@ export async function googolProviderUserCreate(googleUser: string | null) {
           };
      }
      try {
+          const { name, email, image } = JSON.parse(
+               googleUser
+          ) as UserLoginResponse;
+
+          if (!name || !email) {
+               console.log("Google User: Missing required fields.");
+               return { success: false, message: "Missing required fields." };
+          }
+
+          const existingUser = await User.findOne({ email }).lean();
+
+          if (existingUser) {
+               const user = replaceMongoIds(existingUser) as UserGoogleRegister;
+               console.log("Google User: User already exists.");
+               return {
+                    success: true,
+                    message: "User already exists.",
+                    user,
+               };
+          }
+
+          const newUser = new User({
+               name,
+               email,
+               image,
+               provider: "google",
+          });
+
+          await newUser.save();
+
+          return {
+               success: true,
+               message: "Google user created successfully.",
+               user: replaceMongoIds(newUser) as UserGoogleRegister,
+          };
      } catch (error) {
           return {
                success: false,
@@ -168,6 +209,11 @@ export async function userLogin(loginInfo: string | null) {
                     error: JSON.stringify(error),
                };
           }
+
+          return {
+               success: false,
+               message: "Internal server error.",
+          };
      }
 }
 
@@ -186,14 +232,15 @@ export async function signInServer(loginInfo: string | null) {
                message: "No login information provided.",
           };
      }
-     const { email, password } = JSON.parse(loginInfo) as UserLoginInfo;
-
-     if (!email || !password) {
-          console.log("Login User: Missing required fields.");
-          return { success: false, message: "Missing required fields." };
-     }
 
      try {
+          const { email, password } = JSON.parse(loginInfo) as UserLoginInfo;
+
+          if (!email || !password) {
+               console.log("Login User: Missing required fields.");
+               return { success: false, message: "Missing required fields." };
+          }
+
           await signIn("credentials", {
                redirect: false,
                email,
@@ -204,10 +251,10 @@ export async function signInServer(loginInfo: string | null) {
                message: "User logged in successfully.",
           };
      } catch (error) {
-          console.log(error);
+          console.log("login error:", error);
           return {
                success: false,
-               message: (error?.code as string) || "Internal server error.",
+               message: getErrorMessage(error),
                error: JSON.stringify(error),
           };
      }
