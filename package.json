@@ -3,7 +3,6 @@
      "version": "0.1.0",
      "private": true,
      "scripts": {
-          "serverStart": "node server.js",
           "dev": "next dev --turbopack",
           "build": "next build",
           "start": "next start",
@@ -36,6 +35,7 @@
           "react-dom": "^19.0.0",
           "react-hook-form": "^7.56.1",
           "react-icons": "^5.5.0",
+          "react-image-magnify": "^2.7.4",
           "react-share": "^5.2.2",
           "react-slick": "^0.30.3",
           "slick-carousel": "^1.8.1",
