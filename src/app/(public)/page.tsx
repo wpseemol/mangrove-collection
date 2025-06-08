@@ -10,10 +10,13 @@ import PopularProductSection from "./_components/home/popular-product-section";
 /**
  * Meta information for the home page.
  */
-
-const profileImage = `${process.env.NEXT_PUBLIC_BASE_URL}assets/logo/mangrove-collection.png`;
+const profileImage = "/assets/logo/mangrove-collection.png"; // Changed to relative path
 
 export const metadata: Metadata = {
+     metadataBase: new URL(
+          process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
+     ),
+
      title: "Mangrove Collection | Natural Fish & Pure Honey",
      description:
           "Premium natural fish & 100% pure honey. Fresh, organic, sustainably sourced. Free delivery on orders over.",
@@ -33,7 +36,7 @@ export const metadata: Metadata = {
           siteName: "Mangrove Collection",
           images: [
                {
-                    url: profileImage,
+                    url: profileImage, // Now relative to metadataBase
                     width: 1200,
                     height: 630,
                     alt: "Mangrove Collection Organic Products",
@@ -57,20 +60,6 @@ export const metadata: Metadata = {
           images: [profileImage],
           site: "@MangroveCollect",
           creator: "@MangroveCollect",
-     },
-
-     other: {
-          "instagram:card": "summary_large_image",
-          "instagram:title": "Mangrove Collection | Natural Fish & Pure Honey",
-          "instagram:description":
-               "Discover our fresh, organic seafood and honey products",
-          "instagram:image": profileImage,
-
-          "linkedin:card": "summary_large_image",
-          "linkedin:title": "Mangrove Collection | Premium Organic Products",
-          "linkedin:description":
-               "Sustainable seafood and natural honey products",
-          "linkedin:image": profileImage,
      },
 };
 
