@@ -4,8 +4,8 @@ import Link from "next/link";
 import "../_components/quill-content-css.css";
 import DetailsBuyBtn from "./details-buy-btn";
 import DetailsCartBtn from "./details-cart-btn";
-import ImagePreview from "./image-preview";
 import PriceSection from "./price-section";
+import ProductImages from "./product-images";
 import QuantityCounter from "./quntity-counter";
 import SelectedVariant from "./selected-variant";
 import SocialShareBtn from "./social-share-btn";
@@ -29,7 +29,7 @@ export default function ProductDetails({
                >
                     {/* image preview component */}
                     {/* allImage function return array and input a single image url and images array */}
-                    <ImagePreview
+                    <ProductImages
                          allImage={allImageArray(
                               details.thumbnail,
                               details.images
