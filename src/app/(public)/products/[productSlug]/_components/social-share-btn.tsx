@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { FaFacebookF, FaLink, FaTwitter } from "react-icons/fa6";
 import { GrLinkedinOption } from "react-icons/gr";
@@ -19,10 +20,13 @@ export default function SocialShareBtn({
      title,
 }: SocialShareBtnType) {
      const [copied, setCopied] = useState(false);
-     const fullUrl =
-          typeof window !== "undefined"
-               ? window.location.href
-               : "URL_NOT_AVAILABLE";
+
+     const pathName = usePathname();
+     console.log(pathName);
+
+     const fullUrl = `${process.env.NEXT_PUBLIC_BASE_URL!}${pathName}`;
+
+     console.log(fullUrl);
 
      const clearDescription = stripHtml(description);
 
