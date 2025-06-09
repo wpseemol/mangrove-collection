@@ -22,11 +22,8 @@ export default function SocialShareBtn({
      const [copied, setCopied] = useState(false);
 
      const pathName = usePathname();
-     console.log(pathName);
 
      const fullUrl = `${process.env.NEXT_PUBLIC_BASE_URL!}${pathName}`;
-
-     console.log(fullUrl);
 
      const clearDescription = stripHtml(description);
 
