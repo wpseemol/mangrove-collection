@@ -42,7 +42,7 @@ export default function CartBtn({
                disabled={isAlreadyCard || loading}
                variant="default"
                size="sm"
-               className={`text-neutral-100 hover:bg-primary-foreground disabled:pointer-events-auto cursor-pointer ${
+               className={`text-neutral-100 hover:bg-primary-foreground disabled:pointer-events-auto cursor-pointer text-xs ${
                     loading
                          ? "disabled:cursor-progress"
                          : "disabled:cursor-not-allowed"

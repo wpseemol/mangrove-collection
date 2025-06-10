@@ -48,7 +48,7 @@ export default function PurchaseBtn({
                size="sm"
                className={`text-neutral-100 hover:bg-primary-foreground 
                      group-hover:animate-jump animate-once animate-duration-[3000ms]
-                     shadow-xl disabled:pointer-events-auto cursor-pointer ${
+                     shadow-xl disabled:pointer-events-auto cursor-pointer text-xs ${
                           loading
                                ? "disabled:cursor-progress"
                                : "disabled:cursor-not-allowed"
