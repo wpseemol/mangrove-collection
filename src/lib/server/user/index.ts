@@ -1,18 +1,18 @@
 "use server";
 
 import { signIn } from "@/auth";
+import { connectMongoDB } from "@/db/connections";
 import { User } from "@/lib/schemas/mongoose/user";
 import {
      RegisterUser,
-     UserGoogleRegister,
      UserLoginInfo,
      UserLoginResponse,
+     UserResponseType,
 } from "@/types/user";
 import { getErrorMessage } from "@/utils/error";
 import { replaceMongoIds } from "@/utils/replace";
 import bcrypt from "bcryptjs";
 import { MongoServerError } from "mongodb";
-import { Types } from "mongoose";
 
 /**
  * Registers a new user with the provided login information.
@@ -109,42 +109,45 @@ export async function googolProviderUserCreate(googleUser: string | null) {
                return { success: false, message: "Missing required fields." };
           }
 
-          const existingUser = await User.findOne({ email }).lean();
+          await connectMongoDB();
+
+          const existingUser = await User.findOne({
+               email,
+          }).lean<UserResponseType>();
 
           if (existingUser) {
-               const user: UserGoogleRegister = {
-                    id: (existingUser._id as Types.ObjectId).toString(),
-                    name: existingUser.name as string,
-                    email: existingUser.email as string,
-                    role: existingUser.role as string,
-                    image: existingUser.image as string,
-               };
                return {
                     success: true,
                     message: "User already exists.",
-                    user,
+                    user: {
+                         id: existingUser._id.toString(),
+                         name: existingUser.name,
+                         email: existingUser.email,
+                         role: existingUser.role,
+                         image: existingUser.image,
+                         provider: existingUser.provider,
+                    },
                };
           }
 
-          const newUser = await User.create({
+          const newUser = (await User.create({
                name,
                email,
                image,
                provider: "google",
-          });
-
-          const user: UserGoogleRegister = {
-               id: (newUser._id as Types.ObjectId).toString(),
-               name: newUser.name as string,
-               email: newUser.email as string,
-               role: newUser.role as string,
-               image: newUser.image as string,
-          };
+          })) as UserResponseType;
 
           return {
                success: true,
                message: "Google user created successfully.",
-               user,
+               user: {
+                    id: newUser._id.toString(),
+                    name: newUser.name,
+                    email: newUser.email,
+                    role: newUser.role,
+                    image: newUser.image,
+                    provider: newUser.provider,
+               },
           };
      } catch (error) {
           return {
@@ -176,6 +179,8 @@ export async function userLogin(loginInfo: string | null) {
                console.log("Login User: Missing required fields.");
                return { success: false, message: "Missing required fields." };
           }
+
+          await connectMongoDB();
 
           const projection = "name email role image provider password";
           const response = await User.findOne({ email }, projection).lean();

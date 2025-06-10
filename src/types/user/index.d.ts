@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+
 /**
  * Represents the data required to register a new user.
  *
@@ -69,4 +71,14 @@ export interface UserGoogleRegister {
      image: string | null;
      role: "user" | "creator" | "admin";
      provider: string;
+}
+
+export interface UserResponseType {
+     _id: Types.ObjectId;
+     name: string;
+     email: string;
+     role: "user" | "creator" | "admin";
+     image: string;
+     provider: string;
+     // Add other fields here
 }

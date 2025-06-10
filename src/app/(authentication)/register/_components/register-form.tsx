@@ -363,8 +363,8 @@ export default function RegisterForm() {
                                    >
                                         {form.formState.isSubmitting ? (
                                              <>
+                                                  Creating Account
                                                   <ButtonLoading />
-                                                  Creating Account...
                                              </>
                                         ) : (
                                              "Create Account"

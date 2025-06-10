@@ -39,6 +39,7 @@ export default function LoginWithGoogleBtn() {
      return (
           <Button
                onClick={handleGoogleLogin}
+               disabled={loading}
                variant="outline"
                className="w-full mt-4 group border-gray-200 cursor-pointer disabled:cursor-wait"
           >

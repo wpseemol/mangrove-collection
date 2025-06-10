@@ -77,7 +77,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     }
 
                     errorMessage = googleLoginUser.message;
-                    throw new InvalidGoogleLogin(googleLoginUser.message);
+                    throw new InvalidLoginError();
+                    return false;
                }
 
                return true;
@@ -111,19 +112,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 let errorMessage = "Some thing is wrong.";
 
 class InvalidLoginError extends CredentialsSignin {
-     type = "CredentialsSignin" as const;
+     message = errorMessage;
      code = errorMessage;
-     cause = {
-          ...(errorMessage && { message: errorMessage }), // Only include if exists
-          err: new Error(errorMessage), // Actual Error object
-     };
-}
-
-class InvalidGoogleLogin extends CredentialsSignin {
-     type = "AccessDenied" as const;
-     code = errorMessage;
-     cause = {
-          ...(errorMessage && { message: errorMessage }), // Only include if exists
-          err: new Error(errorMessage), // Actual Error object
-     };
+     name = errorMessage;
+     stack?: string | undefined = errorMessage;
+     cause?: (Record<string, unknown> & { err?: Error }) | undefined;
 }
