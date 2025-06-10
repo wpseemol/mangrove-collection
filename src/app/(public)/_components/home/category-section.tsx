@@ -32,7 +32,7 @@ export default async function CategorySection() {
                                    className="bg-card py-4 sm:px-2 px-1 group
                             hover:text-primary-foreground duration-300 rounded border-neutral-900/15 overflow-hidden 
                             md:h-[175px] h-[160px] w-full justify-self-center flex flex-col justify-center items-center 
-                            hover:shadow-2xl hover:scale-105"
+                             hover:-translate-y-0.5"
                               >
                                    <Link
                                         href={`/products?category=${category?.slug}`}
