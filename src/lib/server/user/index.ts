@@ -12,6 +12,7 @@ import { getErrorMessage } from "@/utils/error";
 import { replaceMongoIds } from "@/utils/replace";
 import bcrypt from "bcryptjs";
 import { MongoServerError } from "mongodb";
+import { Types } from "mongoose";
 
 /**
  * Registers a new user with the provided login information.
@@ -111,8 +112,13 @@ export async function googolProviderUserCreate(googleUser: string | null) {
           const existingUser = await User.findOne({ email }).lean();
 
           if (existingUser) {
-               const user = replaceMongoIds(existingUser) as UserGoogleRegister;
-               console.log("Google User: User already exists.");
+               const user: UserGoogleRegister = {
+                    id: (existingUser._id as Types.ObjectId).toString(),
+                    name: existingUser.name as string,
+                    email: existingUser.email as string,
+                    role: existingUser.role as string,
+                    image: existingUser.image as string,
+               };
                return {
                     success: true,
                     message: "User already exists.",
@@ -120,19 +126,25 @@ export async function googolProviderUserCreate(googleUser: string | null) {
                };
           }
 
-          const newUser = new User({
+          const newUser = await User.create({
                name,
                email,
                image,
                provider: "google",
           });
 
-          await newUser.save();
+          const user: UserGoogleRegister = {
+               id: (newUser._id as Types.ObjectId).toString(),
+               name: newUser.name as string,
+               email: newUser.email as string,
+               role: newUser.role as string,
+               image: newUser.image as string,
+          };
 
           return {
                success: true,
                message: "Google user created successfully.",
-               user: replaceMongoIds(newUser) as UserGoogleRegister,
+               user,
           };
      } catch (error) {
           return {

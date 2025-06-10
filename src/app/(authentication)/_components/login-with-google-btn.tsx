@@ -34,13 +34,13 @@ export default function LoginWithGoogleBtn() {
                     router.push("/login");
                }, 1500);
           }
-     }, [code,searchParams,router]);
+     }, [code, searchParams, router]);
 
      return (
           <Button
                onClick={handleGoogleLogin}
                variant="outline"
-               className="w-full mt-4 group"
+               className="w-full mt-4 group border-gray-200 cursor-pointer disabled:cursor-wait"
           >
                <svg
                     xmlns="http://www.w3.org/2000/svg"
