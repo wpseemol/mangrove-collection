@@ -361,13 +361,9 @@ export default function RegisterForm() {
                                         className="text-white w-full"
                                         disabled={form.formState.isSubmitting}
                                    >
-                                        {form.formState.isSubmitting ? (
-                                             <>
-                                                  Creating Account
-                                                  <ButtonLoading />
-                                             </>
-                                        ) : (
-                                             "Create Account"
+                                        Create Account
+                                        {form.formState.isSubmitting && (
+                                             <ButtonLoading />
                                         )}
                                    </Button>
                               </div>
