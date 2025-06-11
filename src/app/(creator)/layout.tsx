@@ -1,12 +1,23 @@
-export default function CreatorLayout({
-    children,
+import { auth } from "@/auth";
+import { userRoleCheck } from "@/lib/server/user";
+import { notFound } from "next/navigation";
+
+export default async function CreatorLayout({
+     children,
 }: Readonly<{
-    children: React.ReactNode;
+     children: React.ReactNode;
 }>) {
-    return (
-        <>
-            <p>creator layout</p>
-            {children}
-        </>
-    );
+     const session = await auth();
+
+     const isAdmin = await userRoleCheck(
+          session.user.id,
+          session.user.role,
+          "creator"
+     );
+
+     if (!isAdmin || !session) {
+          notFound();
+          return;
+     }
+     return <>{children}</>;
 }

@@ -5,6 +5,7 @@ import { connectMongoDB } from "@/db/connections";
 import { User } from "@/lib/schemas/mongoose/user";
 import {
      RegisterUser,
+     Role,
      UserLoginInfo,
      UserLoginResponse,
      UserResponseType,
@@ -274,5 +275,38 @@ export async function signInServer(loginInfo: string | null) {
                message: getErrorMessage(error),
                error: JSON.stringify(error),
           };
+     }
+}
+
+/**
+ * Checks if the given user has an admin role.
+ *
+ * @param userId - type `string` The user object to check.
+ * @param userRole - type `Role` User Role type admin,creator,user
+ * @param staticRole - type `Role` User Role the is the check vale
+ * @returns True if the user is an admin, false otherwise.
+ */
+export async function userRoleCheck(
+     userId: string,
+     userRole: Role,
+     staticRole: Role
+): boolean {
+     if (!userId || !userRole || !staticRole) return false;
+
+     try {
+          await connectMongoDB();
+
+          const showFiled = "role";
+          const userResponse = await User.findOne(
+               { _id: userId },
+               showFiled
+          ).lean<{ role: Role }>();
+
+          if (!userResponse) return false;
+
+          return staticRole === userRole && userResponse.role === staticRole;
+     } catch (error) {
+          console.log("is admin Check error:", error);
+          return false;
      }
 }

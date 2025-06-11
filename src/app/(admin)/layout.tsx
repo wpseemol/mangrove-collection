@@ -1,12 +1,24 @@
-export default function AdminLayout({
-    children,
+import { auth } from "@/auth";
+import { userRoleCheck } from "@/lib/server/user";
+import { notFound } from "next/navigation";
+
+export default async function AdminLayout({
+     children,
 }: Readonly<{
-    children: React.ReactNode;
+     children: React.ReactNode;
 }>) {
-    return (
-        <>
-        <p>this is admin layout</p>
-            {children}
-        </>
-    );
+     const session = await auth();
+
+     const isAdmin = await userRoleCheck(
+          session.user.id,
+          session.user.role,
+          "admin"
+     );
+
+     if (!isAdmin || !session) {
+          notFound();
+          return;
+     }
+
+     return <>{children}</>;
 }

@@ -64,21 +64,48 @@ export interface GoogleUserRegister {
      image: string | null;
 }
 
+/**
+ * Represents a user registered via Google authentication.
+ *
+ * @type UserGoogleRegister
+ * @property id - The unique identifier of the user.
+ * @property name - The name of the user.
+ * @property email - The email address of the user.
+ * @property image - The profile image URL of the user, or null if not available.
+ * @property role - The role of the user, which can be "user", "creator", or "admin".
+ * @property provider - The authentication provider (e.g., "google").
+ */
 export interface UserGoogleRegister {
      id: string;
      name: string;
      email: string;
      image: string | null;
-     role: "user" | "creator" | "admin";
+     role: Role;
      provider: string;
 }
 
+/**
+ * Represents the response type for a user object.
+ *
+ * @type UserResponseType
+ * @property _id - The MongoDB ObjectId of the user.
+ * @property name - The name of the user.
+ * @property email - The email address of the user.
+ * @property role - The role of the user, which can be "user", "creator", or "admin".
+ * @property image - The profile image URL of the user.
+ * @property provider - The authentication provider used.
+ */
 export interface UserResponseType {
      _id: Types.ObjectId;
      name: string;
      email: string;
-     role: "user" | "creator" | "admin";
+     role: Role;
      image: string;
      provider: string;
      // Add other fields here
 }
+
+/**
+ * Defines the possible roles a user can have in the system.
+ */
+export type Role = "user" | "creator" | "admin";
