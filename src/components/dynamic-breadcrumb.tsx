@@ -3,15 +3,15 @@
 import {
      Breadcrumb,
      BreadcrumbItem,
-     BreadcrumbLink,
      BreadcrumbList,
      BreadcrumbPage,
      BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 
-export default function ProfileBreadcrumb() {
+export default function DynamicBreadcrumb() {
      const pathname = usePathname();
      const pathSegments = pathname ? pathname.split("/").filter(Boolean) : [];
 
@@ -34,12 +34,12 @@ export default function ProfileBreadcrumb() {
                                              {item.name}
                                         </BreadcrumbPage>
                                    ) : (
-                                        <BreadcrumbLink
+                                        <Link
                                              href={item.href}
                                              className="capitalize"
                                         >
                                              {item.name}
-                                        </BreadcrumbLink>
+                                        </Link>
                                    )}
                               </BreadcrumbItem>
                               {idx < breadcrumbItems.length - 1 && (

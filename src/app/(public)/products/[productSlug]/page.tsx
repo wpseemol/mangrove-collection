@@ -1,11 +1,4 @@
-import {
-     Breadcrumb,
-     BreadcrumbItem,
-     BreadcrumbLink,
-     BreadcrumbList,
-     BreadcrumbPage,
-     BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+import DynamicBreadcrumb from "@/components/dynamic-breadcrumb";
 import { getProductsDetails } from "@/lib/server/products";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -102,25 +95,7 @@ export default async function ProductDetailsPage({
      return (
           <main className="container mx-auto min-h-[calc(100vh-25rem)]">
                {/* breadcrumb Product page*/}
-               <Breadcrumb>
-                    <BreadcrumbList>
-                         <BreadcrumbItem>
-                              <BreadcrumbLink href="/">Home</BreadcrumbLink>
-                         </BreadcrumbItem>
-                         <BreadcrumbSeparator />
-                         <BreadcrumbItem>
-                              <BreadcrumbLink href="/products">
-                                   Products
-                              </BreadcrumbLink>
-                         </BreadcrumbItem>
-                         <BreadcrumbSeparator />
-                         <BreadcrumbItem>
-                              <BreadcrumbPage className="capitalize">
-                                   {productDetails.name}
-                              </BreadcrumbPage>
-                         </BreadcrumbItem>
-                    </BreadcrumbList>
-               </Breadcrumb>
+               <DynamicBreadcrumb />
                {/* breadcrumb Product page*/}
 
                <VariantContentUpdateProvider>

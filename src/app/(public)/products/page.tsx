@@ -1,12 +1,4 @@
-import {
-     Breadcrumb,
-     BreadcrumbItem,
-     BreadcrumbLink,
-     BreadcrumbList,
-     BreadcrumbPage,
-     BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-
+import DynamicBreadcrumb from "@/components/dynamic-breadcrumb";
 import { getCategoryWithCount } from "@/lib/server/category";
 import { Metadata } from "next";
 import FilterSection from "./_components/filter-section";
@@ -28,18 +20,7 @@ export default async function ProductsPage({
      return (
           <main className="container mx-auto min-h-[calc(100vh-25.45rem)]">
                {/* breadcrumb Product page*/}
-               <Breadcrumb>
-                    <BreadcrumbList>
-                         <BreadcrumbItem>
-                              <BreadcrumbLink href="/">Home</BreadcrumbLink>
-                         </BreadcrumbItem>
-                         <BreadcrumbSeparator />
-                         <BreadcrumbItem>
-                              <BreadcrumbPage>Products</BreadcrumbPage>
-                         </BreadcrumbItem>
-                    </BreadcrumbList>
-               </Breadcrumb>
-               {/* breadcrumb Product page*/}
+               <DynamicBreadcrumb />
 
                <section className="grid lg:grid-cols-5 md:grid-cols-4 grid-cols-1 gap-6 pt-4 pb-16 items-start justify-center sm:mx-auto mx-2 ">
                     <FilterSection categoryWithCount={categoryWithCount} />

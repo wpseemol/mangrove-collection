@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
+import DynamicBreadcrumb from "@/components/dynamic-breadcrumb";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import ProfileBreadcrumb from "./profile-breadcrumb";
 
 export default async function ProfileLayouts({
      children,
@@ -18,13 +18,16 @@ export default async function ProfileLayouts({
      return (
           <main className="container mx-auto md:min-h-[calc(100vh-25rem)]">
                {/* breadcrumb Product page*/}
-               <ProfileBreadcrumb />
+               <DynamicBreadcrumb />
 
                <section className="flex md:flex-row flex-col items-center justify-center md:justify-between 2xl:max-w-7xl lg:max-w-6xl md:max-w-5xl mx-auto my-6 md:gap-0 gap-6">
                     <div className="flex items-center gap-4">
                          <figure className="border border-gray-200 rounded-full overflow-hidden">
                               <Image
-                                   src={session.user.image}
+                                   src={
+                                        session.user.image ||
+                                        "/assets/logo/user-avatar.png"
+                                   }
                                    alt={session.user.name}
                                    width={80}
                                    height={80}
