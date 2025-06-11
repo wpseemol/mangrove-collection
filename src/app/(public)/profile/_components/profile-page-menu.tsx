@@ -26,12 +26,22 @@ export default function ProfilePagMenu() {
                     }}
                     className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 "
                >
-                    {menuItems.map((item) => (
+                    {profileMenuItems.map((item, idx) => (
                          <motion.li
                               key={item.id}
+                              initial="hidden"
+                              animate="visible"
+                              viewport={{ once: true }}
                               variants={{
                                    hidden: { opacity: 0, y: 20 },
-                                   visible: { opacity: 1, y: 0 },
+                                   visible: {
+                                        opacity: 1,
+                                        y: 0,
+                                        transition: {
+                                             delay: 0.4 + idx * 0.1,
+                                             duration: 0.4 + idx * 0.1,
+                                        },
+                                   },
                               }}
                               className=""
                          >
@@ -52,7 +62,7 @@ export default function ProfilePagMenu() {
      );
 }
 
-const menuItems: ProfileMenuList[] = [
+export const profileMenuItems: ProfileMenuList[] = [
      {
           id: 1,
           title: "Orders",

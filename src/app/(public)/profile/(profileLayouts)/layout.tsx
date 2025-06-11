@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { notFound } from "next/navigation";
 import ProfileLayouts from "../_components/profile-layouts";
+import ProfileSubMenu from "../_components/profile-sub-menu";
 
 export default async function ProfileSubLayout({
      children,
@@ -14,5 +15,10 @@ export default async function ProfileSubLayout({
           return;
      }
 
-     return <ProfileLayouts>{children}</ProfileLayouts>;
+     return (
+          <ProfileLayouts>
+               <ProfileSubMenu />
+               {children}
+          </ProfileLayouts>
+     );
 }

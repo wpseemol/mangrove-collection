@@ -1,3 +1,4 @@
+import * as motion from "motion/react-client";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -102,10 +103,20 @@ export default function Footer() {
                               Product
                          </h3>
                          <ul className="space-y-1">
-                              {products.map((product) => (
-                                   <li
+                              {products.map((product, idx) => (
+                                   <motion.li
                                         key={product.id}
                                         className="animate-delay-100 hover:text-primary-foreground duration-150"
+                                        viewport={{ once: true, amount: 1 }}
+                                        initial={{
+                                             opacity: 0,
+                                             y: 20,
+                                        }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{
+                                             delay: 0.4 + idx * 0.1,
+                                             duration: 0.4 + idx * 0.1,
+                                        }}
                                    >
                                         <Link
                                              className="hover:translate-x-2 inline-block duration-500"
@@ -114,7 +125,7 @@ export default function Footer() {
                                         >
                                              {product.label}
                                         </Link>
-                                   </li>
+                                   </motion.li>
                               ))}
                          </ul>
                     </div>
@@ -124,9 +135,19 @@ export default function Footer() {
                          </h3>
 
                          <ul className="space-y-1">
-                              {allCompany.map((company) => (
-                                   <li
+                              {allCompany.map((company, idx) => (
+                                   <motion.li
                                         key={company.id}
+                                        viewport={{ once: true, amount: 1 }}
+                                        initial={{
+                                             opacity: 0,
+                                             y: 20,
+                                        }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{
+                                             delay: 0.4 + idx * 0.1,
+                                             duration: 0.4 + idx * 0.1,
+                                        }}
                                         className="animate-delay-100 hover:text-primary-foreground duration-150"
                                    >
                                         <Link
@@ -136,7 +157,7 @@ export default function Footer() {
                                         >
                                              {company.label}
                                         </Link>
-                                   </li>
+                                   </motion.li>
                               ))}
                          </ul>
                     </div>
@@ -145,9 +166,15 @@ export default function Footer() {
                               Developers
                          </h3>
                          <ul className="space-y-1 ">
-                              {developers.map((developer) => (
-                                   <li
+                              {developers.map((developer, idx) => (
+                                   <motion.li
                                         key={developer.id}
+                                        initial={{ opacity: 0, scale: 0.95 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        transition={{
+                                             delay: 0.4 + idx * 0.1,
+                                             duration: 0.4 + idx * 0.1,
+                                        }}
                                         className="animate-delay-100 hover:text-primary-foreground duration-150"
                                    >
                                         <Link
@@ -157,7 +184,7 @@ export default function Footer() {
                                         >
                                              {developer.label}
                                         </Link>
-                                   </li>
+                                   </motion.li>
                               ))}
                          </ul>
                     </div>

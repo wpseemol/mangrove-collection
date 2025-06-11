@@ -1,7 +1,8 @@
 import * as motion from "motion/react-client";
+import Link from "next/link";
 export default function OrderPages() {
      return (
-          <main className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-6">
+          <div className="flex flex-col items-center justify-center p-6 py-6">
                <motion.div
                     initial={{ opacity: 0, y: 40 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -16,11 +17,16 @@ export default function OrderPages() {
                          orders here!
                     </p>
                     <div className="flex justify-center">
-                         <button className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-                              Shop Now
+                         <button className=" bg-blue-600 text-white rounded hover:bg-blue-700 transition overflow-hidden">
+                              <Link
+                                   href="/products"
+                                   className="w-full inline-block border px-6 py-2 rounded"
+                              >
+                                   Shop Now
+                              </Link>
                          </button>
                     </div>
                </motion.div>
-          </main>
+          </div>
      );
 }

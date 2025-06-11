@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function EditProfilePage() {
      return (
-          <div className="md:grid grid-cols-2 items-center w-full">
+          <div className="md:grid grid-cols-2 items-center w-full my-6">
                <div className="flex flex-col items-center">
                     <motion.form
                          initial={{ opacity: 0, y: 40 }}
