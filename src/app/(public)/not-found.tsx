@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function NotFoundPage() {
      return (
-          <main className="flex items-center justify-center h-screen bg-gray-900">
+          <main className="flex items-center justify-center h-[calc(100vh-24.5rem)] bg-gray-900">
                <div className="text-center">
                     <motion.h1
                          className="text-9xl font-extrabold text-white"

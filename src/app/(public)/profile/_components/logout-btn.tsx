@@ -18,7 +18,13 @@ export default function LogoutBtn() {
      }
      return (
           <>
-               <Button onClick={handleLogout} className="text-white">
+               <Button
+                    onClick={handleLogout}
+                    disabled={loading}
+                    size="lg"
+                    className="text-white cursor-pointer disabled:cursor-wait"
+               >
+                    Logout
                     {loading ? (
                          <svg
                               className="animate-spin h-5 w-5 text-white"
@@ -42,7 +48,7 @@ export default function LogoutBtn() {
                          </svg>
                     ) : (
                          <svg
-                              className="mr-2 h-5 w-5 text-white"
+                              className="h-5 w-5 text-white"
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
                               viewBox="0 0 24 24"
@@ -56,7 +62,6 @@ export default function LogoutBtn() {
                               />
                          </svg>
                     )}
-                    Logout
                </Button>
           </>
      );
