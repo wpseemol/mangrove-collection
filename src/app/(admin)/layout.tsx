@@ -9,13 +9,18 @@ export default async function AdminLayout({
 }>) {
      const session = await auth();
 
+     if (!session) {
+          notFound();
+          return;
+     }
+
      const isAdmin = await userRoleCheck(
           session.user.id,
           session.user.role,
-          "admin"
+          "creator"
      );
 
-     if (!isAdmin || !session) {
+     if (!isAdmin) {
           notFound();
           return;
      }

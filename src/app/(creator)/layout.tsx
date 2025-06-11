@@ -9,13 +9,17 @@ export default async function CreatorLayout({
 }>) {
      const session = await auth();
 
+     if (!session) {
+          notFound();
+          return;
+     }
      const isAdmin = await userRoleCheck(
           session.user.id,
           session.user.role,
           "creator"
      );
 
-     if (!isAdmin || !session) {
+     if (!isAdmin) {
           notFound();
           return;
      }
