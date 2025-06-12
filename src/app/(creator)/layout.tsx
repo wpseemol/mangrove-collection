@@ -13,6 +13,7 @@ export default async function CreatorLayout({
           notFound();
           return;
      }
+
      const isAdmin = await userRoleCheck(
           session.user.id,
           session.user.role,

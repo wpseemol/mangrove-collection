@@ -290,7 +290,7 @@ export async function userRoleCheck(
      userId: string,
      userRole: Role,
      staticRole: Role
-): boolean {
+): Promise<boolean> {
      if (!userId || !userRole || !staticRole) return false;
 
      try {

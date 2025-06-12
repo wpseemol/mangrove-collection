@@ -1,6 +1,9 @@
 import { auth } from "@/auth";
 import { userRoleCheck } from "@/lib/server/user";
 import { notFound } from "next/navigation";
+import DashboardMenuLayout from "./dashboard/_components/dashboard-menu-layout";
+import DashboardLoginUser from "./dashboard/_components/dashboard-menu-login-user";
+import DashboardProviders from "./dashboard/_components/dashboard-providers";
 
 export default async function AdminLayout({
      children,
@@ -17,7 +20,7 @@ export default async function AdminLayout({
      const isAdmin = await userRoleCheck(
           session.user.id,
           session.user.role,
-          "creator"
+          "admin"
      );
 
      if (!isAdmin) {
@@ -25,5 +28,14 @@ export default async function AdminLayout({
           return;
      }
 
-     return <>{children}</>;
+     return (
+          <>
+               {" "}
+               <DashboardProviders>
+                    <DashboardMenuLayout userMenu={<DashboardLoginUser />}>
+                         {children}
+                    </DashboardMenuLayout>
+               </DashboardProviders>
+          </>
+     );
 }
