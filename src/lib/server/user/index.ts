@@ -100,6 +100,9 @@ export async function googolProviderUserCreate(googleUser: string | null) {
                message: "No Google user information provided.",
           };
      }
+
+     const connectMongo = await connectMongoDB();
+
      try {
           const { name, email, image } = JSON.parse(
                googleUser
@@ -109,8 +112,6 @@ export async function googolProviderUserCreate(googleUser: string | null) {
                console.log("Google User: Missing required fields.");
                return { success: false, message: "Missing required fields." };
           }
-
-          await connectMongoDB();
 
           const existingUser = await User.findOne({
                email,
@@ -156,6 +157,8 @@ export async function googolProviderUserCreate(googleUser: string | null) {
                message: "An error occurred while creating the Google user.",
                error: JSON.stringify(error),
           };
+     } finally {
+          await connectMongo.disconnect();
      }
 }
 
@@ -173,6 +176,8 @@ export async function userLogin(loginInfo: string | null) {
                message: "No login information provided.",
           };
      }
+
+     const connectMongo = await connectMongoDB();
      try {
           const { email, password } = JSON.parse(loginInfo) as UserLoginInfo;
 
@@ -180,8 +185,6 @@ export async function userLogin(loginInfo: string | null) {
                console.log("Login User: Missing required fields.");
                return { success: false, message: "Missing required fields." };
           }
-
-          await connectMongoDB();
 
           const projection = "name email role image provider password";
           const response = await User.findOne({ email }, projection).lean();
@@ -232,6 +235,8 @@ export async function userLogin(loginInfo: string | null) {
                success: false,
                message: "Internal server error.",
           };
+     } finally {
+          await connectMongo.disconnect();
      }
 }
 
@@ -293,9 +298,8 @@ export async function userRoleCheck(
 ): Promise<boolean> {
      if (!userId || !userRole || !staticRole) return false;
 
+     const connectMong = await connectMongoDB();
      try {
-          await connectMongoDB();
-
           const showFiled = "role";
           const userResponse = await User.findOne(
                { _id: userId },
@@ -308,5 +312,7 @@ export async function userRoleCheck(
      } catch (error) {
           console.log("is admin Check error:", error);
           return false;
+     } finally {
+          await connectMong.disconnect();
      }
 }

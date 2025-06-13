@@ -48,30 +48,41 @@ export function SaleChart() {
                          config={chartConfig}
                          className="dark:text-white"
                     >
-                         <BarChart accessibilityLayer data={chartData}>
-                              <CartesianGrid vertical={false} />
+                         <BarChart
+                              accessibilityLayer
+                              data={chartData}
+                              className="dark:text-white"
+                         >
+                              <CartesianGrid
+                                   vertical={false}
+                                   className="dark:text-white"
+                              />
                               <XAxis
                                    dataKey="month"
                                    tickLine={true}
                                    tickMargin={10}
                                    axisLine={true}
                                    tickFormatter={(value) => value.slice(0, 3)}
+                                   className="dark:text-white"
                               />
                               <ChartTooltip
                                    cursor={false}
                                    content={
                                         <ChartTooltipContent indicator="dashed" />
                                    }
+                                   className="dark:text-white"
                               />
                               <Bar
                                    dataKey="desktop"
                                    fill="var(--color-desktop)"
                                    radius={4}
+                                   className="dark:text-white"
                               />
                               <Bar
                                    dataKey="mobile"
                                    fill="var(--color-mobile)"
                                    radius={4}
+                                   className="dark:text-white"
                               />
                          </BarChart>
                     </ChartContainer>
