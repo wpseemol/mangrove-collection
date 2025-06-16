@@ -35,7 +35,7 @@ import {
      TableRow,
 } from "@/components/ui/table";
 import { useCartProducts } from "@/hooks";
-import { CartProductsType } from "@/lib/server/cart";
+import { CartProductsType } from "@/lib/actions/cart";
 import Image from "next/image";
 import Link from "next/link";
 import CartItemRemove from "./cart-item-remove";

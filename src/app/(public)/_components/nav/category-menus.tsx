@@ -1,5 +1,5 @@
 import CustomLink from "@/components/custom-link";
-import { getCategory } from "@/lib/server/category";
+import { getCategory } from "@/lib/actions/category";
 import Image from "next/image";
 
 export default async function CategoryMenus() {

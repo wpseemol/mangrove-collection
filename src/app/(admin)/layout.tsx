@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { userRoleCheck } from "@/lib/server/user";
+import { userRoleCheck } from "@/lib/actions/user";
 import { notFound } from "next/navigation";
 import DashboardMenuLayout from "./dashboard/_components/dashboard-menu-layout";
 import DashboardLoginUser from "./dashboard/_components/dashboard-menu-login-user";

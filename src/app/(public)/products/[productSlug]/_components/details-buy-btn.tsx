@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useVariantUpdate } from "@/hooks";
-import { setPurchaseData } from "@/lib/server/purchase";
+import { setPurchaseData } from "@/lib/actions/purchase";
 import { PurchaseItemType } from "@/types/purchase";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";

@@ -9,7 +9,7 @@ export default async function AddProductLayout({
 }) {
      const session = await auth();
 
-     if (!session || session?.user.role == !"admin") {
+     if (!session || session?.user.role !== "admin") {
           notFound();
           return;
      }

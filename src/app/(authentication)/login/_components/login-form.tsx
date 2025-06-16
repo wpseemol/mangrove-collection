@@ -3,8 +3,8 @@
 import ButtonLoading from "@/components/button-loading";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import { signInServer } from "@/lib/actions/user";
 import { loginSchema } from "@/lib/schemas/zod/login-schema";
-import { signInServer } from "@/lib/server/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle, Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";

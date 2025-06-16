@@ -1,5 +1,5 @@
 import ProductCard from "@/components/product-card";
-import { getRelatedProducts } from "@/lib/server/products";
+import { getRelatedProducts } from "@/lib/actions/products";
 
 export default async function RelatedProduct(params: ParamsType) {
      const relatedProducts = await getRelatedProducts(

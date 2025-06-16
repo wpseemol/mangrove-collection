@@ -1,6 +1,6 @@
 import ProductCard from "@/components/product-card";
-import { getCategoryids } from "@/lib/server/category";
-import { getProducts } from "@/lib/server/products";
+import { getCategoryids } from "@/lib/actions/category";
+import { getProducts } from "@/lib/actions/products";
 import { SearchParamsType } from "../page";
 import ListViewProductCard from "./list-view-card";
 import ProductViewChange from "./product-view-change";

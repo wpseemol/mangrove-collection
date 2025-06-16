@@ -1,5 +1,5 @@
 import ProductCard from "@/components/product-card";
-import { getPopularProducts } from "@/lib/server/products";
+import { getPopularProducts } from "@/lib/actions/products";
 import * as motion from "motion/react-client";
 import HomeTitle from "./home-title";
 

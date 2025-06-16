@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useCart, useCartProducts } from "@/hooks";
-import { cartProductDelete } from "@/lib/server/cart";
+import { cartProductDelete } from "@/lib/actions/cart";
 import Swal from "sweetalert2";
 
 export default function MultiDeletedBtn() {

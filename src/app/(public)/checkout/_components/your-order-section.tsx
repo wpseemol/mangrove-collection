@@ -5,7 +5,7 @@ import { usePurchase } from "@/hooks";
 import {
      purchaseDataDelete,
      purchaseQuantityUpdate,
-} from "@/lib/server/purchase";
+} from "@/lib/actions/purchase";
 import { PurchaseProductsType } from "@/types/purchase";
 import debounce from "@/utils/debounce";
 import { AnimatePresence, motion } from "framer-motion";

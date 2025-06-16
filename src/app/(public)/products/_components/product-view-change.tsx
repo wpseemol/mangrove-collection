@@ -1,6 +1,6 @@
 "use client";
 
-import { getCategoryNameFromSlug } from "@/lib/server/category";
+import { getCategoryNameFromSlug } from "@/lib/actions/category";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";

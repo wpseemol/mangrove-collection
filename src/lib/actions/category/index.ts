@@ -145,9 +145,8 @@ export interface CategoryWithCount {
      slug: string;
      productCount: number;
 }
+
 /**
- *
- *
  * Represents a category entity.
  *
  * @interface Categories

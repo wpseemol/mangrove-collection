@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useCart, useCartProducts } from "@/hooks";
-import { cartProductDelete } from "@/lib/server/cart";
-import { setPurchaseData } from "@/lib/server/purchase";
+import { cartProductDelete } from "@/lib/actions/cart";
+import { setPurchaseData } from "@/lib/actions/purchase";
 import { PurchaseItemType } from "@/types/purchase";
 import { useRouter } from "next/navigation";
 

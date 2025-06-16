@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useCartProducts } from "@/hooks";
-import { CartProductsType, cartQuantityUpdate } from "@/lib/server/cart";
+import { CartProductsType, cartQuantityUpdate } from "@/lib/actions/cart";
 import debounce from "@/utils/debounce";
 import { Row } from "@tanstack/react-table";
 

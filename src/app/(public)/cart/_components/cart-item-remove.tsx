@@ -1,5 +1,5 @@
 import { useCart, useCartProducts } from "@/hooks";
-import { cartProductDelete, CartProductsType } from "@/lib/server/cart";
+import { cartProductDelete, CartProductsType } from "@/lib/actions/cart";
 import { Row } from "@tanstack/react-table";
 import { FaTrash } from "react-icons/fa6";
 

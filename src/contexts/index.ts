@@ -1,4 +1,4 @@
-import { CartProductsType } from "@/lib/server/cart";
+import { CartProductsType } from "@/lib/actions/cart";
 import { createContext, Dispatch, SetStateAction } from "react";
 
 export const VariantUpdateContext =

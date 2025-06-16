@@ -1,5 +1,5 @@
 import DynamicBreadcrumb from "@/components/dynamic-breadcrumb";
-import { getCategoryWithCount } from "@/lib/server/category";
+import { getCategoryWithCount } from "@/lib/actions/category";
 import { Metadata } from "next";
 import FilterSection from "./_components/filter-section";
 import ProductSection from "./_components/products-section";

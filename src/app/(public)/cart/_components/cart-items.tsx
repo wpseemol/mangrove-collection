@@ -2,7 +2,7 @@
 import { Card, CardHeader } from "@/components/ui/card";
 
 import { useCartProducts } from "@/hooks";
-import { CartProductsType } from "@/lib/server/cart";
+import { CartProductsType } from "@/lib/actions/cart";
 import { useEffect } from "react";
 import CartEmpty from "./cart-empty";
 import CartLoading from "./cart-loading";

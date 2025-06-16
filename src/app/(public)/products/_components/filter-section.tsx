@@ -1,6 +1,9 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { CategoryWithCount, getCategoryWithCount } from "@/lib/server/category";
+import {
+     CategoryWithCount,
+     getCategoryWithCount,
+} from "@/lib/actions/category";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { FaFilter, FaFilterCircleXmark } from "react-icons/fa6";

@@ -1,4 +1,4 @@
-import { googolProviderUserCreate, userLogin } from "@/lib/server/user";
+import { googolProviderUserCreate, userLogin } from "@/lib/actions/user";
 import type { User } from "next-auth";
 import NextAuth, { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";

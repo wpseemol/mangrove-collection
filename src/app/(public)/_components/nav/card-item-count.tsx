@@ -1,6 +1,6 @@
 "use client";
 import { useCart } from "@/hooks";
-import { getCartData } from "@/lib/server/cart";
+import { getCartData } from "@/lib/actions/cart";
 import { useEffect } from "react";
 
 export default function CartCount() {

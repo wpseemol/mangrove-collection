@@ -1,5 +1,5 @@
 import DynamicBreadcrumb from "@/components/dynamic-breadcrumb";
-import { getProductsDetails } from "@/lib/server/products";
+import { getProductsDetails } from "@/lib/actions/products";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ProductDetails from "./_components/product-details";

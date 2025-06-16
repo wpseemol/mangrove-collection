@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useCart, useVariantUpdate } from "@/hooks";
-import { setCartData } from "@/lib/server/cart";
+import { setCartData } from "@/lib/actions/cart";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 

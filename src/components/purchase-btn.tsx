@@ -1,6 +1,6 @@
 "use client";
 
-import { setPurchaseData } from "@/lib/server/purchase";
+import { setPurchaseData } from "@/lib/actions/purchase";
 import { PurchaseItemType } from "@/types/purchase";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

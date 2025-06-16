@@ -1,4 +1,4 @@
-import { getOrderProducts } from "@/lib/server/order-confirm";
+import { getOrderProducts } from "@/lib/actions/order-confirm";
 import { OrderProductType } from "@/types/my-order";
 import EmptyProducts from "./empty-product";
 import OrderAddressBookComponent from "./order-address-book-component";

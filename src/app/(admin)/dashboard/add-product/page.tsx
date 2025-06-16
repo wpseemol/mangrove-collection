@@ -1,6 +1,17 @@
+import { auth } from "@/auth";
+import { getCategory } from "@/lib/actions/category";
 import * as motion from "motion/react-client";
+import { notFound } from "next/navigation";
+import AddProduct from "./_components/add-product";
 
-export default function AddProductPage() {
+export default async function AddProductPage() {
+     const allCategory = await getCategory();
+     const session = await auth();
+
+     if (!session || session?.user.role !== "admin") {
+          notFound();
+          return;
+     }
      return (
           <>
                <motion.h1
@@ -11,6 +22,11 @@ export default function AddProductPage() {
                >
                     Add product
                </motion.h1>
+
+               <AddProduct
+                    allCategory={JSON.stringify(allCategory)}
+                    user={JSON.stringify(session.user)}
+               />
           </>
      );
 }

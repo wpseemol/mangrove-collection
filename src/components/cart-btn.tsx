@@ -1,7 +1,7 @@
 "use client";
 
 import { useCart } from "@/hooks";
-import { setCartData } from "@/lib/server/cart";
+import { setCartData } from "@/lib/actions/cart";
 import { useState } from "react";
 import { Button } from "./ui/button";
 

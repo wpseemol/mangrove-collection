@@ -2,8 +2,8 @@
 import { Button } from "@/components/ui/button";
 import { PaymentMethod, PurchaseProducts } from "@/contexts";
 import { usePurchase } from "@/hooks";
-import { getSearchAddressBookDataPhoneNumber } from "@/lib/server/address-book";
-import { orderConfirm } from "@/lib/server/order-confirm";
+import { getSearchAddressBookDataPhoneNumber } from "@/lib/actions/address-book";
+import { orderConfirm } from "@/lib/actions/order-confirm";
 import { AddressType } from "@/types/address-book";
 import debounce from "@/utils/debounce";
 import { zodResolver } from "@hookform/resolvers/zod";

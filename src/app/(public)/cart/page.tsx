@@ -1,4 +1,4 @@
-import { getCartProductDetails } from "@/lib/server/cart";
+import { getCartProductDetails } from "@/lib/actions/cart";
 import { notFound } from "next/navigation";
 import CartItems from "./_components/cart-items";
 import CartProductsProvider from "./_components/cart-products-provider";

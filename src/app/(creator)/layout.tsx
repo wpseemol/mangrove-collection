@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { userRoleCheck } from "@/lib/server/user";
+import { userRoleCheck } from "@/lib/actions/user";
 import { notFound } from "next/navigation";
 
 export default async function CreatorLayout({

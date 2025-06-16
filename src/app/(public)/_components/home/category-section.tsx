@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { getCategory } from "@/lib/server/category";
+import { getCategory } from "@/lib/actions/category";
 import { Category } from "@/types/home";
 import * as motion from "motion/react-client";
 import Image from "next/image";

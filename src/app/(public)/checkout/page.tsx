@@ -1,4 +1,4 @@
-import { getPurchaseProductData } from "@/lib/server/purchase";
+import { getPurchaseProductData } from "@/lib/actions/purchase";
 import { CheckoutForm } from "./_components/checkout-form";
 import PurchProvider from "./_components/purch-provider";
 import YourOrderSection from "./_components/your-order-section";

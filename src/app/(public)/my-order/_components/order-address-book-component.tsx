@@ -1,4 +1,4 @@
-import { getAddressBookData } from "@/lib/server/address-book";
+import { getAddressBookData } from "@/lib/actions/address-book";
 import AddressBookTable from "./address-book-table";
 import EmptyAddressBook from "./empty-address-book";
 
