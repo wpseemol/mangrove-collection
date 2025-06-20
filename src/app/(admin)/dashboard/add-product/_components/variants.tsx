@@ -49,8 +49,6 @@ export default function Variants({ form }: { form: AddProductFormType }) {
           setVariants((pre) => [...pre, { id: crypto.randomUUID() }]);
      }
 
-     console.log(variants);
-
      return (
           <>
                <div className="mb-4" id="variant-section">

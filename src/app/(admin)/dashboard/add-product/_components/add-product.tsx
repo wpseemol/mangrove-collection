@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import ProductInformation from "./information/product-information";
+import OtherInformation from "./other-information/other-information";
 import Pricing from "./pricing/pricing";
 import ProductCategoryContainer from "./product-category-container";
 import Variants from "./variants";
@@ -25,8 +26,7 @@ export default function AddProduct({
      /**
       * string to make object or content.
       */
-     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-     const category = JSON.parse(allCategory) as Categories[];
+
      // eslint-disable-next-line @typescript-eslint/no-unused-vars
      const loginUser = JSON.parse(user) as User;
 
@@ -132,7 +132,10 @@ export default function AddProduct({
                                    className="h-fit"
                                    title="Other information"
                               >
-                                   wait come soon
+                                   <OtherInformation
+                                        form={form}
+                                        allCategory={allCategory}
+                                   />
                               </ProductCategoryContainer>
                          </div>
 
@@ -152,20 +155,4 @@ export default function AddProduct({
                </Form>
           </>
      );
-}
-
-/**
- * Represents a category entity.
- *
- * @interface Categories
- * @property {string} id - The unique identifier for the category.
- * @property {string} name - The name of the category.
- * @property {string} slug - The URL-friendly identifier for the category, typically used in web URLs.
- * @property {string} imgUrl - The URL of the image associated with the category.
- */
-interface Categories {
-     id: string;
-     name: string;
-     slug: string;
-     imgUrl: string;
 }
