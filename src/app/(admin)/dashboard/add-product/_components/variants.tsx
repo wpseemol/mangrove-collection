@@ -21,9 +21,7 @@ import { AddProductFormType } from "@/types/add-products";
 import { useEffect, useState } from "react";
 
 export default function Variants({ form }: { form: AddProductFormType }) {
-     const [variants, setVariants] = useState<VariantsType[]>([
-          { id: crypto.randomUUID() },
-     ]);
+     const [variants, setVariants] = useState<VariantsType[]>([]);
      const [finalSelectVariants, setFinalSelectVariants] = useState<
           FinalSelectVariantsType[]
      >([]);
@@ -32,22 +30,6 @@ export default function Variants({ form }: { form: AddProductFormType }) {
                form.setValue("variants", finalSelectVariants);
           }
      }, [finalSelectVariants, form]);
-
-     const productUnit = form.watch("unit");
-     useEffect(() => {
-          switch (productUnit) {
-               case "pc":
-                    setVariants([{ id: crypto.randomUUID() }]);
-                    form.setValue("variants", []);
-                    selectedValue = "";
-                    break;
-               case "kg":
-                    setVariants([{ id: crypto.randomUUID() }]);
-                    form.setValue("variants", []);
-                    selectedValue = "";
-                    break;
-          }
-     }, [productUnit, form]);
 
      // when form rest state also reset
      useEffect(() => {
@@ -67,18 +49,59 @@ export default function Variants({ form }: { form: AddProductFormType }) {
           setVariants((pre) => [...pre, { id: crypto.randomUUID() }]);
      }
 
+     console.log(variants);
+
      return (
           <>
                <div className="mb-4" id="variant-section">
                     <FormLabel className="mb-1">Variants</FormLabel>
-                    {variants.map((item) => (
-                         <VariantsInput
-                              key={item.id}
-                              form={form}
-                              id={item.id}
-                              setFinalSelectVariants={setFinalSelectVariants}
+                    {/* default value */}
+                    <div className="grid grid-cols-3 gap-3 mb-3 last:mb-0 mt-1">
+                         <Select defaultValue="default" disabled>
+                              <SelectTrigger
+                                   className="bg-transparent border border-neutral-500/20 p-2 focus:outline-none  
+                    focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] col-span-1 w-full"
+                              >
+                                   <SelectValue
+                                        placeholder={`Select what type of variants`}
+                                   />
+                              </SelectTrigger>
+
+                              <SelectContent
+                                   className="bg-[#f0f1f7] dark:bg-[#252729] border border-neutral-500/20
+                p-2 focus:outline-none  focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px]"
+                              >
+                                   <SelectItem
+                                        value="default"
+                                        className="border border-neutral-700/15 mb-0.5"
+                                   >
+                                        Default
+                                   </SelectItem>
+                              </SelectContent>
+                         </Select>
+                         <Input
+                              disabled
+                              value={"Regular"}
+                              type="text"
+                              name="varian-title"
+                              id="varian-title-default"
+                              className="w-full bg-transparent border border-neutral-500/20 col-span-2
+                            p-2 focus:outline-none  focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] rounded"
+                              placeholder="Variant title"
                          />
-                    ))}
+                    </div>
+                    {/* default value */}
+                    {variants.length > 0 &&
+                         variants.map((item) => (
+                              <VariantsInput
+                                   key={item.id}
+                                   form={form}
+                                   id={item.id}
+                                   setFinalSelectVariants={
+                                        setFinalSelectVariants
+                                   }
+                              />
+                         ))}
 
                     {/* option add btn */}
                     <div

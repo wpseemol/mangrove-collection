@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import ProductInformation from "./information/product-information";
+import Pricing from "./pricing/pricing";
 import ProductCategoryContainer from "./product-category-container";
 import Variants from "./variants";
 
@@ -124,7 +125,7 @@ export default function AddProduct({
                                    className="h-fit"
                                    title="Pricing"
                               >
-                                   wait come soon
+                                   <Pricing form={form} />
                               </ProductCategoryContainer>
                               <ProductCategoryContainer
                                    id="product-outer-info"
