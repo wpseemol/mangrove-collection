@@ -452,7 +452,7 @@ export default function TiptapMenuBar({ editor }: { editor: Editor | null }) {
      ];
 
      return (
-          <div className="flex flex-wrap gap-1 rounded-md border border-neutral-500/20 p-1 focus:outline-none focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] space-y-0.5">
+          <div className="flex flex-wrap items-center gap-1 rounded-t-md border border-neutral-500/20 p-1 focus:outline-none focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] -mb-1">
                {options.map((option) => (
                     <Tooltip key={option.id}>
                          <TooltipTrigger asChild>

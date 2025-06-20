@@ -1,5 +1,7 @@
 "use client";
 
+import ButtonLoading from "@/components/button-loading";
+import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { addProductSchema } from "@/lib/schemas/zod/add-product-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -90,7 +92,7 @@ export default function AddProduct({
           <>
                <Form {...form}>
                     <form
-                         onSubmit={onSubmit}
+                         onSubmit={form.handleSubmit(onSubmit)}
                          className="grid md:grid-cols-3 grid-cols-1 gap-4 md:mx-5 mb-5"
                     >
                          <div className="md:col-span-2">
@@ -101,6 +103,19 @@ export default function AddProduct({
                                    <ProductInformation form={form} />
                               </ProductCategoryContainer>
                          </div>
+
+                         <section className="md:col-span-3 -mt-4">
+                              <Button
+                                   disabled={form.formState.isSubmitting}
+                                   type="submit"
+                                   className="text-white"
+                              >
+                                   Upload
+                                   {form.formState.isSubmitting && (
+                                        <ButtonLoading />
+                                   )}
+                              </Button>
+                         </section>
                     </form>
                </Form>
           </>

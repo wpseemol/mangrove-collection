@@ -93,7 +93,7 @@ export default function Description({ form }: DescriptionProps) {
           content: form.getValues("description") || "",
           editorProps: {
                attributes: {
-                    class: "min-h-[120px] outline-none prose prose-sm focus:outline-none border border-gray-200 dark:border-neutral-700 p-1 tiptap rounded focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] space-y-0.5 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100",
+                    class: "min-h-[160px] outline-none prose prose-sm focus:outline-none border border-gray-200 dark:border-neutral-700 p-1 tiptap rounded-b-md focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] space-y-0.5 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 border-t-0 -mt-1",
                },
           },
           onUpdate: ({ editor }) => {
@@ -123,7 +123,9 @@ export default function Description({ form }: DescriptionProps) {
                          <FormControl>
                               <EditorContent editor={editor} />
                          </FormControl>
-                         <FormMessage>{fieldState.error?.message}</FormMessage>
+                         <FormMessage className="text-red-500">
+                              {fieldState.error?.message}
+                         </FormMessage>
                     </FormItem>
                )}
           />

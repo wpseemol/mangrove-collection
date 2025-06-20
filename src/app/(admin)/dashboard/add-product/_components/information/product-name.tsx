@@ -30,7 +30,7 @@ export default function ProductName({ form }: { form: AddProductFormType }) {
                                         placeholder="Product name"
                                    />
                               </FormControl>
-                              <FormMessage>
+                              <FormMessage className="text-red-500">
                                    {fieldState.error?.message}
                               </FormMessage>
                          </FormItem>

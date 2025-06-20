@@ -2,14 +2,14 @@ import { z } from "zod";
 
 const addProductSchema = z.object({
      name: z.string().min(1, {
-          message: "Must be input the product.",
+          message: "Must be input the product name.",
      }),
      slug: z.string().min(1, {
           message: "Must be input product slug.",
      }),
      unit: z.string(),
      description: z.string().min(1, {
-          message: "Must be input product description",
+          message: "Must be input product description.",
      }),
      thumbnail: z.string().min(1, {
           message: "Must be product thumbnail image",
