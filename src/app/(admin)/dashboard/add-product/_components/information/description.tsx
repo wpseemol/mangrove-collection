@@ -7,7 +7,6 @@ import {
      FormLabel,
      FormMessage,
 } from "@/components/ui/form";
-import { UseFormReturn } from "react-hook-form";
 import "./tiptap-style.css";
 
 import { Color } from "@tiptap/extension-color";
@@ -24,17 +23,11 @@ import Youtube from "@tiptap/extension-youtube";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 
+import { AddProductFormType } from "@/types/add-products";
 import { useEffect } from "react";
 import TiptapMenuBar from "./tiptap-menu-bar";
 
-interface DescriptionProps {
-     form: UseFormReturn<{
-          description: string;
-          // Add other form fields as needed
-     }>;
-}
-
-export default function Description({ form }: DescriptionProps) {
+export default function Description({ form }: AddProductFormType) {
      const editor = useEditor({
           extensions: [
                Emoji.configure({

@@ -12,6 +12,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import ProductInformation from "./information/product-information";
 import ProductCategoryContainer from "./product-category-container";
+import Variants from "./variants";
 
 export default function AddProduct({
      allCategory,
@@ -101,6 +102,36 @@ export default function AddProduct({
                                    id="product-information"
                               >
                                    <ProductInformation form={form} />
+                              </ProductCategoryContainer>
+                              {/* product Media section */}
+                              <ProductCategoryContainer
+                                   title="Media"
+                                   id="media"
+                              >
+                                   wait come soon
+                              </ProductCategoryContainer>
+
+                              <ProductCategoryContainer
+                                   title="Variants"
+                                   id="variants"
+                              >
+                                   <Variants form={form} />
+                              </ProductCategoryContainer>
+                         </div>
+                         <div className="md:col-span-1">
+                              <ProductCategoryContainer
+                                   id="product-price"
+                                   className="h-fit"
+                                   title="Pricing"
+                              >
+                                   wait come soon
+                              </ProductCategoryContainer>
+                              <ProductCategoryContainer
+                                   id="product-outer-info"
+                                   className="h-fit"
+                                   title="Other information"
+                              >
+                                   wait come soon
                               </ProductCategoryContainer>
                          </div>
 
