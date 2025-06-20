@@ -35,6 +35,20 @@ export default function TiptapMenuBar({ editor }: { editor: Editor | null }) {
 
      const options = [
           {
+               id: "undo",
+               command: () => editor.chain().focus().undo().run(),
+               isActive: false,
+               label: "Undo",
+               icon: <Undo className="w-4 h-4" />,
+          },
+          {
+               id: "redo",
+               command: () => editor.chain().focus().redo().run(),
+               isActive: false,
+               label: "Redo",
+               icon: <Redo className="w-4 h-4" />,
+          },
+          {
                id: "bold",
                command: () => editor.chain().focus().toggleBold().run(),
                isActive: editor?.isActive("bold"),
@@ -59,12 +73,19 @@ export default function TiptapMenuBar({ editor }: { editor: Editor | null }) {
                id: "lists",
                component: (
                     <DropdownMenu>
-                         <DropdownMenuTrigger asChild>
-                              <Toggle size="sm" className="gap-1">
-                                   <List className="w-4 h-4" />
-                                   <ChevronDown className="w-3 h-3" />
-                              </Toggle>
-                         </DropdownMenuTrigger>
+                         <Tooltip>
+                              <TooltipTrigger asChild>
+                                   <DropdownMenuTrigger asChild>
+                                        <Toggle size="sm" className="gap-1">
+                                             <List className="w-4 h-4" />
+                                             <ChevronDown className="w-3 h-3" />
+                                        </Toggle>
+                                   </DropdownMenuTrigger>
+                              </TooltipTrigger>
+                              <TooltipContent side="top" className="text-white">
+                                   Lists
+                              </TooltipContent>
+                         </Tooltip>
                          <DropdownMenuContent className="bg-gray-100 border-gray-200">
                               {LIST_TYPES.map((listType) => (
                                    <DropdownMenuItem
@@ -103,16 +124,26 @@ export default function TiptapMenuBar({ editor }: { editor: Editor | null }) {
                id: "highlight",
                component: (
                     <DropdownMenu>
-                         <DropdownMenuTrigger asChild>
-                              <Toggle
-                                   size="sm"
-                                   pressed={editor.isActive("highlight")}
-                                   className="gap-1"
-                              >
-                                   <Highlighter className="w-4 h-4" />
-                                   <ChevronDown className="w-3 h-3" />
-                              </Toggle>
-                         </DropdownMenuTrigger>
+                         <Tooltip>
+                              <TooltipTrigger asChild>
+                                   <DropdownMenuTrigger asChild>
+                                        <Toggle
+                                             size="sm"
+                                             pressed={editor.isActive(
+                                                  "highlight"
+                                             )}
+                                             className="gap-1"
+                                        >
+                                             <Highlighter className="w-4 h-4" />
+                                             <ChevronDown className="w-3 h-3" />
+                                        </Toggle>
+                                   </DropdownMenuTrigger>
+                              </TooltipTrigger>
+                              <TooltipContent side="top" className="text-white">
+                                   Highlight
+                              </TooltipContent>
+                         </Tooltip>
+
                          <DropdownMenuContent className="bg-gray-100 border-gray-200">
                               <DropdownMenuItem
                                    onSelect={() =>
@@ -192,20 +223,7 @@ export default function TiptapMenuBar({ editor }: { editor: Editor | null }) {
                label: "H3",
                icon: <Heading3 className="w-4 h-4" />,
           },
-          {
-               id: "undo",
-               command: () => editor.chain().focus().undo().run(),
-               isActive: false,
-               label: "Undo",
-               icon: <Undo className="w-4 h-4" />,
-          },
-          {
-               id: "redo",
-               command: () => editor.chain().focus().redo().run(),
-               isActive: false,
-               label: "Redo",
-               icon: <Redo className="w-4 h-4" />,
-          },
+
           {
                id: "add-link",
                command: () => {
@@ -246,6 +264,143 @@ export default function TiptapMenuBar({ editor }: { editor: Editor | null }) {
                     </svg>
                ),
           },
+          {
+               id: "add-youtube",
+               command: () => {
+                    const url = window.prompt("Enter YouTube video URL");
+                    if (!url) return;
+
+                    // Extract video ID from URL
+                    const match = url.match(
+                         /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/
+                    );
+                    const videoId = match ? match[1] : null;
+
+                    if (!videoId) {
+                         window.alert("Invalid YouTube URL");
+                         return;
+                    }
+
+                    editor
+                         .chain()
+                         .focus()
+                         .setYoutubeVideo({
+                              src: `https://www.youtube.com/embed/${videoId}`,
+                              width: 640,
+                              height: 360,
+                         })
+                         .run();
+               },
+               isActive: editor.isActive("youtube"),
+               label: "Add YouTube Video",
+               icon: (
+                    <svg
+                         className="w-4 h-4"
+                         fill="none"
+                         stroke="currentColor"
+                         strokeWidth={2}
+                         viewBox="0 0 24 24"
+                    >
+                         <rect x="2" y="4" width="20" height="16" rx="3" />
+                         <polygon
+                              points="10,9 16,12 10,15"
+                              fill="currentColor"
+                         />
+                    </svg>
+               ),
+          },
+          {
+               id: "add-table",
+               command: () => {
+                    // Create a custom dialog for table dimensions
+                    const rows =
+                         Number(window.prompt("Number of rows (1-10):", "3")) ||
+                         3;
+                    const cols =
+                         Number(
+                              window.prompt("Number of columns (1-10):", "3")
+                         ) || 3;
+                    const withHeader = window.confirm("Include header row?");
+
+                    // Validate input
+                    const validatedRows = Math.min(Math.max(rows, 1), 10);
+                    const validatedCols = Math.min(Math.max(cols, 1), 10);
+
+                    editor
+                         .chain()
+                         .focus()
+                         .insertTable({
+                              rows: validatedRows,
+                              cols: validatedCols,
+                              withHeaderRow: withHeader,
+                         })
+                         .run();
+               },
+               isActive: editor.isActive("table"),
+               label: "Add Table",
+               icon: (
+                    <svg
+                         className="w-4 h-4"
+                         fill="none"
+                         stroke="currentColor"
+                         strokeWidth={2}
+                         viewBox="0 0 24 24"
+                    >
+                         <rect x="3" y="3" width="18" height="18" rx="2" />
+                         <line x1="3" y1="9" x2="21" y2="9" />
+                         <line x1="3" y1="15" x2="21" y2="15" />
+                         <line x1="9" y1="3" x2="9" y2="21" />
+                         <line x1="15" y1="3" x2="15" y2="21" />
+                    </svg>
+               ),
+          },
+          {
+               id: "add-emoji",
+               component: (
+                    <DropdownMenu>
+                         <Tooltip>
+                              <TooltipTrigger asChild>
+                                   <DropdownMenuTrigger asChild>
+                                        <Toggle size="sm" className="gap-1">
+                                             <span
+                                                  role="img"
+                                                  aria-label="Emoji"
+                                                  className="text-lg"
+                                             >
+                                                  😊
+                                             </span>
+                                             <ChevronDown className="w-3 h-3" />
+                                        </Toggle>
+                                   </DropdownMenuTrigger>
+                              </TooltipTrigger>
+                              <TooltipContent side="top" className="text-white">
+                                   Insert Emoji
+                              </TooltipContent>
+                         </Tooltip>
+                         <DropdownMenuContent className="bg-gray-100 border-gray-200 max-h-64 overflow-y-auto grid grid-cols-8 gap-1 p-2">
+                              {EMOJI_LIST.map((emoji) => (
+                                   <DropdownMenuItem
+                                        key={emoji}
+                                        onSelect={() => {
+                                             editor
+                                                  .chain()
+                                                  .focus()
+                                                  .insertContent(emoji)
+                                                  .run();
+                                        }}
+                                        className="flex items-center justify-center text-lg px-1 py-1"
+                                   >
+                                        <span role="img" aria-label="emoji">
+                                             {emoji}
+                                        </span>
+                                   </DropdownMenuItem>
+                              ))}
+                         </DropdownMenuContent>
+                    </DropdownMenu>
+               ),
+               label: "Insert Emoji",
+          },
+
           {
                id: "add-image",
                command: () => {
@@ -297,7 +452,7 @@ export default function TiptapMenuBar({ editor }: { editor: Editor | null }) {
      ];
 
      return (
-          <div className="flex flex-wrap gap-1 p-1 border border-gray-200 rounded-md bg-background">
+          <div className="flex flex-wrap gap-1 rounded-md border border-neutral-500/20 p-1 focus:outline-none focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] space-y-0.5">
                {options.map((option) => (
                     <Tooltip key={option.id}>
                          <TooltipTrigger asChild>
@@ -308,7 +463,11 @@ export default function TiptapMenuBar({ editor }: { editor: Editor | null }) {
                                         aria-label={`Toggle ${option.label}`}
                                         pressed={option.isActive}
                                         onPressedChange={() => option.command()}
-                                        className="data-[state=on]:bg-accent data-[state=on]:text-accent-foreground"
+                                        className={`data-[state=on]:bg-accent data-[state=on]:text-accent-foreground ${
+                                             option.isActive
+                                                  ? "bg-gray-800/15 hover:bg-gray-700/10 "
+                                                  : ""
+                                        }`}
                                         size="sm"
                                    >
                                         {option.icon}
@@ -343,4 +502,185 @@ const LIST_TYPES = [
           label: "Numbered List",
           icon: <ListOrdered className="w-4 h-4" />,
      },
+];
+
+const EMOJI_LIST = [
+     "👋",
+     "🤚",
+     "🖐️",
+     "✋",
+     "🖖",
+     "👌",
+     "🤏",
+     "✌️",
+     "🤞",
+     "🤟",
+     "🤘",
+     "🤙",
+     "👈",
+     "👉",
+     "👆",
+     "👇",
+     "☝️",
+     "👍",
+     "👎",
+     "✊",
+     "👊",
+     "🤛",
+     "🤜",
+     "👏",
+     "🙌",
+     "👐",
+     "🤲",
+     "🤝",
+     "🙏",
+     "✍️",
+     "⌚",
+     "📱",
+     "💻",
+     "⌨️",
+     "🖥️",
+     "🖨️",
+     "🖱️",
+     "🖲️",
+     "💽",
+     "💾",
+     "📷",
+     "🎥",
+     "📹",
+     "📼",
+     "🔍",
+     "🕯️",
+     "💡",
+     "🔦",
+     "🏮",
+     "🪔",
+     "📔",
+     "📕",
+     "📖",
+     "📗",
+     "📘",
+     "📙",
+     "📚",
+     "📓",
+     "📒",
+     "📃",
+     "😀",
+     "😁",
+     "😂",
+     "🤣",
+     "😃",
+     "😄",
+     "😅",
+     "😆",
+     "😉",
+     "😊",
+     "😋",
+     "😎",
+     "😍",
+     "😘",
+     "🥰",
+     "😗",
+     "😙",
+     "😚",
+     "🙂",
+     "🤗",
+     "🤩",
+     "🤔",
+     "🤨",
+     "😐",
+     "😑",
+     "😶",
+     "🙄",
+     "😏",
+     "😣",
+     "😥",
+     "😮",
+     "🤐",
+     "😯",
+     "😪",
+     "😫",
+     "🥱",
+     "😴",
+     "😌",
+     "😛",
+     "😜",
+     "😝",
+     "🤤",
+     "😒",
+     "😓",
+     "😔",
+     "😕",
+     "🙃",
+     "🤑",
+     "😲",
+     "☹️",
+     "🙁",
+     "😖",
+     "😞",
+     "😟",
+     "😤",
+     "😢",
+     "😭",
+     "😦",
+     "😧",
+     "😨",
+     "😩",
+     "🤯",
+     "😬",
+     "😰",
+     "😱",
+     "🥵",
+     "🥶",
+     "😳",
+     "🤪",
+     "😵",
+     "😡",
+     "😠",
+     "🤬",
+     "😷",
+     "🤒",
+     "🤕",
+     "🤢",
+     "🤮",
+     "🥴",
+     "😇",
+     "🥳",
+     "🥺",
+     "🤠",
+     "🤡",
+     "🤥",
+     "🤫",
+     "🤭",
+     "🧐",
+     "🍏",
+     "🍎",
+     "🍐",
+     "🍊",
+     "🍋",
+     "🍌",
+     "🍉",
+     "🍇",
+     "🍓",
+     "🫐",
+     "🍈",
+     "🍒",
+     "🍑",
+     "🥭",
+     "🍍",
+     "🥥",
+     "🥝",
+     "🍅",
+     "🍆",
+     "🥑",
+     "🥦",
+     "🥬",
+     "🥒",
+     "🌶️",
+     "🫑",
+     "🌽",
+     "🥕",
+     "🫒",
+     "🧄",
+     "🧅",
 ];
