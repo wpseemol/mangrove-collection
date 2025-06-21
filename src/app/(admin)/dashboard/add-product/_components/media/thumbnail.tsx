@@ -10,57 +10,54 @@ import {
 } from "@/components/ui/form";
 import { AddProductFormType } from "@/types/add-products";
 import Image from "next/image";
-import { useEffect } from "react";
-import { useDropzone } from "react-dropzone";
+import { useCallback, useState } from "react";
+import { FileRejection, useDropzone } from "react-dropzone";
 import { FiTrash2, FiUpload } from "react-icons/fi";
 
 export default function Thumbnail({ form }: { form: AddProductFormType }) {
-     //  const onDrop = useCallback((acceptedFiles: File[]) => {
-     //       if (acceptedFiles.length === 1) {
-     //            // Create preview
-     //            const reader = new FileReader();
-     //            reader.onload = () => {
-     //                 setPreview(reader.result as string);
-     //            };
-     //            reader.readAsDataURL(acceptedFiles[0]);
-     //       }
-     //  }, []);
+     const [preview, setPreview] = useState<string | null>(null);
 
-     const {
-          acceptedFiles,
-          getRootProps,
-          fileRejections,
-          getInputProps,
-          isDragActive,
-     } = useDropzone({
-          accept: { "image/*": [".jpeg", ".jpg", ".png"] },
-          maxFiles: 1,
-          //   onDrop,
-     });
+     //  const [file, setFile] = useState([]);
+
+     const onDrop = useCallback(
+          (acceptedFiles: File[], fileRejections: FileRejection[]) => {
+               if (acceptedFiles.length === 1) {
+                    setPreview(URL.createObjectURL(acceptedFiles[0]));
+               }
+
+               if (fileRejections.length > 0) {
+                    const errorMessageObj = {
+                         "file-invalid-type":
+                              "Only JPEG, JPG, and PNG files are allowed.",
+                         "too-many-files": "Only one file can be uploaded.",
+                         "file-too-large": "Image file is too larger.",
+                    };
+
+                    form.setError("thumbnail", {
+                         type: "manual",
+                         message:
+                              errorMessageObj[
+                                   fileRejections[0].errors[0].code
+                              ] || "Image file select wrong.",
+                    });
+               } else {
+                    form.clearErrors("thumbnail");
+               }
+          },
+          [form]
+     );
+
+     const { acceptedFiles, getRootProps, getInputProps, isDragActive } =
+          useDropzone({
+               accept: { "image/*": [".jpeg", ".jpg", ".png"] },
+               maxFiles: 1,
+               maxSize: 1024 * 5000,
+               onDrop,
+          });
 
      function handelRemoveFile() {
-          //   setPreview(null);
+          setPreview(null);
      }
-
-     console.log("accept files:", acceptedFiles);
-
-     useEffect(() => {
-          // Handle file rejections
-          if (fileRejections.length > 0) {
-               const errors = fileRejections[0].errors;
-               if (errors.some((e) => e.code === "file-invalid-type")) {
-                    form.setError("thumbnail", {
-                         type: "manual",
-                         message: "Only JPEG, JPG, and PNG files are allowed",
-                    });
-               } else if (errors.some((e) => e.code === "too-many-files")) {
-                    form.setError("thumbnail", {
-                         type: "manual",
-                         message: "Only one file can be uploaded",
-                    });
-               }
-          }
-     }, [fileRejections, form]);
 
      return (
           <FormField
@@ -77,14 +74,18 @@ export default function Thumbnail({ form }: { form: AddProductFormType }) {
                          </FormDescription>
 
                          <FormControl>
-                              {acceptedFiles[0] ? (
+                              {/* preview when is true */}
+                              {preview ? (
                                    <div className="relative group">
                                         <div className="border border-neutral-200 rounded-md overflow-hidden w-fit mx-auto">
                                              <figure className="w-52 relative">
                                                   <Image
-                                                       src={URL.createObjectURL(
-                                                            acceptedFiles[0]
-                                                       )}
+                                                       src={preview}
+                                                       onLoad={() => {
+                                                            URL.revokeObjectURL(
+                                                                 preview
+                                                            );
+                                                       }}
                                                        alt="Preview"
                                                        width={100}
                                                        height={100}

@@ -29,6 +29,7 @@ import TiptapMenuBar from "./tiptap-menu-bar";
 
 export default function Description({ form }: AddProductFormType) {
      const editor = useEditor({
+          immediatelyRender: false,
           extensions: [
                Emoji.configure({
                     enableEmoticons: true,
