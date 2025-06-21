@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import ProductInformation from "./information/product-information";
+import Media from "./media/media";
 import OtherInformation from "./other-information/other-information";
 import Pricing from "./pricing/pricing";
 import ProductCategoryContainer from "./product-category-container";
@@ -109,7 +110,7 @@ export default function AddProduct({
                                    title="Media"
                                    id="media"
                               >
-                                   wait come soon
+                                   <Media form={form} />
                               </ProductCategoryContainer>
 
                               <ProductCategoryContainer
