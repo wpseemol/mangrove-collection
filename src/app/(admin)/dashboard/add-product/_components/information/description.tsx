@@ -113,7 +113,7 @@ export default function Description({
           if (isFormReset && editor) {
                editor.commands.clearContent();
           }
-     }, [isFormReset, editor]); // Only depend on editor
+     }, [isFormReset, editor]);
 
      return (
           <FormField

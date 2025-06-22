@@ -45,13 +45,6 @@ export default function AddProduct({
 
      /**
       * Initializes a React Hook Form instance for the Add Product form using the provided Zod schema.
-      *
-      * - Utilizes `zodResolver` to enforce validation rules defined in `addProductSchema`.
-      * - Sets up default values for all product fields, including name, slug, unit, description, images, variants, pricing, category, and tags.
-      * - The form state is strongly typed with the inferred type from the Zod schema.
-      *
-      * @typeParam z.infer<typeof addProductSchema> - The inferred type from the product schema, ensuring type safety for form data.
-      * @returns The form instance, including methods and state for managing the Add Product form.
       */
      const form = useForm<z.infer<typeof addProductSchema>>({
           resolver: zodResolver(addProductSchema),
@@ -60,7 +53,7 @@ export default function AddProduct({
                slug: "",
                unit: "pc",
                description: "",
-               thumbnail: "thumbnail url",
+               thumbnail: "",
                images: [],
                variants: [],
                currency: "tk",
@@ -106,7 +99,10 @@ export default function AddProduct({
                                    title="Media"
                                    id="media"
                               >
-                                   <Media form={form} />
+                                   <Media
+                                        form={form}
+                                        isFormReset={isFormReset}
+                                   />
                               </ProductCategoryContainer>
 
                               <ProductCategoryContainer
