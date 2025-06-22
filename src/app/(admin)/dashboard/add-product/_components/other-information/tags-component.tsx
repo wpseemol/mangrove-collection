@@ -108,12 +108,14 @@ export default function TagsComponent({ form }: TagsComponentProps) {
                                              tags.length > 0
                                                   ? "w-fit"
                                                   : "w-full"
-                                        } bg-transparent border-none flex-grow min-w-[100px]`}
+                                        } bg-transparent border-none flex-grow min-w-[100px] placeholder:text-neutral-400`}
                                         placeholder="Add tags (separate with ; or press Enter)"
                                    />
                               </div>
                          </FormControl>
-                         <FormMessage>{fieldState.error?.message}</FormMessage>
+                         <FormMessage className="text-red-500">
+                              {fieldState.error?.message}
+                         </FormMessage>
                     </FormItem>
                )}
           />

@@ -84,7 +84,7 @@ export default function Variants({ form }: { form: AddProductFormType }) {
                               name="varian-title"
                               id="varian-title-default"
                               className="w-full bg-transparent border border-neutral-500/20 col-span-2
-                            p-2 focus:outline-none  focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] rounded"
+                            p-2 focus:outline-none  focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] rounded placeholder:text-neutral-400"
                               placeholder="Variant title"
                          />
                     </div>
@@ -205,7 +205,7 @@ function VariantsInput({
                     name="varian-title"
                     id="varian-title"
                     className="w-full bg-transparent border border-neutral-500/20 col-span-2
-                            p-2 focus:outline-none  focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] rounded"
+                            p-2 focus:outline-none  focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] rounded placeholder:text-neutral-400"
                     placeholder="Variant title"
                />
           </div>
@@ -229,7 +229,7 @@ function TypeSelector({
                <FormControl>
                     <SelectTrigger
                          className="bg-transparent border border-neutral-500/20 p-2 focus:outline-none  
-                    focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] col-span-1 w-full"
+                    focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] col-span-1 w-full placeholder:text-neutral-400"
                     >
                          <SelectValue
                               placeholder={`Select what type of variants`}

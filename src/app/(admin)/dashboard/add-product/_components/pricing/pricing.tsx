@@ -30,7 +30,7 @@ export default function Pricing({ form }: { form: AddProductFormType }) {
                                    </FormDescription>
                                    <PriceFormControl form={form} />
                                    {/* price err message here */}
-                                   <FormMessage>
+                                   <FormMessage className="text-red-500">
                                         {fieldState.error?.message}
                                    </FormMessage>
                               </FormItem>

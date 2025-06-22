@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import { AddProductFormType } from "@/types/add-products";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface Category {
      id: string;
@@ -36,30 +36,7 @@ export default function CategorySelect({
 }: CategorySelectProps) {
      const router = useRouter();
      const [selectedCategory, setSelectedCategory] = useState("");
-     const [categories, setCategories] = useState<Category[]>([]);
-
-     // Parse categories safely
-     useEffect(() => {
-          try {
-               const parsedCategories = JSON.parse(allCategory) as Category[];
-               if (Array.isArray(parsedCategories)) {
-                    setCategories(parsedCategories);
-               }
-          } catch (error) {
-               console.error("Failed to parse categories:", error);
-               setCategories([]);
-          }
-     }, [allCategory]);
-
-     // Reset when form resets
-     useEffect(() => {
-          const subscription = form.watch((value, { name }) => {
-               if (name === undefined) {
-                    setSelectedCategory("");
-               }
-          });
-          return () => subscription.unsubscribe();
-     }, [form]);
+     const categories = JSON.parse(allCategory) as Category[];
 
      const handleCategoryChange = (value: string) => {
           setSelectedCategory(value);

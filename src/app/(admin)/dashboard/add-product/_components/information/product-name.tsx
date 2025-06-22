@@ -12,30 +12,24 @@ import { AddProductFormType } from "@/types/add-products";
 
 export default function ProductName({ form }: { form: AddProductFormType }) {
      return (
-          <>
-               <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field, fieldState }) => (
-                         <FormItem>
-                              <FormLabel className="mb-1">
-                                   Product Name*
-                              </FormLabel>
-
-                              <FormControl>
-                                   <Input
-                                        {...field}
-                                        className="w-full bg-transparent border border-neutral-500/20
-                                            p-2 focus:outline-none  focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] rounded"
-                                        placeholder="Product name"
-                                   />
-                              </FormControl>
-                              <FormMessage className="text-red-500">
-                                   {fieldState.error?.message}
-                              </FormMessage>
-                         </FormItem>
-                    )}
-               />
-          </>
+          <FormField
+               control={form.control}
+               name="name"
+               render={({ field }) => (
+                    <FormItem>
+                         <FormLabel className="text-gray-700 font-medium">
+                              Product Name*
+                         </FormLabel>
+                         <FormControl>
+                              <Input
+                                   {...field}
+                                   placeholder="Enter product name"
+                                   className="border-gray-300 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 placeholder:text-gray-400 text-gray-800"
+                              />
+                         </FormControl>
+                         <FormMessage className="text-red-500 text-sm" />
+                    </FormItem>
+               )}
+          />
      );
 }

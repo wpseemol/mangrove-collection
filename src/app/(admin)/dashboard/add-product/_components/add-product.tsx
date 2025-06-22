@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import ButtonLoading from "@/components/button-loading";
@@ -7,15 +8,12 @@ import { addProductSchema } from "@/lib/schemas/zod/add-product-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { User } from "next-auth";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import ProductInformation from "./information/product-information";
 import Media from "./media/media";
-import OtherInformation from "./other-information/other-information";
-import Pricing from "./pricing/pricing";
 import ProductCategoryContainer from "./product-category-container";
-import Variants from "./variants";
 
 export default function AddProduct({
      allCategory,
@@ -24,11 +22,23 @@ export default function AddProduct({
      allCategory: string;
      user: string;
 }) {
+     const [isFormReset, setIsFormReset] = useState<boolean>(false);
+
+     /**
+      * isFormReset again false
+      */
+     useEffect(() => {
+          if (isFormReset) {
+               setTimeout(() => {
+                    setIsFormReset(false);
+               }, 1000);
+          }
+     }, [isFormReset]);
+
      /**
       * string to make object or content.
       */
 
-     // eslint-disable-next-line @typescript-eslint/no-unused-vars
      const loginUser = JSON.parse(user) as User;
 
      const router = useRouter();
@@ -50,37 +60,16 @@ export default function AddProduct({
                slug: "",
                unit: "pc",
                description: "",
-               thumbnail: "",
+               thumbnail: "thumbnail url",
                images: [],
                variants: [],
-               currency: "",
+               currency: "tk",
                price: [{ variantId: "regular", price: 1, select: true }],
-               category: "",
-               shortDescription: "",
+               category: "some text",
+               shortDescription: "short description",
                tags: [],
           },
      });
-
-     useEffect(() => {
-          if (form.formState.isSubmitting) {
-               const isFormError = form.formState.errors;
-               if (
-                    !!isFormError.name ||
-                    !!isFormError.slug ||
-                    !!isFormError.description
-               ) {
-                    router.push("#product-information");
-               } else if (!!isFormError.thumbnail) {
-                    router.push("#product-thumbnail");
-               } else if (!!isFormError.currency) {
-                    router.push("#product-price");
-               } else if (!!isFormError.category) {
-                    router.push("#product-outer-info");
-               } else {
-                    router.push("");
-               }
-          }
-     }, [form.formState.isSubmitting, form.formState.errors, router]);
 
      /**
       * form submit here.
@@ -88,7 +77,11 @@ export default function AddProduct({
       */
 
      async function onSubmit(values: z.infer<typeof addProductSchema>) {
-          console.log(values);
+          console.log("upload product:", values);
+          if (true) {
+               form.reset();
+               setIsFormReset(true);
+          }
      }
 
      return (
@@ -103,7 +96,10 @@ export default function AddProduct({
                                    title="Product information"
                                    id="product-information"
                               >
-                                   <ProductInformation form={form} />
+                                   <ProductInformation
+                                        form={form}
+                                        isFormReset={isFormReset}
+                                   />
                               </ProductCategoryContainer>
                               {/* product Media section */}
                               <ProductCategoryContainer
@@ -117,26 +113,23 @@ export default function AddProduct({
                                    title="Variants"
                                    id="variants"
                               >
-                                   <Variants form={form} />
+                                   coming soon
                               </ProductCategoryContainer>
                          </div>
-                         <div className="md:col-span-1">
+                         <div className="md:col-span-1 ">
                               <ProductCategoryContainer
                                    id="product-price"
                                    className="h-fit"
                                    title="Pricing"
                               >
-                                   <Pricing form={form} />
+                                   coming soon
                               </ProductCategoryContainer>
                               <ProductCategoryContainer
                                    id="product-outer-info"
                                    className="h-fit"
                                    title="Other information"
                               >
-                                   <OtherInformation
-                                        form={form}
-                                        allCategory={allCategory}
-                                   />
+                                   coming soon
                               </ProductCategoryContainer>
                          </div>
 

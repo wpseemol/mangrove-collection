@@ -1,3 +1,5 @@
+"use client";
+
 import {
      FormControl,
      FormField,
@@ -16,46 +18,37 @@ import { AddProductFormType } from "@/types/add-product";
 
 export default function ProductUnit({ form }: { form: AddProductFormType }) {
      return (
-          <>
-               <FormField
-                    control={form.control}
-                    name="unit"
-                    render={({ field }) => (
-                         <FormItem>
-                              <FormLabel className="mb-1">Unit</FormLabel>
-                              <Select
-                                   onValueChange={field.onChange}
-                                   defaultValue={field.value}
-                              >
-                                   <FormControl>
-                                        <SelectTrigger
-                                             className="bg-transparent border border-neutral-500/20
-                                            p-2 focus:outline-none  focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] w-full"
+          <FormField
+               control={form.control}
+               name="unit"
+               render={({ field }) => (
+                    <FormItem>
+                         <FormLabel className="text-gray-700 font-medium">
+                              Unit
+                         </FormLabel>
+                         <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                         >
+                              <FormControl>
+                                   <SelectTrigger className="border-gray-300 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 text-gray-800 w-full">
+                                        <SelectValue placeholder="Select unit" />
+                                   </SelectTrigger>
+                              </FormControl>
+                              <SelectContent className="bg-white border-gray-300 shadow-lg">
+                                   {PRODUCT_UNITS.map((unit) => (
+                                        <SelectItem
+                                             key={unit.id}
+                                             value={unit.id}
+                                             className="text-gray-700 hover:bg-gray-100"
                                         >
-                                             <SelectValue
-                                                  placeholder={`Product unit ${field.value} selected`}
-                                             />
-                                        </SelectTrigger>
-                                   </FormControl>
-                                   <SelectContent
-                                        className="bg-[#f0f1f7] dark:bg-[#252729]
-                                                border border-neutral-500/20
-                                            p-2 focus:outline-none  focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] space-y-0.5"
-                                   >
-                                        {PRODUCT_UNITS.map((unit) => (
-                                             <SelectItem
-                                                  key={unit.id}
-                                                  value={unit.id}
-                                                  className="border border-neutral-800/10 mb-0.5"
-                                             >
-                                                  {unit.title}
-                                             </SelectItem>
-                                        ))}
-                                   </SelectContent>
-                              </Select>
-                         </FormItem>
-                    )}
-               />
-          </>
+                                             {unit.title}
+                                        </SelectItem>
+                                   ))}
+                              </SelectContent>
+                         </Select>
+                    </FormItem>
+               )}
+          />
      );
 }

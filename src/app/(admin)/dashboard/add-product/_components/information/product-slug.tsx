@@ -13,7 +13,8 @@ import { useEffect } from "react";
 
 export default function ProductSlug({ form }: { form: AddProductFormType }) {
      const name = form.watch("name");
-     // slug create
+
+     // Auto-generate slug from name
      useEffect(() => {
           if (name) {
                form.setValue(
@@ -21,44 +22,38 @@ export default function ProductSlug({ form }: { form: AddProductFormType }) {
                     name
                          .trim()
                          .toLowerCase()
-                         .replace(/[^\w\s-]/g, "-") // Replace non-word characters with hyphens
-                         .replace(/\s+/g, "-") // Replace spaces with hyphens
-                         .replace(/^-+|-+$/g, "") // Remove hyphens from the start and end
+                         .replace(/[^\w\s-]/g, "-")
+                         .replace(/\s+/g, "-")
+                         .replace(/^-+|-+$/g, "")
                );
-
                form.clearErrors("slug");
           } else {
                form.setValue("slug", "");
                form.clearErrors("slug");
           }
      }, [form, name]);
-     // slug create
 
      return (
-          <>
-               <FormField
-                    control={form.control}
-                    name="slug"
-                    render={({ field, fieldState }) => (
-                         <FormItem>
-                              <FormLabel id="product-slug" className="mb-1">
-                                   Product Slug*
-                              </FormLabel>
-
-                              <FormControl>
-                                   <Input
-                                        {...field}
-                                        className="w-full bg-transparent border border-neutral-500/20
-                                            p-2 focus:outline-none focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] rounded"
-                                        placeholder="product-slug-example"
-                                   />
-                              </FormControl>
-                              <FormMessage className="text-red-500">
-                                   {fieldState.error?.message}
-                              </FormMessage>
-                         </FormItem>
-                    )}
-               />
-          </>
+          <FormField
+               control={form.control}
+               name="slug"
+               render={({ field, fieldState }) => (
+                    <FormItem>
+                         <FormLabel className="text-gray-700 font-medium">
+                              Product Slug*
+                         </FormLabel>
+                         <FormControl>
+                              <Input
+                                   {...field}
+                                   placeholder="product-slug-example"
+                                   className="border-gray-300 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 placeholder:text-gray-400 text-gray-800"
+                              />
+                         </FormControl>
+                         <FormMessage className="text-red-500 text-sm">
+                              {fieldState.error?.message}
+                         </FormMessage>
+                    </FormItem>
+               )}
+          />
      );
 }

@@ -23,22 +23,22 @@ export default function PriceFormControl({
           }
      }, [variantPrice, form]);
 
-     // when form rest state also reset
-     useEffect(() => {
-          // Listen for reset event from the form
-          const subscription = form.watch((value, { name }) => {
-               if (name === undefined) {
-                    const obj: VariantPriceType = {
-                         variantId: variantDefault.id,
-                         price: 0,
-                         select: true,
-                    };
-                    setVariantPrice([obj]);
-               }
-          });
-          return () => subscription.unsubscribe(); // clan up function
-     }, [form]);
-     // when form rest state also reset
+     // // when form rest state also reset
+     // useEffect(() => {
+     //      // Listen for reset event from the form
+     //      const subscription = form.watch((value, { name }) => {
+     //           if (name === undefined) {
+     //                const obj: VariantPriceType = {
+     //                     variantId: variantDefault.id,
+     //                     price: 0,
+     //                     select: true,
+     //                };
+     //                setVariantPrice([obj]);
+     //           }
+     //      });
+     //      return () => subscription.unsubscribe(); // clan up function
+     // }, [form]);
+     // // when form rest state also reset
 
      function handelAddVariant() {
           router.push("#variant-section");
@@ -50,7 +50,6 @@ export default function PriceFormControl({
                          title="regular"
                          variant={variantDefault}
                          setVariantPrice={setVariantPrice}
-                         form={form}
                     />
                     {variants?.length > 0 &&
                          variants?.map((variant) => (
@@ -59,7 +58,6 @@ export default function PriceFormControl({
                                    title={variant?.title}
                                    variant={variant}
                                    setVariantPrice={setVariantPrice}
-                                   form={form}
                               />
                          ))}
                </>
@@ -77,18 +75,12 @@ export default function PriceFormControl({
 }
 
 type PriceVariantType = {
-     form: AddProductFormType;
      setVariantPrice: React.Dispatch<React.SetStateAction<VariantPriceType[]>>;
      title: string;
      variant: VariantType;
 };
 
-function PriceVariant({
-     form,
-     title,
-     variant,
-     setVariantPrice,
-}: PriceVariantType) {
+function PriceVariant({ title, variant, setVariantPrice }: PriceVariantType) {
      useEffect(() => {
           const obj = {
                variantId: variant?.id,
@@ -140,7 +132,6 @@ function PriceVariant({
                          {title} :
                     </FormLabel>
                     <PriceInput
-                         form={form}
                          onChangeValue={(value: number) =>
                               handelPriceChange(value)
                          }

@@ -8,8 +8,10 @@ import ProductUnit from "./product-unit";
 
 export default function ProductInformation({
      form,
+     isFormReset,
 }: {
      form: AddProductFormType;
+     isFormReset: boolean;
 }) {
      return (
           <>
@@ -26,7 +28,7 @@ export default function ProductInformation({
                     </div>
                </div>
                <div className="">
-                    <Description form={form} />
+                    <Description form={form} isFormReset={isFormReset} />
                </div>
           </>
      );
