@@ -31,6 +31,9 @@ export default function PreviewImagesComponents({
           setLoading(false);
      }
 
+     /**
+      * upload images function here.
+      */
      const isUploadingRef = useRef(false);
 
      useEffect(() => {
@@ -84,6 +87,9 @@ export default function PreviewImagesComponents({
                if (progressInterval) clearInterval(progressInterval);
           };
      }, [previewImageDetails, setPreviewImages]);
+     /**
+      * upload images function here.
+      */
 
      return (
           <>
