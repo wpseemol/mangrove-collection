@@ -14,6 +14,7 @@ import { z } from "zod";
 import ProductInformation from "./information/product-information";
 import Media from "./media/media";
 import ProductCategoryContainer from "./product-category-container";
+import Variants from "./variants";
 
 export default function AddProduct({
      allCategory,
@@ -55,9 +56,11 @@ export default function AddProduct({
                description: "",
                thumbnail: "",
                images: [],
-               variants: [],
+               variants: [
+                    { id: "defaultId", type: "default", title: "Default" },
+               ],
                currency: "tk",
-               price: [{ variantId: "regular", price: 1, select: true }],
+               price: [{ variantId: "defaultId", price: 1, select: true }],
                category: "some text",
                shortDescription: "short description",
                tags: [],
@@ -109,7 +112,7 @@ export default function AddProduct({
                                    title="Variants"
                                    id="variants"
                               >
-                                   coming soon
+                                   <Variants form={form} />
                               </ProductCategoryContainer>
                          </div>
                          <div className="md:col-span-1 ">

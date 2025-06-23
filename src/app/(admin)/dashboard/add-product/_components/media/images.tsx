@@ -62,7 +62,7 @@ export default function Images({
                               <FormControl>
                                    <div className=" flex flex-col justify-center items-center min-h-40 h-fit">
                                         {preViewImages && (
-                                             <div className="flex gap-2 my-3">
+                                             <div className="flex items-center flex-wrap gap-1.5 my-3">
                                                   {preViewImages.map(
                                                        (previewImg) => (
                                                             <PreviewImagesComponents

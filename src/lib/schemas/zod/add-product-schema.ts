@@ -21,7 +21,15 @@ const addProductSchema = z.object({
           })
      ),
      variants: z.array(
-          z.object({ id: z.string(), type: z.string(), title: z.string() })
+          z.object({
+               id: z.string(),
+               type: z.string().min(1, {
+                    message: "Please select variant type.",
+               }),
+               title: z.string().min(1, {
+                    message: "Please input variant title.",
+               }),
+          })
      ),
      currency: z.string().min(1, {
           message: "Please select price currency.",

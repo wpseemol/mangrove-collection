@@ -46,8 +46,8 @@ export const PRODUCT_UNITS = [
  * Pc variants array it's. { id: 1, type: 'Size', value: 'size' }[],
  */
 export const PC_VARIANTS = [
-     { id: 1, type: "Size", value: "size" },
-     { id: 2, type: "Color", value: "color" },
+     { id: 1, type: "Color", value: "color" },
+     { id: 2, type: "Size", value: "size" },
      { id: 3, type: "Material", value: "material" },
      { id: 4, type: "Style", value: "style" },
      { id: 5, type: "Title", value: "title" },
