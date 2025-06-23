@@ -9,7 +9,10 @@ import {
      FormMessage,
 } from "@/components/ui/form";
 import { Progress } from "@/components/ui/progress";
-import { deleteUploadedImage, thumbnailUpload } from "@/lib/actions/media";
+import {
+     deleteUploadedImage,
+     imagesUploadCloudinary,
+} from "@/lib/actions/media";
 import { AddProductFormType } from "@/types/add-products";
 import Image from "next/image";
 import {
@@ -62,7 +65,7 @@ export default function Thumbnail({
           const progressInterval = setInterval(() => {
                setProgress((prev) => Math.min(prev + 1, 100));
           }, 1);
-          const response = await thumbnailUpload(formData);
+          const response = await imagesUploadCloudinary(formData);
           clearInterval(progressInterval);
           setProgress(100);
 
@@ -110,7 +113,7 @@ export default function Thumbnail({
                                                                       file.preview
                                                                  );
                                                             }}
-                                                            alt="thumbnail"
+                                                            alt={file.file.name}
                                                             width={80}
                                                             height={80}
                                                             className="object-cover w-full h-full transition-transform duration-200"
@@ -210,7 +213,6 @@ export default function Thumbnail({
                                                        </div>
                                                   </div>
                                              )}
-                                             {/* image Cancel button */}
                                         </div>
                                    </div>
                               ) : (

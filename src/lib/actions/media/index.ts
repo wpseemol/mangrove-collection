@@ -4,7 +4,7 @@ import cloudinary from "@/cloudinary";
 import { extractPublicIdFromUrl } from "@/utils/publick-id-from-url";
 import { Readable } from "stream";
 
-export async function thumbnailUpload(formData: FormData) {
+export async function imagesUploadCloudinary(formData: FormData) {
      try {
           const file = formData.get("product-images") as File | null;
 

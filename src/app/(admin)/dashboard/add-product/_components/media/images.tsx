@@ -10,28 +10,42 @@ import {
 } from "@/components/ui/form";
 import { AddProductFormType } from "@/types/add-products";
 import { generateUniqueIds } from "@/utils/unique-id-generate";
-
 import Image from "next/image";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FileRejection, FileWithPath, useDropzone } from "react-dropzone";
 import { FcMultipleInputs } from "react-icons/fc";
+import PreviewImagesComponents from "./preview-Images-components";
 
-export default function Images({ form }: { form: AddProductFormType }) {
-     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-     const [imageUpload, setImageUpload] = useState([]);
+export default function Images({
+     form,
+     isFormReset,
+}: {
+     form: AddProductFormType;
+     isFormReset: boolean;
+}) {
      const [preViewImages, setPreviewImages] = useState<
           PreviewStateType[] | null
      >(null);
 
-     async function actionAcceptFile(acceptFile) {
-          console.log(acceptFile);
-     }
+     useEffect(() => {
+          if (preViewImages && preViewImages.length > 0) {
+               const imagesValue = preViewImages.map((item) => ({
+                    id: item.id,
+                    imgUrl: item?.url || "",
+               }));
+               if (imagesValue.length > 0) {
+                    form.setValue("images", imagesValue);
+                    form.clearErrors("images");
+               }
+          }
+     }, [preViewImages, form]);
 
-     console.log("preViewImages:", preViewImages);
-
-     function handelCancelImage(id) {
-          console.log("deleted id:", id);
-     }
+     /**
+      * form rest
+      */
+     useEffect(() => {
+          if (isFormReset) setPreviewImages(null);
+     }, [isFormReset]);
 
      return (
           <>
@@ -51,54 +65,17 @@ export default function Images({ form }: { form: AddProductFormType }) {
                                              <div className="flex gap-2 my-3">
                                                   {preViewImages.map(
                                                        (previewImg) => (
-                                                            <div
+                                                            <PreviewImagesComponents
                                                                  key={
                                                                       previewImg.id
                                                                  }
-                                                                 className="relative group transition-transform duration-200 hover:scale-105"
-                                                            >
-                                                                 <figure className="w-24 h-24 rounded-lg overflow-hidden shadow-md border border-neutral-200 transition-shadow duration-200 group-hover:shadow-lg group-hover:border-primary-400">
-                                                                      <Image
-                                                                           src={
-                                                                                previewImg.preview
-                                                                           }
-                                                                           alt={
-                                                                                previewImg
-                                                                                     .file
-                                                                                     .name
-                                                                           }
-                                                                           width={
-                                                                                100
-                                                                           }
-                                                                           height={
-                                                                                100
-                                                                           }
-                                                                           className="object-cover w-full h-full transition-transform duration-200 group-hover:scale-110"
-                                                                      />
-                                                                 </figure>
-                                                                 <button
-                                                                      type="button"
-                                                                      className="absolute top-1 right-1 opacity-80 group-hover:opacity-100 transition-opacity duration-200"
-                                                                      onClick={() =>
-                                                                           handelCancelImage(
-                                                                                previewImg.id
-                                                                           )
-                                                                      }
-                                                                 >
-                                                                      <svg
-                                                                           xmlns="http://www.w3.org/2000/svg"
-                                                                           viewBox="0 0 20 20"
-                                                                           fill="currentColor"
-                                                                           className="w-5 h-5 text-red-500 bg-white rounded-full p-1 shadow transition-colors duration-200 hover:bg-red-500 hover:text-white"
-                                                                      >
-                                                                           <path
-                                                                                fillRule="evenodd"
-                                                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.53-10.47a.75.75 0 00-1.06-1.06L10 8.94 7.53 6.47a.75.75 0 10-1.06 1.06L8.94 10l-2.47 2.47a.75.75 0 101.06 1.06L10 11.06l2.47 2.47a.75.75 0 101.06-1.06L11.06 10l2.47-2.47z"
-                                                                                clipRule="evenodd"
-                                                                           />
-                                                                      </svg>
-                                                                 </button>
-                                                            </div>
+                                                                 previewImageDetails={
+                                                                      previewImg
+                                                                 }
+                                                                 setPreviewImages={
+                                                                      setPreviewImages
+                                                                 }
+                                                            />
                                                        )
                                                   )}
                                              </div>
@@ -107,7 +84,6 @@ export default function Images({ form }: { form: AddProductFormType }) {
                                         <DrugAndDrop
                                              setPreviewImages={setPreviewImages}
                                              form={form}
-                                             actionAcceptFile={actionAcceptFile}
                                         />
                                    </div>
                               </FormControl>
@@ -122,7 +98,7 @@ export default function Images({ form }: { form: AddProductFormType }) {
 //  image drag and drop function start
 function DrugAndDrop({
      setPreviewImages,
-     actionAcceptFile,
+
      form,
 }: DrugAndDropType) {
      const onDrop = useCallback(
@@ -131,22 +107,24 @@ function DrugAndDrop({
                     const previewArray = acceptedFiles.map((file) => ({
                          id: generateUniqueIds(),
                          file: file,
+                         fileName: file.name,
                          preview: URL.createObjectURL(file),
                     }));
 
-                    setPreviewImages((prev) => {
-                         const prevArray = prev
-                              ? [...prev, ...previewArray]
-                              : previewArray;
-
-                         actionAcceptFile(prevArray.map((item) => item.file));
-                         return prevArray;
-                    });
+                    setPreviewImages((prev) =>
+                         prev ? [...prev, ...previewArray] : previewArray
+                    );
                     form.clearErrors("images");
                }
 
                if (fileRejections.length > 0) {
-                    form.setError("thumbnail", {
+                    const errorMessages = {
+                         "file-invalid-type":
+                              "Only JPEG, JPG, and PNG files are allowed.",
+                         "too-many-files": "Only one file can be uploaded.",
+                         "file-too-large": `Image file is too large (max 1MB).`,
+                    };
+                    form.setError("images", {
                          type: "manual",
                          message:
                               errorMessages[fileRejections[0].errors[0].code] ||
@@ -154,7 +132,7 @@ function DrugAndDrop({
                     });
                }
           },
-          [form, setPreviewImages, actionAcceptFile]
+          [form, setPreviewImages]
      );
 
      const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -166,7 +144,7 @@ function DrugAndDrop({
      return (
           <div
                {...getRootProps()}
-               className=" flex justify-center items-center h-fit cursor-pointer py-3 mt-1 border-dashed border-2 border-neutral-500/20 bg-neutral-400/10 w-full"
+               className=" flex justify-center items-center h-fit cursor-pointer py-3 mt-1 border-dashed border-2 border-neutral-500/20 bg-neutral-400/10 w-full group hover:border-neutral-500/90"
           >
                <input {...getInputProps()} />
 
@@ -206,23 +184,13 @@ type DrugAndDropType = {
           React.SetStateAction<PreviewStateType[] | null>
      >;
      form: AddProductFormType;
-     actionAcceptFile: (file: FileWithPath[]) => Promise<void> | void;
 };
 
-interface PreviewStateType {
+export interface PreviewStateType {
      id: string;
-     file: FileWithPath;
+     file: FileWithPath | null;
+     fileName: string;
      preview: string;
+     url?: string | null;
+     public_id?: string | null;
 }
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-interface UploadImageType {
-     ulr: string;
-     public_id: string;
-}
-
-const errorMessages = {
-     "file-invalid-type": "Only JPEG, JPG, and PNG files are allowed.",
-     "too-many-files": "Only one file can be uploaded.",
-     "file-too-large": "Image file is too large (max 1MB).",
-};

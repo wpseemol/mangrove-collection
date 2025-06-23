@@ -17,7 +17,7 @@ export default function Media({
                     <Thumbnail form={form} isFormReset={isFormReset} />
                </div>
                <div className="mb-4">
-                    <Images form={form} />
+                    <Images form={form} isFormReset={isFormReset} />
                </div>
           </>
      );
