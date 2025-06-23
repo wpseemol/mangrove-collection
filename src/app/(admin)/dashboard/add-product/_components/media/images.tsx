@@ -46,9 +46,9 @@ export default function Images({ form }: { form: AddProductFormType }) {
                                    preferable.
                               </FormDescription>
                               <FormControl>
-                                   <div className="border-dashed border-2 border-neutral-500/20 bg-neutral-400/10 w-full flex flex-col justify-center items-center min-h-40 h-fit p-2">
+                                   <div className=" flex flex-col justify-center items-center min-h-40 h-fit">
                                         {preViewImages && (
-                                             <div className="flex gap-2 mt-3">
+                                             <div className="flex gap-2 my-3">
                                                   {preViewImages.map(
                                                        (previewImg) => (
                                                             <div
@@ -166,7 +166,7 @@ function DrugAndDrop({
      return (
           <div
                {...getRootProps()}
-               className="w-full flex justify-center items-center h-fit cursor-pointer my-2 mt-1"
+               className=" flex justify-center items-center h-fit cursor-pointer py-3 mt-1 border-dashed border-2 border-neutral-500/20 bg-neutral-400/10 w-full"
           >
                <input {...getInputProps()} />
 
