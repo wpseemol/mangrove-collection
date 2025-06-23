@@ -8,74 +8,30 @@ import {
      FormLabel,
      FormMessage,
 } from "@/components/ui/form";
-import { Progress } from "@/components/ui/progress";
 import { AddProductFormType } from "@/types/add-products";
+import { generateUniqueIds } from "@/utils/unique-id-generate";
 
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
-import { useDropzone } from "react-dropzone";
-import { FcAddImage, FcMultipleInputs, FcUpload } from "react-icons/fc";
-import { MdDelete } from "react-icons/md";
-
-function ErrorMassage({ form, type }: ErrorMassageType) {
-     return (
-          <>
-               <FormField
-                    control={form.control}
-                    name="images"
-                    render={() => (
-                         <FormItem>
-                              <FormLabel>Pictures</FormLabel>
-                              <FormDescription className="mt-1">
-                                   Product Images width and height 300x300
-                                   preferable.
-                              </FormDescription>
-                              <FormControl>content or more</FormControl>
-                              <FormMessage className="text-red-500 text-sm" />
-                         </FormItem>
-                    )}
-               />
-          </>
-     );
-}
+import { useCallback, useState } from "react";
+import { FileRejection, FileWithPath, useDropzone } from "react-dropzone";
+import { FcMultipleInputs } from "react-icons/fc";
 
 export default function Images({ form }: { form: AddProductFormType }) {
-     const [imageUpload, setImageUpload] = useState<ImageUploadType[]>(
-          initialUpdatedImageValue
-     );
-     const [imgUrl, setImgUrl] = useState<ImgUrlType[]>([]);
+     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+     const [imageUpload, setImageUpload] = useState([]);
+     const [preViewImages, setPreviewImages] = useState<
+          PreviewStateType[] | null
+     >(null);
 
-     function handelAddElement() {
-          setImageUpload((pre: ImageUploadType[]) => [
-               ...pre,
-               {
-                    id: crypto.randomUUID(),
-                    file: null,
-                    imgUrl: null,
-               },
-          ]);
-
-          form.clearErrors("images");
+     async function actionAcceptFile(acceptFile) {
+          console.log(acceptFile);
      }
 
-     useEffect(() => {
-          if (imgUrl.length > 0) {
-               form.setValue("images", imgUrl);
-          }
-     }, [imgUrl, form]);
+     console.log("preViewImages:", preViewImages);
 
-     // when form rest state also reset
-     useEffect(() => {
-          // Listen for reset event from the form
-          const subscription = form.watch((value, { name }) => {
-               if (name === undefined) {
-                    setImgUrl([]);
-                    setImageUpload(initialUpdatedImageValue);
-               }
-          });
-          return () => subscription.unsubscribe(); // clan up function
-     }, [form]);
-     // when form rest state also reset
+     function handelCancelImage(id) {
+          console.log("deleted id:", id);
+     }
 
      return (
           <>
@@ -90,389 +46,183 @@ export default function Images({ form }: { form: AddProductFormType }) {
                                    preferable.
                               </FormDescription>
                               <FormControl>
-                                   <div className="border-dashed border-2 border-neutral-500/20 bg-neutral-400/10 w-full flex flex-col justify-center items-center min-h-40 h-fit p-2 py-4">
-                                        content here
+                                   <div className="border-dashed border-2 border-neutral-500/20 bg-neutral-400/10 w-full flex flex-col justify-center items-center min-h-40 h-fit p-2">
+                                        {preViewImages && (
+                                             <div className="flex gap-2 mt-3">
+                                                  {preViewImages.map(
+                                                       (previewImg) => (
+                                                            <div
+                                                                 key={
+                                                                      previewImg.id
+                                                                 }
+                                                                 className="relative group transition-transform duration-200 hover:scale-105"
+                                                            >
+                                                                 <figure className="w-24 h-24 rounded-lg overflow-hidden shadow-md border border-neutral-200 transition-shadow duration-200 group-hover:shadow-lg group-hover:border-primary-400">
+                                                                      <Image
+                                                                           src={
+                                                                                previewImg.preview
+                                                                           }
+                                                                           alt={
+                                                                                previewImg
+                                                                                     .file
+                                                                                     .name
+                                                                           }
+                                                                           width={
+                                                                                100
+                                                                           }
+                                                                           height={
+                                                                                100
+                                                                           }
+                                                                           className="object-cover w-full h-full transition-transform duration-200 group-hover:scale-110"
+                                                                      />
+                                                                 </figure>
+                                                                 <button
+                                                                      type="button"
+                                                                      className="absolute top-1 right-1 opacity-80 group-hover:opacity-100 transition-opacity duration-200"
+                                                                      onClick={() =>
+                                                                           handelCancelImage(
+                                                                                previewImg.id
+                                                                           )
+                                                                      }
+                                                                 >
+                                                                      <svg
+                                                                           xmlns="http://www.w3.org/2000/svg"
+                                                                           viewBox="0 0 20 20"
+                                                                           fill="currentColor"
+                                                                           className="w-5 h-5 text-red-500 bg-white rounded-full p-1 shadow transition-colors duration-200 hover:bg-red-500 hover:text-white"
+                                                                      >
+                                                                           <path
+                                                                                fillRule="evenodd"
+                                                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.53-10.47a.75.75 0 00-1.06-1.06L10 8.94 7.53 6.47a.75.75 0 10-1.06 1.06L8.94 10l-2.47 2.47a.75.75 0 101.06 1.06L10 11.06l2.47 2.47a.75.75 0 101.06-1.06L11.06 10l2.47-2.47z"
+                                                                                clipRule="evenodd"
+                                                                           />
+                                                                      </svg>
+                                                                 </button>
+                                                            </div>
+                                                       )
+                                                  )}
+                                             </div>
+                                        )}
+
+                                        <DrugAndDrop
+                                             setPreviewImages={setPreviewImages}
+                                             form={form}
+                                             actionAcceptFile={actionAcceptFile}
+                                        />
                                    </div>
                               </FormControl>
                               <FormMessage className="text-red-500 text-sm" />
                          </FormItem>
                     )}
                />
-
-               <>
-                    {/* image upload add */}
-                    <div className="flex items-center justify-center gap-4 flex-wrap">
-                         {imageUpload?.map((element) => (
-                              <InputOrImage
-                                   key={element?.id}
-                                   element={element}
-                                   setImageUpload={setImageUpload}
-                                   form={form}
-                                   setImgUrl={setImgUrl}
-                              />
-                         ))}
-
-                         <div
-                              onClick={handelAddElement}
-                              className={`${uploadImageBtn} cursor-pointer group`}
-                         >
-                              <FcAddImage className="text-4xl group-hover:scale-110 duration-200" />
-                         </div>
-                    </div>
-                    {/* image upload add */}
-
-                    <DrugAndDrop setImageUpload={setImageUpload} form={form} />
-               </>
-               <ErrorMassage form={form} type="images" />
           </>
      );
 }
 
-// image preview or input box here
-let selectedId = "";
-function InputOrImage({
-     element,
-     setImageUpload,
+//  image drag and drop function start
+function DrugAndDrop({
+     setPreviewImages,
+     actionAcceptFile,
      form,
-     setImgUrl,
-}: InputOrImageType) {
-     const [uploadProgress, setUploadProgress] = useState(0);
-     const [imageNameWithRandomId, setImageNameWithRandomId] = useState<
-          string | null
-     >(null);
+}: DrugAndDropType) {
+     const onDrop = useCallback(
+          (acceptedFiles: FileWithPath[], fileRejections: FileRejection[]) => {
+               if (acceptedFiles.length > 0) {
+                    const previewArray = acceptedFiles.map((file) => ({
+                         id: generateUniqueIds(),
+                         file: file,
+                         preview: URL.createObjectURL(file),
+                    }));
 
-     const handelClick = (id: string) => {
-          selectedId = id;
-     };
+                    setPreviewImages((prev) => {
+                         const prevArray = prev
+                              ? [...prev, ...previewArray]
+                              : previewArray;
 
-     function handelImageUpload(event: React.ChangeEvent<HTMLInputElement>) {
-          const file = event.target.files?.[0];
-          if (file) {
-               imageUrlBase64(selectedId, file, setImageUpload); // image util
-               form.clearErrors("images");
-          }
-     }
+                         actionAcceptFile(prevArray.map((item) => item.file));
+                         return prevArray;
+                    });
+                    form.clearErrors("images");
+               }
 
-     async function handelDelete(id: string, imageName: string) {
-          const pathName = "product";
-          try {
-               await imageDeleteAction(pathName, imageName);
-               setImageUpload((pre) => pre?.filter((item) => item.id !== id));
-               setImgUrl((pre) => pre?.filter((item) => item.id !== id));
-          } catch (error) {
-               throw error;
-          }
-     }
-
-     useEffect(() => {
-          async function firebaseImageUpload(
-               uploadImage: File,
-               uploadImageId: string
-          ) {
-               try {
-                    const imageNameWithId =
-                         crypto.randomUUID() + "-" + uploadImage?.name;
-                    setImageNameWithRandomId(imageNameWithId);
-                    const imageRef = ref(
-                         storage,
-                         `/product/${imageNameWithId}`
-                    );
-                    const uploadTask = uploadBytesResumable(
-                         imageRef,
-                         uploadImage
-                    );
-                    uploadTask.on(
-                         "state_changed",
-                         (snapshot) => {
-                              const progress =
-                                   (snapshot.bytesTransferred /
-                                        snapshot.totalBytes) *
-                                   100;
-
-                              setUploadProgress(progress);
-                         },
-                         (error) => {
-                              console.log(error);
-                              form.setError("images", {
-                                   type: "manual",
-                                   message: "Error uploading image. Please try again.",
-                              });
-                         },
-                         async () => {
-                              const imgUrl = await getDownloadURL(
-                                   ref(imageRef)
-                              );
-
-                              setImgUrl((prevUrls) => {
-                                   // Check if the URL with the same ID already exists
-                                   const urlExists = prevUrls.some(
-                                        (url) => url.id === uploadImageId
-                                   );
-                                   if (!urlExists) {
-                                        return [
-                                             ...prevUrls,
-                                             { id: uploadImageId, imgUrl },
-                                        ];
-                                   }
-                                   return prevUrls;
-                              });
-                         }
-                    );
-               } catch (error) {
-                    console.log(error);
-                    form.setError("images", {
+               if (fileRejections.length > 0) {
+                    form.setError("thumbnail", {
                          type: "manual",
-                         message: error?.message,
+                         message:
+                              errorMessages[fileRejections[0].errors[0].code] ||
+                              "Image file select wrong.",
                     });
                }
-          }
+          },
+          [form, setPreviewImages, actionAcceptFile]
+     );
 
-          if (element?.imgUrl && element?.file) {
-               firebaseImageUpload(element?.file, element?.id);
-          }
-     }, [element, form, setImgUrl]);
+     const { getRootProps, getInputProps, isDragActive } = useDropzone({
+          onDrop,
+          accept: { "image/*": [".jpeg", ".jpg", ".png"] },
+          maxSize: 1024 * 1000,
+     });
 
      return (
-          <>
-               {element?.imgUrl ? (
-                    <figure className={uploadImageBtn}>
-                         <Image
-                              src={element?.imgUrl as string}
-                              alt={`image-${element?.id}`}
-                              width={100}
-                              height={100}
-                              className="w-auto h-auto object-cover object-center"
-                         />
-                         {uploadProgress !== 100 ? (
-                              <>
-                                   <div
-                                        className="absolute top-0 left-0 w-full h-full flex justify-center items-center
-                            backdrop-blur-[1px] bg-green-900/35 text-neutral-100 z-10 cursor-wait"
-                                   >
-                                        <p className="text-lg font-medium">
-                                             {Math.round(uploadProgress)}
-                                             <span>%</span>
-                                        </p>
-                                   </div>
-                                   <Progress
-                                        className="bg-slate-400 h-[6px] absolute -bottom-2 left-0 shadow-lg z-10"
-                                        value={uploadProgress}
-                                   />
-                              </>
-                         ) : (
-                              <div
-                                   className="absolute top-0 left-0 w-full h-full flex justify-center items-center hover:backdrop-blur-[1px] hover:bg-green-900/35 text-neutral-100 z-10 duration-200
-                        group"
-                              >
-                                   <span
-                                        onClick={() =>
-                                             imageNameWithRandomId &&
-                                             handelDelete(
-                                                  element.id,
-                                                  imageNameWithRandomId
-                                             )
-                                        }
-                                        className="group-hover:scale-100 scale-0 duration-200 text-2xl text-red-500 
-                            cursor-pointer p-2"
-                                   >
-                                        <MdDelete />
-                                   </span>
-                              </div>
-                         )}
-                    </figure>
-               ) : (
-                    <div className={`${uploadImageBtn} overflow-hidden`}>
-                         <label
-                              onClick={() => handelClick(element.id)}
-                              htmlFor="images"
-                              className="w-full h-full flex flex-col justify-center items-center hover:scale-105 duration-200 gap-1"
-                         >
-                              <FcUpload className="text-4xl" />
-                              <p className="text-sm font-medium">Upload now</p>
-                         </label>
+          <div
+               {...getRootProps()}
+               className="w-full flex justify-center items-center h-fit cursor-pointer my-2 mt-1"
+          >
+               <input {...getInputProps()} />
 
-                         <input
-                              onChange={(e) => handelImageUpload(e)}
-                              id="images"
-                              className="hidden"
-                              type="file"
-                              accept="image/*"
-                         />
+               {isDragActive ? (
+                    <div className="h-[10.2rem] flex flex-col justify-center items-center">
+                         <FcMultipleInputs className="text-7xl my-2 mx-auto scale-125" />
+                         <p className="text-lg font-medium">
+                              Drop the files here...
+                         </p>
+                    </div>
+               ) : (
+                    <div className="py-1 h-[10.2rem] text-center">
+                         <div className="w-20 mx-auto">
+                              <Image
+                                   src="/assets/logo/drag and drop icon.png"
+                                   alt="Drag and drop"
+                                   width={80}
+                                   height={80}
+                                   priority
+                              />
+                         </div>
+                         <p>or</p>
+                         <p className="text-lg font-medium">
+                              Drag and drop your file here
+                         </p>
+                         <p className="text-sm text-gray-500">
+                              Supports: JPEG, JPG, PNG (Max 1MB)
+                         </p>
                     </div>
                )}
-          </>
+          </div>
      );
 }
-
-const uploadImageBtn =
-     "w-24 h-24 border border-neutral-500/20 flex flex-col justify-center items-center rounded relative overflow-hidden";
-
-// image preview or input box here
 
 type DrugAndDropType = {
-     setImageUpload: React.Dispatch<React.SetStateAction<ImageUploadType[]>>;
+     setPreviewImages: React.Dispatch<
+          React.SetStateAction<PreviewStateType[] | null>
+     >;
      form: AddProductFormType;
+     actionAcceptFile: (file: FileWithPath[]) => Promise<void> | void;
 };
-//  image drag and drop function start
-function DrugAndDrop({ setImageUpload, form }: DrugAndDropType) {
-     const onDrop = useCallback(
-          (acceptedFiles: File[]) => {
-               if (acceptedFiles?.length > 0) {
-                    const base64Urls = async () => {
-                         try {
-                              const response: ImageUploadType[] =
-                                   await Promise.all(
-                                        acceptedFiles.map((element: File) =>
-                                             convertFileToBase64(element)
-                                        )
-                                   );
-                              setImageUpload((pre) => {
-                                   const filterArray = pre.filter(
-                                        (item) => item.imgUrl
-                                   );
-                                   return [...filterArray, ...response];
-                              });
-                         } catch (error) {
-                              form.setError("images", {
-                                   type: "manual",
-                                   message: (error as Error).message,
-                              });
-                         }
-                    };
 
-                    base64Urls();
-               }
-
-               form.clearErrors("images");
-          },
-          [setImageUpload, form]
-     );
-
-     const { getRootProps, fileRejections, getInputProps, isDragActive } =
-          useDropzone({
-               onDrop,
-               accept: { "image/*": [".jpeg", ".jpg", ".png"] },
-               maxSize: 1024 * 1000,
-          });
-
-     useEffect(() => {
-          if (fileRejections[0]?.errors[0]?.code === "file-invalid-type") {
-               form.setError("images", {
-                    type: "manual",
-                    message: `You selected ${fileRejections[0]?.file.type}.Only images can upload.`,
-               });
-          }
-          // image upload unction
-     }, [fileRejections, form]);
-
-     return (
-          <>
-               <div
-                    {...getRootProps({
-                         className:
-                              "w-full flex justify-center items-center h-fit",
-                    })}
-               >
-                    <input {...getInputProps()} multiple={false} />
-                    {isDragActive ? (
-                         <div className="h-[8.2rem] flex flex-col justify-center items-center">
-                              <div className="text-center text-7xl my-2 mx-auto">
-                                   <FcMultipleInputs className="scale-125 text-center mx-auto" />
-                              </div>
-                              <p className="text-center  text-lg font-medium">
-                                   Drop the files here ...
-                              </p>
-                         </div>
-                    ) : (
-                         <div className="py-1 h-[8.2rem] ">
-                              <figure className="w-20 mx-auto">
-                                   <Image
-                                        src="/assets/logo/drag and drop icon.png"
-                                        alt="drag and drop"
-                                        width={80}
-                                        height={80}
-                                   />
-                              </figure>
-                              <p className="text-center ">or</p>
-                              <p className="text-center text-lg font-medium">
-                                   Drag and drop your file here
-                              </p>
-                         </div>
-                    )}
-               </div>
-          </>
-     );
+interface PreviewStateType {
+     id: string;
+     file: FileWithPath;
+     preview: string;
 }
 
-//  image drag and drop function end
-type ErrorMassageType = {
-     form: AddProductFormType;
-     type: string;
-};
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+interface UploadImageType {
+     ulr: string;
+     public_id: string;
+}
 
-const imageUrlBase64 = (
-     selectedId: string,
-     file: File,
-     setStateFun: React.Dispatch<React.SetStateAction<ImageUploadType[]>>
-) => {
-     const render = new FileReader();
-     render.readAsDataURL(file);
-     render.onloadend = () => {
-          setStateFun((pre) => {
-               const updatedImageUpload = pre.map((element) => {
-                    if (element.id === selectedId) {
-                         return {
-                              ...element,
-                              file,
-                              imgUrl: render.result,
-                         };
-                    } else {
-                         return element;
-                    }
-               });
-
-               return updatedImageUpload;
-          });
-     };
-};
-
-const convertFileToBase64 = (file: File): Promise<ImageUploadType> => {
-     return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onloadend = () => {
-               resolve({
-                    id: crypto.randomUUID(),
-                    file,
-                    imgUrl: reader.result,
-               });
-          };
-          reader.onerror = reject;
-     });
-};
-
-const initialUpdatedImageValue = [
-     {
-          id: crypto.randomUUID(),
-          file: null,
-          imgUrl: null,
-     },
-];
-
-type ImageUploadType = {
-     id: string;
-     file: File | null;
-     imgUrl: ArrayBuffer | FileReader | string | null;
-};
-
-type ImgUrlType = {
-     id: string;
-     imgUrl: string;
-};
-
-type InputOrImageType = {
-     element: ImageUploadType;
-     setImageUpload: React.Dispatch<React.SetStateAction<ImageUploadType[]>>;
-     form: AddProductFormType; // Replace 'any' with the correct form type if available
-     setImgUrl: React.Dispatch<React.SetStateAction<ImgUrlType[]>>;
+const errorMessages = {
+     "file-invalid-type": "Only JPEG, JPG, and PNG files are allowed.",
+     "too-many-files": "Only one file can be uploaded.",
+     "file-too-large": "Image file is too large (max 1MB).",
 };
