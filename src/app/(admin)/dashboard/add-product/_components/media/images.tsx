@@ -29,12 +29,17 @@ export default function Images({
 
      useEffect(() => {
           if (preViewImages && preViewImages.length > 0) {
-               const imagesValue = preViewImages.map((item) => ({
-                    id: item.id,
-                    imgUrl: item?.url || "",
-               }));
-               if (imagesValue.length > 0) {
-                    form.setValue("images", imagesValue);
+               const finalImagesArray: { id: string; imgUrl: string }[] = [];
+               preViewImages.forEach((item) => {
+                    if (item?.url) {
+                         finalImagesArray.push({
+                              id: item.id,
+                              imgUrl: item.url,
+                         });
+                    }
+               });
+               if (finalImagesArray.length > 0) {
+                    form.setValue("images", finalImagesArray);
                     form.clearErrors("images");
                }
           }
