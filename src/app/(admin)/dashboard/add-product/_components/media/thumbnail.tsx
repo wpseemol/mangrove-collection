@@ -84,7 +84,7 @@ export default function Thumbnail({
           <FormField
                control={form.control}
                name="thumbnail"
-               render={({ fieldState }) => (
+               render={() => (
                     <FormItem>
                          <FormLabel className="-mb-2">
                               Thumbnail image*
@@ -217,9 +217,7 @@ export default function Thumbnail({
                                    />
                               )}
                          </FormControl>
-                         <FormMessage className="text-red-500">
-                              {fieldState.error?.message}
-                         </FormMessage>
+                         <FormMessage className="text-red-500 text-sm" />
                     </FormItem>
                )}
           />

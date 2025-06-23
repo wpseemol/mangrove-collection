@@ -57,6 +57,8 @@ export async function userRegister(loginInfo: string | null) {
                password: hashPassword,
           };
 
+          await connectMongoDB();
+
           await User.create(registerUserInfo);
 
           return {

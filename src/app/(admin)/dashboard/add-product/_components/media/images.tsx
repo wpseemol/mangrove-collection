@@ -1,6 +1,7 @@
 "use client";
-import imageDeleteAction from "@/action/image-delete-action";
+
 import {
+     FormControl,
      FormDescription,
      FormField,
      FormItem,
@@ -8,14 +9,35 @@ import {
      FormMessage,
 } from "@/components/ui/form";
 import { Progress } from "@/components/ui/progress";
-import { storage } from "@/firebase/firebase-config";
 import { AddProductFormType } from "@/types/add-products";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { FcAddImage, FcMultipleInputs, FcUpload } from "react-icons/fc";
 import { MdDelete } from "react-icons/md";
+
+function ErrorMassage({ form, type }: ErrorMassageType) {
+     return (
+          <>
+               <FormField
+                    control={form.control}
+                    name="images"
+                    render={() => (
+                         <FormItem>
+                              <FormLabel>Pictures</FormLabel>
+                              <FormDescription className="mt-1">
+                                   Product Images width and height 300x300
+                                   preferable.
+                              </FormDescription>
+                              <FormControl>content or more</FormControl>
+                              <FormMessage className="text-red-500 text-sm" />
+                         </FormItem>
+                    )}
+               />
+          </>
+     );
+}
 
 export default function Images({ form }: { form: AddProductFormType }) {
      const [imageUpload, setImageUpload] = useState<ImageUploadType[]>(
@@ -57,16 +79,27 @@ export default function Images({ form }: { form: AddProductFormType }) {
 
      return (
           <>
-               <div className="mb-1">
-                    <FormLabel>Pictures</FormLabel>
-                    <FormDescription className="mt-1">
-                         Product Images width and height 500x500 preferable
-                    </FormDescription>
-               </div>
-               <div
-                    className="border-dashed border-2 border-neutral-500/20 bg-neutral-400/10 w-full flex 
-            flex-col justify-center items-center min-h-40 h-fit p-2 py-4"
-               >
+               <FormField
+                    control={form.control}
+                    name="images"
+                    render={() => (
+                         <FormItem>
+                              <FormLabel>Pictures</FormLabel>
+                              <FormDescription className="mt-1">
+                                   Product Images width and height 300x300
+                                   preferable.
+                              </FormDescription>
+                              <FormControl>
+                                   <div className="border-dashed border-2 border-neutral-500/20 bg-neutral-400/10 w-full flex flex-col justify-center items-center min-h-40 h-fit p-2 py-4">
+                                        content here
+                                   </div>
+                              </FormControl>
+                              <FormMessage className="text-red-500 text-sm" />
+                         </FormItem>
+                    )}
+               />
+
+               <>
                     {/* image upload add */}
                     <div className="flex items-center justify-center gap-4 flex-wrap">
                          {imageUpload?.map((element) => (
@@ -89,7 +122,7 @@ export default function Images({ form }: { form: AddProductFormType }) {
                     {/* image upload add */}
 
                     <DrugAndDrop setImageUpload={setImageUpload} form={form} />
-               </div>
+               </>
                <ErrorMassage form={form} type="images" />
           </>
      );
@@ -318,7 +351,8 @@ function DrugAndDrop({ setImageUpload, form }: DrugAndDropType) {
      const { getRootProps, fileRejections, getInputProps, isDragActive } =
           useDropzone({
                onDrop,
-               accept: { "image/jpeg": [], "image/png": [] },
+               accept: { "image/*": [".jpeg", ".jpg", ".png"] },
+               maxSize: 1024 * 1000,
           });
 
      useEffect(() => {
@@ -355,6 +389,8 @@ function DrugAndDrop({ setImageUpload, form }: DrugAndDropType) {
                                    <Image
                                         src="/assets/logo/drag and drop icon.png"
                                         alt="drag and drop"
+                                        width={80}
+                                        height={80}
                                    />
                               </figure>
                               <p className="text-center ">or</p>
@@ -373,24 +409,6 @@ type ErrorMassageType = {
      form: AddProductFormType;
      type: string;
 };
-
-function ErrorMassage({ form, type }: ErrorMassageType) {
-     return (
-          <>
-               <FormField
-                    control={form.control}
-                    name={type}
-                    render={({ fieldState }) => (
-                         <FormItem>
-                              <FormMessage>
-                                   {fieldState.error?.message}
-                              </FormMessage>
-                         </FormItem>
-                    )}
-               />
-          </>
-     );
-}
 
 const imageUrlBase64 = (
      selectedId: string,

@@ -1,6 +1,7 @@
 "use client";
 
 import { AddProductFormType } from "@/types/add-products";
+import Images from "./images";
 import Thumbnail from "./thumbnail";
 
 export default function Media({
@@ -15,7 +16,9 @@ export default function Media({
                <div id="product-thumbnail" className="mb-4">
                     <Thumbnail form={form} isFormReset={isFormReset} />
                </div>
-               <div className="mb-4">{/* <Images form={form} /> */}</div>
+               <div className="mb-4">
+                    <Images form={form} />
+               </div>
           </>
      );
 }
