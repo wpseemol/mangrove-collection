@@ -112,7 +112,10 @@ export default function AddProduct({
                                    title="Variants"
                                    id="variants"
                               >
-                                   <Variants form={form} />
+                                   <Variants
+                                        form={form}
+                                        isFormReset={isFormReset}
+                                   />
                               </ProductCategoryContainer>
                          </div>
                          <div className="md:col-span-1 ">

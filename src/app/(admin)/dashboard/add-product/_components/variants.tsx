@@ -23,7 +23,13 @@ import { AddProductFormType } from "@/types/add-products";
 import { generateUniqueIds } from "@/utils/unique-id-generate";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-export default function Variants({ form }: { form: AddProductFormType }) {
+export default function Variants({
+     form,
+     isFormReset,
+}: {
+     form: AddProductFormType;
+     isFormReset: boolean;
+}) {
      const [variants, setVariants] = useState<VariantType[] | null>(null);
 
      function handelAddVariant() {
@@ -34,7 +40,30 @@ export default function Variants({ form }: { form: AddProductFormType }) {
           setVariants((prev) => (prev ? [...prev, variantObj] : [variantObj]));
      }
 
-     console.log("variant state:", variants);
+     useEffect(() => {
+          const defaultVariants = {
+               id: "defaultId",
+               type: "default",
+               title: "Default",
+          };
+          const finalVariantArray: FinalVariantType = [defaultVariants];
+          if (variants && variants.length > 0) {
+               variants.forEach((variant) => {
+                    if (variant?.title && variant?.type) {
+                         finalVariantArray.push({ ...variant });
+                    }
+               });
+
+               form.setValue("variants", finalVariantArray);
+               form.clearErrors("variants");
+          }
+     }, [variants, form]);
+
+     useEffect(() => {
+          if (isFormReset) {
+               setVariants(null);
+          }
+     }, [isFormReset]);
 
      return (
           <>
@@ -171,12 +200,12 @@ function VariantsInputSelect({
                                    <SelectLabel>Variants Type</SelectLabel>
 
                                    {variantArrayObj[unitState].map(
-                                        (variant) => (
+                                        (variantItem) => (
                                              <SelectItem
-                                                  key={variant.id}
-                                                  value={variant.value}
+                                                  key={variantItem.id}
+                                                  value={variantItem.value}
                                              >
-                                                  {variant.type}
+                                                  {variantItem.type}
                                              </SelectItem>
                                         )
                                    )}
@@ -220,13 +249,17 @@ function VariantsInputSelect({
      );
 }
 
-function DefaultVariants({ form }: { form: AddProductFormType }) {
-     const variants = form.getValues("variants");
+function DefaultVariants() {
+     const defaultVariants = {
+          id: "defaultId",
+          type: "default",
+          title: "Default",
+     };
 
      return (
           <div className="flex items-center gap-2 mb-2">
                <div className="md:w-1/3 w-full">
-                    <Select value={variants[0].id}>
+                    <Select value={defaultVariants.id}>
                          <SelectTrigger
                               disabled
                               className="border-gray-200 w-full"
@@ -236,14 +269,10 @@ function DefaultVariants({ form }: { form: AddProductFormType }) {
                          <SelectContent className="bg-gray-50 border-gray-100">
                               <SelectGroup>
                                    <SelectLabel>Variants Type</SelectLabel>
-                                   {variants.map((variant) => (
-                                        <SelectItem
-                                             key={variant.id}
-                                             value={variant.id}
-                                        >
-                                             {variant.title}
-                                        </SelectItem>
-                                   ))}
+
+                                   <SelectItem value={defaultVariants.id}>
+                                        {defaultVariants.title}
+                                   </SelectItem>
                               </SelectGroup>
                          </SelectContent>
                     </Select>
@@ -251,7 +280,7 @@ function DefaultVariants({ form }: { form: AddProductFormType }) {
                <div className="md:w-2/3 w-full">
                     <Input
                          disabled
-                         value={variants[0].title}
+                         value={defaultVariants.title}
                          placeholder="Enter product name"
                          className="border-gray-300 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 placeholder:text-gray-400 text-gray-800"
                     />
@@ -266,4 +295,10 @@ interface VariantType {
      id: string;
      type?: string;
      title?: string;
+}
+
+interface FinalVariantType {
+     id: string;
+     type: string;
+     title: string;
 }
