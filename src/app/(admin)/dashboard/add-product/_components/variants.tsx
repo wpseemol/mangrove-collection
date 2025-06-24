@@ -46,20 +46,29 @@ export default function Variants({
                type: "default",
                title: "Default",
           };
-          const finalVariantArray: FinalVariantType = [defaultVariants];
+          const finalVariantArray: FinalVariantType[] = [defaultVariants];
           if (variants && variants.length > 0) {
                variants.forEach((variant) => {
                     if (variant?.title && variant?.type) {
                          finalVariantArray.push({ ...variant });
                     }
                });
-
-               form.setValue("variants", finalVariantArray);
-               form.clearErrors("variants");
-          } else {
-               form.setValue("variants", finalVariantArray);
-               form.clearErrors("variants");
           }
+          form.setValue("variants", finalVariantArray);
+
+          /**
+           * price value set
+           */
+          form.setValue(
+               "price",
+               finalVariantArray.map((item) =>
+                    item.id === defaultVariants.id
+                         ? { variantId: item.id, price: 0, select: true }
+                         : { variantId: item.id, price: 0, select: false }
+               )
+          );
+
+          form.clearErrors("variants");
      }, [variants, form]);
 
      useEffect(() => {
@@ -72,7 +81,7 @@ export default function Variants({
           <>
                <FormField
                     control={form.control}
-                    name="name"
+                    name="variants"
                     render={() => (
                          <FormItem>
                               <FormLabel className="text-gray-700 font-medium">

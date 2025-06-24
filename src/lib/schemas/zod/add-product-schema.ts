@@ -38,13 +38,13 @@ const addProductSchema = z.object({
           z.object({
                variantId: z.string(),
                price: z.coerce.number().min(1, {
-                    message: "Price must be at least 1.",
+                    message: "Price input product price.",
                }),
                select: z.boolean(),
           })
      ),
      category: z.string().min(1, {
-          message: "Please select category, then submit agin.",
+          message: "Please select category, then submit again.",
      }),
      shortDescription: z.string(),
      tags: z.array(z.string()),
