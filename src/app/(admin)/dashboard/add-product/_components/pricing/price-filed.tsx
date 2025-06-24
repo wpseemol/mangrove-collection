@@ -190,7 +190,7 @@ function PriceInput({
                                         </label>
                                    </TooltipTrigger>
                                    <TooltipContent className="text-white">
-                                        Show on cart
+                                        Selected show on product cart default.
                                    </TooltipContent>
                               </Tooltip>
                          </div>
