@@ -1,5 +1,6 @@
 "use client";
 import { CurrencyIcon } from "@/components/currency-icon";
+import { Button } from "@/components/ui/button";
 import {
      FormDescription,
      FormField,
@@ -41,6 +42,26 @@ export default function PriceFiled({
                                         isFormReset={isFormReset}
                                    />
                               ))}
+                         <div>
+                              <Button
+                                   type="button"
+                                   variant="ghost"
+                                   className="cursor-pointer"
+                                   onClick={() => {
+                                        const variantSection =
+                                             document.getElementById(
+                                                  "variant-section"
+                                             );
+                                        if (variantSection) {
+                                             variantSection.scrollIntoView({
+                                                  behavior: "smooth",
+                                             });
+                                        }
+                                   }}
+                              >
+                                   + Add Variant
+                              </Button>
+                         </div>
 
                          {/* price err message here */}
                          <FormMessage className="text-red-500 text-sm" />
@@ -82,7 +103,7 @@ function PriceInput({
      }, [isFormReset]);
 
      return (
-          <div className="flex items-center gap-4 py-2 border-b border-gray-200 last:border-b-0">
+          <div className="flex items-center gap-4 py-2  border-gray-200 last:border-b-0">
                <div className="w-1/3 flex items-center">
                     <span className="font-medium text-gray-700 capitalize">
                          {variant.title.toLocaleLowerCase()}
