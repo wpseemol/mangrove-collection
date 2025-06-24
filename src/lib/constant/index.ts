@@ -61,7 +61,7 @@ export const KG_VARIANTS = [{ id: 1, type: "Size", value: "size" }];
 /**
  * Price unit array.
  */
-export const PRICE_UNITS = [
+export const PRICE_CURRENCY = [
      { id: "taka", title: "&#2547; টাকা" },
      { id: "dollar", title: "&#36; Dollar" },
 ];

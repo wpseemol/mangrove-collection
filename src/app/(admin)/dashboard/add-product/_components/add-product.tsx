@@ -13,6 +13,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import ProductInformation from "./information/product-information";
 import Media from "./media/media";
+import Pricing from "./pricing/pricing";
 import ProductCategoryContainer from "./product-category-container";
 import Variants from "./variants";
 
@@ -59,7 +60,7 @@ export default function AddProduct({
                variants: [
                     { id: "defaultId", type: "default", title: "Default" },
                ],
-               currency: "tk",
+               currency: "taka",
                price: [{ variantId: "defaultId", price: 1, select: true }],
                category: "some text",
                shortDescription: "short description",
@@ -110,7 +111,7 @@ export default function AddProduct({
 
                               <ProductCategoryContainer
                                    title="Variants"
-                                   id="variants"
+                                   id="variant-section"
                               >
                                    <Variants
                                         form={form}
@@ -124,7 +125,10 @@ export default function AddProduct({
                                    className="h-fit"
                                    title="Pricing"
                               >
-                                   coming soon
+                                   <Pricing
+                                        form={form}
+                                        isFormReset={isFormReset}
+                                   />
                               </ProductCategoryContainer>
                               <ProductCategoryContainer
                                    id="product-outer-info"

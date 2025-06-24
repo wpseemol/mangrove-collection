@@ -56,6 +56,9 @@ export default function Variants({
 
                form.setValue("variants", finalVariantArray);
                form.clearErrors("variants");
+          } else {
+               form.setValue("variants", finalVariantArray);
+               form.clearErrors("variants");
           }
      }, [variants, form]);
 
@@ -184,7 +187,7 @@ function VariantsInputSelect({
      }
 
      return (
-          <div className="flex items-center gap-2 mb-2 md:group">
+          <div className="flex items-center gap-2 mb-2 group">
                <div className="md:w-1/3 w-full ">
                     <Select
                          value={selectVariant}
@@ -281,7 +284,7 @@ function DefaultVariants() {
                     <Input
                          disabled
                          value={defaultVariants.title}
-                         placeholder="Enter product name"
+                         placeholder="Variant Title"
                          className="border-gray-300 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 placeholder:text-gray-400 text-gray-800"
                     />
                </div>
