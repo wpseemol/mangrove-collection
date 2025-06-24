@@ -8,7 +8,7 @@ import {
      FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { AddProductFormType } from "@/types/add-product";
+import { AddProductFormType } from "@/types/add-products";
 import { useEffect } from "react";
 
 export default function ProductSlug({ form }: { form: AddProductFormType }) {

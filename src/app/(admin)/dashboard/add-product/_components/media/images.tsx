@@ -11,7 +11,13 @@ import {
 import { AddProductFormType } from "@/types/add-products";
 import { generateUniqueIds } from "@/utils/unique-id-generate";
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import {
+     Dispatch,
+     SetStateAction,
+     useCallback,
+     useEffect,
+     useState,
+} from "react";
 import { FileRejection, FileWithPath, useDropzone } from "react-dropzone";
 import { FcMultipleInputs } from "react-icons/fc";
 import PreviewImagesComponents from "./preview-Images-components";
@@ -19,9 +25,11 @@ import PreviewImagesComponents from "./preview-Images-components";
 export default function Images({
      form,
      isFormReset,
+     setIsFileUpload,
 }: {
      form: AddProductFormType;
      isFormReset: boolean;
+     setIsFileUpload: Dispatch<SetStateAction<boolean>>;
 }) {
      const [preViewImages, setPreviewImages] = useState<
           PreviewStateType[] | null
@@ -80,6 +88,9 @@ export default function Images({
                                                                  setPreviewImages={
                                                                       setPreviewImages
                                                                  }
+                                                                 setIsFileUpload={
+                                                                      setIsFileUpload
+                                                                 }
                                                             />
                                                        )
                                                   )}
@@ -110,7 +121,7 @@ function DrugAndDrop({
           (acceptedFiles: FileWithPath[], fileRejections: FileRejection[]) => {
                if (acceptedFiles.length > 0) {
                     const previewArray = acceptedFiles.map((file) => ({
-                         id: generateUniqueIds(),
+                         id: generateUniqueIds({ pattern: "***" }) as string,
                          file: file,
                          fileName: file.name,
                          preview: URL.createObjectURL(file),
@@ -128,12 +139,22 @@ function DrugAndDrop({
                               "Only JPEG, JPG, and PNG files are allowed.",
                          "too-many-files": "Only one file can be uploaded.",
                          "file-too-large": `Image file is too large (max 1MB).`,
+                    } as const; // 'as const' makes TypeScript preserve the literal types
+
+                    // Type guard to check if the code is a valid key
+                    const getErrorMessage = (code: string): string => {
+                         return code in errorMessages
+                              ? errorMessages[
+                                     code as keyof typeof errorMessages
+                                ]
+                              : "Image file select wrong.";
                     };
+
                     form.setError("images", {
                          type: "manual",
-                         message:
-                              errorMessages[fileRejections[0].errors[0].code] ||
-                              "Image file select wrong.",
+                         message: getErrorMessage(
+                              fileRejections[0].errors[0].code
+                         ),
                     });
                }
           },

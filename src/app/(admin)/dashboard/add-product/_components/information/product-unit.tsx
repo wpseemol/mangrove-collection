@@ -14,7 +14,7 @@ import {
      SelectValue,
 } from "@/components/ui/select";
 import { PRODUCT_UNITS } from "@/lib/constant";
-import { AddProductFormType } from "@/types/add-product";
+import { AddProductFormType } from "@/types/add-products";
 
 export default function ProductUnit({ form }: { form: AddProductFormType }) {
      return (

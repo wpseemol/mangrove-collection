@@ -30,9 +30,11 @@ import { IoCloseOutline } from "react-icons/io5";
 export default function Thumbnail({
      form,
      isFormReset,
+     setIsFileUpload,
 }: {
      form: AddProductFormType;
      isFormReset: boolean;
+     setIsFileUpload: Dispatch<SetStateAction<boolean>>;
 }) {
      const [file, setFile] = useState<FileStateType | null>(null);
 
@@ -46,6 +48,7 @@ export default function Thumbnail({
      // console.log(progress);
 
      async function handelImageDeleted() {
+          setIsFileUpload(true);
           if (!uploadImage) return;
           setLoading(true);
           await deleteUploadedImage({
@@ -55,28 +58,35 @@ export default function Thumbnail({
           setFile(null);
           form.setValue("thumbnail", "");
           setLoading(false);
+          setIsFileUpload(false);
      }
 
-     async function handelAcceptFile(acceptedFile) {
+     async function handelAcceptFile(acceptedFile: FileWithPath) {
+          setIsFileUpload(true);
           const formData = new FormData();
           formData.append("product-images", acceptedFile);
 
           setProgress(0);
           const progressInterval = setInterval(() => {
                setProgress((prev) => Math.min(prev + 1, 100));
-          }, 0);
+          }, 10);
           const response = await imagesUploadCloudinary(formData);
           clearInterval(progressInterval);
           setProgress(100);
 
-          if (response.success) {
+          if (
+               response.success &&
+               response.data?.secure_url &&
+               response.data?.public_id
+          ) {
                setUploadImage({
-                    ulr: response.data.secure_url as string,
-                    public_id: response.data.public_id as string,
+                    ulr: response.data.secure_url,
+                    public_id: response.data.public_id,
                });
 
-               form.setValue("thumbnail", response.data.secure_url as string);
+               form.setValue("thumbnail", response.data.secure_url);
           }
+          setIsFileUpload(false);
      }
 
      useEffect(() => {
@@ -266,19 +276,32 @@ function DragAndDropImage({
                 *  if any file rejection set form message.
                 */
                if (fileRejections.length > 0) {
-                    const errorMessageObj = {
+                    // Define the error codes as a type
+                    type ErrorCode =
+                         | "file-invalid-type"
+                         | "too-many-files"
+                         | "file-too-large";
+
+                    const errorMessageObj: Record<ErrorCode, string> = {
                          "file-invalid-type":
                               "Only JPEG, JPG, and PNG files are allowed.",
                          "too-many-files": "Only one file can be uploaded.",
                          "file-too-large": "Image file is too larger.",
                     };
 
+                    // Create a safe accessor function
+                    const getErrorMessage = (code: string): string => {
+                         return (
+                              errorMessageObj[code as ErrorCode] ||
+                              "Image file select wrong."
+                         );
+                    };
+
                     form.setError("thumbnail", {
                          type: "manual",
-                         message:
-                              errorMessageObj[
-                                   fileRejections[0].errors[0].code
-                              ] || "Image file select wrong.",
+                         message: getErrorMessage(
+                              fileRejections[0].errors[0].code
+                         ),
                     });
                } else {
                     form.clearErrors("thumbnail");

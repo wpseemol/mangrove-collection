@@ -6,9 +6,11 @@ import TagsComponent from "./tags-component";
 export default function OtherInformation({
      form,
      allCategory,
+     isFormReset,
 }: {
      form: AddProductFormType;
      allCategory: string;
+     isFormReset: boolean;
 }) {
      return (
           <>
@@ -19,7 +21,7 @@ export default function OtherInformation({
                     <ShortDescription form={form} />
                </section>
                <section className="mb-4">
-                    <TagsComponent form={form} />
+                    <TagsComponent form={form} isFormReset={isFormReset} />
                </section>
           </>
      );

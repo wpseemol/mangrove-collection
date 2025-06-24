@@ -10,15 +10,18 @@ import { PreviewStateType } from "./images";
 interface PreviewImagesComponentsType {
      previewImageDetails: PreviewStateType;
      setPreviewImages: Dispatch<SetStateAction<PreviewStateType[] | null>>;
+     setIsFileUpload: Dispatch<SetStateAction<boolean>>;
 }
 export default function PreviewImagesComponents({
+     setIsFileUpload,
      previewImageDetails,
      setPreviewImages,
 }: PreviewImagesComponentsType) {
      const [progress, setProgress] = useState<number>(0);
      const [loading, setLoading] = useState<boolean>(false);
 
-     async function handelCancelImage(id, public_id) {
+     async function handelCancelImage(id: string, public_id: string) {
+          setIsFileUpload(true);
           setLoading(true);
           await deleteUploadedImage({
                public_id,
@@ -29,6 +32,7 @@ export default function PreviewImagesComponents({
                return afterCancel.length === 0 ? null : afterCancel;
           });
           setLoading(false);
+          setIsFileUpload(false);
      }
 
      /**
@@ -37,36 +41,48 @@ export default function PreviewImagesComponents({
      const isUploadingRef = useRef(false);
 
      useEffect(() => {
-          let progressInterval: NodeJS.Timeout;
+          let progressInterval: NodeJS.Timeout | null = null;
           setProgress(0);
 
           if (previewImageDetails?.file && !isUploadingRef.current) {
                isUploadingRef.current = true;
 
                const uploadImage = async (acceptedFile: File) => {
+                    setIsFileUpload(true);
                     const formData = new FormData();
                     formData.append("product-images", acceptedFile);
 
+                    // Start progress simulation
                     progressInterval = setInterval(() => {
-                         setProgress((prev) => Math.min(prev + 1, 99));
-                    }, 0);
+                         setProgress((prev) => {
+                              const newProgress = Math.min(prev + 1, 99);
+                              return newProgress;
+                         });
+                    }, 10);
 
                     try {
                          const response = await imagesUploadCloudinary(
                               formData
                          );
-                         clearInterval(progressInterval);
 
+                         // Clear interval and set final progress
+                         if (progressInterval) clearInterval(progressInterval);
+                         setProgress(100);
+
+                         // Update preview images
                          setPreviewImages((prev) => {
-                              if (!prev) return null;
+                              if (!prev || !previewImageDetails) return prev;
                               return prev.map((item) =>
                                    item.id === previewImageDetails.id
                                         ? {
                                                ...item,
                                                file: null,
-                                               url: response.data.secure_url,
+                                               url:
+                                                    response.data?.secure_url ??
+                                                    "",
                                                public_id:
-                                                    response.data.public_id,
+                                                    response.data?.public_id ??
+                                                    "",
                                           }
                                         : item
                               );
@@ -74,19 +90,20 @@ export default function PreviewImagesComponents({
                     } catch (error) {
                          console.error("Upload failed:", error);
                     } finally {
-                         isUploadingRef.current = false; // Reset upload status
-                         clearInterval(progressInterval);
-                         setProgress(100);
+                         // Cleanup
+                         if (progressInterval) clearInterval(progressInterval);
+                         isUploadingRef.current = false;
+                         setIsFileUpload(false);
                     }
                };
 
-               uploadImage(previewImageDetails.file);
+               uploadImage(previewImageDetails.file).catch(console.error);
           }
 
           return () => {
                if (progressInterval) clearInterval(progressInterval);
           };
-     }, [previewImageDetails, setPreviewImages]);
+     }, [previewImageDetails, setPreviewImages, setIsFileUpload]);
      /**
       * upload images function here.
       */

@@ -19,23 +19,19 @@ export default function ShortDescription({
                <FormField
                     control={form.control}
                     name="shortDescription"
-                    render={({ field, fieldState }) => (
+                    render={({ field }) => (
                          <FormItem>
                               <FormLabel>Short description</FormLabel>
 
                               <FormControl>
                                    <Textarea
                                         placeholder="Short description type here ..."
-                                        className="resize-none bg-transparent w-full
-                                border border-neutral-500/20 p-2 focus:outline-none focus-visible:ring-0
-                                focus-visible:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] focus-visible:ring-offset-0 rounded placeholder:text-neutral-400"
+                                        className="border-gray-300 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 placeholder:text-gray-400 text-gray-800"
                                         {...field}
                                    />
                               </FormControl>
 
-                              <FormMessage className="text-red-500">
-                                   {fieldState.error?.message}
-                              </FormMessage>
+                              <FormMessage className="text-red-500 text-sm" />
                          </FormItem>
                     )}
                />

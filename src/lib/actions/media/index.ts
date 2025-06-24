@@ -1,7 +1,7 @@
 "use server";
 
 import cloudinary from "@/cloudinary";
-import { extractPublicIdFromUrl } from "@/utils/publick-id-from-url";
+import { extractPublicIdFromUrl } from "@/utils/public-id-from-url";
 import { Readable } from "stream";
 
 export async function imagesUploadCloudinary(formData: FormData) {
@@ -52,7 +52,7 @@ export async function imagesUploadCloudinary(formData: FormData) {
           return {
                success: true,
                message: "Thumbnail uploaded successfully.",
-               data: result,
+               data: result as { public_id: string; secure_url: string },
           };
      } catch (error) {
           console.log("thumbnail upload error:", error);

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import ButtonLoading from "@/components/button-loading";
@@ -13,6 +12,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import ProductInformation from "./information/product-information";
 import Media from "./media/media";
+import OtherInformation from "./other-information/other-information";
 import Pricing from "./pricing/pricing";
 import ProductCategoryContainer from "./product-category-container";
 import Variants from "./variants";
@@ -25,6 +25,7 @@ export default function AddProduct({
      user: string;
 }) {
      const [isFormReset, setIsFormReset] = useState<boolean>(false);
+     const [isFileUpload, setIsFileUpload] = useState<boolean>(false);
 
      /**
       * isFormReset again false
@@ -41,8 +42,10 @@ export default function AddProduct({
       * string to make object or content.
       */
 
+     // eslint-disable-next-line @typescript-eslint/no-unused-vars
      const loginUser = JSON.parse(user) as User;
 
+     // eslint-disable-next-line @typescript-eslint/no-unused-vars
      const router = useRouter();
 
      /**
@@ -62,8 +65,8 @@ export default function AddProduct({
                ],
                currency: "taka",
                price: [{ variantId: "defaultId", price: 1, select: true }],
-               category: "some text",
-               shortDescription: "short description",
+               category: "",
+               shortDescription: "",
                tags: [],
           },
      });
@@ -106,6 +109,7 @@ export default function AddProduct({
                                    <Media
                                         form={form}
                                         isFormReset={isFormReset}
+                                        setIsFileUpload={setIsFileUpload}
                                    />
                               </ProductCategoryContainer>
 
@@ -135,19 +139,32 @@ export default function AddProduct({
                                    className="h-fit"
                                    title="Other information"
                               >
-                                   coming soon
+                                   <OtherInformation
+                                        allCategory={allCategory}
+                                        form={form}
+                                        isFormReset={isFormReset}
+                                   />
                               </ProductCategoryContainer>
                          </div>
 
                          <section className="md:col-span-3 -mt-4">
                               <Button
-                                   disabled={form.formState.isSubmitting}
+                                   disabled={
+                                        form.formState.isSubmitting ||
+                                        isFileUpload
+                                   }
                                    type="submit"
-                                   className="text-white"
+                                   className="text-white disabled:cursor-wait"
                               >
-                                   Upload
-                                   {form.formState.isSubmitting && (
-                                        <ButtonLoading />
+                                   {isFileUpload ? (
+                                        "Wait..."
+                                   ) : (
+                                        <>
+                                             Upload
+                                             {form.formState.isSubmitting && (
+                                                  <ButtonLoading />
+                                             )}
+                                        </>
                                    )}
                               </Button>
                          </section>

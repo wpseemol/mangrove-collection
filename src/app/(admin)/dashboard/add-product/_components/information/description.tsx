@@ -42,7 +42,6 @@ export default function Description({
                }),
                Emoji.configure({
                     enableEmoticons: true,
-                    enableShortcuts: true,
                }),
                Youtube.configure({
                     inline: false,

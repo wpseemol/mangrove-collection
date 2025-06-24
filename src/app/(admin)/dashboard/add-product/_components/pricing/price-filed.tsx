@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/tooltip";
 import { AddProductFormType } from "@/types/add-products";
 import { useEffect, useState } from "react";
-import { FieldError } from "react-hook-form";
 
 export default function PriceFiled({
      form,
@@ -49,10 +48,15 @@ export default function PriceFiled({
                                         form={form}
                                         isFormReset={isFormReset}
                                         error={
-                                             pricerErrorStatus.invalid
-                                                  ? pricerErrorStatus?.error[
-                                                         inx
-                                                    ]
+                                             pricerErrorStatus.invalid &&
+                                             pricerErrorStatus?.error
+                                                  ? (
+                                                         pricerErrorStatus.error as unknown as {
+                                                              [
+                                                                   key: number
+                                                              ]: PriceErrorType;
+                                                         }
+                                                    )[inx]
                                                   : null
                                         }
                                    />
@@ -96,7 +100,7 @@ function PriceInput({
      variantPrice: PriceVariantType;
      form: AddProductFormType;
      isFormReset: boolean;
-     error: FieldError | null;
+     error: PriceErrorType | null;
 }) {
      const [price, setPrice] = useState<string>(""); // use string to allow empty value
      const currency = form.watch("currency");
@@ -157,7 +161,7 @@ function PriceInput({
                     <div className="w-1/3 flex items-center">
                          {matchVariant && (
                               <span className="font-medium text-gray-700 capitalize">
-                                   {matchVariant.title.toLocaleLowerCase()}
+                                   {matchVariant.title.toLocaleLowerCase()}*
                               </span>
                          )}
                     </div>
@@ -210,4 +214,8 @@ interface PriceVariantType {
      price: number;
      variantId: string;
      select: boolean;
+}
+
+interface PriceErrorType {
+     price?: { message: string };
 }

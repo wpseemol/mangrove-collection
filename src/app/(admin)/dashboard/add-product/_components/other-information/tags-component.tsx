@@ -2,6 +2,7 @@
 
 import {
      FormControl,
+     FormDescription,
      FormField,
      FormItem,
      FormLabel,
@@ -14,17 +15,30 @@ import { IoMdCloseCircle } from "react-icons/io";
 
 interface TagsComponentProps {
      form: AddProductFormType;
+     isFormReset: boolean;
 }
 
-export default function TagsComponent({ form }: TagsComponentProps) {
+export default function TagsComponent({
+     form,
+     isFormReset,
+}: TagsComponentProps) {
      const [tags, setTags] = useState<string[]>([]);
      const [tagInput, setTagInput] = useState("");
      const [isFocused, setIsFocused] = useState(false);
 
      // Sync tags with form
      useEffect(() => {
-          form.setValue("tags", tags);
+          if (tags.length > 0) {
+               form.setValue("tags", tags);
+          }
      }, [tags, form]);
+
+     // if for rest
+     useEffect(() => {
+          if (isFormReset) {
+               setTags([]);
+          }
+     }, [isFormReset]);
 
      const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
           form.clearErrors("tags");
@@ -78,44 +92,49 @@ export default function TagsComponent({ form }: TagsComponentProps) {
           <FormField
                control={form.control}
                name="tags"
-               render={({ fieldState }) => (
+               render={() => (
                     <FormItem>
                          <FormLabel className="mb-1">Tags</FormLabel>
                          <FormControl>
-                              <div
-                                   className={`${
-                                        isFocused
-                                             ? "shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px]"
-                                             : ""
-                                   } 
+                              <section>
+                                   <FormDescription className="text-sm text-gray-500 mb-1">
+                                        Type a tag and press Enter, or separate
+                                        multiple tags with a semicolon (;). Tags
+                                        must be unique.
+                                   </FormDescription>
+                                   <div
+                                        className={`${
+                                             isFocused
+                                                  ? "shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px]"
+                                                  : ""
+                                        } 
               w-full bg-transparent border border-neutral-500/20
               p-2 rounded flex items-center gap-2 flex-wrap min-h-10 duration-150`}
-                              >
-                                   {tags.map((tag) => (
-                                        <TagElement
-                                             key={tag}
-                                             tag={tag}
-                                             onDelete={handleDeleteTag}
+                                   >
+                                        {tags.map((tag) => (
+                                             <TagElement
+                                                  key={tag}
+                                                  tag={tag}
+                                                  onDelete={handleDeleteTag}
+                                             />
+                                        ))}
+                                        <Input
+                                             value={tagInput}
+                                             onChange={handleInputChange}
+                                             onKeyDown={handleKeyDown}
+                                             onFocus={() => setIsFocused(true)}
+                                             onBlur={() => setIsFocused(false)}
+                                             className={`${
+                                                  tags.length > 0
+                                                       ? "w-fit"
+                                                       : "w-full"
+                                             } bg-transparent border-none flex-grow min-w-[100px] placeholder:text-neutral-400`}
+                                             placeholder="Add tags (separate with ; or press Enter)"
                                         />
-                                   ))}
-                                   <Input
-                                        value={tagInput}
-                                        onChange={handleInputChange}
-                                        onKeyDown={handleKeyDown}
-                                        onFocus={() => setIsFocused(true)}
-                                        onBlur={() => setIsFocused(false)}
-                                        className={`${
-                                             tags.length > 0
-                                                  ? "w-fit"
-                                                  : "w-full"
-                                        } bg-transparent border-none flex-grow min-w-[100px] placeholder:text-neutral-400`}
-                                        placeholder="Add tags (separate with ; or press Enter)"
-                                   />
-                              </div>
+                                   </div>
+                              </section>
                          </FormControl>
-                         <FormMessage className="text-red-500">
-                              {fieldState.error?.message}
-                         </FormMessage>
+                         <FormMessage className="text-red-500 text-sm" />
                     </FormItem>
                )}
           />

@@ -34,7 +34,7 @@ export default function Variants({
 
      function handelAddVariant() {
           const variantObj: VariantType = {
-               id: generateUniqueIds({ pattern: "****" }),
+               id: generateUniqueIds({ pattern: "****" }) as string,
           };
 
           setVariants((prev) => (prev ? [...prev, variantObj] : [variantObj]));
@@ -50,7 +50,11 @@ export default function Variants({
           if (variants && variants.length > 0) {
                variants.forEach((variant) => {
                     if (variant?.title && variant?.type) {
-                         finalVariantArray.push({ ...variant });
+                         finalVariantArray.push({
+                              id: variant.id,
+                              type: variant.type,
+                              title: variant.title,
+                         });
                     }
                });
           }
@@ -78,47 +82,45 @@ export default function Variants({
      }, [isFormReset]);
 
      return (
-          <>
-               <FormField
-                    control={form.control}
-                    name="variants"
-                    render={() => (
-                         <FormItem>
-                              <FormLabel className="text-gray-700 font-medium">
-                                   Product Variants
-                              </FormLabel>
-                              <FormControl>
-                                   <div>
-                                        <DefaultVariants form={form} />
-                                        {variants &&
-                                             variants.length > 0 &&
-                                             variants.map((variant) => (
-                                                  <VariantsInputSelect
-                                                       key={variant.id}
-                                                       form={form}
-                                                       setVariants={setVariants}
-                                                       variant={variant}
-                                                  />
-                                             ))}
+          <FormField
+               control={form.control}
+               name="variants"
+               render={() => (
+                    <FormItem>
+                         <FormLabel className="text-gray-700 font-medium">
+                              Product Variants
+                         </FormLabel>
+                         <FormControl>
+                              <div>
+                                   <DefaultVariants />
+                                   {variants &&
+                                        variants.length > 0 &&
+                                        variants.map((variant) => (
+                                             <VariantsInputSelect
+                                                  key={variant.id}
+                                                  form={form}
+                                                  setVariants={setVariants}
+                                                  variant={variant}
+                                             />
+                                        ))}
 
-                                        <Button
-                                             onClick={handelAddVariant}
-                                             variant="ghost"
-                                             className="text-md mt-2 cursor-pointer"
-                                             type="button"
-                                        >
-                                             +{" "}
-                                             <span className="font-medium">
-                                                  Add another option
-                                             </span>
-                                        </Button>
-                                   </div>
-                              </FormControl>
-                              <FormMessage className="text-red-500 text-sm" />
-                         </FormItem>
-                    )}
-               />
-          </>
+                                   <Button
+                                        onClick={handelAddVariant}
+                                        variant="ghost"
+                                        className="text-md mt-2 cursor-pointer"
+                                        type="button"
+                                   >
+                                        +{" "}
+                                        <span className="font-medium">
+                                             Add another option
+                                        </span>
+                                   </Button>
+                              </div>
+                         </FormControl>
+                         <FormMessage className="text-red-500 text-sm" />
+                    </FormItem>
+               )}
+          />
      );
 }
 
@@ -131,7 +133,7 @@ function VariantsInputSelect({
      setVariants: Dispatch<SetStateAction<VariantType[] | null>>;
      variant: VariantType;
 }) {
-     const unit = form.watch("unit");
+     const unit = form.watch("unit") as UnitType;
 
      const variantArrayObj = {
           pc: PC_VARIANTS,
@@ -235,7 +237,6 @@ function VariantsInputSelect({
                     />
                     <button
                          onClick={handleCancelVariant}
-                         variant="ghost"
                          type="button"
                          className="group md:w-0 overflow-hidden md:p-0 rounded border border-transparent  group-hover:w-fit group-hover:border-gray-200 group-hover:p-2 duration-200 flex justify-center items-center"
                     >
