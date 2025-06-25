@@ -8,14 +8,16 @@ import PreviewImageWithZoom from "./preview-image-with-zoom";
 
 interface ImagePreviewType {
      productName: string;
-     allImage: ImageType[];
+     allImage: string;
 }
 
 export default function ProductImages({
      productName,
      allImage,
 }: ImagePreviewType) {
-     const [previewImage, setPreviewImage] = useState(allImage[0]);
+     const allImageArray = JSON.parse(allImage) as ImageType[];
+
+     const [previewImage, setPreviewImage] = useState(allImageArray[0]);
 
      function handelImagePreviewHover(img: ImageType) {
           setPreviewImage(img);
@@ -33,12 +35,12 @@ export default function ProductImages({
 
                {/* mobile view */}
                <MobileViewSlider
-                    allImage={allImage}
+                    allImage={allImageArray}
                     productName={productName}
                />
 
                <div className="md:flex items-center justify-center gap-4 mt-4 hidden">
-                    {allImage?.map((img, inx) => (
+                    {allImageArray?.map((img, inx) => (
                          <div
                               onMouseOver={() => {
                                    debouncedHandleImageHover(img);

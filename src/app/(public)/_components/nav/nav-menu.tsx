@@ -20,7 +20,7 @@ export function NavMenu() {
                                     */
                                    items.id === "category" && (
                                         <SubMenu
-                                             menuItme={items}
+                                             menuItem={items}
                                              SubMenuContent={<CategoryMenus />}
                                         />
                                    )

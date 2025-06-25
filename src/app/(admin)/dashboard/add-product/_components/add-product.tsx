@@ -3,12 +3,14 @@
 import ButtonLoading from "@/components/button-loading";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import { addProductDatabase } from "@/lib/actions/add-product-action";
 import { addProductSchema } from "@/lib/schemas/zod/add-product-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { User } from "next-auth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast, Toaster } from "sonner";
 import { z } from "zod";
 import ProductInformation from "./information/product-information";
 import Media from "./media/media";
@@ -45,7 +47,6 @@ export default function AddProduct({
      // eslint-disable-next-line @typescript-eslint/no-unused-vars
      const loginUser = JSON.parse(user) as User;
 
-     // eslint-disable-next-line @typescript-eslint/no-unused-vars
      const router = useRouter();
 
      /**
@@ -77,10 +78,21 @@ export default function AddProduct({
       */
 
      async function onSubmit(values: z.infer<typeof addProductSchema>) {
-          console.log("upload product:", values);
-          if (true) {
+          const response = await addProductDatabase(values);
+          console.log("test response:", response);
+          if (!response.success) {
+               toast.error(response.message);
+               return;
+          }
+
+          if (response.success) {
+               toast.success(response.message || "Login successful!");
+               setTimeout(() => {
+                    router.push("/");
+               }, 1000);
                form.reset();
                setIsFormReset(true);
+               return;
           }
      }
 
@@ -170,6 +182,8 @@ export default function AddProduct({
                          </section>
                     </form>
                </Form>
+
+               <Toaster position="top-center" richColors closeButton />
           </>
      );
 }

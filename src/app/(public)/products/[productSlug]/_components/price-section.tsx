@@ -5,26 +5,28 @@ import { useEffect, useState } from "react";
 
 interface PriceSectionType {
      displayPrice: number;
-     priceVariants: PriceType[];
+     priceVariants: string;
 }
 
 export default function PriceSection({
      displayPrice,
      priceVariants,
 }: PriceSectionType) {
+     const priceVariantsArray = JSON.parse(priceVariants) as PriceType[];
+
      const [price, setPrice] = useState<number>(displayPrice);
 
      const { variantSelectId } = useVariantUpdate();
 
      useEffect(() => {
           if (variantSelectId) {
-               const selectedPrice = priceVariants.find(
+               const selectedPrice = priceVariantsArray.find(
                     (price) => price.variantId === variantSelectId
                );
 
                if (selectedPrice?.price) setPrice(selectedPrice?.price);
           }
-     }, [variantSelectId, priceVariants]);
+     }, [variantSelectId, priceVariantsArray]);
 
      return <>{price.toFixed(2)}</>;
 }

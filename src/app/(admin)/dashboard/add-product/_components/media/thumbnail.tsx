@@ -69,7 +69,7 @@ export default function Thumbnail({
           setProgress(0);
           const progressInterval = setInterval(() => {
                setProgress((prev) => Math.min(prev + 1, 100));
-          }, 10);
+          }, 30);
           const response = await imagesUploadCloudinary(formData);
           clearInterval(progressInterval);
           setProgress(100);

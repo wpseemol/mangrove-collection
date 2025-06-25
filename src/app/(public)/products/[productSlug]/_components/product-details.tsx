@@ -30,9 +30,8 @@ export default function ProductDetails({
                     {/* image preview component */}
                     {/* allImage function return array and input a single image url and images array */}
                     <ProductImages
-                         allImage={allImageArray(
-                              details.thumbnail,
-                              details.images
+                         allImage={JSON.stringify(
+                              allImageArray(details.thumbnail, details.images)
                          )}
                          productName={details.name}
                     />
@@ -47,7 +46,9 @@ export default function ProductDetails({
                                    {displayPrice && (
                                         <PriceSection
                                              displayPrice={displayPrice.price}
-                                             priceVariants={details.price}
+                                             priceVariants={JSON.stringify(
+                                                  details.price
+                                             )}
                                         />
                                    )}
                                    <CurrencyIcon currency={details.currency} />{" "}
@@ -108,8 +109,12 @@ export default function ProductDetails({
                                         </span>
                                         <SelectedVariant
                                              type={variant}
-                                             variants={details.variants}
-                                             displayPrice={displayPrice}
+                                             variants={JSON.stringify(
+                                                  details.variants
+                                             )}
+                                             displayPrice={JSON.stringify(
+                                                  displayPrice
+                                             )}
                                         />
                                    </p>
                               ))}

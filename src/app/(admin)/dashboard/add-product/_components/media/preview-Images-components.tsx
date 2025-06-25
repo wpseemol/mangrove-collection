@@ -58,7 +58,7 @@ export default function PreviewImagesComponents({
                               const newProgress = Math.min(prev + 1, 99);
                               return newProgress;
                          });
-                    }, 10);
+                    }, 30);
 
                     try {
                          const response = await imagesUploadCloudinary(
