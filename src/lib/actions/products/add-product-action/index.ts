@@ -17,7 +17,9 @@ export type ProductZodErrorType = z.ZodError<typeof addProductSchema>;
  */
 export async function addProductDatabase(input: ProductSchemaType) {
      const session = await auth();
-
+     /**
+      * Validates user and input, then adds a new product if authorized; returns operation result and errors if any.
+      */
      if (!session || !session.user) {
           return { success: false, message: "You are not login user." };
      }
