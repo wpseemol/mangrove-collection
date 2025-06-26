@@ -131,6 +131,10 @@ function PriceInput({
                form.clearErrors("price");
           } else {
                form.setValue("price", finalPriceArray);
+               form.setError("price", {
+                    type: "manual",
+                    message: `Please enter a valid price for ${matchVariant?.title}.`,
+               });
           }
      }
 
