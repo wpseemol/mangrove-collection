@@ -3,11 +3,9 @@
 import ButtonLoading from "@/components/button-loading";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { addProductDatabase } from "@/lib/actions/add-product-action";
+import { addProductDatabase } from "@/lib/actions/products/add-product-action";
 import { addProductSchema } from "@/lib/schemas/zod/add-product-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { User } from "next-auth";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast, Toaster } from "sonner";
@@ -19,13 +17,7 @@ import Pricing from "./pricing/pricing";
 import ProductCategoryContainer from "./product-category-container";
 import Variants from "./variants";
 
-export default function AddProduct({
-     allCategory,
-     user,
-}: {
-     allCategory: string;
-     user: string;
-}) {
+export default function AddProduct({ allCategory }: { allCategory: string }) {
      const [isFormReset, setIsFormReset] = useState<boolean>(false);
      const [isFileUpload, setIsFileUpload] = useState<boolean>(false);
 
@@ -39,15 +31,6 @@ export default function AddProduct({
                }, 1000);
           }
      }, [isFormReset]);
-
-     /**
-      * string to make object or content.
-      */
-
-     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-     const loginUser = JSON.parse(user) as User;
-
-     const router = useRouter();
 
      /**
       * Initializes a React Hook Form instance for the Add Product form using the provided Zod schema.
@@ -87,9 +70,6 @@ export default function AddProduct({
 
           if (response.success) {
                toast.success(response.message || "Login successful!");
-               setTimeout(() => {
-                    router.push("/");
-               }, 1000);
                form.reset();
                setIsFormReset(true);
                return;

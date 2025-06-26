@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { userRoleCheck } from "@/lib/actions/user";
 import { notFound } from "next/navigation";
 import TabBtn from "./_components/tab-btn";
 
@@ -9,7 +10,18 @@ export default async function AddProductLayout({
 }) {
      const session = await auth();
 
-     if (!session || session?.user.role !== "admin") {
+     if (!session) {
+          notFound();
+          return;
+     }
+
+     const isAdmin = await userRoleCheck(
+          session.user.id,
+          session.user.role,
+          "admin"
+     );
+
+     if (!isAdmin) {
           notFound();
           return;
      }

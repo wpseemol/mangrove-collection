@@ -4,10 +4,10 @@ import { addProductSchema } from "@/lib/schemas/zod/add-product-schema";
 import { formatZodError, getFirstErrorMessage } from "@/utils/zod-error";
 
 import { connectMongoDB } from "@/db/connections";
+import { userRoleCheck } from "@/lib/actions/user";
 import { Product } from "@/lib/schemas/mongoose/product";
 import { MongoServerError } from "mongodb";
 import type { z } from "zod";
-import { userRoleCheck } from "../user";
 
 // Define the input type based on your schema
 type ProductSchemaType = z.infer<typeof addProductSchema>;

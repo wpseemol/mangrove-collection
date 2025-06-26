@@ -53,28 +53,44 @@ const adminMenus: MenuArraysType[] = [
           id: 1,
      },
      {
+          href: "/dashboard/products",
+          icon: (
+               <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    width="1.2em"
+                    height="1.2em"
+               >
+                    <path d="M4 7V6a2 2 0 012-2h12a2 2 0 012 2v1h1a1 1 0 011 1v2a1 1 0 01-1 1h-1v7a2 2 0 01-2 2H6a2 2 0 01-2-2v-7H3a1 1 0 01-1-1V8a1 1 0 011-1h1zm2 0h12V6H6v1zm0 2v7h12V9H6zm2 2h2v3H8v-3zm4 0h2v3h-2v-3z" />
+               </svg>
+          ),
+          name: "Products",
+          id: 2,
+     },
+     {
           href: "/dashboard/users",
           icon: <FaUsersGear />,
           name: "Manage All User",
-          id: 2,
+          id: 3,
      },
 
      {
           href: "/dashboard/profile",
           icon: <ImProfile />,
           name: "Profile",
-          id: 3,
+          id: 4,
      },
      {
           href: "/dashboard/setting",
           icon: <IoSettings />,
           name: "Setting",
-          id: 4,
+          id: 5,
      },
      {
           href: "/dashboard/help",
           icon: <TbHelpHexagonFilled />,
           name: "Help",
-          id: 5,
+          id: 6,
      },
 ];
