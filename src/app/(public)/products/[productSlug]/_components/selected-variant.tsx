@@ -5,8 +5,8 @@ import { useEffect } from "react";
 
 interface SelectedVariantType {
      type: string;
-     variants?: string;
-     displayPrice?: string;
+     variants: string;
+     displayPrice: string;
 }
 
 export default function SelectedVariant({
@@ -20,7 +20,7 @@ export default function SelectedVariant({
      const { variantSelectId, setVariantSelectId } = useVariantUpdate();
 
      const typeVariants = variantsArray?.filter(
-          (variant) => variant?.type === type
+          (variant) => variant.type === type
      );
 
      function handelSelectVariant(selectedId: string) {
@@ -29,13 +29,13 @@ export default function SelectedVariant({
 
      useEffect(() => {
           if (displayPriceParse?.variantId) {
-               setVariantSelectId(displayPriceParse?.variantId);
+               setVariantSelectId(displayPriceParse.variantId);
           }
      }, [displayPriceParse?.variantId, setVariantSelectId]);
 
      return typeVariants?.map((variant) => (
           <button
-               onClick={() => handelSelectVariant(variant?.id)}
+               onClick={() => handelSelectVariant(variant.id)}
                key={variant?.id}
                className={`${
                     variant?.id === variantSelectId
@@ -44,7 +44,7 @@ export default function SelectedVariant({
                } duration-150 py-1 px-2 rounded capitalize
                     cursor-pointer`}
           >
-               {variant?.title}
+               {variant.title}
           </button>
      ));
 }

@@ -130,6 +130,8 @@ function PriceInput({
 
                form.setValue("price", finalPriceArray);
                form.clearErrors("price");
+          } else {
+               form.setValue("price", 0);
           }
      }
 

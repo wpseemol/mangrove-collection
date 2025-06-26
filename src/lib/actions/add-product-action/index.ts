@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { addProductSchema } from "@/lib/schemas/zod/add-product-schema";
 import { formatZodError, getFirstErrorMessage } from "@/utils/zod-error";
 
+import { connectMongoDB } from "@/db/connections";
 import { Product } from "@/lib/schemas/mongoose/product";
 import { MongoServerError } from "mongodb";
 import type { z } from "zod";
@@ -62,6 +63,7 @@ export async function addProductDatabase(input: ProductSchemaType) {
      const { data: product } = parsed;
 
      try {
+          await connectMongoDB();
           const isCreate = await Product.create({
                ...product,
                author: session.user.id,

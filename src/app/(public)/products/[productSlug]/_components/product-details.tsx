@@ -1,5 +1,5 @@
 import { CurrencyIcon } from "@/components/currency-icon";
-import { ProductDetailsType } from "@/types/mongoose/product";
+import { Price, ProductDetailsType } from "@/types/mongoose/product";
 import Link from "next/link";
 import "../_components/quill-content-css.css";
 import DetailsBuyBtn from "./details-buy-btn";
@@ -113,7 +113,7 @@ export default function ProductDetails({
                                                   details.variants
                                              )}
                                              displayPrice={JSON.stringify(
-                                                  displayPrice
+                                                  displayPrice as Price
                                              )}
                                         />
                                    </p>
