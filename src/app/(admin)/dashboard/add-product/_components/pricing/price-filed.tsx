@@ -121,17 +121,16 @@ function PriceInput({
 
           // Optionally, convert to number or set to null if invalid
           const priceValidInput = isValid ? Number(inputValue) : null;
+          const finalPriceArray = priceValue.map((item) =>
+               item.variantId === variantPrice.variantId
+                    ? { ...item, price: priceValidInput || 0 }
+                    : item
+          );
           if (priceValidInput) {
-               const finalPriceArray = priceValue.map((item) =>
-                    item.variantId === variantPrice.variantId
-                         ? { ...item, price: priceValidInput }
-                         : item
-               );
-
                form.setValue("price", finalPriceArray);
                form.clearErrors("price");
           } else {
-               form.setValue("price", 0);
+               form.setValue("price", finalPriceArray);
           }
      }
 
