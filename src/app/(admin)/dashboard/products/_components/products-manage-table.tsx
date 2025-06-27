@@ -1,6 +1,27 @@
 "use client";
 
+import {
+     ColumnDef,
+     ColumnFiltersState,
+     flexRender,
+     getCoreRowModel,
+     getFilteredRowModel,
+     getPaginationRowModel,
+     getSortedRowModel,
+     SortingState,
+     useReactTable,
+     VisibilityState,
+} from "@tanstack/react-table";
+import { ArrowUpDown, ChevronDown } from "lucide-react";
+import * as React from "react";
+
 import { Button } from "@/components/ui/button";
+import {
+     DropdownMenu,
+     DropdownMenuCheckboxItem,
+     DropdownMenuContent,
+     DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
      Table,
@@ -11,53 +32,42 @@ import {
      TableRow,
 } from "@/components/ui/table";
 import { ProductManageType } from "@/lib/actions/products/get-product-manage";
-import {
-     ColumnDef,
-     flexRender,
-     getCoreRowModel,
-     getFilteredRowModel,
-     getPaginationRowModel,
-     getSortedRowModel,
-     SortingState,
-     useReactTable,
-} from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
 import ProductDelete from "./product-delete";
 import ProductEdit from "./product-edit";
 
-const columns: ColumnDef<ProductManageType>[] = [
+export const columns: ColumnDef<ProductManageType>[] = [
      {
-          accessorKey: "id",
+          id: "id",
           header: "ID",
-          cell: (info) => info.row.index + 1,
+          cell: ({ row }) => <h3>{row.index + 1}</h3>,
+          enableSorting: false,
+          enableHiding: false,
      },
      {
           accessorKey: "thumbnail",
           header: "Thumbnail",
-          cell: (info) => {
-               const src = info.getValue() as string;
-               if (!src) return null;
-               // Use dynamic import to avoid SSR issues
-               return (
+          cell: ({ row }) => (
+               <figure>
                     <Image
-                         src={src}
-                         alt="Thumbnail"
+                         src={row.getValue("thumbnail")}
+                         alt={row.original.name}
                          width={48}
                          height={48}
-                         className="w-12 h-12 object-cover rounded"
+                         className="rounded-md object-cover"
+                         unoptimized
+                         loading="lazy"
                     />
-               );
-          },
+               </figure>
+          ),
      },
      {
           accessorKey: "name",
+          enableHiding: false,
           header: ({ column }) => {
                return (
                     <Button
                          variant="ghost"
-                         className="p-0 hover:bg-transparent"
                          onClick={() =>
                               column.toggleSorting(
                                    column.getIsSorted() === "asc"
@@ -65,150 +75,206 @@ const columns: ColumnDef<ProductManageType>[] = [
                          }
                     >
                          Name
-                         <ArrowUpDown className="ml-2 h-4 w-4" />
+                         <ArrowUpDown />
                     </Button>
                );
           },
-          cell: (info) => (
-               <p className="capitalize">
-                    {info.row.original.name.toLocaleLowerCase()}
-               </p>
+          cell: ({ row }) => (
+               <div className="capitalize">
+                    {row.original.name.toLocaleLowerCase()}
+               </div>
           ),
      },
-
      {
           accessorKey: "category",
           header: "Category",
-          cell: (info) => (info.getValue() as { name: string }).name,
+          enableSorting: false,
+          cell: ({ row }) => (
+               <span className="capitalize">
+                    {row.original.category.name.toLocaleLowerCase()}
+               </span>
+          ),
+     },
+     {
+          accessorKey: "author",
+          header: "Author",
+          cell: ({ row }) => <span>{row.original.author.name}</span>,
+          enableSorting: false,
      },
      {
           accessorKey: "price",
-          header: "Price",
-          cell: (info) => `${info.getValue()} ${info.row.original.currency}`,
+          enableHiding: false,
+          header: () => <div className="text-right">Price</div>,
+          cell: ({ row }) => {
+               return (
+                    <div className="text-right font-medium">
+                         {row.getValue("price")}
+                    </div>
+               );
+          },
      },
      {
-          accessorKey: "action",
-          header: () => <p className="text-right pr-14">Action</p>,
-          cell: (info) => {
+          id: "actions",
+          header: () => <div className="text-right mr-6">Actions</div>,
+          enableSorting: false,
+          enableHiding: false,
+          cell: ({ row }) => {
                return (
-                    <div className="flex justify-end gap-2 items-center p-2">
-                         <ProductEdit info={info} />
-                         <span>|</span>
-                         <ProductDelete info={info} />
+                    <div className="flex items-center justify-end space-x-2 mr-6">
+                         <ProductEdit row={row} /> <span>|</span>
+                         <ProductDelete row={row} />
                     </div>
                );
           },
      },
 ];
 
-export default function ProductsManageTable({
-     data,
-}: {
-     data: ProductManageType[];
-}) {
-     const [sorting, setSorting] = useState<SortingState>([]);
-     const [globalFilter, setGlobalFilter] = useState("");
-     const [showCategory, setShowCategory] = useState(true);
-     const [showThumbnail, setShowThumbnail] = useState(true);
-
-     const dynamicColumns = [
-          columns.find((col) => col.accessorKey === "id"),
-          ...(showThumbnail
-               ? [columns.find((col) => col.accessorKey === "thumbnail")]
-               : []),
-          columns.find((col) => col.accessorKey === "name"),
-          ...(showCategory
-               ? [columns.find((col) => col.accessorKey === "category")]
-               : []),
-          columns.find((col) => col.accessorKey === "price"),
-          columns.find((col) => col.accessorKey === "action"),
-     ].filter(Boolean) as ColumnDef<ProductManageType>[];
+export function ProductsManageTable({ dataString }: { dataString: string }) {
+     const [sorting, setSorting] = React.useState<SortingState>([]);
+     const [columnFilters, setColumnFilters] =
+          React.useState<ColumnFiltersState>([]);
+     const [columnVisibility, setColumnVisibility] =
+          React.useState<VisibilityState>({});
+     const [rowSelection, setRowSelection] = React.useState({});
 
      const table = useReactTable({
-          data,
-          columns: dynamicColumns,
+          data: JSON.parse(dataString) as ProductManageType[],
+          columns,
           onSortingChange: setSorting,
+          onColumnFiltersChange: setColumnFilters,
           getCoreRowModel: getCoreRowModel(),
           getPaginationRowModel: getPaginationRowModel(),
           getSortedRowModel: getSortedRowModel(),
           getFilteredRowModel: getFilteredRowModel(),
+          onColumnVisibilityChange: setColumnVisibility,
+          onRowSelectionChange: setRowSelection,
           state: {
                sorting,
-               globalFilter,
+               columnFilters,
+               columnVisibility,
+               rowSelection,
           },
-          onGlobalFilterChange: setGlobalFilter,
      });
 
      return (
-          <div className="space-y-4">
-               <div className="flex items-center justify-between gap-2">
-                    <div>
-                         <Input
-                              type="text"
-                              placeholder="Search by name..."
-                              value={globalFilter ?? ""}
-                              onChange={(e) => setGlobalFilter(e.target.value)}
-                              className="border border-gray-300 px-3 py-2 rounded w-64"
-                         />
-                    </div>
-
-                    <div className="flex items-center gap-4">
-                         <label className="flex items-center gap-2">
-                              <input
-                                   type="checkbox"
-                                   checked={showCategory}
-                                   onChange={() => setShowCategory((v) => !v)}
-                              />
-                              Show Category
-                         </label>
-                         <label className="flex items-center gap-2">
-                              <input
-                                   type="checkbox"
-                                   checked={showThumbnail}
-                                   onChange={() => setShowThumbnail((v) => !v)}
-                              />
-                              Show Thumbnail
-                         </label>
-                    </div>
-               </div>
-
-               <Table>
-                    <TableHeader>
-                         {table.getHeaderGroups().map((headerGroup) => (
-                              <TableRow key={headerGroup.id}>
-                                   {headerGroup.headers.map((header) => (
-                                        <TableHead key={header.id}>
-                                             {flexRender(
-                                                  header.column.columnDef
-                                                       .header,
-                                                  header.getContext()
-                                             )}
-                                        </TableHead>
-                                   ))}
-                              </TableRow>
-                         ))}
-                    </TableHeader>
-                    <TableBody className="border border-gray-200 rounded-2xl">
-                         {table.getRowModel().rows.map((row) => (
-                              <TableRow
-                                   key={row.id}
-                                   className="border-gray-200 hover:bg-gray-50 transition-colors group"
+          <div className="w-full">
+               <div className="flex items-center py-4">
+                    <Input
+                         placeholder="Filter emails..."
+                         value={
+                              (table
+                                   .getColumn("name")
+                                   ?.getFilterValue() as string) ?? ""
+                         }
+                         onChange={(event) =>
+                              table
+                                   .getColumn("name")
+                                   ?.setFilterValue(event.target.value)
+                         }
+                         className="max-w-sm border-gray-300"
+                    />
+                    <DropdownMenu>
+                         <DropdownMenuTrigger asChild>
+                              <Button
+                                   variant="outline"
+                                   className="ml-auto border-gray-300"
                               >
-                                   {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                             {flexRender(
-                                                  cell.column.columnDef.cell,
-                                                  cell.getContext()
-                                             )}
+                                   Columns <ChevronDown />
+                              </Button>
+                         </DropdownMenuTrigger>
+                         <DropdownMenuContent
+                              align="end"
+                              className="border-gray-200 bg-gray-100"
+                         >
+                              {table
+                                   .getAllColumns()
+                                   .filter((column) => column.getCanHide())
+                                   .map((column) => {
+                                        return (
+                                             <DropdownMenuCheckboxItem
+                                                  key={column.id}
+                                                  className="capitalize"
+                                                  checked={column.getIsVisible()}
+                                                  onCheckedChange={(value) =>
+                                                       column.toggleVisibility(
+                                                            !!value
+                                                       )
+                                                  }
+                                             >
+                                                  {column.id}
+                                             </DropdownMenuCheckboxItem>
+                                        );
+                                   })}
+                         </DropdownMenuContent>
+                    </DropdownMenu>
+               </div>
+               <div className="rounded-md overflow-hidden border border-gray-300">
+                    <Table>
+                         <TableHeader className="bg-gray-200 dark:bg-gray-800/90 rounded-md">
+                              {table.getHeaderGroups().map((headerGroup) => (
+                                   <TableRow key={headerGroup.id}>
+                                        {headerGroup.headers.map((header) => {
+                                             return (
+                                                  <TableHead key={header.id}>
+                                                       {header.isPlaceholder
+                                                            ? null
+                                                            : flexRender(
+                                                                   header.column
+                                                                        .columnDef
+                                                                        .header,
+                                                                   header.getContext()
+                                                              )}
+                                                  </TableHead>
+                                             );
+                                        })}
+                                   </TableRow>
+                              ))}
+                         </TableHeader>
+                         <TableBody>
+                              {table.getRowModel().rows?.length ? (
+                                   table.getRowModel().rows.map((row) => (
+                                        <TableRow
+                                             key={row.id}
+                                             data-state={
+                                                  row.getIsSelected() &&
+                                                  "selected"
+                                             }
+                                             className="border-gray-200 hover:bg-gray-50 duration-100 dark:hover:bg-gray-700/50"
+                                        >
+                                             {row
+                                                  .getVisibleCells()
+                                                  .map((cell) => (
+                                                       <TableCell key={cell.id}>
+                                                            {flexRender(
+                                                                 cell.column
+                                                                      .columnDef
+                                                                      .cell,
+                                                                 cell.getContext()
+                                                            )}
+                                                       </TableCell>
+                                                  ))}
+                                        </TableRow>
+                                   ))
+                              ) : (
+                                   <TableRow>
+                                        <TableCell
+                                             colSpan={columns.length}
+                                             className="h-24 text-center"
+                                        >
+                                             No results.
                                         </TableCell>
-                                   ))}
-                              </TableRow>
-                         ))}
-                    </TableBody>
-               </Table>
-
-               <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
+                                   </TableRow>
+                              )}
+                         </TableBody>
+                    </Table>
+               </div>
+               <div className="flex items-center justify-end space-x-2 py-4">
+                    <div className="text-muted-foreground flex-1 text-sm">
+                         {table.getFilteredSelectedRowModel().rows.length} of{" "}
+                         {table.getFilteredRowModel().rows.length} row(s)
+                         selected.
+                    </div>
+                    <div className="space-x-2">
                          <Button
                               variant="outline"
                               size="sm"
@@ -228,13 +294,6 @@ export default function ProductsManageTable({
                               Next
                          </Button>
                     </div>
-                    <span>
-                         Page{" "}
-                         <strong>
-                              {table.getState().pagination.pageIndex + 1} of{" "}
-                              {table.getPageCount()}
-                         </strong>
-                    </span>
                </div>
           </div>
      );

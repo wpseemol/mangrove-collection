@@ -2,19 +2,20 @@
 
 import { Button } from "@/components/ui/button";
 import { ProductManageType } from "@/lib/actions/products/get-product-manage";
-import { CellContext } from "@tanstack/react-table";
+import { Row } from "@tanstack/react-table";
 
 export default function ProductDelete({
-     info,
+     row,
 }: {
-     info: CellContext<ProductManageType>;
+     row: Row<ProductManageType>;
 }) {
      async function handleDelete() {
-          const productId = info.row.original.id;
+          const productId = row.original.id;
+          const public_ids = row.original.public_ids;
           console.log("Deleting product with ID:", productId);
+          console.log("Deleting product with ID:", public_ids);
           // Here you would typically call an API to delete the product
           // await deleteProduct(productId);
-          console.log("ProductDelete", info.row.original);
      }
 
      return (

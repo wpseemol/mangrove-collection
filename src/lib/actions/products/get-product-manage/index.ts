@@ -5,8 +5,11 @@ import { connectMongoDB } from "@/db/connections";
 import { userRoleCheck } from "@/lib/actions/user";
 import { Category } from "@/lib/schemas/mongoose/category";
 import { Product } from "@/lib/schemas/mongoose/product";
+import { User } from "@/lib/schemas/mongoose/user";
 import { Price } from "@/types/mongoose/product";
+import { extractPublicIdFromUrl } from "@/utils/public-id-from-url";
 import { replaceMongoIds } from "@/utils/replace";
+import { generateUniqueIds } from "@/utils/unique-id-generate";
 import { ObjectId } from "mongodb";
 
 export async function getProductManage() {
@@ -44,15 +47,15 @@ export async function getProductManage() {
           await connectMongoDB();
 
           const showField =
-               "name slug thumbnail shortDescription currency price";
+               "name slug thumbnail images shortDescription currency price";
 
-          const mongodbResponse = await Product.find()
+          const mongodbResponse = await Product.find({}, showField)
                .populate({
                     path: "category",
                     model: Category,
                     select: "name slug",
                })
-               .select(showField)
+               .populate({ path: "author", model: User, select: "name email" })
                .sort({ createdAt: -1 })
                .lean();
 
@@ -63,9 +66,33 @@ export async function getProductManage() {
           const products = mongodbReplaceIds.map((product) => {
                const price = product.price.find((p) => p.select)?.price || 0;
 
+               const author = {
+                    id: product.author._id.toString(),
+                    name:
+                         product.author._id.toString() === session.user.id
+                              ? "You"
+                              : product.author.name,
+                    email: product.author.email,
+               };
+               const { images, ...rest } = product;
+
+               const picturesUrlWithId = [
+                    {
+                         id: generateUniqueIds({ pattern: "***" }) as string,
+                         imgUrl: product.thumbnail,
+                    },
+                    ...images,
+               ];
+
+               const public_ids = picturesUrlWithId.map((imgObj) =>
+                    extractPublicIdFromUrl(imgObj.imgUrl)
+               );
+
                return {
-                    ...product,
+                    ...rest,
                     price,
+                    public_ids,
+                    author,
                     category: {
                          id: product.category._id.toString(),
                          name: product.category.name,
@@ -77,7 +104,7 @@ export async function getProductManage() {
           return {
                success: true,
                message: "Product manage data fetched successfully.",
-               products,
+               products: JSON.stringify(products),
           };
      } catch (error) {
           console.log("Error in getProductManage:", error);
@@ -105,6 +132,7 @@ interface ManageProduct {
      name: string;
      slug: string;
      thumbnail: string;
+     images: { id: string; imgUrl: "string" }[];
      shortDescription: string;
      currency: string;
      price: Price[];
@@ -113,22 +141,44 @@ interface ManageProduct {
           name: string;
           slug: string;
      };
+     author: {
+          _id: ObjectId;
+          name: string;
+          email: string;
+     };
 }
 
-type ProductType = Awaited<ReturnType<typeof getProductManage>>;
-
 /**
- * Extracts the type of a single product item from the `products` property of `ProductType`.
+ * Represents the structure of a product returned by the getProductManage function.
  *
- * This type uses TypeScript's conditional and infer types to obtain the element type of the
- * `products` array within `ProductType`. If `ProductType["products"]` is an array, it infers
- * the type of its elements as `ProductManageType`. If not, it resolves to `never`.
- *
- * This is useful for working with individual product objects when the overall type
- * describes a collection of products.
+ * @property id - The unique identifier of the product.
+ * @property name - The name of the product.
+ * @property slug - The URL-friendly identifier for the product.
+ * @property thumbnail - The URL of the product's thumbnail image.
+ * @property shortDescription - A brief description of the product.
+ * @property currency - The currency code for the product's price.
+ * @property price - The selected price of the product.
+ * @property category - The category information, including id, name, and slug.
+ * @property author - The author information, including id, name, and email.
+ * @property public_ids - An array of public IDs extracted from the product's images.
  */
-export type ProductManageType = NonNullable<
-     ProductType["products"]
-> extends Array<infer U>
-     ? U
-     : never;
+export interface ProductManageType {
+     id: string;
+     name: string;
+     slug: string;
+     thumbnail: string;
+     shortDescription: string;
+     currency: string;
+     price: number;
+     category: {
+          id: string;
+          name: string;
+          slug: string;
+     };
+     author: {
+          id: string;
+          name: string;
+          email: string;
+     };
+     public_ids: string[];
+}

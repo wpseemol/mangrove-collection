@@ -1,6 +1,6 @@
 import { getProductManage } from "@/lib/actions/products/get-product-manage";
 import * as motion from "framer-motion/client";
-import ProductsManageTable from "./_components/products-manage-table";
+import { ProductsManageTable } from "./_components/products-manage-table";
 
 export default async function ProductPage() {
      const response = await getProductManage();
@@ -38,7 +38,8 @@ export default async function ProductPage() {
                >
                     Products
                </motion.h1>
-               <ProductsManageTable data={response.products} />
+
+               <ProductsManageTable dataString={response.products as string} />
           </main>
      );
 }
