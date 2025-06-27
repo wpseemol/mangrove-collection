@@ -69,28 +69,61 @@ const adminMenus: MenuArraysType[] = [
           id: 2,
      },
      {
+          href: "/dashboard/orders",
+          icon: (
+               <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    width="1.2em"
+                    height="1.2em"
+               >
+                    <circle cx="9" cy="21" r="1.5" /> {/* Left wheel */}
+                    <circle cx="18" cy="21" r="1.5" /> {/* Right wheel */}
+                    <path d="M5 6h16l-1.5 9h-13z" /> {/* Cart body */}
+                    <rect x="8" y="10" width="2.5" height="2.5" rx="0.5" />{" "}
+                    {/* Product box */}
+                    <rect
+                         x="13"
+                         y="10"
+                         width="2.5"
+                         height="2.5"
+                         rx="0.5"
+                    />{" "}
+                    {/* Product box */}
+                    <path d="M7 6V4a1 1 0 011-1h2" /> {/* Handle */}
+               </svg>
+          ),
+          name: "Orders",
+          id: 3,
+     },
+     {
           href: "/dashboard/users",
           icon: <FaUsersGear />,
           name: "Manage All User",
-          id: 3,
+          id: 4,
      },
 
      {
           href: "/dashboard/profile",
           icon: <ImProfile />,
           name: "Profile",
-          id: 4,
+          id: 5,
      },
      {
           href: "/dashboard/setting",
           icon: <IoSettings />,
           name: "Setting",
-          id: 5,
+          id: 6,
      },
      {
           href: "/dashboard/help",
           icon: <TbHelpHexagonFilled />,
           name: "Help",
-          id: 6,
+          id: 7,
      },
 ];

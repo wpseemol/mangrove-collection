@@ -115,7 +115,7 @@ export const columns: ColumnDef<ProductManageType>[] = [
      },
      {
           id: "actions",
-          header: () => <div className="text-right mr-6">Actions</div>,
+          header: () => <div className="text-right mr-20">Actions</div>,
           enableSorting: false,
           enableHiding: false,
           cell: ({ row }) => {
@@ -160,7 +160,7 @@ export function ProductsManageTable({ dataString }: { dataString: string }) {
           <div className="w-full">
                <div className="flex items-center py-4">
                     <Input
-                         placeholder="Filter emails..."
+                         placeholder="Search by name..."
                          value={
                               (table
                                    .getColumn("name")
