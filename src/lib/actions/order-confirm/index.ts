@@ -95,6 +95,8 @@ export async function orderConfirm(details: string) {
                orderStatus: "processing",
           } as Order;
 
+          await connectMongoDB();
+
           // save order
           await OrderModel.create(orderObj);
 

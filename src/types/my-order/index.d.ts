@@ -51,6 +51,7 @@ export type OrderProduct = {
  */
 export type OrderProductType = {
      id: string;
+     orderId: string;
      userId: string | null;
      products: OrderProduct[];
      totalAmount: number;

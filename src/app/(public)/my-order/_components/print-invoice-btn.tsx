@@ -164,7 +164,9 @@ export default function PrintInvoiceBtn({
 
                               <div className="invoice-section">
                                    <p>
-                                        <strong>Order ID:</strong> {data.id}
+                                        {/* ekhane order id hobe */}
+                                        <strong>Order ID:</strong>{" "}
+                                        {data.orderId || data.id}
                                    </p>
                                    <p>
                                         <strong>Customer:</strong>{" "}
