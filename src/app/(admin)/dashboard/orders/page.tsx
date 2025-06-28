@@ -5,9 +5,7 @@ import { OrderManageTable } from "./_components/order-manage-table";
 export default async function OrderPage() {
      const response = await getOrderData();
 
-     const dataPars = JSON.parse(response.orders) as OrderTableType[];
-
-     if (!response.success) {
+     if (!response.success || !response.orders) {
           return (
                <main className="p-4">
                     <section className="p-4 pb-0">
@@ -26,6 +24,8 @@ export default async function OrderPage() {
                </main>
           );
      }
+
+     const data = JSON.parse(response.orders) as OrderTableType[];
 
      return (
           <main>
@@ -47,7 +47,7 @@ export default async function OrderPage() {
 
                {response.orders && (
                     <section className="p-4 pt-0">
-                         <OrderManageTable data={dataPars} />
+                         <OrderManageTable data={data} />
                     </section>
                )}
           </main>
