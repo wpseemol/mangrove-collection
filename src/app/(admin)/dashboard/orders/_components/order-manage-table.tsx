@@ -31,7 +31,6 @@ import {
      TableHeader,
      TableRow,
 } from "@/components/ui/table";
-import { Order } from "@/lib/schemas/mongoose/order";
 import { orderTableColumns, tableColumns } from "./order-table-columns";
 
 import {
@@ -43,10 +42,11 @@ import {
      SelectTrigger,
      SelectValue,
 } from "@/components/ui/select";
+import { OrderTableType } from "@/lib/actions/order/getOrderData";
 import PrintComponent from "./print-component";
 
 export function OrderManageTable({ dataString }: { dataString: string }) {
-     const data = JSON.parse(dataString) as Order[];
+     const data = JSON.parse(dataString) as OrderTableType[];
 
      const [sorting, setSorting] = React.useState<SortingState>([]);
      const [columnFilters, setColumnFilters] =
@@ -318,7 +318,7 @@ export function OrderManageTable({ dataString }: { dataString: string }) {
      );
 }
 
-const searchColumnName = {
+const searchColumnName: Record<string, string> = {
      orderStatus: "order status",
      paymentStatus: "payment status",
      paymentMethod: "payment method",

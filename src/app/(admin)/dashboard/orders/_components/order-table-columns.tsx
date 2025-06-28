@@ -102,7 +102,7 @@ export const orderTableColumns: ColumnDef<OrderTableType>[] = [
           cell: ({ row }) => {
                return (
                     <div className="font-medium">
-                         {row.getValue("totalAmount").toFixed(2)}{" "}
+                         {row.original.totalAmount.toFixed(2)}{" "}
                          <CurrencyIcon currency={row.original.currency} />
                     </div>
                );
@@ -183,7 +183,7 @@ export const orderTableColumns: ColumnDef<OrderTableType>[] = [
      },
 ];
 
-export const tableColumns = {
+export const tableColumns: Record<string, string> = {
      id: "Order Id",
      date: "Date",
      paymentMethod: "Payment Method",

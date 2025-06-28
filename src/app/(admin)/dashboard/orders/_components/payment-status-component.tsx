@@ -16,6 +16,12 @@ export default function PaymentStatusComponent({
 }: {
      row: Row<OrderTableType>;
 }) {
+     const handleStatusChange = (status: string) => {
+          // Add your status update logic here
+          console.log(`Changing status to: ${status}`);
+          // Example: updateOrderStatus(row.original.id, status);
+     };
+
      return (
           <DropdownMenu>
                <DropdownMenuTrigger asChild>
@@ -23,8 +29,7 @@ export default function PaymentStatusComponent({
                          variant="ghost"
                          className="border-gray-300 caption-bottom capitalize"
                     >
-                         {/* <span className="sr-only">Open menu</span> */}#
-                         {mongodbIdToOrderId(row.original.id)}
+                         #{mongodbIdToOrderId(row.original.id)}
                     </Button>
                </DropdownMenuTrigger>
                <DropdownMenuContent
@@ -32,13 +37,27 @@ export default function PaymentStatusComponent({
                     className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
                >
                     <DropdownMenuLabel>
-                         <strong className="">#{row.original.id}</strong>{" "}
+                         <strong className="">
+                              #{mongodbIdToOrderId(row.original.id)}
+                         </strong>{" "}
                          Payment Status
                     </DropdownMenuLabel>
-                    <DropdownMenuItem value="pending">Pending</DropdownMenuItem>
+                    <DropdownMenuItem
+                         onSelect={() => handleStatusChange("pending")}
+                    >
+                         Pending
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem value="paid">Paid</DropdownMenuItem>
-                    <DropdownMenuItem value="failed">Failed</DropdownMenuItem>
+                    <DropdownMenuItem
+                         onSelect={() => handleStatusChange("paid")}
+                    >
+                         Paid
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                         onSelect={() => handleStatusChange("failed")}
+                    >
+                         Failed
+                    </DropdownMenuItem>
                </DropdownMenuContent>
           </DropdownMenu>
      );
