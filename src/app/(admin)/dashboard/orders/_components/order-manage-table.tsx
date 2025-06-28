@@ -31,7 +31,6 @@ import {
      TableHeader,
      TableRow,
 } from "@/components/ui/table";
-import { OrderTableType } from "@/lib/actions/order/getOrderData";
 import { Order } from "@/lib/schemas/mongoose/order";
 import { orderTableColumns, tableColumns } from "./order-table-columns";
 
@@ -47,9 +46,7 @@ import {
 import PrintComponent from "./print-component";
 
 export function OrderManageTable({ dataString }: { dataString: string }) {
-     const test = JSON.parse(dataString) as Order[];
-
-     console.log("order details:", test);
+     const data = JSON.parse(dataString) as Order[];
 
      const [sorting, setSorting] = React.useState<SortingState>([]);
      const [columnFilters, setColumnFilters] =
@@ -321,193 +318,11 @@ export function OrderManageTable({ dataString }: { dataString: string }) {
      );
 }
 
-const data: OrderTableType[] = [
-     {
-          id: "ORD-78451",
-          clientName: "Alex Turner",
-          email: "alex.turner@example.com",
-          phone: "+1555123456",
-          date: new Date("2023-06-15T11:20:00Z"),
-          products: [
-               {
-                    productId: "PROD-4512",
-                    name: "Quantum Blender",
-                    slug: "quantum-blender",
-                    image: "/products/blender.jpg",
-                    price: 129.99,
-                    currency: "USD",
-                    quantity: 1,
-                    selectedPriceId: "price-blender-129",
-                    variants: {
-                         type: "color",
-                         title: "Stainless Steel",
-                    },
-               },
-               {
-                    productId: "PROD-7845",
-                    name: "Nebula Lamp",
-                    slug: "nebula-lamp",
-                    image: "/products/lamp.jpg",
-                    price: 45.5,
-                    currency: "USD",
-                    quantity: 2,
-                    selectedPriceId: "price-lamp-45",
-               },
-          ],
-          totalAmount: 220.99,
-          shippingCost: 15.0,
-          paymentMethod: "online-payment",
-          paymentStatus: "completed",
-          orderStatus: "shipped",
-          address: "789 Galaxy Way, Suite 200, Austin, TX 78701, USA",
-          currency: "taka",
-     },
-     {
-          id: "ORD-91234",
-          clientName: "Sophia Chen",
-          email: "sophia.chen@example.com",
-          phone: "+1888999777",
-          date: new Date("2023-06-18T08:45:00Z"),
-          products: [
-               {
-                    productId: "PROD-3366",
-                    name: "Aurora Keyboard",
-                    slug: "aurora-keyboard",
-                    image: "/products/keyboard.jpg",
-                    price: 89.99,
-                    currency: "USD",
-                    quantity: 1,
-                    selectedPriceId: "price-keyboard-89",
-                    variants: {
-                         type: "layout",
-                         title: "QWERTY US",
-                    },
-               },
-          ],
-          totalAmount: 89.99,
-          shippingCost: 0.0,
-          paymentMethod: "card",
-          paymentStatus: "pending",
-          orderStatus: "processing",
-          address: "321 Cosmos Lane, Toronto, ON M5V 2H1, Canada",
-          currency: "taka",
-     },
-     {
-          id: "ORD-56789",
-          clientName: "Marcus Wright",
-          email: "marcus.w@example.com",
-          phone: "+1444555666",
-          date: new Date("2023-06-20T16:30:00Z"),
-          products: [
-               {
-                    productId: "PROD-1122",
-                    name: "Infinity Scarf",
-                    slug: "infinity-scarf",
-                    image: "/products/scarf.jpg",
-                    price: 29.99,
-                    currency: "USD",
-                    quantity: 3,
-                    selectedPriceId: "price-scarf-29",
-                    variants: {
-                         type: "color",
-                         title: "Midnight Blue",
-                    },
-               },
-               {
-                    productId: "PROD-9988",
-                    name: "Celestial Mug",
-                    slug: "celestial-mug",
-                    image: "/products/mug.jpg",
-                    price: 18.75,
-                    currency: "taka",
-                    quantity: 1,
-                    selectedPriceId: "price-mug-18",
-               },
-          ],
-          totalAmount: 108.72,
-          shippingCost: 8.5,
-          paymentMethod: "cod",
-          paymentStatus: "pending",
-          orderStatus: "pending",
-          address: "555 Stellar Ave, Chicago, IL 60601, USA",
-          currency: "taka",
-     },
-     {
-          id: "ORD-34567",
-          clientName: "Elena Rodriguez",
-          email: "elena.r@example.com",
-          phone: "+1777888999",
-          date: new Date("2023-06-22T09:15:00Z"),
-          products: [
-               {
-                    productId: "PROD-2233",
-                    name: "Solar Charger",
-                    slug: "solar-charger",
-                    image: "/products/charger.jpg",
-                    price: 79.95,
-                    currency: "USD",
-                    quantity: 1,
-                    selectedPriceId: "price-charger-79",
-               },
-               {
-                    productId: "PROD-4455",
-                    name: "Lunar Backpack",
-                    slug: "lunar-backpack",
-                    image: "/products/backpack.jpg",
-                    price: 65.0,
-                    currency: "USD",
-                    quantity: 1,
-                    selectedPriceId: "price-backpack-65",
-                    variants: {
-                         type: "size",
-                         title: "Medium",
-                    },
-               },
-          ],
-          totalAmount: 144.95,
-          shippingCost: 12.0,
-          paymentMethod: "online-payment",
-          paymentStatus: "completed",
-          orderStatus: "delivered",
-          address: "222 Orbit Street, Madrid, 28001, Spain",
-          currency: "taka",
-     },
-     {
-          id: "ORD-67890",
-          clientName: "Daniel Kim",
-          email: "daniel.kim@example.com",
-          phone: "+1666777888",
-          date: new Date("2023-06-25T13:50:00Z"),
-          products: [
-               {
-                    productId: "PROD-5566",
-                    name: "Gravity Blanket",
-                    slug: "gravity-blanket",
-                    image: "/products/blanket.jpg",
-                    price: 149.0,
-                    currency: "USD",
-                    quantity: 1,
-                    selectedPriceId: "price-blanket-149",
-                    variants: {
-                         type: "weight",
-                         title: "15 lbs",
-                    },
-               },
-          ],
-          totalAmount: 149.0,
-          shippingCost: 0.0,
-          paymentMethod: "card",
-          paymentStatus: "failed",
-          orderStatus: "cancelled",
-          address: "777 Comet Road, Seoul, South Korea",
-          currency: "taka",
-     },
-];
-
 const searchColumnName = {
      orderStatus: "order status",
      paymentStatus: "payment status",
      paymentMethod: "payment method",
      clientName: "client name",
      id: "id",
+     phone: "phone number",
 };

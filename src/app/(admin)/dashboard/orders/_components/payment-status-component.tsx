@@ -8,6 +8,7 @@ import {
      DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { OrderTableType } from "@/lib/actions/order/getOrderData";
+import { mongodbIdToOrderId } from "@/utils/mongodb-id-to-order-id";
 import { Row } from "@tanstack/react-table";
 
 export default function PaymentStatusComponent({
@@ -22,8 +23,8 @@ export default function PaymentStatusComponent({
                          variant="ghost"
                          className="border-gray-300 caption-bottom capitalize"
                     >
-                         {/* <span className="sr-only">Open menu</span> */}
-                         {row.original.paymentStatus}
+                         {/* <span className="sr-only">Open menu</span> */}#
+                         {mongodbIdToOrderId(row.original.id)}
                     </Button>
                </DropdownMenuTrigger>
                <DropdownMenuContent

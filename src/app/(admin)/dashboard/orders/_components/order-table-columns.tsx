@@ -7,6 +7,7 @@ import { CurrencyIcon } from "@/components/currency-icon";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { OrderTableType } from "@/lib/actions/order/getOrderData";
+import { mongodbIdToOrderId } from "@/utils/mongodb-id-to-order-id";
 import ActionComponent from "./action-component";
 import OrderStatusComponent from "./order-status-component";
 import PaymentStatusComponent from "./payment-status-component";
@@ -40,10 +41,7 @@ export const orderTableColumns: ColumnDef<OrderTableType>[] = [
           accessorKey: "id",
           header: "Order ID",
           cell: ({ row }) => (
-               <div className="">
-                    {/* {mongodbIdToOrderId(row.original.id)} */}
-                    {row.original.id}
-               </div>
+               <div className="">#{mongodbIdToOrderId(row.original.id)}</div>
           ),
      },
      {
@@ -67,6 +65,21 @@ export const orderTableColumns: ColumnDef<OrderTableType>[] = [
           cell: ({ row }) => (
                <div className="">{row.getValue("clientName")}</div>
           ),
+     },
+     {
+          accessorKey: "phone",
+          header: ({ column }) => (
+               <Button
+                    variant="ghost"
+                    onClick={() =>
+                         column.toggleSorting(column.getIsSorted() === "asc")
+                    }
+               >
+                    Phone Number
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+               </Button>
+          ),
+          cell: ({ row }) => <div className="">{row.getValue("phone")}</div>,
      },
      {
           accessorKey: "totalAmount",

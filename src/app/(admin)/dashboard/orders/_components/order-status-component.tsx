@@ -7,6 +7,7 @@ import {
      DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { OrderTableType } from "@/lib/actions/order/getOrderData";
+import { mongodbIdToOrderId } from "@/utils/mongodb-id-to-order-id";
 import { Row } from "@tanstack/react-table";
 
 export default function OrderStatusComponent({
@@ -51,7 +52,8 @@ export default function OrderStatusComponent({
                          className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
                     >
                          <DropdownMenuLabel className="tex-sm font-normal">
-                              {row.original.id} order status
+                              #{mongodbIdToOrderId(row.original.id)} order
+                              status
                               <hr className="text-gray-300" />
                          </DropdownMenuLabel>
 
