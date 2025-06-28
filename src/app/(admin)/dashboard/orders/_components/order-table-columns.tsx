@@ -68,6 +68,7 @@ export const orderTableColumns: ColumnDef<OrderTableType>[] = [
      },
      {
           accessorKey: "phone",
+          enableHiding: false,
           header: ({ column }) => (
                <Button
                     variant="ghost"
@@ -84,6 +85,7 @@ export const orderTableColumns: ColumnDef<OrderTableType>[] = [
      {
           accessorKey: "product",
           header: "Products",
+          enableHiding: false,
           cell: ({ row }) => (
                <div>
                     <ul className="">
@@ -202,6 +204,7 @@ export const orderTableColumns: ColumnDef<OrderTableType>[] = [
           header: "Actions",
           cell: ({ row }) => <ActionComponent row={row} />,
           enableSorting: false,
+          enableHiding: false,
      },
 ];
 

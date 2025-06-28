@@ -1,11 +1,14 @@
-import { getProductManage } from "@/lib/actions/products/get-product-manage";
+import {
+     getProductManage,
+     ProductManageType,
+} from "@/lib/actions/products/get-product-manage";
 import * as motion from "framer-motion/client";
 import { ProductsManageTable } from "./_components/products-manage-table";
 
 export default async function ProductPage() {
      const response = await getProductManage();
 
-     if (!response.success) {
+     if (!response.success || !response.products) {
           return (
                <main className="p-4">
                     <motion.h1
@@ -28,6 +31,8 @@ export default async function ProductPage() {
           );
      }
 
+     const data = JSON.parse(response.products) as ProductManageType[];
+
      return (
           <main className="p-4">
                <motion.h1
@@ -39,7 +44,7 @@ export default async function ProductPage() {
                     Products
                </motion.h1>
 
-               <ProductsManageTable dataString={response.products as string} />
+               <ProductsManageTable data={data} />
           </main>
      );
 }

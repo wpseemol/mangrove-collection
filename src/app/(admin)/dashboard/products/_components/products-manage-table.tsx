@@ -129,7 +129,7 @@ export const columns: ColumnDef<ProductManageType>[] = [
      },
 ];
 
-export function ProductsManageTable({ dataString }: { dataString: string }) {
+export function ProductsManageTable({ data }: { data: ProductManageType[] }) {
      const [sorting, setSorting] = React.useState<SortingState>([]);
      const [columnFilters, setColumnFilters] =
           React.useState<ColumnFiltersState>([]);
@@ -138,7 +138,7 @@ export function ProductsManageTable({ dataString }: { dataString: string }) {
      const [rowSelection, setRowSelection] = React.useState({});
 
      const table = useReactTable({
-          data: JSON.parse(dataString) as ProductManageType[],
+          data,
           columns,
           onSortingChange: setSorting,
           onColumnFiltersChange: setColumnFilters,

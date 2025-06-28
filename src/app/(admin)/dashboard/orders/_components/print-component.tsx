@@ -2,9 +2,7 @@ import { Button } from "@/components/ui/button";
 import { OrderTableType } from "@/lib/actions/order/getOrderData";
 import { Printer } from "lucide-react";
 
-export default function PrintComponent({ dataString }: { dataString: string }) {
-     const data = JSON.parse(dataString) as OrderTableType[];
-
+export default function PrintComponent({ data }: { data: OrderTableType[] }) {
      const handlePrint = () => {
           const printWindow = window.open("", "_blank");
           if (printWindow) {

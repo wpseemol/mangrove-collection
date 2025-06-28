@@ -213,15 +213,21 @@ export function CartProductTable({ data }: { data: CartProductsType[] }) {
                                    .getColumn("name")
                                    ?.setFilterValue(event.target.value)
                          }
-                         className="max-w-sm"
+                         className="max-w-sm border-gray-200"
                     />
                     <DropdownMenu>
                          <DropdownMenuTrigger asChild>
-                              <Button variant="outline" className="ml-auto">
+                              <Button
+                                   variant="outline"
+                                   className="ml-auto border-gray-300"
+                              >
                                    Columns <ChevronDown />
                               </Button>
                          </DropdownMenuTrigger>
-                         <DropdownMenuContent align="end">
+                         <DropdownMenuContent
+                              align="end"
+                              className="bg-gray-50 border-gray-300 shadow"
+                         >
                               {table
                                    .getAllColumns()
                                    .filter((column) => column.getCanHide())

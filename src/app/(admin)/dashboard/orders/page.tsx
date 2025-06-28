@@ -1,9 +1,11 @@
-import { getOrderData } from "@/lib/actions/order/getOrderData";
+import { getOrderData, OrderTableType } from "@/lib/actions/order/getOrderData";
 import * as motion from "framer-motion/client";
 import { OrderManageTable } from "./_components/order-manage-table";
 
 export default async function OrderPage() {
      const response = await getOrderData();
+
+     const dataPars = JSON.parse(response.orders) as OrderTableType[];
 
      if (!response.success) {
           return (
@@ -45,7 +47,7 @@ export default async function OrderPage() {
 
                {response.orders && (
                     <section className="p-4 pt-0">
-                         <OrderManageTable dataString={response.orders} />
+                         <OrderManageTable data={dataPars} />
                     </section>
                )}
           </main>

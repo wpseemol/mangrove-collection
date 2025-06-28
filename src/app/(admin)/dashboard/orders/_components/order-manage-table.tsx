@@ -45,9 +45,7 @@ import {
 import { OrderTableType } from "@/lib/actions/order/getOrderData";
 import PrintComponent from "./print-component";
 
-export function OrderManageTable({ dataString }: { dataString: string }) {
-     const data = JSON.parse(dataString) as OrderTableType[];
-
+export function OrderManageTable({ data }: { data: OrderTableType[] }) {
      const [sorting, setSorting] = React.useState<SortingState>([]);
      const [columnFilters, setColumnFilters] =
           React.useState<ColumnFiltersState>([]);
@@ -143,7 +141,7 @@ export function OrderManageTable({ dataString }: { dataString: string }) {
                          />
                     </div>
                     <div className="flex gap-2">
-                         <PrintComponent dataString={dataString} />
+                         <PrintComponent data={data} />
                          <DropdownMenu>
                               <DropdownMenuTrigger
                                    asChild
