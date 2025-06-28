@@ -105,7 +105,7 @@ export default function PrintComponent({ dataString }: { dataString: string }) {
                         <td>${order.phone}</td>
                         <td class="capitalize">${order.orderStatus}</td>
                         <td><ul class="product-list">${productList}</ul></td>
-                        <td>$${order.totalAmount.toFixed(2)}</td>
+                        <td>${order.totalAmount.toFixed(2)}/=</td>
                       </tr>
                     `;
                      })

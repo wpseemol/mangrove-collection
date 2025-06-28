@@ -82,6 +82,28 @@ export const orderTableColumns: ColumnDef<OrderTableType>[] = [
           cell: ({ row }) => <div className="">{row.getValue("phone")}</div>,
      },
      {
+          accessorKey: "product",
+          header: "Products",
+          cell: ({ row }) => (
+               <div>
+                    <ul className="">
+                         {row.original.products.map((product) => (
+                              <li
+                                   key={product.productId}
+                                   className="capitalize before:content-['#'] before:mr-1"
+                              >
+                                   {product.name.toLocaleLowerCase()} (
+                                   {product.quantity}x)
+                                   {product.price.toFixed(2)}
+                                   <CurrencyIcon currency={product.currency} />
+                              </li>
+                         ))}
+                    </ul>
+               </div>
+          ),
+     },
+
+     {
           accessorKey: "totalAmount",
           enableHiding: false,
           header: ({ column }) => {

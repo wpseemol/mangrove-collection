@@ -29,7 +29,7 @@ export default function PaymentStatusComponent({
                          variant="ghost"
                          className="border-gray-300 caption-bottom capitalize"
                     >
-                         #{mongodbIdToOrderId(row.original.id)}
+                         {row.original.paymentStatus}
                     </Button>
                </DropdownMenuTrigger>
                <DropdownMenuContent
