@@ -1,23 +1,17 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import { Payment, products } from "./order-manage-table";
+import { ArrowUpDown } from "lucide-react";
 
+import { CurrencyIcon } from "@/components/currency-icon";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-     DropdownMenu,
-     DropdownMenuContent,
-     DropdownMenuItem,
-     DropdownMenuLabel,
-     DropdownMenuSeparator,
-     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { OrderTableType } from "@/lib/actions/order/getOrderData";
+import ActionComponent from "./action-component";
+import OrderStatusComponent from "./order-status-component";
+import PaymentStatusComponent from "./payment-status-component";
 
-export const orderTableColumns: ColumnDef<Payment>[] = [
+export const orderTableColumns: ColumnDef<OrderTableType>[] = [
      {
           id: "select",
           header: ({ table }) => (
@@ -43,14 +37,18 @@ export const orderTableColumns: ColumnDef<Payment>[] = [
           enableHiding: false,
      },
      {
-          accessorKey: "status",
-          header: "Status",
+          accessorKey: "id",
+          header: "Order ID",
           cell: ({ row }) => (
-               <div className="capitalize">{row.getValue("status")}</div>
+               <div className="">
+                    {/* {mongodbIdToOrderId(row.original.id)} */}
+                    {row.original.id}
+               </div>
           ),
      },
      {
-          accessorKey: "email",
+          accessorKey: "clientName",
+          enableHiding: false,
           header: ({ column }) => {
                return (
                     <Button
@@ -61,153 +59,122 @@ export const orderTableColumns: ColumnDef<Payment>[] = [
                               )
                          }
                     >
-                         Email
+                         Clint Name
                          <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                );
           },
           cell: ({ row }) => (
-               <div className="lowercase">{row.getValue("email")}</div>
+               <div className="">{row.getValue("clientName")}</div>
           ),
      },
      {
-          accessorKey: "amount",
-          header: () => <div className="text-right">Amount</div>,
+          accessorKey: "totalAmount",
+          enableHiding: false,
+          header: ({ column }) => {
+               return (
+                    <Button
+                         variant="ghost"
+                         onClick={() =>
+                              column.toggleSorting(
+                                   column.getIsSorted() === "asc"
+                              )
+                         }
+                    >
+                         Total Amount
+                         <ArrowUpDown className="ml-2 h-4 w-4" />
+                    </Button>
+               );
+          },
           cell: ({ row }) => {
-               const amount = parseFloat(row.getValue("amount"));
-
-               const formatted = new Intl.NumberFormat("en-US", {
-                    style: "currency",
-                    currency: "USD",
-               }).format(amount);
-
-               return <div className="text-right font-medium">{formatted}</div>;
+               return (
+                    <div className="font-medium">
+                         {row.getValue("totalAmount").toFixed(2)}{" "}
+                         <CurrencyIcon currency={row.original.currency} />
+                    </div>
+               );
           },
      },
      {
-          id: "products",
-          header: "Products",
-          cell: ({ row }) => {
-               const payment = row.original;
-               const [quantities, setQuantities] = useState<
-                    Record<string, number>
-               >(
-                    Object.fromEntries(
-                         products.map((product) => [
-                              product.id,
-                              payment.orderItems?.find(
-                                   (item) => item.productId === product.id
-                              )?.quantity || 0,
-                         ])
-                    )
-               );
-
-               const handleQuantityChange = (
-                    productId: string,
-                    value: number
-               ) => {
-                    const newQuantity = Math.max(0, value);
-                    setQuantities((prev) => ({
-                         ...prev,
-                         [productId]: newQuantity,
-                    }));
-
-                    // In a real app, you would update the order here
-                    console.log(
-                         `Updated product ${productId} quantity to ${newQuantity}`
-                    );
-               };
-
-               const getProductName = (productId: string) => {
-                    return (
-                         products.find((p) => p.id === productId)?.name ||
-                         productId
-                    );
-               };
-
+          accessorKey: "date",
+          header: ({ column }) => {
                return (
-                    <DropdownMenu>
-                         <DropdownMenuTrigger asChild>
-                              <Button variant="outline" size="sm">
-                                   {payment.orderItems?.reduce(
-                                        (sum, item) => sum + item.quantity,
-                                        0
-                                   ) || 0}{" "}
-                                   items
-                              </Button>
-                         </DropdownMenuTrigger>
-                         <DropdownMenuContent className="w-64 p-4">
-                              <DropdownMenuLabel>
-                                   Product Quantities
-                              </DropdownMenuLabel>
-                              <DropdownMenuSeparator />
-                              <div className="space-y-3">
-                                   {products.map((product) => (
-                                        <div
-                                             key={product.id}
-                                             className="flex items-center justify-between"
-                                        >
-                                             <span className="text-sm">
-                                                  {product.name}
-                                             </span>
-                                             <Input
-                                                  type="number"
-                                                  min="0"
-                                                  className="w-20"
-                                                  value={
-                                                       quantities[product.id] ||
-                                                       0
-                                                  }
-                                                  onChange={(e) =>
-                                                       handleQuantityChange(
-                                                            product.id,
-                                                            parseInt(
-                                                                 e.target.value
-                                                            ) || 0
-                                                       )
-                                                  }
-                                             />
-                                        </div>
-                                   ))}
-                              </div>
-                         </DropdownMenuContent>
-                    </DropdownMenu>
+                    <Button
+                         variant="ghost"
+                         onClick={() =>
+                              column.toggleSorting(
+                                   column.getIsSorted() === "asc"
+                              )
+                         }
+                    >
+                         Date
+                         <ArrowUpDown className="ml-2 h-4 w-4" />
+                    </Button>
                );
           },
+          cell: ({ row }) => {
+               const date = new Date(row.getValue("date"));
+               return (
+                    <div className="text-sm text-gray-500">
+                         {date.toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "2-digit",
+                              day: "2-digit",
+                         })}{" "}
+                         {date.toLocaleTimeString("en-US", {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                         })}
+                    </div>
+               );
+          },
+     },
+     {
+          accessorKey: "paymentMethod",
+          header: ({ column }) => (
+               <Button
+                    variant="ghost"
+                    onClick={() =>
+                         column.toggleSorting(column.getIsSorted() === "asc")
+                    }
+               >
+                    Payment Method
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+               </Button>
+          ),
+          cell: ({ row }) => (
+               <div>
+                    {row.getValue("paymentMethod") === "cod"
+                         ? "Cash on Delivery"
+                         : row.getValue("paymentMethod") === "online-payment"
+                         ? "Online Payment"
+                         : "Card Payment"}
+               </div>
+          ),
+     },
+     {
+          accessorKey: "paymentStatus",
+          header: "Payment Status",
+          cell: ({ row }) => <PaymentStatusComponent row={row} />,
+     },
+     {
+          accessorKey: "orderStatus",
+          header: "Order Status",
+          cell: ({ row }) => <OrderStatusComponent row={row} />,
      },
      {
           id: "actions",
-          enableHiding: false,
-          cell: ({ row }) => {
-               const payment = row.original;
-
-               return (
-                    <DropdownMenu>
-                         <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" className="h-8 w-8 p-0">
-                                   <span className="sr-only">Open menu</span>
-                                   <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                         </DropdownMenuTrigger>
-                         <DropdownMenuContent align="end">
-                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                              <DropdownMenuItem
-                                   onClick={() =>
-                                        navigator.clipboard.writeText(
-                                             payment.id
-                                        )
-                                   }
-                              >
-                                   Copy payment ID
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem>View customer</DropdownMenuItem>
-                              <DropdownMenuItem>
-                                   View payment details
-                              </DropdownMenuItem>
-                         </DropdownMenuContent>
-                    </DropdownMenu>
-               );
-          },
+          header: "Actions",
+          cell: ({ row }) => <ActionComponent row={row} />,
+          enableSorting: false,
      },
 ];
+
+export const tableColumns = {
+     id: "Order Id",
+     date: "Date",
+     paymentMethod: "Payment Method",
+     paymentStatus: "Payment Status",
+     orderStatus: "Order Status",
+     action: "Action",
+};

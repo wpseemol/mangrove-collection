@@ -11,7 +11,7 @@ import {
      useReactTable,
      VisibilityState,
 } from "@tanstack/react-table";
-import { ChevronDown, Printer } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
@@ -31,29 +31,26 @@ import {
      TableHeader,
      TableRow,
 } from "@/components/ui/table";
-import { orderTableColumns } from "./order-table-columns";
+import { OrderTableType } from "@/lib/actions/order/getOrderData";
+import { Order } from "@/lib/schemas/mongoose/order";
+import { orderTableColumns, tableColumns } from "./order-table-columns";
 
-// Product data
-export const products = [
-     { id: "p1", name: "T-Shirt", price: 19.99 },
-     { id: "p2", name: "Jeans", price: 49.99 },
-     { id: "p3", name: "Sneakers", price: 89.99 },
-];
+import {
+     Select,
+     SelectContent,
+     SelectGroup,
+     SelectItem,
+     SelectLabel,
+     SelectTrigger,
+     SelectValue,
+} from "@/components/ui/select";
+import PrintComponent from "./print-component";
 
-interface OrderItem {
-     productId: string;
-     quantity: number;
-}
+export function OrderManageTable({ dataString }: { dataString: string }) {
+     const test = JSON.parse(dataString) as Order[];
 
-export interface Payment {
-     id: string;
-     amount: number;
-     status: "pending" | "processing" | "success" | "failed";
-     email: string;
-     orderItems?: OrderItem[];
-}
+     console.log("order details:", test);
 
-export function OrderManageTable() {
      const [sorting, setSorting] = React.useState<SortingState>([]);
      const [columnFilters, setColumnFilters] =
           React.useState<ColumnFiltersState>([]);
@@ -62,6 +59,7 @@ export function OrderManageTable() {
      const [rowSelection, setRowSelection] = React.useState({});
      const [pageSize, setPageSize] = React.useState(5);
      const [customPageSize, setCustomPageSize] = React.useState("");
+     const [selectForSearch, setSelectForSearch] = React.useState<string>("id");
 
      const table = useReactTable({
           data,
@@ -104,123 +102,51 @@ export function OrderManageTable() {
           }
      };
 
-     const handlePrint = () => {
-          const printWindow = window.open("", "_blank");
-          if (printWindow) {
-               printWindow.document.write(`
-        <html>
-          <head>
-            <title>Order Summary</title>
-            <style>
-              @media print {
-                body { font-family: Arial, sans-serif; padding: 10px; }
-                .print-header { text-align: center; margin-bottom: 20px; }
-                .print-table { width: 100%; border-collapse: collapse; }
-                .print-table th, .print-table td { 
-                  border: 1px solid #ddd; 
-                  padding: 8px; 
-                  text-align: left; 
-                }
-                .print-table th { background-color: #f2f2f2; }
-                .product-list { margin: 0; padding-left: 20px; }
-                .total-row { font-weight: bold; }
-              }
-              @media (max-width: 600px) {
-                .print-table { font-size: 12px; }
-                .print-table th, .print-table td { padding: 4px; }
-              }
-            </style>
-          </head>
-          <body>
-            <div class="print-header">
-              <h2>Order Summary</h2>
-              <p>Generated on ${new Date().toLocaleString()}</p>
-            </div>
-            <table class="print-table">
-              <thead>
-                <tr>
-                  <th>Order ID</th>
-                  <th>Email</th>
-                  <th>Status</th>
-                  <th>Products</th>
-                  <th>Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${table
-                     .getRowModel()
-                     .rows.map((row) => {
-                          const payment = row.original;
-                          const productList =
-                               payment.orderItems
-                                    ?.map((item) => {
-                                         const product = products.find(
-                                              (p) => p.id === item.productId
-                                         );
-                                         return `<li>${
-                                              product?.name || item.productId
-                                         } (x${item.quantity})</li>`;
-                                    })
-                                    .join("") || "<li>No products</li>";
-
-                          return `
-                    <tr>
-                      <td>${payment.id}</td>
-                      <td>${payment.email}</td>
-                      <td class="capitalize">${payment.status}</td>
-                      <td><ul class="product-list">${productList}</ul></td>
-                      <td>$${payment.amount.toFixed(2)}</td>
-                    </tr>
-                  `;
-                     })
-                     .join("")}
-                <tr class="total-row">
-                  <td colspan="4">Total</td>
-                  <td>$${data
-                       .reduce((sum, item) => sum + item.amount, 0)
-                       .toFixed(2)}</td>
-                </tr>
-              </tbody>
-            </table>
-            <script>
-              setTimeout(() => {
-                window.print();
-                window.close();
-              }, 100);
-            </script>
-          </body>
-        </html>
-      `);
-               printWindow.document.close();
-          }
-     };
-
      return (
           <div className="w-full">
                <div className="flex items-center justify-between py-4">
-                    <Input
-                         placeholder="Filter emails..."
-                         value={
-                              (table
-                                   .getColumn("email")
-                                   ?.getFilterValue() as string) ?? ""
-                         }
-                         onChange={(event) =>
-                              table
-                                   .getColumn("email")
-                                   ?.setFilterValue(event.target.value)
-                         }
-                         className="max-w-sm"
-                    />
-                    <div className="flex gap-2">
-                         <Button
-                              variant="outline"
-                              onClick={handlePrint}
-                              className="border-gray-300"
+                    <div className="flex md:flex-row flex-col gap-1 items-center">
+                         <Select
+                              value={selectForSearch}
+                              onValueChange={setSelectForSearch}
                          >
-                              <Printer className="mr-2 h-4 w-4" />
-                              Print
-                         </Button>
+                              <SelectTrigger className="border-gray-300">
+                                   <SelectValue placeholder="Select field for search" />
+                              </SelectTrigger>
+                              <SelectContent className="bg-gray-50 border-gray-200">
+                                   <SelectGroup>
+                                        <SelectLabel>Select filed</SelectLabel>
+                                        {Object.keys(searchColumnName).map(
+                                             (item) => (
+                                                  <SelectItem
+                                                       key={item}
+                                                       value={item}
+                                                  >
+                                                       Filter{" "}
+                                                       {searchColumnName[item]}
+                                                  </SelectItem>
+                                             )
+                                        )}
+                                   </SelectGroup>
+                              </SelectContent>
+                         </Select>
+                         <Input
+                              placeholder={`Filter ${searchColumnName[selectForSearch]}...`}
+                              value={
+                                   (table
+                                        .getColumn(selectForSearch)
+                                        ?.getFilterValue() as string) ?? ""
+                              }
+                              onChange={(event) =>
+                                   table
+                                        .getColumn(selectForSearch)
+                                        ?.setFilterValue(event.target.value)
+                              }
+                              className="max-w-sm border-gray-300"
+                         />
+                    </div>
+                    <div className="flex gap-2">
+                         <PrintComponent dataString={dataString} />
                          <DropdownMenu>
                               <DropdownMenuTrigger
                                    asChild
@@ -252,7 +178,7 @@ export function OrderManageTable() {
                                                             )
                                                        }
                                                   >
-                                                       {column.id}
+                                                       {tableColumns[column.id]}
                                                   </DropdownMenuCheckboxItem>
                                              );
                                         })}
@@ -332,7 +258,11 @@ export function OrderManageTable() {
                               <span className="text-sm">Rows per page:</span>
                               <DropdownMenu>
                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="outline" size="sm">
+                                        <Button
+                                             variant="outline"
+                                             size="sm"
+                                             className="border-gray-300"
+                                        >
                                              {pageSize}{" "}
                                              <ChevronDown className="ml-2 h-4 w-4" />
                                         </Button>
@@ -391,75 +321,193 @@ export function OrderManageTable() {
      );
 }
 
-const data: Payment[] = [
+const data: OrderTableType[] = [
      {
-          id: "m5gr84i9",
-          amount: 316,
-          status: "success",
-          email: "ken99@example.com",
-          orderItems: [
-               { productId: "p1", quantity: 2 },
-               { productId: "p2", quantity: 1 },
+          id: "ORD-78451",
+          clientName: "Alex Turner",
+          email: "alex.turner@example.com",
+          phone: "+1555123456",
+          date: new Date("2023-06-15T11:20:00Z"),
+          products: [
+               {
+                    productId: "PROD-4512",
+                    name: "Quantum Blender",
+                    slug: "quantum-blender",
+                    image: "/products/blender.jpg",
+                    price: 129.99,
+                    currency: "USD",
+                    quantity: 1,
+                    selectedPriceId: "price-blender-129",
+                    variants: {
+                         type: "color",
+                         title: "Stainless Steel",
+                    },
+               },
+               {
+                    productId: "PROD-7845",
+                    name: "Nebula Lamp",
+                    slug: "nebula-lamp",
+                    image: "/products/lamp.jpg",
+                    price: 45.5,
+                    currency: "USD",
+                    quantity: 2,
+                    selectedPriceId: "price-lamp-45",
+               },
           ],
+          totalAmount: 220.99,
+          shippingCost: 15.0,
+          paymentMethod: "online-payment",
+          paymentStatus: "completed",
+          orderStatus: "shipped",
+          address: "789 Galaxy Way, Suite 200, Austin, TX 78701, USA",
+          currency: "taka",
      },
      {
-          id: "3u1reuv4",
-          amount: 242,
-          status: "success",
-          email: "Abe45@example.com",
-          orderItems: [{ productId: "p3", quantity: 3 }],
-     },
-     {
-          id: "derv1ws0",
-          amount: 837,
-          status: "processing",
-          email: "Monserrat44@example.com",
-     },
-     {
-          id: "5kma53ae",
-          amount: 874,
-          status: "success",
-          email: "Silas22@example.com",
-     },
-     {
-          id: "bhqecj4p",
-          amount: 721,
-          status: "failed",
-          email: "carmella@example.com",
-     },
-     {
-          id: "m5gr84i8",
-          amount: 150,
-          status: "success",
-          email: "john@example.com",
-          orderItems: [
-               { productId: "p1", quantity: 1 },
-               { productId: "p3", quantity: 2 },
+          id: "ORD-91234",
+          clientName: "Sophia Chen",
+          email: "sophia.chen@example.com",
+          phone: "+1888999777",
+          date: new Date("2023-06-18T08:45:00Z"),
+          products: [
+               {
+                    productId: "PROD-3366",
+                    name: "Aurora Keyboard",
+                    slug: "aurora-keyboard",
+                    image: "/products/keyboard.jpg",
+                    price: 89.99,
+                    currency: "USD",
+                    quantity: 1,
+                    selectedPriceId: "price-keyboard-89",
+                    variants: {
+                         type: "layout",
+                         title: "QWERTY US",
+                    },
+               },
           ],
+          totalAmount: 89.99,
+          shippingCost: 0.0,
+          paymentMethod: "card",
+          paymentStatus: "pending",
+          orderStatus: "processing",
+          address: "321 Cosmos Lane, Toronto, ON M5V 2H1, Canada",
+          currency: "taka",
      },
      {
-          id: "3u1reuv5",
-          amount: 300,
-          status: "processing",
-          email: "jane@example.com",
+          id: "ORD-56789",
+          clientName: "Marcus Wright",
+          email: "marcus.w@example.com",
+          phone: "+1444555666",
+          date: new Date("2023-06-20T16:30:00Z"),
+          products: [
+               {
+                    productId: "PROD-1122",
+                    name: "Infinity Scarf",
+                    slug: "infinity-scarf",
+                    image: "/products/scarf.jpg",
+                    price: 29.99,
+                    currency: "USD",
+                    quantity: 3,
+                    selectedPriceId: "price-scarf-29",
+                    variants: {
+                         type: "color",
+                         title: "Midnight Blue",
+                    },
+               },
+               {
+                    productId: "PROD-9988",
+                    name: "Celestial Mug",
+                    slug: "celestial-mug",
+                    image: "/products/mug.jpg",
+                    price: 18.75,
+                    currency: "taka",
+                    quantity: 1,
+                    selectedPriceId: "price-mug-18",
+               },
+          ],
+          totalAmount: 108.72,
+          shippingCost: 8.5,
+          paymentMethod: "cod",
+          paymentStatus: "pending",
+          orderStatus: "pending",
+          address: "555 Stellar Ave, Chicago, IL 60601, USA",
+          currency: "taka",
      },
      {
-          id: "derv1ws1",
-          amount: 450,
-          status: "success",
-          email: "mike@example.com",
-          orderItems: [{ productId: "p2", quantity: 3 }],
+          id: "ORD-34567",
+          clientName: "Elena Rodriguez",
+          email: "elena.r@example.com",
+          phone: "+1777888999",
+          date: new Date("2023-06-22T09:15:00Z"),
+          products: [
+               {
+                    productId: "PROD-2233",
+                    name: "Solar Charger",
+                    slug: "solar-charger",
+                    image: "/products/charger.jpg",
+                    price: 79.95,
+                    currency: "USD",
+                    quantity: 1,
+                    selectedPriceId: "price-charger-79",
+               },
+               {
+                    productId: "PROD-4455",
+                    name: "Lunar Backpack",
+                    slug: "lunar-backpack",
+                    image: "/products/backpack.jpg",
+                    price: 65.0,
+                    currency: "USD",
+                    quantity: 1,
+                    selectedPriceId: "price-backpack-65",
+                    variants: {
+                         type: "size",
+                         title: "Medium",
+                    },
+               },
+          ],
+          totalAmount: 144.95,
+          shippingCost: 12.0,
+          paymentMethod: "online-payment",
+          paymentStatus: "completed",
+          orderStatus: "delivered",
+          address: "222 Orbit Street, Madrid, 28001, Spain",
+          currency: "taka",
      },
      {
-          id: "5kma53af",
-          amount: 200,
-          status: "failed",
-          email: "sara@example.com",
-     },
-     {
-          id: "bhqecj4q",
-          amount: 180,
-          status: "success",
-          email: "dave@example.com",
+          id: "ORD-67890",
+          clientName: "Daniel Kim",
+          email: "daniel.kim@example.com",
+          phone: "+1666777888",
+          date: new Date("2023-06-25T13:50:00Z"),
+          products: [
+               {
+                    productId: "PROD-5566",
+                    name: "Gravity Blanket",
+                    slug: "gravity-blanket",
+                    image: "/products/blanket.jpg",
+                    price: 149.0,
+                    currency: "USD",
+                    quantity: 1,
+                    selectedPriceId: "price-blanket-149",
+                    variants: {
+                         type: "weight",
+                         title: "15 lbs",
+                    },
+               },
+          ],
+          totalAmount: 149.0,
+          shippingCost: 0.0,
+          paymentMethod: "card",
+          paymentStatus: "failed",
+          orderStatus: "cancelled",
+          address: "777 Comet Road, Seoul, South Korea",
+          currency: "taka",
      },
 ];
+
+const searchColumnName = {
+     orderStatus: "order status",
+     paymentStatus: "payment status",
+     paymentMethod: "payment method",
+     clientName: "client name",
+     id: "id",
+};

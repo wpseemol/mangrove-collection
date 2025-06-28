@@ -16,7 +16,6 @@ export interface OrderItem {
 }
 
 export interface Order extends Document {
-     orderId: string; // Unique identifier for the order
      userId: Types.ObjectId | null;
      products: OrderItem[];
      address: {
@@ -45,12 +44,6 @@ export interface Order extends Document {
 
 const OrderItemSchema = new Schema<OrderItem>({
      productId: { type: Schema.Types.ObjectId, ref: "Product", required: true },
-     orderId: {
-          type: String,
-          unique: true,
-          required: true,
-          default: () => Date.now().toString(),
-     },
      name: { type: String, required: true },
      slug: { type: String, required: true },
      image: { type: String, required: true },

@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { OrderProductType } from "@/types/my-order";
 import { formatDate } from "@/utils/format-date";
+import { mongodbIdToOrderId } from "@/utils/mongodb-id-to-order-id";
 import { Row } from "@tanstack/react-table";
 import html2canvas from "html2canvas";
 import { useRef } from "react";
@@ -165,8 +166,8 @@ export default function PrintInvoiceBtn({
                               <div className="invoice-section">
                                    <p>
                                         {/* ekhane order id hobe */}
-                                        <strong>Order ID:</strong>{" "}
-                                        {data.orderId || data.id}
+                                        <strong>Order ID:</strong> #
+                                        {mongodbIdToOrderId(data.id)}
                                    </p>
                                    <p>
                                         <strong>Customer:</strong>{" "}
