@@ -1,5 +1,5 @@
 "use client";
-
+import TiptapMenuBar from "@/components/tiptap-menu-bar";
 import {
      FormControl,
      FormField,
@@ -7,10 +7,6 @@ import {
      FormLabel,
      FormMessage,
 } from "@/components/ui/form";
-import "./tiptap-style.css";
-
-import TiptapMenuBar from "@/components/tiptap-menu-bar";
-import { AddProductFormType } from "@/types/add-products";
 import { Color } from "@tiptap/extension-color";
 import Emoji from "@tiptap/extension-emoji";
 import Highlight from "@tiptap/extension-highlight";
@@ -25,14 +21,13 @@ import TextStyle from "@tiptap/extension-text-style";
 import Youtube from "@tiptap/extension-youtube";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { useEffect } from "react";
+import { EditProductFormType } from "./edit-product-form";
+import "./edit-tiptap-style.css";
 
-export default function Description({
+export default function EditProductDescriptionFiled({
      form,
-     isFormReset,
 }: {
-     form: AddProductFormType;
-     isFormReset: boolean;
+     form: EditProductFormType;
 }) {
      const editor = useEditor({
           immediatelyRender: false,
@@ -92,7 +87,7 @@ export default function Description({
                TextStyle,
                Color,
           ],
-          content: "",
+          content: form.getValues("description") || "",
           editorProps: {
                attributes: {
                     class: "min-h-[160px] outline-none prose prose-sm focus:outline-none border border-gray-200 dark:border-neutral-700 p-1 tiptap rounded-b-md focus:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] space-y-0.5 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 border-t-0 -mt-1",
@@ -108,19 +103,15 @@ export default function Description({
           },
      });
 
-     useEffect(() => {
-          if (isFormReset && editor) {
-               editor.commands.clearContent();
-          }
-     }, [isFormReset, editor]);
-
      return (
           <FormField
                control={form.control}
                name="description"
-               render={() => (
-                    <FormItem>
-                         <FormLabel className="mb-1">Description*</FormLabel>
+               render={({ field }) => (
+                    <FormItem className="md:col-span-3">
+                         <FormLabel className="data-[error=true]:text-gray-600 font-medium dark:text-gray-200">
+                              Description*
+                         </FormLabel>
                          <TiptapMenuBar editor={editor} />
                          <FormControl>
                               <EditorContent editor={editor} />

@@ -19,7 +19,7 @@ export default function EditProductSlugFiled({
                control={form.control}
                name="slug"
                render={({ field }) => (
-                    <FormItem className="md:col-span-3">
+                    <FormItem className="min-w-2/3">
                          <FormLabel className="data-[error=true]:text-gray-600 font-medium dark:text-gray-200">
                               Slug*
                          </FormLabel>

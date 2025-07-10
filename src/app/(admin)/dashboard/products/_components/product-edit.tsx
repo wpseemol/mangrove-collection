@@ -49,7 +49,8 @@ export default function ProductEdit({ row }: { row: Row<ProductManageType> }) {
                          Edit
                     </Button>
                </DialogTrigger>
-               <DialogContent className="bg-gray-200 dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+
+               <DialogContent className="bg-gray-200 dark:bg-gray-800 border-gray-200 dark:border-gray-700 sm:max-h-[calc(100vh-2rem)] max-h-screen overflow-y-auto sm:max-w-3xl max-w-screen">
                     <DialogHeader>
                          <DialogTitle>Edit Product</DialogTitle>
                          {!editProduct.loading && (

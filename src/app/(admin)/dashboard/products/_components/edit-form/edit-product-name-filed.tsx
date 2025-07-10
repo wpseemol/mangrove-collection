@@ -27,7 +27,7 @@ export default function EditProductNameFiled({
                               <Input
                                    {...field}
                                    placeholder="Enter product name"
-                                   className="border-gray-600 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 placeholder:text-gray-400 text-gray-600 dark:text-gray-200 "
+                                   className="border-gray-600 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 placeholder:text-gray-400 text-gray-600 dark:text-gray-200"
                               />
                          </FormControl>
                          <FormMessage className="text-red-500 text-sm" />

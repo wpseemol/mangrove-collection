@@ -9,8 +9,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { z } from "zod";
+import EditProductDescriptionFiled from "./edit-product-description-filed";
 import EditProductNameFiled from "./edit-product-name-filed";
 import EditProductSlugFiled from "./edit-product-slug-filed";
+import EditProductUnitFiled from "./edit-product-unit-filed";
 
 export default function EditProductForm({
      productInfo,
@@ -27,7 +29,7 @@ export default function EditProductForm({
                name: productInfo.name || "",
                slug: productInfo.slug || "",
                unit: productInfo.unit || "pc",
-               description: "test waiting",
+               description: productInfo.description,
                thumbnail: productInfo.thumbnail || "",
                images: productInfo.images || [],
                variants: productInfo.variants || [
@@ -69,54 +71,20 @@ export default function EditProductForm({
                <Form {...form}>
                     <form
                          onSubmit={form.handleSubmit(onSubmit)}
-                         className="space-y-4"
+                         className="space-y-4 "
                     >
                          {/* Product Name */}
                          <EditProductNameFiled form={form} />
+                         <div className="flex items-center">
+                              {/* Slug */}
+                              <EditProductSlugFiled form={form} />
+                              {/* Unit */}
+                              <EditProductUnitFiled form={form} />
+                         </div>
 
-                         {/* Slug */}
-                         <EditProductSlugFiled form={form} />
-
-                         {/* Unit */}
-                         {/* <FormField
-                              control={form.control}
-                              name="unit"
-                              render={({ field }) => (
-                                   <FormItem>
-                                        <FormLabel className="text-gray-700 font-medium">
-                                             Unit*
-                                        </FormLabel>
-                                        <Select
-                                             onValueChange={field.onChange}
-                                             defaultValue={field.value}
-                                        >
-                                             <FormControl>
-                                                  <SelectTrigger>
-                                                       <SelectValue placeholder="Select unit" />
-                                                  </SelectTrigger>
-                                             </FormControl>
-                                             <SelectContent>
-                                                  <SelectItem value="pc">
-                                                       Piece
-                                                  </SelectItem>
-                                                  <SelectItem value="kg">
-                                                       Kilogram
-                                                  </SelectItem>
-                                                  <SelectItem value="g">
-                                                       Gram
-                                                  </SelectItem>
-                                                  <SelectItem value="l">
-                                                       Liter
-                                                  </SelectItem>
-                                                  <SelectItem value="ml">
-                                                       Milliliter
-                                                  </SelectItem>
-                                             </SelectContent>
-                                        </Select>
-                                        <FormMessage className="text-red-500 text-sm" />
-                                   </FormItem>
-                              )}
-                         /> */}
+                         <div className="">
+                              <EditProductDescriptionFiled form={form} />
+                         </div>
 
                          {/* Currency */}
                          {/* <FormField
