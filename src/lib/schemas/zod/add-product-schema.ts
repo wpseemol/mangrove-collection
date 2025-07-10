@@ -4,9 +4,15 @@ const addProductSchema = z.object({
      name: z.string().min(1, {
           message: "Must be input the product name.",
      }),
-     slug: z.string().min(1, {
-          message: "Must be input product slug.",
-     }),
+     slug: z
+          .string()
+          .min(1, {
+               message: "Must be input product slug.",
+          })
+          .regex(
+               /^[a-zA-Z0-9-]+$/,
+               "Only letters, numbers, and hyphens allowed (no spaces)"
+          ),
      unit: z.string(),
      description: z.string().min(1, {
           message: "Must be input product description.",

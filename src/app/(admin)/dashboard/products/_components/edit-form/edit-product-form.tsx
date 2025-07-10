@@ -1,30 +1,16 @@
 "use client";
-// import ImageUpload from "@/components/image-upload"; // Assuming you have an image upload component
 import { Button } from "@/components/ui/button";
-import {
-     Form,
-     FormControl,
-     FormField,
-     FormItem,
-     FormLabel,
-     FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-     Select,
-     SelectContent,
-     SelectItem,
-     SelectTrigger,
-     SelectValue,
-} from "@/components/ui/select";
+import { DialogClose, DialogFooter } from "@/components/ui/dialog";
+import { Form } from "@/components/ui/form";
 import { Toaster } from "@/components/ui/sonner";
-import { Textarea } from "@/components/ui/textarea";
 import { addProductSchema } from "@/lib/schemas/zod/add-product-schema";
 import { ProductDetailsType } from "@/types/mongoose/product";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, UseFormReturn } from "react-hook-form";
 import { z } from "zod";
+import EditProductNameFiled from "./edit-product-name-filed";
+import EditProductSlugFiled from "./edit-product-slug-filed";
 
 export default function EditProductForm({
      productInfo,
@@ -41,7 +27,7 @@ export default function EditProductForm({
                name: productInfo.name || "",
                slug: productInfo.slug || "",
                unit: productInfo.unit || "pc",
-               description: "",
+               description: "test waiting",
                thumbnail: productInfo.thumbnail || "",
                images: productInfo.images || [],
                variants: productInfo.variants || [
@@ -51,11 +37,17 @@ export default function EditProductForm({
                price: productInfo.price || [
                     { variantId: "defaultId", price: 1, select: true },
                ],
-               category: productInfo.category || "",
+               category: "some test",
                shortDescription: productInfo.shortDescription || "",
                tags: productInfo.tags || [],
           },
      });
+
+     /**
+      * test for error console.log();
+      */
+     form.formState.errors &&
+          console.log("Form errors:", form.formState.errors);
 
      /**
       * form submit here.
@@ -77,52 +69,16 @@ export default function EditProductForm({
                <Form {...form}>
                     <form
                          onSubmit={form.handleSubmit(onSubmit)}
-                         className="grid md:grid-cols-3 grid-cols-1 gap-4 md:mx-5 mb-5"
+                         className="space-y-4"
                     >
                          {/* Product Name */}
-                         <FormField
-                              control={form.control}
-                              name="name"
-                              render={({ field }) => (
-                                   <FormItem className="md:col-span-3">
-                                        <FormLabel className="text-gray-700 font-medium">
-                                             Product Name*
-                                        </FormLabel>
-                                        <FormControl>
-                                             <Input
-                                                  {...field}
-                                                  placeholder="Enter product name"
-                                                  className="border-gray-300 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 placeholder:text-gray-400 text-gray-800"
-                                             />
-                                        </FormControl>
-                                        <FormMessage className="text-red-500 text-sm" />
-                                   </FormItem>
-                              )}
-                         />
+                         <EditProductNameFiled form={form} />
 
                          {/* Slug */}
-                         <FormField
-                              control={form.control}
-                              name="slug"
-                              render={({ field }) => (
-                                   <FormItem>
-                                        <FormLabel className="text-gray-700 font-medium">
-                                             Slug*
-                                        </FormLabel>
-                                        <FormControl>
-                                             <Input
-                                                  {...field}
-                                                  placeholder="product-slug"
-                                                  className="border-gray-300 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 placeholder:text-gray-400 text-gray-800"
-                                             />
-                                        </FormControl>
-                                        <FormMessage className="text-red-500 text-sm" />
-                                   </FormItem>
-                              )}
-                         />
+                         <EditProductSlugFiled form={form} />
 
                          {/* Unit */}
-                         <FormField
+                         {/* <FormField
                               control={form.control}
                               name="unit"
                               render={({ field }) => (
@@ -160,10 +116,10 @@ export default function EditProductForm({
                                         <FormMessage className="text-red-500 text-sm" />
                                    </FormItem>
                               )}
-                         />
+                         /> */}
 
                          {/* Currency */}
-                         <FormField
+                         {/* <FormField
                               control={form.control}
                               name="currency"
                               render={({ field }) => (
@@ -195,10 +151,10 @@ export default function EditProductForm({
                                         <FormMessage className="text-red-500 text-sm" />
                                    </FormItem>
                               )}
-                         />
+                         /> */}
 
                          {/* Category */}
-                         <FormField
+                         {/* <FormField
                               control={form.control}
                               name="category"
                               render={({ field }) => (
@@ -216,10 +172,10 @@ export default function EditProductForm({
                                         <FormMessage className="text-red-500 text-sm" />
                                    </FormItem>
                               )}
-                         />
+                         /> */}
 
                          {/* Short Description */}
-                         <FormField
+                         {/* <FormField
                               control={form.control}
                               name="shortDescription"
                               render={({ field }) => (
@@ -237,10 +193,10 @@ export default function EditProductForm({
                                         <FormMessage className="text-red-500 text-sm" />
                                    </FormItem>
                               )}
-                         />
+                         /> */}
 
                          {/* Description */}
-                         <FormField
+                         {/* <FormField
                               control={form.control}
                               name="description"
                               render={({ field }) => (
@@ -258,10 +214,10 @@ export default function EditProductForm({
                                         <FormMessage className="text-red-500 text-sm" />
                                    </FormItem>
                               )}
-                         />
+                         /> */}
 
                          {/* Thumbnail */}
-                         <FormField
+                         {/* <FormField
                               control={form.control}
                               name="thumbnail"
                               render={({ field }) => (
@@ -281,14 +237,14 @@ export default function EditProductForm({
                                                        field.onChange("");
                                                   }}
                                              /> */}
-                                        </FormControl>
+                         {/* </FormControl>
                                         <FormMessage className="text-red-500 text-sm" />
                                    </FormItem>
                               )}
-                         />
+                         /> */}
 
                          {/* Images */}
-                         <FormField
+                         {/* <FormField
                               control={form.control}
                               name="images"
                               render={({ field }) => (
@@ -317,14 +273,14 @@ export default function EditProductForm({
                                                        );
                                                   }}
                                              /> */}
-                                        </FormControl>
+                         {/* </FormControl>
                                         <FormMessage className="text-red-500 text-sm" />
                                    </FormItem>
                               )}
-                         />
+                         /> */}
 
                          {/* Tags */}
-                         <FormField
+                         {/* <FormField
                               control={form.control}
                               name="tags"
                               render={({ field }) => (
@@ -363,7 +319,7 @@ export default function EditProductForm({
                                         <FormMessage className="text-red-500 text-sm" />
                                    </FormItem>
                               )}
-                         />
+                         /> */}
 
                          {/* Variants */}
                          {/* This would be a more complex component to handle product variants */}
@@ -372,17 +328,30 @@ export default function EditProductForm({
                          {/* Prices */}
                          {/* Similarly, prices would be handled in relation to variants */}
 
-                         <div className="md:col-span-3 flex justify-end">
+                         <DialogFooter className="mt-4">
+                              <DialogClose asChild>
+                                   <Button
+                                        type="button"
+                                        variant="outline"
+                                        className="cursor-pointer border-[1px]"
+                                   >
+                                        Cancel
+                                   </Button>
+                              </DialogClose>
                               <Button
                                    type="submit"
-                                   className="bg-primary-500 hover:bg-primary-600"
+                                   className="bg-primary-500 hover:bg-primary-600 shadow cursor-pointer border border-green-700/85"
                               >
-                                   Update Product
+                                   Save changes
                               </Button>
-                         </div>
+                         </DialogFooter>
                     </form>
                </Form>
                <Toaster position="top-center" richColors closeButton />
           </>
      );
 }
+
+export type EditProductFormType = UseFormReturn<
+     z.infer<typeof addProductSchema>
+>;

@@ -37,7 +37,7 @@ export default function ProductSlug({ form }: { form: AddProductFormType }) {
           <FormField
                control={form.control}
                name="slug"
-               render={({ field, fieldState }) => (
+               render={({ field }) => (
                     <FormItem>
                          <FormLabel className="text-gray-700 font-medium">
                               Product Slug*
@@ -49,9 +49,7 @@ export default function ProductSlug({ form }: { form: AddProductFormType }) {
                                    className="border-gray-300 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 placeholder:text-gray-400 text-gray-800"
                               />
                          </FormControl>
-                         <FormMessage className="text-red-500 text-sm">
-                              {fieldState.error?.message}
-                         </FormMessage>
+                         <FormMessage className="text-red-500 text-sm" />
                     </FormItem>
                )}
           />
