@@ -117,7 +117,10 @@ export default function Thumbnail({
                                              <div className="flex xl:flex-row flex-col items-center gap-4 ">
                                                   <figure className="w-24 h-24 rounded-lg overflow-hidden shadow-md border border-neutral-200 transition-shadow duration-200 group-hover:shadow-lg group-hover:border-primary-400">
                                                        <Image
-                                                            src={file.preview}
+                                                            src={
+                                                                 file.preview ||
+                                                                 "/assets/logo/no-image.jpg"
+                                                            }
                                                             onLoad={() => {
                                                                  URL.revokeObjectURL(
                                                                       file.preview

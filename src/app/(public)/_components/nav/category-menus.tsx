@@ -23,7 +23,10 @@ export default async function CategoryMenus() {
                          >
                               <figure className="w-[20px] h-[20px] overflow-hidden rounded-sm">
                                    <Image
-                                        src={category?.imgUrl}
+                                        src={
+                                             category?.imgUrl ||
+                                             "/assets/logo/no-image.jpg"
+                                        }
                                         width={20}
                                         height={20}
                                         alt={category.name}

@@ -39,7 +39,10 @@ export default async function CategorySection() {
                                    >
                                         <figure className="mx-auto md:w-24 md:h-24 sm:w-20 sm:h-20 w-10 h-12 overflow-hidden rounded">
                                              <Image
-                                                  src={category?.imgUrl}
+                                                  src={
+                                                       category?.imgUrl ||
+                                                       "/assets/logo/no-image.jpg"
+                                                  }
                                                   alt={category?.name}
                                                   className="w-full h-full object-cover object-center group-hover:scale-105 duration-500"
                                                   width={70}

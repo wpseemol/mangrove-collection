@@ -50,7 +50,10 @@ export default function OrderProducts({ row }: { row: Row<OrderProductType> }) {
                                         <TableCell>
                                              <figure className="w-12 h-12 rounded overflow-hidden">
                                                   <Image
-                                                       src={product.image}
+                                                       src={
+                                                            product.image ||
+                                                            "/assets/logo/no-image.jpg"
+                                                       }
                                                        alt={product.name}
                                                        width={100}
                                                        height={100}

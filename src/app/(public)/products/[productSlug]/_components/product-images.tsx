@@ -53,7 +53,10 @@ export default function ProductImages({
                               } h-14 w-14 overflow-hidden border rounded flex items-center justify-start duration-150`}
                          >
                               <Image
-                                   src={img?.imgUrl}
+                                   src={
+                                        img?.imgUrl ||
+                                        "/assets/logo/no-image.jpg"
+                                   }
                                    alt={`${productName} - ${inx + 1}`}
                                    width={100}
                                    height={100}

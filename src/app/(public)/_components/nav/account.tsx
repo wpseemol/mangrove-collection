@@ -83,7 +83,12 @@ function ProfilePicture({ url, name }: { url?: string | null; name: string }) {
      if (url) {
           return (
                <figure className="w-[30px] h-[30px] rounded-full overflow-hidden">
-                    <Image src={url} alt={name} width={30} height={30} />
+                    <Image
+                         src={url || "/assets/logo/no-image.jpg"}
+                         alt={name}
+                         width={30}
+                         height={30}
+                    />
                </figure>
           );
      }

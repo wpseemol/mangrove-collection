@@ -25,7 +25,10 @@ export default function ProductCard({ details }: { details: CardProductType }) {
                                    className={` w-full sm:h-[190px] h-[145px] mx-auto rounded-t overflow-hidden relative animate-fade animate-duration-1000 border border-neutral-800/10 border-b`}
                               >
                                    <Image
-                                        src={details.thumbnail}
+                                        src={
+                                             details.thumbnail ||
+                                             "/assets/logo/no-image.jpg"
+                                        }
                                         alt={details.name}
                                         width={145}
                                         height={145}

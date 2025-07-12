@@ -165,7 +165,8 @@ export default function YourOrderSection({
                                                        >
                                                             <Image
                                                                  src={
-                                                                      product.thumbnail
+                                                                      product.thumbnail ||
+                                                                      "/assets/logo/no-image.jpg"
                                                                  }
                                                                  alt={
                                                                       product.name

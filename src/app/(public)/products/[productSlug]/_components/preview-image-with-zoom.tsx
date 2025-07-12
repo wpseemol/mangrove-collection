@@ -22,7 +22,9 @@ export default function PreviewImageWithZoom({
                     className="2xl:w-[400px] 2xl:h-[400px] md:h-[350px] h-[300px] md:w-[350px] w-[300px] border border-neutral-500/10 bg-slate-200/10 rounded overflow-hidden hidden md:block"
                >
                     <Image
-                         src={previewImage.imgUrl}
+                         src={
+                              previewImage.imgUrl || "/assets/logo/no-image.jpg"
+                         }
                          alt={productName}
                          width={400}
                          height={400}

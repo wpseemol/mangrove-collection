@@ -51,7 +51,10 @@ export const columns: ColumnDef<ProductManageType>[] = [
           cell: ({ row }) => (
                <figure>
                     <Image
-                         src={row.getValue("thumbnail")}
+                         src={
+                              row.getValue("thumbnail") ||
+                              "/assets/logo/no-image.jpg"
+                         }
                          alt={row.original.name}
                          width={48}
                          height={48}

@@ -59,6 +59,7 @@ export default function ProductEdit({ row }: { row: Row<ProductManageType> }) {
                                    "Save changes" when finished.`}
                               </DialogDescription>
                          )}
+                         <hr className="dark:border-gray-200/40" />
                     </DialogHeader>
 
                     <>

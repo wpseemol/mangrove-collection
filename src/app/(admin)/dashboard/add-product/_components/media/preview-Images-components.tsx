@@ -130,7 +130,10 @@ export default function PreviewImagesComponents({
                >
                     <figure className="w-24 h-24 rounded-lg overflow-hidden shadow-md border border-neutral-200 transition-shadow duration-200 group-hover:shadow-lg group-hover:border-primary-400">
                          <Image
-                              src={previewImageDetails.preview}
+                              src={
+                                   previewImageDetails.preview ||
+                                   "/assets/logo/no-image.jpg"
+                              }
                               alt={previewImageDetails.fileName}
                               width={100}
                               height={100}

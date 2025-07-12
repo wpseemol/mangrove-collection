@@ -70,14 +70,15 @@ export const columns: ColumnDef<CartProductsType>[] = [
           accessorKey: "thumbnail",
           header: "Image",
           cell: ({ row }) => {
-               const imgUrl = row.original.thumbnail;
+               const imgUrl =
+                    row.original.thumbnail || "/assets/logo/no-image.jpg";
                const productName = row.original.name;
 
                return (
                     <figure className="w-14 h-14 overflow-hidden bg-neutral-600/55 rounded-sm">
                          <Link href={`/products/${row.original.slug}`}>
                               <Image
-                                   src={imgUrl}
+                                   src={imgUrl || "/assets/logo/no-image.jpg"}
                                    width={100}
                                    height={100}
                                    alt={productName}

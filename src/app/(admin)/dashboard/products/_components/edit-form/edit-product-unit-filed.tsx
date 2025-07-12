@@ -36,16 +36,16 @@ export default function EditProductUnitFiled({
                               defaultValue={field.value}
                          >
                               <FormControl>
-                                   <SelectTrigger className="border-gray-300 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 text-gray-800 w-full">
+                                   <SelectTrigger className="border-transparent bg-white focus:ring-1 focus:ring-primary-500 text-gray-800 w-full dark:bg-gray-900 hover:dark:bg-gray-900 dark:text-gray-200">
                                         <SelectValue placeholder="Select unit" />
                                    </SelectTrigger>
                               </FormControl>
-                              <SelectContent className="bg-white border-gray-300 shadow-lg">
+                              <SelectContent className="bg-white dark:bg-gray-900 border-gray-300 shadow-lg">
                                    {PRODUCT_UNITS.map((unit) => (
                                         <SelectItem
                                              key={unit.id}
                                              value={unit.id}
-                                             className="text-gray-700 hover:bg-gray-100"
+                                             className="text-gray-700 hover:bg-gray-100 dark:text-gray-200"
                                         >
                                              {unit.title}
                                         </SelectItem>

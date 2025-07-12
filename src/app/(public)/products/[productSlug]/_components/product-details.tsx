@@ -31,7 +31,11 @@ export default function ProductDetails({
                     {/* allImage function return array and input a single image url and images array */}
                     <ProductImages
                          allImage={JSON.stringify(
-                              allImageArray(details.thumbnail, details.images)
+                              allImageArray(
+                                   details.thumbnail ||
+                                        "/assets/logo/no-image.jpg",
+                                   details.images
+                              )
                          )}
                          productName={details.name}
                     />
@@ -225,7 +229,7 @@ export function allImageArray(
      if (thumbnail) {
           allImage.push({
                id: crypto.randomUUID(),
-               imgUrl: thumbnail,
+               imgUrl: thumbnail || "/assets/logo/no-image.jpg",
           });
      }
 

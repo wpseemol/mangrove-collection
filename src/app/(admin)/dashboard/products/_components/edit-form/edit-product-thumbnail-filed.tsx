@@ -44,7 +44,7 @@ export default function EditProductThumbnailFiled({
                               size: 1MB
                          </FormDescription>
                          <FormControl>
-                              <div className="flex flex-col items-center w-full border border-dashed border-gray-400 rounded">
+                              <div className="flex flex-col items-center w-full border border-dashed border-gray-400 rounded py-2 bg-white dark:bg-gray-900">
                                    {previewUrl ? (
                                         <PreviewImages
                                              url={previewUrl}
@@ -80,7 +80,12 @@ function PreviewImages({
 }) {
      return (
           <figure className="relative">
-               <Image src={url} alt={productName} width={80} height={80} />
+               <Image
+                    src={url || "/assets/logo/no-image.jpg"}
+                    alt={productName}
+                    width={80}
+                    height={80}
+               />
                <button
                     type="button"
                     onClick={actionRemove}

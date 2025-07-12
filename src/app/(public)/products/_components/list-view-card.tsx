@@ -29,7 +29,10 @@ export default function ListViewProductCard({
                     >
                          <figure className="lg:w-[15.5rem] md:w-[12rem] sm:w-80 w-72 lg:h-[15.5rem] md:h-[12rem] sm:h-80 h-72 overflow-hidden relative ">
                               <Image
-                                   src={details.thumbnail}
+                                   src={
+                                        details.thumbnail ||
+                                        "/assets/logo/no-image.jpg"
+                                   }
                                    alt={details.name}
                                    width={145}
                                    height={145}
