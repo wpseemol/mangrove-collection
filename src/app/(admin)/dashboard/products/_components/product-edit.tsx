@@ -55,8 +55,8 @@ export default function ProductEdit({ row }: { row: Row<ProductManageType> }) {
                          <DialogTitle>Edit Product</DialogTitle>
                          {!editProduct.loading && (
                               <DialogDescription>
-                                   Update the product information below. Click
-                                   "Save changes" when finished.
+                                   {`Update the product information below. Click
+                                   "Save changes" when finished.`}
                               </DialogDescription>
                          )}
                     </DialogHeader>

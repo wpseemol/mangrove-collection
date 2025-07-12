@@ -6,12 +6,12 @@ import { Toaster } from "@/components/ui/sonner";
 import { addProductSchema } from "@/lib/schemas/zod/add-product-schema";
 import { ProductDetailsType } from "@/types/mongoose/product";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import EditProductDescriptionFiled from "./edit-product-description-filed";
 import EditProductNameFiled from "./edit-product-name-filed";
 import EditProductSlugFiled from "./edit-product-slug-filed";
+import EditProductThumbnailFiled from "./edit-product-thumbnail-filed";
 import EditProductUnitFiled from "./edit-product-unit-filed";
 
 export default function EditProductForm({
@@ -19,10 +19,6 @@ export default function EditProductForm({
 }: {
      productInfo: ProductDetailsType;
 }) {
-     const [thumbnail, setThumbnail] = useState(productInfo.thumbnail || "");
-     const [images, setImages] = useState<string[]>(productInfo.images || []);
-     const [tags, setTags] = useState<string[]>(productInfo.tags || []);
-
      const form = useForm<z.infer<typeof addProductSchema>>({
           resolver: zodResolver(addProductSchema),
           defaultValues: {
@@ -48,8 +44,7 @@ export default function EditProductForm({
      /**
       * test for error console.log();
       */
-     form.formState.errors &&
-          console.log("Form errors:", form.formState.errors);
+     console.log("Form errors:", form.formState.errors);
 
      /**
       * form submit here.
@@ -62,6 +57,7 @@ export default function EditProductForm({
                // const response = await updateProduct(productInfo._id, values);
                // Handle success
           } catch (error) {
+               console.log("error:", error);
                // Handle error
           }
      }
@@ -85,6 +81,8 @@ export default function EditProductForm({
                          <div className="">
                               <EditProductDescriptionFiled form={form} />
                          </div>
+
+                         <EditProductThumbnailFiled form={form} />
 
                          {/* Currency */}
                          {/* <FormField
