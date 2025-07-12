@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { userRoleCheck } from "@/lib/actions/user";
 import { notFound } from "next/navigation";
 
 export default async function MainProfileLayout({
@@ -6,12 +7,18 @@ export default async function MainProfileLayout({
 }: Readonly<{
      children: React.ReactNode;
 }>) {
-     const section = await auth();
+     const session = await auth();
 
-     if (!section) {
-          notFound();
-          return;
+     const isUser = await userRoleCheck(
+          session.user.id,
+          session.user.role,
+          "user"
+     );
+
+     if (isUser) {
+          return <>{children}</>;
      }
 
-     return <>{children}</>;
+     notFound();
+     return;
 }
