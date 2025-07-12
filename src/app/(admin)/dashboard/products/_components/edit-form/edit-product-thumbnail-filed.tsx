@@ -7,6 +7,11 @@ import {
      FormLabel,
      FormMessage,
 } from "@/components/ui/form";
+import {
+     deleteUploadedImage,
+     imagesUploadCloudinary,
+} from "@/lib/actions/media";
+import { removeProductThumbnailUrl } from "@/lib/actions/product";
 import Image from "next/image";
 import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import { FileRejection, FileWithPath, useDropzone } from "react-dropzone";
@@ -15,19 +20,48 @@ import { EditProductFormType } from "./edit-product-form";
 
 export default function EditProductThumbnailFiled({
      form,
+     productId,
 }: {
      form: EditProductFormType;
+     productId: string;
 }) {
+     const [loading, setLoading] = useState<boolean>(false);
+
      const [previewUrl, setPreviewUrl] = useState<string | null>(
           form.getValues("thumbnail")
      );
 
      async function handelRemoveImage() {
+          if (!previewUrl) return;
+          setLoading(true);
+          await deleteUploadedImage({
+               url: previewUrl,
+          });
+          form.setValue("thumbnail", "");
+          const response = await removeProductThumbnailUrl(productId);
+          console.log("is deleted:", response);
           setPreviewUrl(null);
+          setLoading(false);
      }
 
      async function handleAcceptFile(file: FileWithPath) {
-          console.log("here image:", file);
+          setLoading(true);
+          const formData = new FormData();
+          formData.append("product-images", file);
+
+          const response = await imagesUploadCloudinary(formData);
+
+          if (
+               response.success &&
+               response.data?.secure_url &&
+               response.data?.public_id
+          ) {
+               setPreviewUrl(response.data.secure_url);
+
+               form.setValue("thumbnail", response.data.secure_url);
+          }
+
+          setLoading(false);
      }
 
      return (
@@ -52,6 +86,7 @@ export default function EditProductThumbnailFiled({
                                                   "name"
                                              )}
                                              actionRemove={handelRemoveImage}
+                                             loading={loading}
                                         />
                                    ) : (
                                         <AddProductImageInput
@@ -73,18 +108,21 @@ function PreviewImages({
      url,
      productName,
      actionRemove,
+     loading,
 }: {
      url: string;
      productName: string;
      actionRemove: () => Promise<void> | void;
+     loading: boolean;
 }) {
      return (
-          <figure className="relative">
+          <figure className="relative w-[80px] h-[80px]">
                <Image
-                    src={url || "/assets/logo/no-image.jpg"}
+                    src={url}
                     alt={productName}
                     width={80}
                     height={80}
+                    className="w-auto h-auto"
                />
                <button
                     type="button"
@@ -107,6 +145,30 @@ function PreviewImages({
                          />
                     </svg>
                </button>
+               {loading && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-white/70 rounded cursor-wait">
+                         <svg
+                              className="animate-spin h-6 w-6 text-gray-500"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                         >
+                              <circle
+                                   className="opacity-25"
+                                   cx="12"
+                                   cy="12"
+                                   r="10"
+                                   stroke="currentColor"
+                                   strokeWidth="4"
+                              ></circle>
+                              <path
+                                   className="opacity-75"
+                                   fill="currentColor"
+                                   d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                              ></path>
+                         </svg>
+                    </div>
+               )}
           </figure>
      );
 }

@@ -82,7 +82,10 @@ export default function EditProductForm({
                               <EditProductDescriptionFiled form={form} />
                          </div>
 
-                         <EditProductThumbnailFiled form={form} />
+                         <EditProductThumbnailFiled
+                              form={form}
+                              productId={productInfo.id}
+                         />
 
                          {/* Currency */}
                          {/* <FormField
