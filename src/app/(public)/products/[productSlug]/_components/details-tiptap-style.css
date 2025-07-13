@@ -1,5 +1,5 @@
 /* Global Reset */
-.quill-content * {
+.tiptap * {
      margin: 0;
      padding: 0;
      box-sizing: border-box;
@@ -9,87 +9,87 @@
 }
 
 /* Typography Hierarchy */
-.quill-content h1 {
+.tiptap h1 {
      font-size: 2.5em;
      margin: 0.83em 0;
      font-weight: 600;
 }
-.quill-content h2 {
+.tiptap h2 {
      font-size: 2em;
      margin: 0.83em 0;
      font-weight: 500;
 }
-.quill-content h3 {
+.tiptap h3 {
      font-size: 1.75em;
      margin: 1em 0;
 }
-.quill-content h4 {
+.tiptap h4 {
      font-size: 1.5em;
      margin: 1.33em 0;
 }
-.quill-content h5 {
+.tiptap h5 {
      font-size: 1.25em;
      margin: 1.5em 0;
 }
-.quill-content h6 {
+.tiptap h6 {
      font-size: 1em;
      margin: 1.67em 0;
 }
 
 /* Text Elements */
-.quill-content p {
+.tiptap p {
      margin: 1em 0;
      font-size: 1em;
      line-height: 1.6;
 }
 
-.quill-content strong {
+.tiptap strong {
      font-weight: 700;
 }
-.quill-content em {
+.tiptap em {
      font-style: italic;
 }
-.quill-content u {
+.tiptap u {
      text-decoration: underline;
 }
-.quill-content del {
+.tiptap del {
      text-decoration: line-through;
 }
-.quill-content sup,
-.quill-content sub {
+.tiptap sup,
+.tiptap sub {
      font-size: 0.75em;
 }
 
 /* Lists */
-.quill-content ul,
-.quill-content ol {
+.tiptap ul,
+.tiptap ol {
      margin: 1em 0;
      padding-left: 2.5em;
 }
 
-.quill-content ul {
+.tiptap ul {
      list-style: disc;
 }
-.quill-content ol {
+.tiptap ol {
      list-style: decimal;
 }
-.quill-content li {
+.tiptap li {
      margin: 0.5em 0;
 }
 
 /* Links & Interactive Elements */
-.quill-content a {
+.tiptap a {
      color: #0066cc;
      text-decoration: underline;
      cursor: pointer;
      transition: color 0.2s;
 }
 
-.quill-content a:hover {
+.tiptap a:hover {
      color: #004499;
 }
 
-.quill-content button {
+.tiptap button {
      padding: 0.5em 1em;
      background: #f0f0f0;
      border: 1px solid #ccc;
@@ -98,27 +98,27 @@
 }
 
 /* Media Elements */
-.quill-content img {
+.tiptap img {
      max-width: 100%;
      height: auto;
      margin: 1em 0;
      display: block;
 }
 
-.quill-content iframe {
+.tiptap iframe {
      max-width: 100%;
      margin: 1em 0;
 }
 
 /* Code & Preformatted Text */
-.quill-content code {
+.tiptap code {
      font-family: "Courier New", monospace;
      background: #f5f5f5;
      padding: 0.2em 0.4em;
      border-radius: 3px;
 }
 
-.quill-content pre {
+.tiptap pre {
      background: #f5f5f5;
      padding: 1em;
      margin: 1em 0;
@@ -126,71 +126,72 @@
      border-radius: 4px;
 }
 
-.quill-content pre code {
+.tiptap pre code {
      background: none;
      padding: 0;
 }
 
 /* Tables */
-.quill-content table {
+.tiptap table {
      width: 100%;
      border-collapse: collapse;
      margin: 1.5em 0;
+     box-shadow: 0px 0px 0px 1px #e5e7eb;
 }
 
-.quill-content th,
-.quill-content td {
+.tiptap th,
+.tiptap td {
      padding: 0.75em;
      border: 1px solid #ddd;
      text-align: left;
 }
 
-.quill-content th {
+.tiptap th {
      background: #f8f8f8;
      font-weight: 600;
 }
 
 /* Quotes & Dividers */
-.quill-content blockquote {
+.tiptap blockquote {
      margin: 1.5em 0;
      padding: 0 1.5em;
      border-left: 3px solid #ddd;
      color: #666;
 }
 
-.quill-content hr {
+.tiptap hr {
      border: 0;
      border-top: 1px solid #eee;
      margin: 2em 0;
 }
 
 /* Forms */
-.quill-content input,
-.quill-content textarea,
-.quill-content select {
+.tiptap input,
+.tiptap textarea,
+.tiptap select {
      padding: 0.5em;
      border: 1px solid #ddd;
      border-radius: 4px;
      margin: 0.25em 0;
 }
 
-.quill-content label {
+.tiptap label {
      display: block;
      margin: 0.5em 0;
 }
 
 /* Special Elements */
-.quill-content abbr[title] {
+.tiptap abbr[title] {
      border-bottom: 1px dotted #666;
      cursor: help;
 }
 
-.quill-content mark {
+.tiptap mark {
      background: #fff3d4;
      padding: 0.2em;
 }
 
-.quill-content kbd {
+.tiptap kbd {
      background: #f5f5f5;
      border: 1px solid #ddd;
      border-radius: 3px;
@@ -199,14 +200,14 @@
 }
 
 /* Responsive Video */
-.quill-content .video-container {
+.tiptap .video-container {
      position: relative;
      padding-bottom: 56.25%;
      height: 0;
      overflow: hidden;
 }
 
-.quill-content .video-container iframe {
+.tiptap .video-container iframe {
      position: absolute;
      top: 0;
      left: 0;

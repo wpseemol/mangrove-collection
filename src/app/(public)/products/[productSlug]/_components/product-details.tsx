@@ -1,9 +1,9 @@
 import { CurrencyIcon } from "@/components/currency-icon";
 import { Price, ProductDetailsType } from "@/types/mongoose/product";
 import Link from "next/link";
-import "../_components/quill-content-css.css";
 import DetailsBuyBtn from "./details-buy-btn";
 import DetailsCartBtn from "./details-cart-btn";
+import "./details-tiptap-style.css";
 import PriceSection from "./price-section";
 import ProductImages from "./product-images";
 import QuantityCounter from "./quntity-counter";
@@ -203,7 +203,7 @@ export default function ProductDetails({
                     </h3>
                     <div className=" mx-4 pt-6 text-gray-600 md:mx-0 sm:mx-auto">
                          <div
-                              className="quill-content "
+                              className="tiptap"
                               dangerouslySetInnerHTML={{
                                    __html: details.description,
                               }}

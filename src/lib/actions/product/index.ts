@@ -7,12 +7,12 @@ import { Product } from "@/lib/schemas/mongoose/product";
 import { ProductDetailsType } from "@/types/mongoose/product";
 import { replaceMongoIds } from "@/utils/replace";
 
-export async function getProductForEdit(productId: string) {
+export async function getProductForEdit(productSlug: string) {
      try {
           /**
            * Validates user and input, then adds a new product if authorized; returns operation result and errors if any.
            */
-          if (!productId) {
+          if (!productSlug) {
                return {
                     success: false,
                     message: "Find product need to Product id.",
@@ -49,7 +49,7 @@ export async function getProductForEdit(productId: string) {
           await connectMongoDB();
 
           const productDetailsResponse = await Product.findOne({
-               _id: productId,
+               slug: productSlug,
           })
                .populate({
                     path: "category",
