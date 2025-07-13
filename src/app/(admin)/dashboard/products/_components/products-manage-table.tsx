@@ -34,8 +34,8 @@ import {
 } from "@/components/ui/table";
 import { ProductManageType } from "@/lib/actions/products/get-product-manage";
 import Image from "next/image";
+import Link from "next/link";
 import ProductDelete from "./product-delete";
-import ProductEdit from "./product-edit";
 
 export const columns: ColumnDef<ProductManageType>[] = [
      {
@@ -126,7 +126,12 @@ export const columns: ColumnDef<ProductManageType>[] = [
           cell: ({ row }) => {
                return (
                     <div className="flex items-center justify-end space-x-2 mr-6">
-                         <ProductEdit row={row} /> <span>|</span>
+                         <Link
+                              href={`/dashboard/products/${row.original.slug}/edit`}
+                         >
+                              Edit
+                         </Link>{" "}
+                         <span>|</span>
                          <ProductDelete row={row} />
                     </div>
                );
