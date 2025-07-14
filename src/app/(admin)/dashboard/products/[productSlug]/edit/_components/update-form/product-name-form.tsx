@@ -16,7 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 
 import { z } from "zod";
 
@@ -98,7 +98,6 @@ export default function ProductNameForm({
                          </Button>
                     </DialogFooter>
                </form>
-               <Toaster position="top-center" richColors closeButton />
           </Form>
      );
 }

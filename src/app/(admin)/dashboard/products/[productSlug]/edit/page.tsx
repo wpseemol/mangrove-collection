@@ -1,5 +1,6 @@
 import { getProductForEdit } from "@/lib/actions/product";
 import * as motion from "motion/react-client";
+import { Toaster } from "sonner";
 import ProductViewForEdit from "./_components/product-view-for-edit";
 
 export default async function ProductEditPage({
@@ -43,6 +44,7 @@ export default async function ProductEditPage({
                {response.product && (
                     <ProductViewForEdit stringDetails={response.product} />
                )}
+               <Toaster position="top-center" richColors closeButton />
           </main>
      );
 }

@@ -7,7 +7,9 @@ export default function DashboardSiteLogo({
      isDryerClose: boolean;
 }) {
      return (
-          <section className={`flex gap-2 items-center group`}>
+          <section
+               className={`flex gap-2 items-center sm:w-fit w-full sm:ml-0 ml-2 group`}
+          >
                <Link href="/">
                     <figure
                          className={`w-10 h-10 mx-auto overflow-hidden duration-300  ${
@@ -25,12 +27,12 @@ export default function DashboardSiteLogo({
                          />
                     </figure>
                </Link>
-               <Link href="/dashboard">
+               <Link href="/dashboard" className=" ">
                     <h2
-                         className={`font-bold text-primary-foreground text-sm md:text-base opacity-100
+                         className={`font-bold text-primary-foreground sm:text-sm text-xl md:text-base opacity-100
                         ${
                              isDryerClose
-                                  ? "sm:hidden block sm:scale-0 sm:opacity-0 opacity-100 scale-200"
+                                  ? "sm:hidden block sm:scale-0 sm:opacity-0 opacity-100 "
                                   : ""
                         }
                         `}
