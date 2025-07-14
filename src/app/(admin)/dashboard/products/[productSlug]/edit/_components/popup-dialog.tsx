@@ -2,26 +2,21 @@ export default function PopupButton() {
      return <div></div>;
 }
 
-import { Button } from "@/components/ui/button";
 import {
      Dialog,
-     DialogClose,
      DialogContent,
      DialogDescription,
-     DialogFooter,
      DialogHeader,
      DialogTitle,
      DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+import React from "react";
 
 export function PopupDialog({
-     content,
-     filedName,
+     children,
      title,
 }: {
-     content: string;
-     filedName: string;
+     children: React.ReactNode;
      title: string;
 }) {
      return (
@@ -55,25 +50,7 @@ export function PopupDialog({
                               Update the product information below.
                          </DialogDescription>
                     </DialogHeader>
-                    <form>
-                         <div className="grid gap-4">
-                              <div className="grid gap-3">
-                                   <Input
-                                        id="username-1"
-                                        name={filedName}
-                                        defaultValue={content}
-                                   />
-                              </div>
-                         </div>
-                         <DialogFooter className="mt-2">
-                              <DialogClose asChild>
-                                   <Button variant="outline">Cancel</Button>
-                              </DialogClose>
-                              <Button type="submit" className="text-white">
-                                   Save changes
-                              </Button>
-                         </DialogFooter>
-                    </form>
+                    {children}
                </DialogContent>
           </Dialog>
      );

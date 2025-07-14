@@ -4,6 +4,7 @@ import { ProductDetailsType } from "@/types/mongoose/product";
 import { PopupDialog } from "./popup-dialog";
 import ProductEditContainer from "./product-edit-container";
 import "./tiptap-style.css";
+import ProductNameForm from "./update-form/product-name-form";
 
 export default function ProductViewForEdit({
      stringDetails,
@@ -20,19 +21,22 @@ export default function ProductViewForEdit({
                          id="product-information"
                     >
                          <div className="space-y-3">
+                              {/* product name */}
                               <div>
                                    <h3 className="text-xl font-semibold">
                                         Product Name
                                    </h3>
                                    <div className="flex items-center justify-between px-2 border border-gray-800/10 rounded">
                                         <p>{productDetails.name}</p>{" "}
-                                        <PopupDialog
-                                             content={productDetails.name}
-                                             filedName="name"
-                                             title="Update Product name."
-                                        />
+                                        <PopupDialog title="Update Product name.">
+                                             <ProductNameForm
+                                                  content={productDetails.name}
+                                                  productId={productDetails.id}
+                                             />
+                                        </PopupDialog>
                                    </div>
                               </div>
+                              {/* product slug  */}
                               <div className="flex items-center ">
                                    <div className="w-2/3">
                                         <h3 className="text-lg font-semibold">
@@ -40,38 +44,35 @@ export default function ProductViewForEdit({
                                         </h3>
                                         <div className="flex items-center justify-between px-2 border border-gray-800/10 rounded">
                                              <p>{productDetails.slug}</p>{" "}
-                                             <PopupDialog
-                                                  content={productDetails.slug}
-                                                  filedName="name"
-                                                  title="Update Product name."
-                                             />
+                                             <PopupDialog title="Update Product name.">
+                                                  coming soon
+                                             </PopupDialog>
                                         </div>
                                    </div>
+
+                                   {/* product unit */}
                                    <div className="pl-2 w-1/3">
                                         <h3 className="text-lg font-semibold">
                                              Unit
                                         </h3>
                                         <div className="flex items-center justify-between px-2 border border-gray-800/10 rounded">
                                              <p>{productDetails.unit}</p>{" "}
-                                             <PopupDialog
-                                                  content={productDetails.unit}
-                                                  filedName="unit"
-                                                  title="Update Product name."
-                                             />
+                                             <PopupDialog title="Update Product name.">
+                                                  coming soon
+                                             </PopupDialog>
                                         </div>
                                    </div>
                               </div>
 
                               <div>
+                                   {/* product description  */}
                                    <div className="flex items-center gap-2">
                                         <h3 className="text-lg font-semibold">
                                              Product Description
                                         </h3>
-                                        <PopupDialog
-                                             content={productDetails.name}
-                                             filedName="name"
-                                             title="Update Product name."
-                                        />
+                                        <PopupDialog title="Update Product name.">
+                                             coming soon
+                                        </PopupDialog>
                                    </div>
                                    <div className="flex items-center justify-between px-2 border border-gray-800/10 rounded">
                                         <div
