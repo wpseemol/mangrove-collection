@@ -5,6 +5,7 @@ import { PopupDialog } from "./popup-dialog";
 import ProductEditContainer from "./product-edit-container";
 import "./tiptap-style.css";
 import ProductNameForm from "./update-form/product-name-form";
+import ProductSlugForm from "./update-form/product-slug-form";
 
 export default function ProductViewForEdit({
      stringDetails,
@@ -45,7 +46,14 @@ export default function ProductViewForEdit({
                                         <div className="flex items-center justify-between px-2 border border-gray-800/10 rounded">
                                              <p>{productDetails.slug}</p>{" "}
                                              <PopupDialog title="Update Product name.">
-                                                  coming soon
+                                                  <ProductSlugForm
+                                                       content={
+                                                            productDetails.slug
+                                                       }
+                                                       productId={
+                                                            productDetails.id
+                                                       }
+                                                  />
                                              </PopupDialog>
                                         </div>
                                    </div>

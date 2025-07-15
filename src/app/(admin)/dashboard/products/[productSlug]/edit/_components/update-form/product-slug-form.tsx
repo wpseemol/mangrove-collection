@@ -12,16 +12,17 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { productContentUpdate } from "@/lib/actions/product";
-import { productNameSchema } from "@/lib/schemas/zod/edit-product-schema";
+import { productSlugSchema } from "@/lib/schemas/zod/edit-product-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { z } from "zod";
 
-export default function ProductNameForm({
+export default function ProductSlugForm({
      content,
      productId,
 }: {
@@ -31,28 +32,30 @@ export default function ProductNameForm({
      const [isDisable, setIsDisable] = useState<boolean>(true);
 
      const usePathName = usePathname();
+     const router = useRouter();
 
-     const form = useForm<z.infer<typeof productNameSchema>>({
-          resolver: zodResolver(productNameSchema),
+     const form = useForm<z.infer<typeof productSlugSchema>>({
+          resolver: zodResolver(productSlugSchema),
           defaultValues: {
-               name: content,
+               slug: content,
           },
      });
 
-     const inputNameValue = form.watch("name");
+     const inputSlugValue = form.watch("slug");
      useEffect(() => {
-          setIsDisable(inputNameValue === content);
-     }, [inputNameValue, content]);
+          setIsDisable(inputSlugValue === content);
+     }, [inputSlugValue, content]);
 
-     async function onSubmit(values: z.infer<typeof productNameSchema>) {
+     async function onSubmit(values: z.infer<typeof productSlugSchema>) {
           const response = await productContentUpdate(
                productId,
                values,
-               "name",
+               "slug",
                usePathName
           );
 
           if (response.success) {
+               router.push(`/dashboard/products/${inputSlugValue}/edit`);
                toast.success(response.message);
           } else {
                toast.error(response.message);
@@ -64,11 +67,11 @@ export default function ProductNameForm({
                <form onSubmit={form.handleSubmit(onSubmit)}>
                     <FormField
                          control={form.control}
-                         name="name"
+                         name="slug"
                          render={({ field }) => (
                               <FormItem>
                                    <FormLabel className="text-gray-700 font-medium">
-                                        Product Name*
+                                        Slug
                                    </FormLabel>
                                    <FormControl>
                                         <Input

@@ -62,7 +62,7 @@ export default function AddProduct({ allCategory }: { allCategory: string }) {
 
      async function onSubmit(values: z.infer<typeof addProductSchema>) {
           const response = await addProductDatabase(values);
-          console.log("test response:", response);
+
           if (!response.success) {
                toast.error(response.message);
                return;

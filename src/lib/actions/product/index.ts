@@ -4,8 +4,13 @@ import { connectMongoDB } from "@/db/connections";
 import { userRoleCheck } from "@/lib/actions/user";
 import { Category } from "@/lib/schemas/mongoose/category";
 import { Product } from "@/lib/schemas/mongoose/product";
+import {
+     productNameSchema,
+     productSlugSchema,
+} from "@/lib/schemas/zod/edit-product-schema";
 import { ProductDetailsType } from "@/types/mongoose/product";
 import { replaceMongoIds } from "@/utils/replace";
+import { formatZodError, getFirstErrorMessage } from "@/utils/zod-error";
 import { revalidatePath } from "next/cache";
 
 /**
@@ -105,12 +110,12 @@ export async function getProductForEdit(productSlug: string) {
  */
 export async function productContentUpdate(
      productId: string,
-     updateContent: UpdateContentType,
-     updateFiled: string,
+     input: UpdateContentType,
+     updateFiled: UpdateFiledType,
      url: string
 ) {
      try {
-          if (!productId || !updateContent || !updateFiled) {
+          if (!productId || !input || !updateFiled || !url) {
                return {
                     success: false,
                     message: "Update Product productId updateContent and updateFiled required",
@@ -144,6 +149,38 @@ export async function productContentUpdate(
                };
           }
 
+          let updateContent = {};
+          let message = "";
+
+          switch (updateFiled) {
+               case "name":
+                    const parsedName = productNameSchema.safeParse(input);
+                    if (!parsedName.success) {
+                         return {
+                              success: false,
+                              message: getFirstErrorMessage(parsedName.error),
+                              errors: formatZodError(parsedName.error),
+                              fieldErrors: parsedName.error.flatten(),
+                         };
+                    }
+                    updateContent = parsedName.data;
+                    message = "Product name filed content update.";
+                    break;
+               case "slug":
+                    const parsedSlug = productSlugSchema.safeParse(input);
+                    if (!parsedSlug.success) {
+                         return {
+                              success: false,
+                              message: getFirstErrorMessage(parsedSlug.error),
+                              errors: formatZodError(parsedSlug.error),
+                              fieldErrors: parsedSlug.error.flatten(),
+                         };
+                    }
+                    updateContent = parsedSlug.data;
+                    message = "Product slug filed content update.";
+                    break;
+          }
+
           /**
            * Mongodb Connection stablish.
            */
@@ -158,7 +195,7 @@ export async function productContentUpdate(
 
           return {
                success: true,
-               message: `Product ${updateFiled} content update.`,
+               message,
                update: JSON.stringify(response),
           };
      } catch (error) {
@@ -171,4 +208,10 @@ export async function productContentUpdate(
      }
 }
 
-type UpdateContentType = { name: string };
+// Define the input type based on your schema
+type ProductNameType = z.infer<typeof productNameSchema>;
+type ProductSlugType = z.infer<typeof productSlugSchema>;
+
+type UpdateContentType = ProductNameType | ProductSlugType;
+
+type UpdateFiledType = "name" | "slug";
