@@ -1,6 +1,7 @@
 "use client";
 
 import { ProductDetailsType } from "@/types/mongoose/product";
+import Image from "next/image";
 import { PopupDialog } from "./popup-dialog";
 import ProductEditContainer from "./product-edit-container";
 import "./tiptap-style.css";
@@ -25,11 +26,11 @@ export default function ProductViewForEdit({
                     >
                          <div className="space-y-3">
                               {/* product name */}
-                              <div>
+                              <div className="bg-gray-100 md:px-2 px-1 md:py-3 py-1 rounded">
                                    <h3 className="text-xl font-semibold">
                                         Product Name
                                    </h3>
-                                   <div className="flex items-center justify-between px-2 border border-gray-800/10 rounded">
+                                   <div className="flex items-center justify-between px-2 border border-gray-800/10 rounded bg-white">
                                         <p>{productDetails.name}</p>{" "}
                                         <PopupDialog title="Update Product name.">
                                              <ProductNameForm
@@ -41,11 +42,11 @@ export default function ProductViewForEdit({
                               </div>
                               {/* product slug  */}
                               <div className="flex items-center ">
-                                   <div className="w-2/3">
+                                   <div className="w-2/3 bg-gray-100 md:px-2 px-1 md:py-3 py-1 rounded">
                                         <h3 className="text-lg font-semibold">
                                              Slug
                                         </h3>
-                                        <div className="flex items-center justify-between px-2 border border-gray-800/10 rounded">
+                                        <div className="flex items-center justify-between px-2 border border-gray-800/10 rounded bg-white">
                                              <p>{productDetails.slug}</p>{" "}
                                              <PopupDialog title="Update Product slug.">
                                                   <ProductSlugForm
@@ -61,11 +62,11 @@ export default function ProductViewForEdit({
                                    </div>
 
                                    {/* product unit */}
-                                   <div className="pl-2 w-1/3">
+                                   <div className="ml-2 w-1/3 bg-gray-100 md:px-2 px-1 md:py-3 py-1 rounded">
                                         <h3 className="text-lg font-semibold">
                                              Unit
                                         </h3>
-                                        <div className="flex items-center justify-between px-2 border border-gray-800/10 rounded">
+                                        <div className="flex items-center justify-between px-2 border border-gray-800/10 rounded bg-white">
                                              <p className="uppercase">
                                                   {productDetails.unit}
                                              </p>{" "}
@@ -83,7 +84,7 @@ export default function ProductViewForEdit({
                                    </div>
                               </div>
 
-                              <div>
+                              <div className="bg-gray-100 md:px-2 px-1 md:py-3 py-1 rounded">
                                    {/* product description  */}
                                    <div className="flex items-center gap-2">
                                         <h3 className="text-lg font-semibold">
@@ -102,7 +103,7 @@ export default function ProductViewForEdit({
                                              />
                                         </PopupDialog>
                                    </div>
-                                   <div className="flex items-center justify-between px-2 border border-gray-800/10 rounded">
+                                   <div className="flex items-center justify-between px-2 border border-gray-800/10 rounded bg-white">
                                         <div
                                              className="tiptap "
                                              dangerouslySetInnerHTML={{
@@ -112,6 +113,30 @@ export default function ProductViewForEdit({
                                              }}
                                         />
                                    </div>
+                              </div>
+                         </div>
+                    </ProductEditContainer>
+                    <ProductEditContainer title="Media" id="edit-media">
+                         <div className="space-y-3">
+                              {/* product thumbnail */}
+                              <div className="bg-gray-100 md:px-2 px-1 md:py-3 py-1 rounded">
+                                   <div className="flex items-center gap-2">
+                                        <h3 className="text-lg font-semibold">
+                                             Product Thumbnail
+                                        </h3>
+                                        <PopupDialog title="Update Product thumbnail.">
+                                             coming soon
+                                        </PopupDialog>
+                                   </div>
+                                   <figure className="w-32 h-32 mx-auto">
+                                        <Image
+                                             src={productDetails.thumbnail}
+                                             alt={productDetails.name}
+                                             width={100}
+                                             height={100}
+                                             className="w-auto h-auto rounded"
+                                        />
+                                   </figure>
                               </div>
                          </div>
                     </ProductEditContainer>

@@ -27,7 +27,7 @@ export default function ProductEditContainer({
                     </h2>
                </header>
 
-               <section className="md:p-3 p-2">{children}</section>
+               <section className="p-1">{children}</section>
           </section>
      );
 }
