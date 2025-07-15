@@ -13,7 +13,9 @@ const addProductSchema = z.object({
                /^[a-zA-Z0-9-]+$/,
                "Only letters, numbers, and hyphens allowed (no spaces)"
           ),
-     unit: z.string(),
+     unit: z.string().refine((val) => val === "pc" || val === "kg", {
+          message: "Unit must be 'pc' or 'kg'",
+     }),
      description: z.string().min(1, {
           message: "Must be input product description.",
      }),

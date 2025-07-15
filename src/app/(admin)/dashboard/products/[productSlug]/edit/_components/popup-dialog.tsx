@@ -15,9 +15,11 @@ import React from "react";
 export function PopupDialog({
      children,
      title,
+     filedName,
 }: {
      children: React.ReactNode;
      title: string;
+     filedName?: string;
 }) {
      return (
           <Dialog>
@@ -43,7 +45,13 @@ export function PopupDialog({
                          </svg>
                     </button>
                </DialogTrigger>
-               <DialogContent className="sm:max-w-[425px] bg-gray-100 border-transparent shadow-2xl">
+               <DialogContent
+                    className={`${
+                         filedName === "description"
+                              ? "md:max-w-[825px] max-w-[calc(100vw-.5rem)] md:h-[calc(100vh-1rem)] h-[calc(100vh-7rem)]"
+                              : "sm:max-w-[425px]"
+                    } bg-gray-100 border-transparent shadow-2xl`}
+               >
                     <DialogHeader>
                          <DialogTitle>{title}</DialogTitle>
                          <DialogDescription>

@@ -17,3 +17,15 @@ export const productSlugSchema = z.object({
                "Only letters, numbers, and hyphens allowed (no spaces)"
           ),
 });
+
+export const productUnitSchema = z.object({
+     unit: z.string().refine((val) => val === "pc" || val === "kg", {
+          message: "Unit must be 'pc' or 'kg'",
+     }),
+});
+
+export const productDescriptionSchema = z.object({
+     description: z.string().min(1, {
+          message: "Must be input product description.",
+     }),
+});

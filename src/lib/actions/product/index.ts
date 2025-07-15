@@ -5,8 +5,10 @@ import { userRoleCheck } from "@/lib/actions/user";
 import { Category } from "@/lib/schemas/mongoose/category";
 import { Product } from "@/lib/schemas/mongoose/product";
 import {
+     productDescriptionSchema,
      productNameSchema,
      productSlugSchema,
+     productUnitSchema,
 } from "@/lib/schemas/zod/edit-product-schema";
 import { ProductDetailsType } from "@/types/mongoose/product";
 import { replaceMongoIds } from "@/utils/replace";
@@ -59,7 +61,7 @@ export async function getProductForEdit(productSlug: string) {
 
           await connectMongoDB();
 
-          const productDetailsResponse = await Product.findOne({
+          const response = await Product.findOne({
                slug: productSlug,
           })
                .populate({
@@ -69,8 +71,15 @@ export async function getProductForEdit(productSlug: string) {
                })
                .lean();
 
+          if (!response) {
+               return {
+                    success: false,
+                    message: "Edit product not found.",
+               };
+          }
+
           const productDetails = replaceMongoIds(
-               productDetailsResponse
+               response
           ) as ProductDetailsType;
 
           return {
@@ -149,7 +158,7 @@ export async function productContentUpdate(
                };
           }
 
-          let updateContent = {};
+          let updateContent: UpdateContentType = {};
           let message = "";
 
           switch (updateFiled) {
@@ -178,6 +187,35 @@ export async function productContentUpdate(
                     }
                     updateContent = parsedSlug.data;
                     message = "Product slug filed content update.";
+                    break;
+               case "unit":
+                    const parsedUnit = productUnitSchema.safeParse(input);
+                    if (!parsedUnit.success) {
+                         return {
+                              success: false,
+                              message: getFirstErrorMessage(parsedUnit.error),
+                              errors: formatZodError(parsedUnit.error),
+                              fieldErrors: parsedUnit.error.flatten(),
+                         };
+                    }
+                    updateContent = parsedUnit.data;
+                    message = "Product unit filed content change.";
+                    break;
+               case "description":
+                    const parsedDescription =
+                         productDescriptionSchema.safeParse(input);
+                    if (!parsedDescription.success) {
+                         return {
+                              success: false,
+                              message: getFirstErrorMessage(
+                                   parsedDescription.error
+                              ),
+                              errors: formatZodError(parsedDescription.error),
+                              fieldErrors: parsedDescription.error.flatten(),
+                         };
+                    }
+                    updateContent = parsedDescription.data;
+                    message = "Product description filed content change.";
                     break;
           }
 
@@ -208,10 +246,10 @@ export async function productContentUpdate(
      }
 }
 
-// Define the input type based on your schema
-type ProductNameType = z.infer<typeof productNameSchema>;
-type ProductSlugType = z.infer<typeof productSlugSchema>;
+type UpdateContentType =
+     | { name: string }
+     | { slug: string }
+     | { unit: "pc" | "kg" }
+     | { description: string };
 
-type UpdateContentType = ProductNameType | ProductSlugType;
-
-type UpdateFiledType = "name" | "slug";
+type UpdateFiledType = "name" | "slug" | "unit" | "description";

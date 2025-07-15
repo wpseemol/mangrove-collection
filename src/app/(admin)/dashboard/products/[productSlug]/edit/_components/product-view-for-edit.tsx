@@ -4,8 +4,10 @@ import { ProductDetailsType } from "@/types/mongoose/product";
 import { PopupDialog } from "./popup-dialog";
 import ProductEditContainer from "./product-edit-container";
 import "./tiptap-style.css";
+import ProductDescriptionForm from "./update-form/product-description-form";
 import ProductNameForm from "./update-form/product-name-form";
 import ProductSlugForm from "./update-form/product-slug-form";
+import ProductUnitForm from "./update-form/product-unit-form";
 
 export default function ProductViewForEdit({
      stringDetails,
@@ -45,7 +47,7 @@ export default function ProductViewForEdit({
                                         </h3>
                                         <div className="flex items-center justify-between px-2 border border-gray-800/10 rounded">
                                              <p>{productDetails.slug}</p>{" "}
-                                             <PopupDialog title="Update Product name.">
+                                             <PopupDialog title="Update Product slug.">
                                                   <ProductSlugForm
                                                        content={
                                                             productDetails.slug
@@ -64,9 +66,18 @@ export default function ProductViewForEdit({
                                              Unit
                                         </h3>
                                         <div className="flex items-center justify-between px-2 border border-gray-800/10 rounded">
-                                             <p>{productDetails.unit}</p>{" "}
-                                             <PopupDialog title="Update Product name.">
-                                                  coming soon
+                                             <p className="uppercase">
+                                                  {productDetails.unit}
+                                             </p>{" "}
+                                             <PopupDialog title="Update Product unit.">
+                                                  <ProductUnitForm
+                                                       content={
+                                                            productDetails.unit
+                                                       }
+                                                       productId={
+                                                            productDetails.id
+                                                       }
+                                                  />
                                              </PopupDialog>
                                         </div>
                                    </div>
@@ -78,13 +89,22 @@ export default function ProductViewForEdit({
                                         <h3 className="text-lg font-semibold">
                                              Product Description
                                         </h3>
-                                        <PopupDialog title="Update Product name.">
-                                             coming soon
+                                        <PopupDialog
+                                             title="Update Product Description."
+                                             filedName="description"
+                                        >
+                                             <ProductDescriptionForm
+                                                  content={
+                                                       productDetails.description ||
+                                                       ""
+                                                  }
+                                                  productId={productDetails.id}
+                                             />
                                         </PopupDialog>
                                    </div>
                                    <div className="flex items-center justify-between px-2 border border-gray-800/10 rounded">
                                         <div
-                                             className="tiptap"
+                                             className="tiptap "
                                              dangerouslySetInnerHTML={{
                                                   __html:
                                                        productDetails.description ||

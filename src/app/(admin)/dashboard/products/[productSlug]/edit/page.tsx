@@ -1,5 +1,6 @@
 import { getProductForEdit } from "@/lib/actions/product";
 import * as motion from "motion/react-client";
+import { notFound } from "next/navigation";
 import { Toaster } from "sonner";
 import ProductViewForEdit from "./_components/product-view-for-edit";
 
@@ -11,6 +12,11 @@ export default async function ProductEditPage({
      const slug = (await params).productSlug;
 
      const response = await getProductForEdit(slug);
+
+     if (!response.success) {
+          notFound();
+          return;
+     }
 
      return (
           <main className="">
