@@ -20,7 +20,7 @@ export default function RootLayout({
      return (
           <html lang="en" suppressHydrationWarning className="scroll-smooth">
                <body className={`${poppins.className} ${roboto.className}`}>
-                    <NextTopLoader color="green" />
+                    <NextTopLoader zIndex={1600} color="green" />
                     {children}
                </body>
           </html>
