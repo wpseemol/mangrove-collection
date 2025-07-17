@@ -167,8 +167,3 @@ docker-compose up -d --force-recreate --build
      ```bash
      sudo chown -R $USER:$USER mangrove_mongodb_data
      ```
-
----
-
-_Last Updated: 2023-11-15 | Version: 2.1.0 | License: MIT_  
-_Total Project Size (uncompressed): ~1.42GB (development)_
