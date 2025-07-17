@@ -16,7 +16,7 @@ import { productSlugSchema } from "@/lib/schemas/zod/edit-product-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePathname, useRouter } from "next/navigation";
 
-import { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -29,7 +29,7 @@ export default function ProductSlugForm({
      content: string;
      productId: string;
 }) {
-     const [isDisable, setIsDisable] = useState<boolean>(true);
+     const [isDisable, setIsDisable] = React.useState<boolean>(true);
 
      const usePathName = usePathname();
      const router = useRouter();
@@ -104,3 +104,8 @@ export default function ProductSlugForm({
           </Form>
      );
 }
+
+/**
+ *
+ * test
+ */
