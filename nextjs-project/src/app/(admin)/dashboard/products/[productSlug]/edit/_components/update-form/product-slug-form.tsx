@@ -104,8 +104,3 @@ export default function ProductSlugForm({
           </Form>
      );
 }
-
-/**
- *
- * test
- */
