@@ -29,3 +29,7 @@ export const productDescriptionSchema = z.object({
           message: "Must be input product description.",
      }),
 });
+
+export const productThumbnailSchema = z.object({
+     thumbnail: z.string().optional().or(z.literal("")),
+});
