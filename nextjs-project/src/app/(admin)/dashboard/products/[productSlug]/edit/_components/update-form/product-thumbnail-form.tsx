@@ -10,10 +10,10 @@ import {
      FormLabel,
      FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { productContentUpdate } from "@/lib/actions/product";
 import { productThumbnailSchema } from "@/lib/schemas/zod/edit-product-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -24,9 +24,11 @@ import { z } from "zod";
 export default function ProductThumbnailForm({
      content,
      productId,
+     productName,
 }: {
      content: string;
      productId: string;
+     productName: string;
 }) {
      const [isDisable, setIsDisable] = useState<boolean>(true);
 
@@ -48,7 +50,7 @@ export default function ProductThumbnailForm({
           const response = await productContentUpdate(
                productId,
                values,
-               "name",
+               "thumbnail",
                usePathName
           );
 
@@ -57,6 +59,10 @@ export default function ProductThumbnailForm({
           } else {
                toast.error(response.message);
           }
+     }
+
+     async function handleThumbnailRemove() {
+          console.log("deleted thumbnail:", content);
      }
 
      return (
@@ -68,14 +74,22 @@ export default function ProductThumbnailForm({
                          render={({ field }) => (
                               <FormItem>
                                    <FormLabel className="text-gray-700 font-medium">
-                                        Product Name*
+                                        Thumbnail Image*
                                    </FormLabel>
                                    <FormControl>
-                                        <Input
-                                             {...field}
-                                             placeholder="Enter product name"
-                                             className="border-gray-300 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 placeholder:text-gray-400 text-gray-800 "
-                                        />
+                                        {inputThumbnailValue ? (
+                                             <PreviewThumbnailImage
+                                                  productName={productName}
+                                                  previewImageUlr={
+                                                       inputThumbnailValue
+                                                  }
+                                                  actionRemove={
+                                                       handleThumbnailRemove
+                                                  }
+                                             />
+                                        ) : (
+                                             "thumbnail input images"
+                                        )}
                                    </FormControl>
                                    <FormMessage className="text-red-500 text-sm" />
                               </FormItem>
@@ -99,5 +113,49 @@ export default function ProductThumbnailForm({
                     </DialogFooter>
                </form>
           </Form>
+     );
+}
+
+function PreviewThumbnailImage({
+     previewImageUlr,
+     productName,
+     actionRemove,
+}: {
+     previewImageUlr: string;
+     productName: string;
+     actionRemove: () => Promise<void> | void;
+}) {
+     return (
+          <figure className="relative w-fit mx-auto">
+               <Image
+                    src={previewImageUlr}
+                    alt={productName}
+                    width={100}
+                    height={100}
+                    className="w-auto h-auto object-center rounded"
+               />
+               <button
+                    onClick={actionRemove}
+                    type="button"
+                    role="button"
+                    aria-label="Remove thumbnail image"
+                    className="absolute right-0 top-0 text-white bg-red-500 hover:bg-red-600 rounded duration-150"
+               >
+                    <svg
+                         xmlns="http://www.w3.org/2000/svg"
+                         className="h-5 w-5"
+                         fill="none"
+                         viewBox="0 0 24 24"
+                         stroke="currentColor"
+                         strokeWidth={2}
+                    >
+                         <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M6 18L18 6M6 6l12 12"
+                         />
+                    </svg>
+               </button>
+          </figure>
      );
 }

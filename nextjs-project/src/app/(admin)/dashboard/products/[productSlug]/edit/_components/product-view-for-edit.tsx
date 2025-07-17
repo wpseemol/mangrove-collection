@@ -8,6 +8,7 @@ import "./tiptap-style.css";
 import ProductDescriptionForm from "./update-form/product-description-form";
 import ProductNameForm from "./update-form/product-name-form";
 import ProductSlugForm from "./update-form/product-slug-form";
+import ProductThumbnailForm from "./update-form/product-thumbnail-form";
 import ProductUnitForm from "./update-form/product-unit-form";
 
 export default function ProductViewForEdit({
@@ -125,7 +126,15 @@ export default function ProductViewForEdit({
                                              Product Thumbnail
                                         </h3>
                                         <PopupDialog title="Update Product thumbnail.">
-                                             coming soon
+                                             <ProductThumbnailForm
+                                                  content={
+                                                       productDetails.thumbnail
+                                                  }
+                                                  productId={productDetails.id}
+                                                  productName={
+                                                       productDetails.name
+                                                  }
+                                             />
                                         </PopupDialog>
                                    </div>
                                    <figure className="w-32 h-32 mx-auto">
