@@ -1,0 +1,241 @@
+/* Reset default list styles for Tailwind and make tiptap editor-friendly */
+
+ul,
+ol {
+     list-style: none;
+     margin: 0;
+     padding: 0;
+}
+
+/* Tiptap editor-friendly list styles */
+.tiptap ul,
+.tiptap ol {
+     margin-left: 1.5rem;
+     padding-left: 0;
+}
+
+.tiptap ul {
+     list-style-type: disc;
+}
+
+.tiptap ol {
+     list-style-type: decimal;
+}
+
+.tiptap li {
+     margin-bottom: 0.25rem;
+     padding-left: 0.5rem;
+     position: relative;
+}
+
+/* Optional: Improve nested list appearance */
+.tiptap ul ul,
+.tiptap ol ol,
+.tiptap ul ol,
+.tiptap ol ul {
+     margin-left: 1.5rem;
+     list-style-type: circle;
+}
+
+.tiptap h1 {
+     font-size: 2.25rem;
+     font-weight: 700;
+     margin: 1.5rem 0 1rem 0;
+     line-height: 2.5rem;
+}
+
+.tiptap h2 {
+     font-size: 1.5rem;
+     font-weight: 600;
+     margin: 1.25rem 0 0.75rem 0;
+     line-height: 2rem;
+}
+
+.tiptap h3 {
+     font-size: 1.25rem;
+     font-weight: 500;
+     margin: 1rem 0 0.5rem 0;
+     line-height: 1.75rem;
+}
+
+.tiptap h4 {
+     font-size: 1.125rem;
+     font-weight: 500;
+     margin: 0.75rem 0 0.5rem 0;
+     line-height: 1.5rem;
+}
+
+.tiptap h5 {
+     font-size: 1rem;
+     font-weight: 500;
+     margin: 0.5rem 0 0.25rem 0;
+     line-height: 1.25rem;
+}
+
+.tiptap h6 {
+     font-size: 0.875rem;
+     font-weight: 500;
+     margin: 0.5rem 0 0.25rem 0;
+     line-height: 1.125rem;
+}
+
+.tiptap p {
+     margin: 0.5rem 0;
+     line-height: 1.75rem;
+}
+
+.tiptap a {
+     color: #2563eb;
+     text-decoration: underline;
+     cursor: pointer;
+}
+
+.tiptap strong {
+     font-weight: 700;
+}
+
+.tiptap em {
+     font-style: italic;
+}
+
+.tiptap blockquote {
+     border-left: 4px solid #e5e7eb;
+     padding-left: 1rem;
+     color: #6b7280;
+     margin: 1rem 0;
+     font-style: italic;
+     background: #f9fafb;
+}
+
+.tiptap code {
+     background: #f3f4f6;
+     color: #d97706;
+     padding: 0.2em 0.4em;
+     border-radius: 0.25rem;
+     font-size: 0.95em;
+     font-family: "Fira Mono", monospace;
+}
+
+.tiptap pre {
+     background: #f3f4f6;
+     color: #111827;
+     padding: 1rem;
+     border-radius: 0.375rem;
+     overflow-x: auto;
+     margin: 1rem 0;
+     font-family: "Fira Mono", monospace;
+     font-size: 0.95em;
+}
+
+.tiptap img {
+     max-width: 100%;
+     height: auto;
+     display: block;
+     margin: 1rem 0;
+     border-radius: 0.375rem;
+}
+
+.tiptap ul,
+.tiptap ol {
+     margin-bottom: 1rem;
+}
+
+.tiptap li {
+     margin-bottom: 0.25rem;
+}
+
+.tiptap hr {
+     border: none;
+     border-top: 1px solid #e5e7eb;
+     margin: 2rem 0;
+}
+
+.tiptap table {
+     width: 100%;
+     border-collapse: collapse;
+     margin: 1rem 0;
+     font-size: 0.95em;
+     border: 1px solid #e5e7eb;
+     border-style: solid;
+     box-shadow: 0px 0px 0px 1px #e5e7eb;
+}
+
+.tiptap th,
+.tiptap td {
+     border: 1px solid #e5e7eb;
+     padding: 0.5rem 0.75rem;
+     text-align: left;
+}
+
+.tiptap th {
+     background: #f3f4f6;
+     font-weight: 600;
+     border: 1px solid #e5e7eb;
+}
+
+.tiptap mark {
+     background: #fef08a;
+     color: #92400e;
+     padding: 0.1em 0.3em;
+     border-radius: 0.2em;
+}
+
+.tiptap del {
+     text-decoration: line-through;
+     color: #9ca3af;
+}
+
+/* In your global CSS */
+.tiptap {
+     .highlight {
+          padding: 0.2em;
+          border-radius: 0.25em;
+
+          &-pink {
+               background-color: #fce4ec;
+          }
+
+          &-blue {
+               background-color: #e3f2fd;
+          }
+
+          &-yellow {
+               background-color: #fff9c4;
+          }
+
+          &-green {
+               background-color: #e8f5e9;
+          }
+     }
+
+     .tag {
+          background-color: #e0f7fa;
+          border-radius: 4px;
+          padding: 0.2em 0.4em;
+          margin: 0 0.2em;
+          font-size: 0.9em;
+          display: inline-flex;
+          align-items: center;
+
+          &-content {
+               color: #00838f;
+          }
+     }
+
+     img {
+          max-width: 100%;
+          height: auto;
+
+          &.ProseMirror-selectednode {
+               outline: 2px solid #68cef8;
+          }
+     }
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+     color: #adb5bd;
+     content: attr(data-placeholder);
+     float: left;
+     height: 0;
+     pointer-events: none;
+}
