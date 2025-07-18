@@ -4,9 +4,18 @@ import cloudinary from "@/cloudinary";
 import { extractPublicIdFromUrl } from "@/utils/public-id-from-url";
 import { Readable } from "stream";
 
-export async function imagesUploadCloudinary(formData: FormData) {
+/**
+ *
+ * @param formData image formdata image
+ * @param folderName folder name default product-images
+ * @returns Object success: boolean; message: string, update cloudinary details
+ */
+export async function imagesUploadCloudinary(
+     formData: FormData,
+     folderName: "product-images"
+) {
      try {
-          const file = formData.get("product-images") as File | null;
+          const file = formData.get("image") as File | null;
 
           if (!file) {
                return {
@@ -16,8 +25,15 @@ export async function imagesUploadCloudinary(formData: FormData) {
           }
 
           // Prepare filename (remove extension)
-          const originalFilename = file.name.replace(/\.[^/.]+$/, "");
+          const originalFilename = file.name.trim();
+          const publicId = originalFilename
+               .replace(/\.[^/.]+$/, "")
+               .replace(/\s+/g, "_")
+               .replace(/[^a-zA-Z0-9-_]/g, "")
+               .toLowerCase();
 
+          console.log("Orginal name:", originalFilename);
+          console.log("public id:", publicId);
           // Convert file to Buffer for streaming
           const buffer = Buffer.from(await file.arrayBuffer());
 
@@ -27,8 +43,8 @@ export async function imagesUploadCloudinary(formData: FormData) {
                // Create upload stream with Cloudinary options
                const uploadStream = cloudinary.uploader.upload_stream(
                     {
-                         folder: "product-images", // Target folder in Cloudinary
-                         public_id: `product_images_${Date.now()}_${originalFilename}`, // Unique filename
+                         folder: folderName, // Target folder in Cloudinary
+                         public_id: `product_images_${Date.now()}_${publicId}`, // Unique filename
                          resource_type: "auto", // Auto-detect file type
                          quality_analysis: true,
                     },
@@ -39,7 +55,7 @@ export async function imagesUploadCloudinary(formData: FormData) {
                          } else {
                               resolve({
                                    ...result,
-                                   originalFilename: file.name, // Include original filename
+                                   originalFilename: originalFilename, // Include original filename
                               });
                          }
                     }

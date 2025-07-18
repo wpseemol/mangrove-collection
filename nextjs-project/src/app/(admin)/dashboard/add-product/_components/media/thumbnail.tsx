@@ -64,7 +64,7 @@ export default function Thumbnail({
      async function handelAcceptFile(acceptedFile: FileWithPath) {
           setIsFileUpload(true);
           const formData = new FormData();
-          formData.append("product-images", acceptedFile);
+          formData.append("image", acceptedFile);
 
           setProgress(0);
           const progressInterval = setInterval(() => {

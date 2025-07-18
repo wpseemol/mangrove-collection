@@ -50,7 +50,7 @@ export default function PreviewImagesComponents({
                const uploadImage = async (acceptedFile: File) => {
                     setIsFileUpload(true);
                     const formData = new FormData();
-                    formData.append("product-images", acceptedFile);
+                    formData.append("image", acceptedFile);
 
                     // Start progress simulation
                     progressInterval = setInterval(() => {

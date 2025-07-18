@@ -139,7 +139,10 @@ export default function ProductViewForEdit({
                                    </div>
                                    <figure className="w-32 h-32 mx-auto">
                                         <Image
-                                             src={productDetails.thumbnail}
+                                             src={
+                                                  productDetails.thumbnail ||
+                                                  "/assets/logo/no-image.jpg"
+                                             }
                                              alt={productDetails.name}
                                              width={100}
                                              height={100}

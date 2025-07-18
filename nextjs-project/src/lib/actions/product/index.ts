@@ -9,6 +9,7 @@ import {
      productNameSchema,
      productSlugSchema,
      productUnitSchema,
+     thumbnailWithEmpty,
 } from "@/lib/schemas/zod/edit-product-schema";
 import { ProductDetailsType } from "@/types/mongoose/product";
 import { replaceMongoIds } from "@/utils/replace";
@@ -113,7 +114,7 @@ export async function getProductForEdit(productSlug: string) {
  * @param productId - The ID of the product to update.
  * @param updateContent - An object containing the fields to update (e.g., { name: string }).
  * @param updateFiled - A string describing the update (e.g., "thumbnail", "description").
- * @param url - A string for revalidatePath(url).
+ * @param url - A string for revalidatePath(url) url null cant reval path.
  * @returns An object indicating success or failure, a message, and the update response or error details.
  *
  */
@@ -121,10 +122,10 @@ export async function productContentUpdate(
      productId: string,
      input: UpdateContentType,
      updateFiled: UpdateFiledType,
-     url: string
+     url: ""
 ) {
      try {
-          if (!productId || !input || !updateFiled || !url) {
+          if (!productId || !input || !updateFiled) {
                return {
                     success: false,
                     message: "Update Product productId updateContent and updateFiled required",
@@ -158,7 +159,7 @@ export async function productContentUpdate(
                };
           }
 
-          let updateContent: UpdateContentType = {};
+          let updateContent: UpdateContentType = null;
           let message = "";
 
           switch (updateFiled) {
@@ -217,6 +218,30 @@ export async function productContentUpdate(
                     updateContent = parsedDescription.data;
                     message = "Product description filed content change.";
                     break;
+               case "thumbnail":
+                    const parsedThumbnail = thumbnailWithEmpty.safeParse(input);
+                    if (!parsedThumbnail.success) {
+                         return {
+                              success: false,
+                              message: getFirstErrorMessage(
+                                   parsedThumbnail.error
+                              ),
+                              errors: formatZodError(parsedThumbnail.error),
+                              fieldErrors: parsedThumbnail.error.flatten(),
+                         };
+                    }
+                    updateContent = parsedThumbnail.data;
+                    message = parsedThumbnail.data.thumbnail
+                         ? "Product thumbnail update done."
+                         : "Product thumbnail remove successful.";
+                    break;
+          }
+
+          if (!updateContent) {
+               return {
+                    success: false,
+                    message: "Product update content is require",
+               };
           }
 
           /**
@@ -229,7 +254,9 @@ export async function productContentUpdate(
                updateContent
           );
 
-          revalidatePath(url);
+          if (url) {
+               revalidatePath(url);
+          }
 
           return {
                success: true,
@@ -237,10 +264,10 @@ export async function productContentUpdate(
                update: JSON.stringify(response),
           };
      } catch (error) {
-          console.log("get product for edit error:", error);
+          console.log("Product update error:", error);
           return {
                success: false,
-               message: "get product for edit error.",
+               message: "Product update error.",
                errors: JSON.stringify(error),
           };
      }
@@ -250,6 +277,8 @@ type UpdateContentType =
      | { name: string }
      | { slug: string }
      | { unit: "pc" | "kg" }
-     | { description: string };
+     | { description: string }
+     | { thumbnail: string }
+     | null;
 
-type UpdateFiledType = "name" | "slug" | "unit" | "description";
+type UpdateFiledType = "name" | "slug" | "unit" | "description" | "thumbnail";
