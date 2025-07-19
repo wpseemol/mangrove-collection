@@ -152,7 +152,7 @@ export default function ProductViewForEdit({
                                    </figure>
                               </div>
 
-                              <div className="bg-gray-100 md:px-2 px-1 md:py-3 py-1 rounded">
+                              <div className="bg-gray-100 md:px-2 px-1 md:py-3 py-1 rounded ">
                                    <div className="flex items-center gap-2">
                                         <h3 className="text-lg font-semibold">
                                              Product Images
@@ -172,35 +172,41 @@ export default function ProductViewForEdit({
                                              />
                                         </PopupDialog>
                                    </div>
-                                   <figure className="w-32 h-32 mx-auto flex gap-1 items-center">
+                                   <div className="flex justify-center items-center gap-1">
                                         {productDetails.images.length > 0 ? (
                                              productDetails.images.map(
                                                   (image, inx) => (
-                                                       <Image
-                                                            key={image.id}
-                                                            src={image.imgUrl}
-                                                            alt={
-                                                                 productDetails.name +
-                                                                 (inx + 1)
-                                                            }
-                                                            width={100}
-                                                            height={100}
-                                                            className="w-auto h-auto rounded"
-                                                       />
+                                                       <figure className="w-32 h-32">
+                                                            <Image
+                                                                 key={image.id}
+                                                                 src={
+                                                                      image.imgUrl
+                                                                 }
+                                                                 alt={
+                                                                      productDetails.name +
+                                                                      (inx + 1)
+                                                                 }
+                                                                 width={100}
+                                                                 height={100}
+                                                                 className="w-auto h-auto rounded"
+                                                            />
+                                                       </figure>
                                                   )
                                              )
                                         ) : (
-                                             <Image
-                                                  src={
-                                                       "/assets/logo/no-image.jpg"
-                                                  }
-                                                  alt={productDetails.name}
-                                                  width={100}
-                                                  height={100}
-                                                  className="w-auto h-auto rounded"
-                                             />
+                                             <figure className="w-32 h-32 flex gap-1 items-center ">
+                                                  <Image
+                                                       src={
+                                                            "/assets/logo/no-image.jpg"
+                                                       }
+                                                       alt={productDetails.name}
+                                                       width={100}
+                                                       height={100}
+                                                       className="w-auto h-auto rounded"
+                                                  />
+                                             </figure>
                                         )}
-                                   </figure>
+                                   </div>
                               </div>
                          </div>
                     </ProductEditContainer>

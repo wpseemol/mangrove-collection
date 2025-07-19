@@ -10,16 +10,27 @@ import {
      FormLabel,
      FormMessage,
 } from "@/components/ui/form";
-import { deleteUploadedImage } from "@/lib/actions/media";
+import {
+     deleteUploadedImage,
+     imagesUploadCloudinary,
+} from "@/lib/actions/media";
 import { productContentUpdate } from "@/lib/actions/product";
 import { productImagesSchema } from "@/lib/schemas/zod/edit-product-schema";
 import { generateUniqueIds } from "@/utils/unique-id-generate";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { Dispatch, SetStateAction, useCallback, useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+     Dispatch,
+     SetStateAction,
+     useCallback,
+     useEffect,
+     useRef,
+     useState,
+} from "react";
 import { FileRejection, FileWithPath, useDropzone } from "react-dropzone";
 import { useForm, UseFormReturn } from "react-hook-form";
+import { FcMultipleInputs } from "react-icons/fc";
 import { toast } from "sonner";
 
 import { z } from "zod";
@@ -39,7 +50,7 @@ export default function ProductImagesForm({
           ProductImageType[] | null
      >(contentImages);
 
-     const pathName = usePathname();
+     const router = useRouter();
 
      const form = useForm<z.infer<typeof productImagesSchema>>({
           resolver: zodResolver(productImagesSchema),
@@ -51,11 +62,8 @@ export default function ProductImagesForm({
      const inputImageValue = form.watch("images");
 
      async function onSubmit() {
+          router.refresh();
           toast.success("Product image auto update.");
-     }
-
-     async function handelInputImages(accFile: FileWithPath[]) {
-          console.log("accept files:", accFile);
      }
 
      return (
@@ -107,9 +115,6 @@ export default function ProductImagesForm({
                                                        setPreviewImages
                                                   }
                                                   form={form}
-                                                  actionAcceptFile={
-                                                       handelInputImages
-                                                  }
                                              />
                                         </section>
                                    </FormControl>
@@ -154,24 +159,28 @@ function PreviewImage({
 
      async function handleRemoveImage() {
           setLoading({ state: true, message: "Cancel..." });
+
           const deletedItem = form
-               .getValues("images")
+               .watch("images")
                .find((item) => item.id === prvImage.id) as ProductImageType;
-          await deleteUploadedImage({
+
+          const afterRemove = form
+               .watch("images")
+               .filter((item) => item.id === prvImage.id) as ProductImageType[];
+
+          const fileDeletedResponse = await deleteUploadedImage({
                url: deletedItem.imgUrl,
           });
 
           const updateResponse = await productContentUpdate(
                productId,
                {
-                    images: form
-                         .getValues("images")
-                         .filter((item) => item.id !== prvImage.id),
+                    images: afterRemove,
                },
                "images"
           );
 
-          console.log("update response:", updateResponse);
+          form.setValue("images", afterRemove);
 
           actionPreview((prev) => {
                if (!prev) return null;
@@ -183,6 +192,63 @@ function PreviewImage({
 
           setLoading(null);
      }
+
+     /**
+      * the function is execute when file is filed.
+      *
+      */
+
+     const isUploadingRef = useRef(false);
+
+     useEffect(() => {
+          if (prvImage?.file && !isUploadingRef.current) {
+               setLoading({ state: true, message: "Image Uploading..." });
+               isUploadingRef.current = true;
+
+               async function uploadImage(file: FileWithPath) {
+                    const formData = new FormData();
+                    formData.append("image", file);
+
+                    try {
+                         const response = await imagesUploadCloudinary(
+                              formData
+                         );
+
+                         if (response.success && response.data?.secure_url) {
+                              const finalArray = [
+                                   ...form.watch("images"),
+                                   {
+                                        id: prvImage.id,
+                                        imgUrl: response.data.secure_url,
+                                   },
+                              ];
+
+                              const updateResponse = await productContentUpdate(
+                                   productId,
+                                   {
+                                        images: finalArray,
+                                   },
+                                   "images"
+                              );
+
+                              if (updateResponse.success) {
+                                   toast.success(updateResponse.message);
+                              } else {
+                                   toast.error(updateResponse.message);
+                              }
+
+                              form.setValue("images", finalArray);
+                         }
+                    } catch (error) {
+                         console.log("image edit upload error:", error);
+                    } finally {
+                         setLoading(null);
+                    }
+               }
+
+               uploadImage(prvImage.file);
+          }
+     }, [prvImage?.file]);
 
      return (
           <figure className="relative w-[120px] h-[120px] group object-cover object-center border border-gray-600/10">
@@ -249,11 +315,9 @@ function PreviewImage({
 function InputImages({
      form,
      actionPreview,
-     actionAcceptFile,
 }: {
      form: UseFormReturn<z.infer<typeof productImagesSchema>>;
      actionPreview: Dispatch<SetStateAction<ProductImageType[] | null>>;
-     actionAcceptFile: (file: FileWithPath[]) => Promise<void> | void;
 }) {
      /**
       * Handles the drop event for file uploads in the thumbnail component.
@@ -281,6 +345,7 @@ function InputImages({
                                                          pattern: "***",
                                                     }) as string,
                                                     imgUrl: base64String,
+                                                    file,
                                                },
                                           ]
                                         : [
@@ -289,17 +354,13 @@ function InputImages({
                                                          pattern: "***",
                                                     }) as string,
                                                     imgUrl: base64String,
+                                                    file,
                                                },
                                           ]
                               );
                          };
                          reader.readAsDataURL(file);
                     });
-
-                    /**
-                     * the when file is accept then call.
-                     */
-                    actionAcceptFile(acceptedFiles);
                }
 
                /**
@@ -337,7 +398,7 @@ function InputImages({
                     form.clearErrors("images");
                }
           },
-          [form, actionAcceptFile]
+          [form]
      );
 
      const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -389,4 +450,5 @@ type LoadingType = { message: string; state: boolean } | null;
 type ProductImageType = {
      id: string;
      imgUrl: string;
+     file?: FileWithPath;
 };
