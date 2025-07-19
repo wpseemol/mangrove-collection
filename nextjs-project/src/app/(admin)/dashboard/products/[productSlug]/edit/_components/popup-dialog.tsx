@@ -15,18 +15,18 @@ import React from "react";
 export function PopupDialog({
      children,
      title,
-     filedName,
+     withFit,
 }: {
      children: React.ReactNode;
      title: string;
-     filedName?: string;
+     withFit?: boolean;
 }) {
      return (
           <Dialog>
                <DialogTrigger asChild>
                     <button
                          type="button"
-                         className="p-2 rounded hover:bg-gray-100 cursor-pointer"
+                         className="p-2 rounded hover:bg-gray-100 cursor-pointer "
                          aria-label="Edit Product Name"
                     >
                          <svg
@@ -47,9 +47,7 @@ export function PopupDialog({
                </DialogTrigger>
                <DialogContent
                     className={`${
-                         filedName === "description"
-                              ? "md:max-w-[825px] max-w-[calc(100vw-.5rem)] md:h-[calc(100vh-1rem)] h-[calc(100vh-7rem)]"
-                              : "sm:max-w-[425px]"
+                         withFit ? "sm:max-w-fit sm:px-8" : "sm:max-w-[425px]"
                     } bg-gray-100 border-transparent shadow-2xl`}
                >
                     <DialogHeader>

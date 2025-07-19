@@ -6,6 +6,7 @@ import { PopupDialog } from "./popup-dialog";
 import ProductEditContainer from "./product-edit-container";
 import "./tiptap-style.css";
 import ProductDescriptionForm from "./update-form/product-description-form";
+import ProductImagesForm from "./update-form/product-images-form";
 import ProductNameForm from "./update-form/product-name-form";
 import ProductSlugForm from "./update-form/product-slug-form";
 import ProductThumbnailForm from "./update-form/product-thumbnail-form";
@@ -93,7 +94,7 @@ export default function ProductViewForEdit({
                                         </h3>
                                         <PopupDialog
                                              title="Update Product Description."
-                                             filedName="description"
+                                             withFit={true}
                                         >
                                              <ProductDescriptionForm
                                                   content={
@@ -148,6 +149,57 @@ export default function ProductViewForEdit({
                                              height={100}
                                              className="w-auto h-auto rounded"
                                         />
+                                   </figure>
+                              </div>
+
+                              <div className="bg-gray-100 md:px-2 px-1 md:py-3 py-1 rounded">
+                                   <div className="flex items-center gap-2">
+                                        <h3 className="text-lg font-semibold">
+                                             Product Images
+                                        </h3>
+                                        <PopupDialog
+                                             title="Update Product Images."
+                                             withFit={true}
+                                        >
+                                             <ProductImagesForm
+                                                  content={JSON.stringify(
+                                                       productDetails.images
+                                                  )}
+                                                  productName={
+                                                       productDetails.name
+                                                  }
+                                                  productId={productDetails.id}
+                                             />
+                                        </PopupDialog>
+                                   </div>
+                                   <figure className="w-32 h-32 mx-auto flex gap-1 items-center">
+                                        {productDetails.images.length > 0 ? (
+                                             productDetails.images.map(
+                                                  (image, inx) => (
+                                                       <Image
+                                                            key={image.id}
+                                                            src={image.imgUrl}
+                                                            alt={
+                                                                 productDetails.name +
+                                                                 (inx + 1)
+                                                            }
+                                                            width={100}
+                                                            height={100}
+                                                            className="w-auto h-auto rounded"
+                                                       />
+                                                  )
+                                             )
+                                        ) : (
+                                             <Image
+                                                  src={
+                                                       "/assets/logo/no-image.jpg"
+                                                  }
+                                                  alt={productDetails.name}
+                                                  width={100}
+                                                  height={100}
+                                                  className="w-auto h-auto rounded"
+                                             />
+                                        )}
                                    </figure>
                               </div>
                          </div>

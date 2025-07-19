@@ -39,3 +39,12 @@ export const productThumbnailSchema = z.object({
           message: "Must be product thumbnail image",
      }),
 });
+
+export const productImagesSchema = z.object({
+     images: z.array(
+          z.object({
+               id: z.string(),
+               imgUrl: z.string(),
+          })
+     ),
+});

@@ -10,24 +10,19 @@ import {
      FormLabel,
      FormMessage,
 } from "@/components/ui/form";
-import {
-     deleteUploadedImage,
-     imagesUploadCloudinary,
-} from "@/lib/actions/media";
-import { productContentUpdate } from "@/lib/actions/product";
-import { productThumbnailSchema } from "@/lib/schemas/zod/edit-product-schema";
+import { productImagesSchema } from "@/lib/schemas/zod/edit-product-schema";
+import { generateUniqueIds } from "@/utils/unique-id-generate";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useCallback, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import { FileRejection, FileWithPath, useDropzone } from "react-dropzone";
 import { useForm, UseFormReturn } from "react-hook-form";
-import { FiUpload } from "react-icons/fi";
 import { toast } from "sonner";
 
 import { z } from "zod";
 
-export default function ProductThumbnailForm({
+export default function ProductImagesForm({
      content,
      productId,
      productName,
@@ -36,76 +31,30 @@ export default function ProductThumbnailForm({
      productId: string;
      productName: string;
 }) {
-     const [previewImage, setPreviewImages] = useState<string | null>(content);
+     const contentImages = JSON.parse(content) as ProductImageType[];
+
+     const [previewImages, setPreviewImages] = useState<
+          ProductImageType[] | null
+     >(contentImages);
      const [loading, setLoading] = useState<LoadingType>(null);
 
      const pathName = usePathname();
 
-     const form = useForm<z.infer<typeof productThumbnailSchema>>({
-          resolver: zodResolver(productThumbnailSchema),
+     const form = useForm<z.infer<typeof productImagesSchema>>({
+          resolver: zodResolver(productImagesSchema),
           defaultValues: {
-               thumbnail: content,
+               images: contentImages,
           },
      });
 
-     const inputThumbnailValue = form.watch("thumbnail");
+     const inputImageValue = form.watch("images");
 
      async function onSubmit() {
-          toast.success("Product thumbnail auto update.");
+          toast.success("Product image auto update.");
      }
 
-     async function handleThumbnailRemove() {
-          setLoading({ state: true, message: "Cancel..." });
-          const response = await deleteUploadedImage({
-               url: inputThumbnailValue,
-          });
-          if (response.success) {
-               form.setValue("thumbnail", "");
-               await productContentUpdate(
-                    productId,
-                    { thumbnail: "" },
-                    "thumbnail"
-               );
-          } else {
-               toast.error("Some thing is wrong please try again.");
-          }
-          setPreviewImages(null);
-
-          setLoading(null);
-     }
-
-     async function handleThumbnailInputChange(acceptedFile: FileWithPath) {
-          setLoading({ state: true, message: "Uploading..." });
-          const formData = new FormData();
-          formData.append("image", acceptedFile);
-
-          const response = await imagesUploadCloudinary(formData);
-
-          if (
-               response.success &&
-               response.data?.secure_url &&
-               response.data?.public_id
-          ) {
-               const responseUpdate = await productContentUpdate(
-                    productId,
-                    { thumbnail: response.data.secure_url },
-                    "thumbnail",
-                    pathName
-               );
-
-               if (responseUpdate.success) {
-                    toast.success(responseUpdate.message);
-                    form.setValue("thumbnail", response.data.secure_url);
-               } else {
-                    form.setValue("thumbnail", "");
-                    toast.error(responseUpdate.message);
-               }
-          } else {
-               setPreviewImages(null);
-               toast.error(response.message);
-          }
-
-          setLoading(false);
+     async function handelInputImages(accFile: FileWithPath[]) {
+          console.log("accept files:", accFile);
      }
 
      return (
@@ -120,26 +69,48 @@ export default function ProductThumbnailForm({
                                         Thumbnail Image*
                                    </FormLabel>
                                    <FormControl>
-                                        {previewImage ? (
-                                             <PreviewThumbnailImage
-                                                  productName={productName}
-                                                  previewImageUlr={previewImage}
-                                                  actionRemove={
-                                                       handleThumbnailRemove
-                                                  }
-                                                  loading={loading}
-                                             />
-                                        ) : (
-                                             <InputThumbnailImage
-                                                  form={form}
+                                        <section>
+                                             <div className="flex items-center justify-center gap-1">
+                                                  {previewImages &&
+                                                       previewImages.length >
+                                                            0 &&
+                                                       previewImages.map(
+                                                            (prvImage, inx) => (
+                                                                 <PreviewImage
+                                                                      key={
+                                                                           prvImage.id
+                                                                      }
+                                                                      loading={
+                                                                           loading
+                                                                      }
+                                                                      productName={
+                                                                           productName +
+                                                                           (inx +
+                                                                                1)
+                                                                      }
+                                                                      prvImage={
+                                                                           prvImage
+                                                                      }
+                                                                      form={
+                                                                           form
+                                                                      }
+                                                                      actionPreview={
+                                                                           setPreviewImages
+                                                                      }
+                                                                 />
+                                                            )
+                                                       )}
+                                             </div>
+                                             <InputImages
                                                   actionPreview={
                                                        setPreviewImages
                                                   }
+                                                  form={form}
                                                   actionAcceptFile={
-                                                       handleThumbnailInputChange
+                                                       handelInputImages
                                                   }
                                              />
-                                        )}
+                                        </section>
                                    </FormControl>
                                    <FormMessage className="text-red-500 text-sm" />
                               </FormItem>
@@ -151,9 +122,7 @@ export default function ProductThumbnailForm({
                          </DialogClose>
                          <Button
                               title="Image auto update."
-                              disabled={
-                                   form.formState.isSubmitting || loading?.state
-                              }
+                              disabled={form.formState.isSubmitting}
                               type="submit"
                               className="text-white disabled:cursor-not-allowed disabled:pointer-events-auto cursor-pointer"
                          >
@@ -167,28 +136,42 @@ export default function ProductThumbnailForm({
      );
 }
 
-function PreviewThumbnailImage({
-     previewImageUlr,
+function PreviewImage({
+     actionPreview,
      productName,
-     actionRemove,
+     prvImage,
      loading,
+     form,
 }: {
-     previewImageUlr: string;
+     actionPreview: Dispatch<SetStateAction<ProductImageType[] | null>>;
      productName: string;
-     actionRemove: () => Promise<void> | void;
+     prvImage: ProductImageType;
      loading: LoadingType;
+     form: UseFormReturn<z.infer<typeof productImagesSchema>>;
 }) {
+     async function handleRemoveImage() {
+          console.log("image id:", prvImage.id);
+
+          actionPreview((prev) => {
+               if (!prev) return null;
+               const removeItem = prev.filter(
+                    (item) => item.id !== prvImage.id
+               );
+               return removeItem.length > 0 ? removeItem : null;
+          });
+     }
+
      return (
-          <figure className="relative w-[200px] h-[200px] mx-auto group object-cover object-center border border-gray-600/10">
+          <figure className="relative w-[120px] h-[120px] group object-cover object-center border border-gray-600/10">
                <Image
-                    src={previewImageUlr}
+                    src={prvImage.imgUrl}
                     alt={productName}
                     width={200}
                     height={200}
                     className="w-auto h-auto object-cover object-center rounded"
                />
                <button
-                    onClick={actionRemove}
+                    onClick={handleRemoveImage}
                     type="button"
                     role="button"
                     aria-label="Remove thumbnail image"
@@ -240,14 +223,14 @@ function PreviewThumbnailImage({
      );
 }
 
-function InputThumbnailImage({
+function InputImages({
      form,
      actionPreview,
      actionAcceptFile,
 }: {
-     form: UseFormReturn<z.infer<typeof productThumbnailSchema>>;
-     actionPreview: Dispatch<SetStateAction<string | null>>;
-     actionAcceptFile: (file: FileWithPath) => Promise<void> | void;
+     form: UseFormReturn<z.infer<typeof productImagesSchema>>;
+     actionPreview: Dispatch<SetStateAction<ProductImageType[] | null>>;
+     actionAcceptFile: (file: FileWithPath[]) => Promise<void> | void;
 }) {
      /**
       * Handles the drop event for file uploads in the thumbnail component.
@@ -261,19 +244,39 @@ function InputThumbnailImage({
       */
      const onDrop = useCallback(
           (acceptedFiles: FileWithPath[], fileRejections: FileRejection[]) => {
-               if (acceptedFiles.length === 1) {
-                    const reader = new FileReader();
+               if (acceptedFiles.length > 0) {
+                    acceptedFiles.forEach((file) => {
+                         const reader = new FileReader();
+                         reader.onloadend = function () {
+                              const base64String = reader.result;
+                              actionPreview((prev) =>
+                                   prev
+                                        ? [
+                                               ...prev,
+                                               {
+                                                    id: generateUniqueIds({
+                                                         pattern: "***",
+                                                    }) as string,
+                                                    imgUrl: base64String,
+                                               },
+                                          ]
+                                        : [
+                                               {
+                                                    id: generateUniqueIds({
+                                                         pattern: "***",
+                                                    }) as string,
+                                                    imgUrl: base64String,
+                                               },
+                                          ]
+                              );
+                         };
+                         reader.readAsDataURL(file);
+                    });
 
-                    reader.onloadend = function () {
-                         const base64String = reader.result;
-                         actionPreview(base64String);
-                    };
-
-                    reader.readAsDataURL(acceptedFiles[0]);
                     /**
                      * the when file is accept then call.
                      */
-                    actionAcceptFile(acceptedFiles[0]);
+                    actionAcceptFile(acceptedFiles);
                }
 
                /**
@@ -301,14 +304,14 @@ function InputThumbnailImage({
                          );
                     };
 
-                    form.setError("thumbnail", {
+                    form.setError("images", {
                          type: "manual",
                          message: getErrorMessage(
                               fileRejections[0].errors[0].code
                          ),
                     });
                } else {
-                    form.clearErrors("thumbnail");
+                    form.clearErrors("images");
                }
           },
           [form, actionAcceptFile]
@@ -316,50 +319,51 @@ function InputThumbnailImage({
 
      const { getRootProps, getInputProps, isDragActive } = useDropzone({
           accept: { "image/*": [".jpeg", ".jpg", ".png"] },
-          maxFiles: 1,
           maxSize: 1024 * 1000,
           onDrop,
      });
 
      return (
           <div
-               {...getRootProps({
-                    className:
-                         "border-dashed border-2 border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 rounded-md w-full flex justify-center items-center cursor-pointer hover:border-primary transition-colors w-[200px] h-[200px]",
-               })}
+               {...getRootProps()}
+               className="px-2 flex justify-center items-center h-fit cursor-pointer py-3 mt-1 border-dashed border-2 border-neutral-500/20 bg-neutral-400/10 w-full group hover:border-neutral-500/90"
           >
-               <input {...getInputProps()} multiple={false} />
-               <div className="text-center py-2">
-                    {isDragActive ? (
-                         <>
-                              <FiUpload className="mx-auto h-10 w-10 text-gray-400 mb-2" />
-                              <p className="text-lg font-medium text-gray-700 dark:text-gray-300">
-                                   Drop the file here
-                              </p>
-                         </>
-                    ) : (
-                         <>
-                              <FiUpload className="mx-auto h-10 w-10 text-gray-400 mb-2" />
-                              <p className="text-md font-medium text-gray-700 dark:text-gray-300">
-                                   Drag and drop your thumbnail here
-                              </p>
-                              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                                   or
-                              </p>
-                              <button
-                                   type="button"
-                                   className="mt-2 inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none"
-                              >
-                                   Select file
-                              </button>
-                              <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                                   JPEG, JPG, PNG up to 1MB
-                              </p>
-                         </>
-                    )}
-               </div>
+               <input {...getInputProps()} />
+
+               {isDragActive ? (
+                    <div className="h-[10.2rem] flex flex-col justify-center items-center">
+                         <FcMultipleInputs className="text-7xl my-2 mx-auto scale-125" />
+                         <p className="text-lg font-medium">
+                              Drop the files here...
+                         </p>
+                    </div>
+               ) : (
+                    <div className="py-1 h-[10.2rem] text-center">
+                         <div className="w-20 mx-auto">
+                              <Image
+                                   src="/assets/logo/drag and drop icon.png"
+                                   alt="Drag and drop"
+                                   width={80}
+                                   height={80}
+                                   priority
+                              />
+                         </div>
+                         <p>or</p>
+                         <p className="text-lg font-medium">
+                              Drag and drop your file here
+                         </p>
+                         <p className="text-sm text-gray-500">
+                              Supports: JPEG, JPG, PNG (Max 1MB)
+                         </p>
+                    </div>
+               )}
           </div>
      );
 }
 
 type LoadingType = { message: string; state: boolean } | null;
+
+type ProductImageType = {
+     id: string;
+     imgUrl: string;
+};
