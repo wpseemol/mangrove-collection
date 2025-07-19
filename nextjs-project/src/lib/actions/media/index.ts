@@ -32,8 +32,6 @@ export async function imagesUploadCloudinary(
                .replace(/[^a-zA-Z0-9-_]/g, "")
                .toLowerCase();
 
-          console.log("Orginal name:", originalFilename);
-          console.log("public id:", publicId);
           // Convert file to Buffer for streaming
           const buffer = Buffer.from(await file.arrayBuffer());
 
