@@ -6,6 +6,7 @@ import { Category } from "@/lib/schemas/mongoose/category";
 import { Product } from "@/lib/schemas/mongoose/product";
 import {
      productDescriptionSchema,
+     productImagesSchema,
      productNameSchema,
      productSlugSchema,
      productUnitSchema,
@@ -235,6 +236,22 @@ export async function productContentUpdate(
                          ? "Product thumbnail update done."
                          : "Product thumbnail remove successful.";
                     break;
+               case "images":
+                    const parsedImages = productImagesSchema.safeParse(input);
+                    if (!parsedImages.success) {
+                         return {
+                              success: false,
+                              message: getFirstErrorMessage(parsedImages.error),
+                              errors: formatZodError(parsedImages.error),
+                              fieldErrors: parsedImages.error.flatten(),
+                         };
+                    }
+                    updateContent = parsedImages.data;
+                    message =
+                         parsedImages.data.images.length > 0
+                              ? "Product images update done."
+                              : "Product images remove successful.";
+                    break;
           }
 
           if (!updateContent) {
@@ -279,6 +296,18 @@ type UpdateContentType =
      | { unit: "pc" | "kg" }
      | { description: string }
      | { thumbnail: string }
+     | {
+            images: {
+                 id: string;
+                 imgUrl: string;
+            }[];
+       }
      | null;
 
-type UpdateFiledType = "name" | "slug" | "unit" | "description" | "thumbnail";
+type UpdateFiledType =
+     | "name"
+     | "slug"
+     | "unit"
+     | "description"
+     | "thumbnail"
+     | "images";

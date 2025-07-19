@@ -10,6 +10,8 @@ import {
      FormLabel,
      FormMessage,
 } from "@/components/ui/form";
+import { deleteUploadedImage } from "@/lib/actions/media";
+import { productContentUpdate } from "@/lib/actions/product";
 import { productImagesSchema } from "@/lib/schemas/zod/edit-product-schema";
 import { generateUniqueIds } from "@/utils/unique-id-generate";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,7 +38,6 @@ export default function ProductImagesForm({
      const [previewImages, setPreviewImages] = useState<
           ProductImageType[] | null
      >(contentImages);
-     const [loading, setLoading] = useState<LoadingType>(null);
 
      const pathName = usePathname();
 
@@ -80,9 +81,6 @@ export default function ProductImagesForm({
                                                                       key={
                                                                            prvImage.id
                                                                       }
-                                                                      loading={
-                                                                           loading
-                                                                      }
                                                                       productName={
                                                                            productName +
                                                                            (inx +
@@ -96,6 +94,9 @@ export default function ProductImagesForm({
                                                                       }
                                                                       actionPreview={
                                                                            setPreviewImages
+                                                                      }
+                                                                      productId={
+                                                                           productId
                                                                       }
                                                                  />
                                                             )
@@ -140,17 +141,37 @@ function PreviewImage({
      actionPreview,
      productName,
      prvImage,
-     loading,
+     productId,
      form,
 }: {
      actionPreview: Dispatch<SetStateAction<ProductImageType[] | null>>;
      productName: string;
      prvImage: ProductImageType;
-     loading: LoadingType;
+     productId: string;
      form: UseFormReturn<z.infer<typeof productImagesSchema>>;
 }) {
+     const [loading, setLoading] = useState<LoadingType>(null);
+
      async function handleRemoveImage() {
-          console.log("image id:", prvImage.id);
+          setLoading({ state: true, message: "Cancel..." });
+          const deletedItem = form
+               .getValues("images")
+               .find((item) => item.id === prvImage.id) as ProductImageType;
+          await deleteUploadedImage({
+               url: deletedItem.imgUrl,
+          });
+
+          const updateResponse = await productContentUpdate(
+               productId,
+               {
+                    images: form
+                         .getValues("images")
+                         .filter((item) => item.id !== prvImage.id),
+               },
+               "images"
+          );
+
+          console.log("update response:", updateResponse);
 
           actionPreview((prev) => {
                if (!prev) return null;
@@ -159,6 +180,8 @@ function PreviewImage({
                );
                return removeItem.length > 0 ? removeItem : null;
           });
+
+          setLoading(null);
      }
 
      return (
