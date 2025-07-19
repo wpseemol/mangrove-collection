@@ -30,7 +30,7 @@ export default function ProductNameForm({
 }) {
      const [isDisable, setIsDisable] = useState<boolean>(true);
 
-     const usePathName = usePathname();
+     const pathName = usePathname();
 
      const form = useForm<z.infer<typeof productNameSchema>>({
           resolver: zodResolver(productNameSchema),
@@ -49,7 +49,7 @@ export default function ProductNameForm({
                productId,
                values,
                "name",
-               usePathName
+               pathName
           );
 
           if (response.success) {

@@ -19,7 +19,7 @@ import { productThumbnailSchema } from "@/lib/schemas/zod/edit-product-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FileRejection, FileWithPath, useDropzone } from "react-dropzone";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { FiUpload } from "react-icons/fi";
@@ -38,6 +38,7 @@ export default function ProductThumbnailForm({
 }) {
      const [previewImage, setPreviewImages] = useState<string | null>(content);
      const [loading, setLoading] = useState<LoadingType>(null);
+     const [isDisable, setIsDisable] = useState<boolean>(true);
 
      const pathName = usePathname();
 
@@ -49,28 +50,33 @@ export default function ProductThumbnailForm({
      });
 
      const inputThumbnailValue = form.watch("thumbnail");
+     useEffect(() => {
+          setIsDisable(inputThumbnailValue === content);
+     }, [inputThumbnailValue, content]);
 
-     async function onSubmit() {
-          toast.success("Product thumbnail auto update.");
+     async function onSubmit(values: z.infer<typeof productThumbnailSchema>) {
+          const response = await productContentUpdate(
+               productId,
+               values,
+               "thumbnail",
+               pathName
+          );
+
+          if (response.success) {
+               toast.success(response.message);
+          } else {
+               toast.error(response.message);
+          }
      }
 
      async function handleThumbnailRemove() {
           setLoading({ state: true, message: "Cancel..." });
-          const response = await deleteUploadedImage({
+          await deleteUploadedImage({
                url: inputThumbnailValue,
           });
-          if (response.success) {
-               form.setValue("thumbnail", "");
-               await productContentUpdate(
-                    productId,
-                    { thumbnail: "" },
-                    "thumbnail"
-               );
-          } else {
-               toast.error("Some thing is wrong please try again.");
-          }
-          setPreviewImages(null);
 
+          form.setValue("thumbnail", "");
+          setPreviewImages(null);
           setLoading(null);
      }
 
@@ -86,26 +92,14 @@ export default function ProductThumbnailForm({
                response.data?.secure_url &&
                response.data?.public_id
           ) {
-               const responseUpdate = await productContentUpdate(
-                    productId,
-                    { thumbnail: response.data.secure_url },
-                    "thumbnail",
-                    pathName
-               );
-
-               if (responseUpdate.success) {
-                    toast.success(responseUpdate.message);
-                    form.setValue("thumbnail", response.data.secure_url);
-               } else {
-                    form.setValue("thumbnail", "");
-                    toast.error(responseUpdate.message);
-               }
+               form.setValue("thumbnail", response.data.secure_url);
           } else {
+               form.setValue("thumbnail", "");
                setPreviewImages(null);
                toast.error(response.message);
           }
 
-          setLoading(false);
+          setLoading(null);
      }
 
      return (
@@ -152,14 +146,19 @@ export default function ProductThumbnailForm({
                          <Button
                               title="Image auto update."
                               disabled={
-                                   form.formState.isSubmitting || loading?.state
+                                   form.formState.isSubmitting ||
+                                   loading?.state ||
+                                   isDisable
                               }
                               type="submit"
                               className="text-white disabled:cursor-not-allowed disabled:pointer-events-auto cursor-pointer"
                          >
-                              {form.formState.isSubmitting
+                              {loading?.state
+                                   ? "Waiting..."
+                                   : form.formState.isSubmitting
                                    ? "Saving..."
                                    : "Save changes"}
+                              {}
                          </Button>
                     </DialogFooter>
                </form>

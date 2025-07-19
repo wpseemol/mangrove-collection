@@ -30,10 +30,6 @@ export const productDescriptionSchema = z.object({
      }),
 });
 
-export const thumbnailWithEmpty = z.object({
-     thumbnail: z.string().optional().or(z.literal("")),
-});
-
 export const productThumbnailSchema = z.object({
      thumbnail: z.string().min(1, {
           message: "Must be product thumbnail image",

@@ -19,7 +19,7 @@ import { productImagesSchema } from "@/lib/schemas/zod/edit-product-schema";
 import { generateUniqueIds } from "@/utils/unique-id-generate";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
      Dispatch,
      SetStateAction,
@@ -46,11 +46,13 @@ export default function ProductImagesForm({
 }) {
      const contentImages = JSON.parse(content) as ProductImageType[];
 
+     const [isDisable, setIsDisable] = useState<boolean>(true);
+     const [isWaiting, setIsWaiting] = useState<boolean>(false);
      const [previewImages, setPreviewImages] = useState<
           ProductImageType[] | null
      >(contentImages);
 
-     const router = useRouter();
+     const pathName = usePathname();
 
      const form = useForm<z.infer<typeof productImagesSchema>>({
           resolver: zodResolver(productImagesSchema),
@@ -60,10 +62,24 @@ export default function ProductImagesForm({
      });
 
      const inputImageValue = form.watch("images");
+     useEffect(() => {
+          setIsDisable(JSON.stringify(inputImageValue) === content);
+          console.log(JSON.stringify(inputImageValue) === content);
+     }, [inputImageValue, content]);
 
-     async function onSubmit() {
-          router.refresh();
-          toast.success("Product image auto update.");
+     async function onSubmit(values: z.infer<typeof productImagesSchema>) {
+          const response = await productContentUpdate(
+               productId,
+               values,
+               "images",
+               pathName
+          );
+
+          if (response.success) {
+               toast.success(response.message);
+          } else {
+               toast.error(response.message);
+          }
      }
 
      return (
@@ -106,6 +122,9 @@ export default function ProductImagesForm({
                                                                       productId={
                                                                            productId
                                                                       }
+                                                                      actionWaiting={
+                                                                           setIsWaiting
+                                                                      }
                                                                  />
                                                             )
                                                        )}
@@ -128,11 +147,17 @@ export default function ProductImagesForm({
                          </DialogClose>
                          <Button
                               title="Image auto update."
-                              disabled={form.formState.isSubmitting}
+                              disabled={
+                                   form.formState.isSubmitting ||
+                                   isWaiting ||
+                                   isDisable
+                              }
                               type="submit"
                               className="text-white disabled:cursor-not-allowed disabled:pointer-events-auto cursor-pointer"
                          >
-                              {form.formState.isSubmitting
+                              {isWaiting
+                                   ? "Waiting..."
+                                   : form.formState.isSubmitting
                                    ? "Saving..."
                                    : "Save changes"}
                          </Button>
@@ -142,23 +167,32 @@ export default function ProductImagesForm({
      );
 }
 
+/**
+ *
+ * preview and image upload cloudy and delete
+ * @returns
+ */
+
 function PreviewImage({
      actionPreview,
      productName,
      prvImage,
      productId,
      form,
+     actionWaiting,
 }: {
      actionPreview: Dispatch<SetStateAction<ProductImageType[] | null>>;
      productName: string;
      prvImage: ProductImageType;
      productId: string;
      form: UseFormReturn<z.infer<typeof productImagesSchema>>;
+     actionWaiting: Dispatch<SetStateAction<boolean>>;
 }) {
      const [loading, setLoading] = useState<LoadingType>(null);
 
      async function handleRemoveImage() {
           setLoading({ state: true, message: "Cancel..." });
+          actionWaiting(true);
 
           const deletedItem = form
                .watch("images")
@@ -166,19 +200,11 @@ function PreviewImage({
 
           const afterRemove = form
                .watch("images")
-               .filter((item) => item.id === prvImage.id) as ProductImageType[];
+               .filter((item) => item.id !== prvImage.id) as ProductImageType[];
 
-          const fileDeletedResponse = await deleteUploadedImage({
+          await deleteUploadedImage({
                url: deletedItem.imgUrl,
           });
-
-          const updateResponse = await productContentUpdate(
-               productId,
-               {
-                    images: afterRemove,
-               },
-               "images"
-          );
 
           form.setValue("images", afterRemove);
 
@@ -191,6 +217,7 @@ function PreviewImage({
           });
 
           setLoading(null);
+          actionWaiting(false);
      }
 
      /**
@@ -202,7 +229,8 @@ function PreviewImage({
 
      useEffect(() => {
           if (prvImage?.file && !isUploadingRef.current) {
-               setLoading({ state: true, message: "Image Uploading..." });
+               setLoading({ state: true, message: "Uploading..." });
+               actionWaiting(true);
                isUploadingRef.current = true;
 
                async function uploadImage(file: FileWithPath) {
@@ -223,26 +251,40 @@ function PreviewImage({
                                    },
                               ];
 
-                              const updateResponse = await productContentUpdate(
-                                   productId,
-                                   {
-                                        images: finalArray,
-                                   },
-                                   "images"
-                              );
-
-                              if (updateResponse.success) {
-                                   toast.success(updateResponse.message);
-                              } else {
-                                   toast.error(updateResponse.message);
-                              }
-
                               form.setValue("images", finalArray);
+
+                              actionPreview((prev) => {
+                                   if (!prev) return null;
+                                   const removeItem = prev.map((item) =>
+                                        item.id === prvImage.id
+                                             ? {
+                                                    id: prvImage.id,
+                                                    imgUrl: response.data
+                                                         .secure_url,
+                                               }
+                                             : item
+                                   );
+                                   return removeItem.length > 0
+                                        ? removeItem
+                                        : null;
+                              });
+                         } else {
+                              actionPreview((prev) => {
+                                   if (!prev) return null;
+                                   const removeItem = prev.filter(
+                                        (item) => item.id !== prvImage.id
+                                   );
+                                   return removeItem.length > 0
+                                        ? removeItem
+                                        : null;
+                              });
+                              toast.error(response.message);
                          }
                     } catch (error) {
                          console.log("image edit upload error:", error);
                     } finally {
                          setLoading(null);
+                         actionWaiting(false);
                     }
                }
 

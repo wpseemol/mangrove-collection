@@ -9,8 +9,8 @@ import {
      productImagesSchema,
      productNameSchema,
      productSlugSchema,
+     productThumbnailSchema,
      productUnitSchema,
-     thumbnailWithEmpty,
 } from "@/lib/schemas/zod/edit-product-schema";
 import { ProductDetailsType } from "@/types/mongoose/product";
 import { replaceMongoIds } from "@/utils/replace";
@@ -220,7 +220,8 @@ export async function productContentUpdate(
                     message = "Product description filed content change.";
                     break;
                case "thumbnail":
-                    const parsedThumbnail = thumbnailWithEmpty.safeParse(input);
+                    const parsedThumbnail =
+                         productThumbnailSchema.safeParse(input);
                     if (!parsedThumbnail.success) {
                          return {
                               success: false,
@@ -232,9 +233,7 @@ export async function productContentUpdate(
                          };
                     }
                     updateContent = parsedThumbnail.data;
-                    message = parsedThumbnail.data.thumbnail
-                         ? "Product thumbnail update done."
-                         : "Product thumbnail remove successful.";
+                    message = "Product thumbnail remove successful.";
                     break;
                case "images":
                     const parsedImages = productImagesSchema.safeParse(input);

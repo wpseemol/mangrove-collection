@@ -163,7 +163,12 @@ export default function ProductViewForEdit({
                                         >
                                              <ProductImagesForm
                                                   content={JSON.stringify(
-                                                       productDetails.images
+                                                       productDetails.images.map(
+                                                            (item) => ({
+                                                                 id: item.id,
+                                                                 imgUrl: item.imgUrl,
+                                                            })
+                                                       )
                                                   )}
                                                   productName={
                                                        productDetails.name
@@ -176,9 +181,11 @@ export default function ProductViewForEdit({
                                         {productDetails.images.length > 0 ? (
                                              productDetails.images.map(
                                                   (image, inx) => (
-                                                       <figure className="w-32 h-32">
+                                                       <figure
+                                                            key={image.id}
+                                                            className="w-32 h-32"
+                                                       >
                                                             <Image
-                                                                 key={image.id}
                                                                  src={
                                                                       image.imgUrl
                                                                  }
