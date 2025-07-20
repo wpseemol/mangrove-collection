@@ -1,3 +1,4 @@
+"use client";
 import { cn } from "@/lib/utils";
 import { Slot } from "@radix-ui/react-slot";
 import Link from "next/link";
@@ -41,10 +42,7 @@ const MyLink = forwardRef<HTMLAnchorElement, CustomLinkProps>(
                     <Comp
                          ref={ref}
                          data-slot="link"
-                         className={cn(
-                              "hover:text-foreground transition-colors",
-                              className
-                         )}
+                         className={cn("", className)}
                          onClick={handleClick}
                          {...props}
                     />
