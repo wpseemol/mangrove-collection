@@ -9,6 +9,11 @@ export default async function MainProfileLayout({
 }>) {
      const session = await auth();
 
+     if (!session) {
+          notFound();
+          return;
+     }
+
      const isUser = await userRoleCheck(
           session.user.id,
           session.user.role,

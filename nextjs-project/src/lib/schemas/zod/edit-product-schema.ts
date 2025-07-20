@@ -19,8 +19,8 @@ export const productSlugSchema = z.object({
 });
 
 export const productUnitSchema = z.object({
-     unit: z.string().refine((val) => val === "pc" || val === "kg", {
-          message: "Unit must be 'pc' or 'kg'",
+     unit: z.enum(["kg", "pc"], {
+          errorMap: () => ({ message: "Unit must be either 'kg' or 'pc'" }),
      }),
 });
 

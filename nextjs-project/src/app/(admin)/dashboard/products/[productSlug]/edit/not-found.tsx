@@ -62,7 +62,8 @@ export default function EditProductNotFound() {
                          transition={{ delay: 0.4 }}
                          className="text-gray-600 mb-6"
                     >
-                         Oops! The product you're trying to edit doesn’t exist.
+                         Oops! The product you&apos;re trying to edit
+                         doesn&apos;t exist.
                     </motion.p>
 
                     {/* Back Button */}

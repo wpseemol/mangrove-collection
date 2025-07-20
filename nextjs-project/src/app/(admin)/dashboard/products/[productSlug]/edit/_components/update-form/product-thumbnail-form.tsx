@@ -19,7 +19,13 @@ import { productThumbnailSchema } from "@/lib/schemas/zod/edit-product-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import {
+     Dispatch,
+     SetStateAction,
+     useCallback,
+     useEffect,
+     useState,
+} from "react";
 import { FileRejection, FileWithPath, useDropzone } from "react-dropzone";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { FiUpload } from "react-icons/fi";
@@ -108,7 +114,7 @@ export default function ProductThumbnailForm({
                     <FormField
                          control={form.control}
                          name="thumbnail"
-                         render={({ field }) => (
+                         render={() => (
                               <FormItem>
                                    <FormLabel className="text-gray-700 font-medium">
                                         Thumbnail Image*
@@ -264,7 +270,7 @@ function InputThumbnailImage({
                     const reader = new FileReader();
 
                     reader.onloadend = function () {
-                         const base64String = reader.result;
+                         const base64String = reader.result as string;
                          actionPreview(base64String);
                     };
 
@@ -310,7 +316,7 @@ function InputThumbnailImage({
                     form.clearErrors("thumbnail");
                }
           },
-          [form, actionAcceptFile]
+          [form, actionAcceptFile, actionPreview]
      );
 
      const { getRootProps, getInputProps, isDragActive } = useDropzone({

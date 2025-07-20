@@ -1,5 +1,6 @@
 import ProductCard from "@/components/product-card";
 import { getNewArrivalProducts } from "@/lib/actions/products";
+import { Variants } from "framer-motion";
 import * as motion from "motion/react-client";
 import HomeTitle from "./home-title";
 
@@ -44,7 +45,7 @@ export default async function NewArrivalProduct() {
 }
 
 // Add these animation variants at the top of your file
-const sectionVariants = {
+const sectionVariants: Variants = {
      hidden: { opacity: 0 },
      visible: {
           opacity: 1,
@@ -55,7 +56,7 @@ const sectionVariants = {
      },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
      hidden: { opacity: 0, y: 50 },
      visible: {
           opacity: 1,

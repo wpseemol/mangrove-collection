@@ -87,8 +87,8 @@ export default function ProductImagesForm({
                <form onSubmit={form.handleSubmit(onSubmit)}>
                     <FormField
                          control={form.control}
-                         name="thumbnail"
-                         render={({ field }) => (
+                         name="images"
+                         render={() => (
                               <FormItem>
                                    <FormLabel className="text-gray-700 font-medium">
                                         Thumbnail Image*
@@ -118,9 +118,6 @@ export default function ProductImagesForm({
                                                                       }
                                                                       actionPreview={
                                                                            setPreviewImages
-                                                                      }
-                                                                      productId={
-                                                                           productId
                                                                       }
                                                                       actionWaiting={
                                                                            setIsWaiting
@@ -177,14 +174,12 @@ function PreviewImage({
      actionPreview,
      productName,
      prvImage,
-     productId,
      form,
      actionWaiting,
 }: {
      actionPreview: Dispatch<SetStateAction<ProductImageType[] | null>>;
      productName: string;
      prvImage: ProductImageType;
-     productId: string;
      form: UseFormReturn<z.infer<typeof productImagesSchema>>;
      actionWaiting: Dispatch<SetStateAction<boolean>>;
 }) {
@@ -290,7 +285,7 @@ function PreviewImage({
 
                uploadImage(prvImage.file);
           }
-     }, [prvImage?.file]);
+     }, [prvImage.id, prvImage?.file, actionPreview, actionWaiting, form]);
 
      return (
           <figure className="relative w-[120px] h-[120px] group object-cover object-center border border-gray-600/10">
@@ -377,7 +372,7 @@ function InputImages({
                     acceptedFiles.forEach((file) => {
                          const reader = new FileReader();
                          reader.onloadend = function () {
-                              const base64String = reader.result;
+                              const base64String = reader.result as string;
                               actionPreview((prev) =>
                                    prev
                                         ? [
@@ -440,7 +435,7 @@ function InputImages({
                     form.clearErrors("images");
                }
           },
-          [form]
+          [form, actionPreview]
      );
 
      const { getRootProps, getInputProps, isDragActive } = useDropzone({

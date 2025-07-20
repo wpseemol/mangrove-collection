@@ -14,7 +14,7 @@ export default function HeroSlickSlider() {
      const [currentIndex, setCurrentIndex] = useState(0);
 
      const settings = {
-          beforeChange: (oldIndex: number, newIndex: number) => {
+          beforeChange: (_oldIndex: number, newIndex: number) => {
                setCurrentIndex(newIndex);
           },
 

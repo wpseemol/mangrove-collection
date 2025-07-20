@@ -12,7 +12,7 @@ import { Readable } from "stream";
  */
 export async function imagesUploadCloudinary(
      formData: FormData,
-     folderName: "product-images"
+     folderName: string = "product-images"
 ) {
      try {
           const file = formData.get("image") as File | null;

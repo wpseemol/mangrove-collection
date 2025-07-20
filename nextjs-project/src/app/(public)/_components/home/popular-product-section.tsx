@@ -1,5 +1,6 @@
 import ProductCard from "@/components/product-card";
 import { getPopularProducts } from "@/lib/actions/products";
+import { Variants } from "framer-motion";
 import * as motion from "motion/react-client";
 import HomeTitle from "./home-title";
 
@@ -35,7 +36,7 @@ export default async function PopularProductSection() {
      );
 }
 
-const containerVariants = {
+const containerVariants: Variants = {
      hidden: { opacity: 0 },
      visible: {
           opacity: 1,
@@ -46,7 +47,7 @@ const containerVariants = {
      },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
      hidden: { opacity: 0, y: 20 },
      visible: {
           opacity: 1,

@@ -44,7 +44,7 @@ export default function ProductDescriptionForm({
 }) {
      const [isDisable, setIsDisable] = useState<boolean>(true);
 
-     const usePathName = usePathname();
+     const pathName = usePathname();
 
      const form = useForm<z.infer<typeof productDescriptionSchema>>({
           resolver: zodResolver(productDescriptionSchema),
@@ -137,7 +137,7 @@ export default function ProductDescriptionForm({
                productId,
                values,
                "description",
-               usePathName
+               pathName
           );
 
           if (response.success) {

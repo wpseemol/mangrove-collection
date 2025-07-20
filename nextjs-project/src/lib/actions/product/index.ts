@@ -123,7 +123,7 @@ export async function productContentUpdate(
      productId: string,
      input: UpdateContentType,
      updateFiled: UpdateFiledType,
-     url: ""
+     url: string | null = null
 ) {
      try {
           if (!productId || !input || !updateFiled) {

@@ -41,7 +41,7 @@ export default function ProductUnitForm({
      const form = useForm<z.infer<typeof productUnitSchema>>({
           resolver: zodResolver(productUnitSchema),
           defaultValues: {
-               unit: content,
+               unit: content as "kg" | "pc",
           },
      });
 
