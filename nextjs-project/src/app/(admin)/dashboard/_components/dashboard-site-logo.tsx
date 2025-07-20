@@ -1,3 +1,4 @@
+import MyLink from "@/components/my-link";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -10,7 +11,7 @@ export default function DashboardSiteLogo({
           <section
                className={`flex gap-2 items-center sm:w-fit w-full sm:ml-0 ml-2 group`}
           >
-               <a href="/">
+               <MyLink href="/">
                     <figure
                          className={`w-10 h-10 mx-auto overflow-hidden duration-300  ${
                               isDryerClose
@@ -26,7 +27,7 @@ export default function DashboardSiteLogo({
                               className="w-full object-cover group-hover:scale-125 duration-300"
                          />
                     </figure>
-               </a>
+               </MyLink>
                <Link href="/dashboard" className=" ">
                     <h2
                          className={`font-bold text-primary-foreground sm:text-sm text-xl md:text-base opacity-100
