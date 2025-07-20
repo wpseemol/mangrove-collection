@@ -267,24 +267,44 @@ export async function getProductBySearch(
      const query = searchQuery.toLocaleLowerCase();
      try {
           await connectMongoDB();
-          const showField = "name slug thumbnail currency price";
-          const results = await Product.find(
+          const results = await Product.aggregate([
                {
-                    $or: [
-                         { name: { $regex: query, $options: "i" } },
-                         { "category.name": { $regex: query, $options: "i" } },
-                    ],
+                    $lookup: {
+                         from: Category.collection.name, // Dynamically get collection name
+                         localField: "category",
+                         foreignField: "_id",
+                         as: "categoryData",
+                    },
                },
-               showField
-          )
-               .populate({
-                    path: "category",
-                    model: Category,
-                    select: "name slug",
-               })
-               .select("name price slug image category")
-               .limit(limit)
-               .lean();
+               { $unwind: "$categoryData" },
+               {
+                    $match: {
+                         $or: [
+                              { name: { $regex: query, $options: "i" } },
+                              {
+                                   "categoryData.name": {
+                                        $regex: query,
+                                        $options: "i",
+                                   },
+                              },
+                         ],
+                    },
+               },
+               {
+                    $project: {
+                         _id: 1,
+                         name: 1,
+                         price: 1,
+                         slug: 1,
+                         thumbnail: 1,
+                         category: {
+                              name: "$categoryData.name",
+                              slug: "$categoryData.slug",
+                         },
+                    },
+               },
+               { $limit: limit },
+          ]);
 
           const searchProducts = replaceMongoIds(results) as CardProductType[];
           const products = searchProducts.map((item) => {
