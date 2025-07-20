@@ -247,3 +247,66 @@ export async function getOrderProductsDetails(ids: string): Promise<
           return null;
      }
 }
+
+/**
+ * getProductBySearch function get data by search.
+ * @param searchQuery string
+ * @param limit number default value 10
+ * @returns
+ */
+export async function getProductBySearch(
+     searchQuery: string,
+     limit: number = 10
+) {
+     if (!searchQuery) {
+          return {
+               success: false,
+               message: "Search search query are require.",
+          };
+     }
+     const query = searchQuery.toLocaleLowerCase();
+     try {
+          await connectMongoDB();
+          const showField = "name slug thumbnail currency price";
+          const results = await Product.find(
+               {
+                    $or: [
+                         { name: { $regex: query, $options: "i" } },
+                         { "category.name": { $regex: query, $options: "i" } },
+                    ],
+               },
+               showField
+          )
+               .populate({
+                    path: "category",
+                    model: Category,
+                    select: "name slug",
+               })
+               .select("name price slug image category")
+               .limit(limit)
+               .lean();
+
+          const searchProducts = replaceMongoIds(results) as CardProductType[];
+          const products = searchProducts.map((item) => {
+               const price: number =
+                    item.price.find((pItem) => pItem.select)?.price || 0;
+
+               return {
+                    ...item,
+                    price,
+               };
+          });
+
+          return {
+               success: true,
+               message: `Get by search query ${searchQuery}:`,
+               data: JSON.stringify(products),
+          };
+     } catch (error) {
+          console.log("Search product error:", error);
+          return {
+               success: false,
+               message: "Failed to get search product.",
+          };
+     }
+}
