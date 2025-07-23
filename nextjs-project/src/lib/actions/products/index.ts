@@ -265,6 +265,7 @@ export async function getProductBySearch(
           };
      }
      const query = searchQuery.toLocaleLowerCase();
+
      try {
           await connectMongoDB();
           const results = await Product.aggregate([

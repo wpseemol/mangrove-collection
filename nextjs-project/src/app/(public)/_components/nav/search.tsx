@@ -58,7 +58,7 @@ export function Search() {
 
      return (
           <li className="relative">
-               <div className=" 2xl:w-[24.5rem] xl:w-[21.5rem] md:w-[12.5rem] sm:w-[22rem] w-[16rem] md:mt-0 mt-6  relative">
+               <div className=" 2xl:w-[24.5rem] xl:w-[21.5rem] md:w-[12.5rem] sm:w-[22rem] w-full md:mt-0  mt-4 sm:relative border ">
                     <form onSubmit={handleSubmit}>
                          <Input
                               onChange={handleInput}
@@ -71,12 +71,12 @@ export function Search() {
                               type="text"
                               name="search"
                               id="search"
-                              className="w-full border-white border placeholder:text-muted-foreground py-2 pl-3 focus:text-primary-foreground rounded font-medium outline-none text-base rounded-r-2xl text-white"
+                              className="w-full border-white border placeholder:text-muted-foreground py-2 pl-3 focus:text-primary-foreground rounded font-medium outline-none text-base sm:rounded-r-2xl text-white bg-black  "
                               placeholder="Search"
                          />
                          <Button
                               type="submit"
-                              className="absolute top-0 z-10 -right-0.5 text-white hover:text-primary-foreground hover:bg-primary md:text-2xl text-xl hidden sm:block disabled:cursor-not-allowed "
+                              className="sm:absolute fixed top-0 z-10 sm:-right-0.5 text-white hover:text-primary-foreground hover:bg-primary md:text-2xl text-xl hidden sm:block disabled:cursor-not-allowed "
                          >
                               <FaMagnifyingGlass />
                          </Button>
@@ -90,7 +90,7 @@ export function Search() {
                               animate={{ opacity: 1, y: 0 }}
                               exit={{ opacity: 0, y: 20 }}
                               transition={{ duration: 0.2 }}
-                              className="absolute top-full mt-2 left-0 min-w-full bg-neutral-100 rounded shadow-lg z-50 p-4 min-h-10"
+                              className="absolute top-full mt-2 sm:left-0  bg-neutral-100 rounded shadow-lg z-50 p-4 min-h-10 min-w-full sm:max-h-[40rem] max-h-[25rem] overflow-y-auto"
                          >
                               {/* Your search results content here */}
                               <div className="p-3">
@@ -102,7 +102,7 @@ export function Search() {
                               {/* Add your actual search results components */}
 
                               {searchProducts && searchProducts.length > 0 && (
-                                   <div className="grid grid-cols-3  gap-x-1 gap-y-1.5 mt-2">
+                                   <div className="grid sm:grid-cols-3 grid-cols-2  gap-x-1 gap-y-1.5 mt-2 ">
                                         {searchProducts.map((product) => (
                                              <SearchProductCart
                                                   key={product.id}

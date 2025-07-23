@@ -30,6 +30,7 @@ export default function ProductViewChange({
      const categoryParams = searchParams.get("category");
      const priceParams = searchParams.get("price");
      const sizeParams = searchParams.get("size");
+     const searchInputParams = searchParams.get("search");
 
      const [categoryName, setCategoryName] = useState<string>("");
 
@@ -60,6 +61,10 @@ export default function ProductViewChange({
      if (sizeParams) {
           filterMessage += ` size <b>${sizeParams}</b>`;
      }
+     if (searchInputParams) {
+          const decodeSearchInput = decodeURI(searchInputParams);
+          filterMessage += ` search <b>${decodeSearchInput}</b>`;
+     }
      filterMessage += `.`;
 
      let emptyMessage = "No products available in";
@@ -72,6 +77,9 @@ export default function ProductViewChange({
      }
      if (sizeParams) {
           emptyMessage += ` size <b>${sizeParams}</b>`;
+     }
+     if (searchInputParams) {
+          emptyMessage += ` size <b>${decodeURI(searchInputParams)}</b>`;
      }
      emptyMessage += `.`;
 
@@ -113,7 +121,10 @@ export default function ProductViewChange({
                {/* filst title section here */}
                {!isEmpty && (
                     <AnimatePresence>
-                         {(categoryParams || priceParams || sizeParams) && (
+                         {(categoryParams ||
+                              priceParams ||
+                              sizeParams ||
+                              searchInputParams) && (
                               <motion.div
                                    initial={{ x: 100, opacity: 0 }}
                                    animate={{ x: 0, opacity: 1 }}
@@ -159,7 +170,8 @@ export default function ProductViewChange({
                               <motion.p className="mb-8 text-gray-600">
                                    {categoryParams ||
                                    priceParams ||
-                                   sizeParams ? (
+                                   sizeParams ||
+                                   searchInputParams ? (
                                         <>
                                              <motion.span
                                                   initial={{
