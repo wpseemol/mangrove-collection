@@ -34,4 +34,5 @@ export interface SearchParamsType {
      category: string;
      price: string;
      size: string;
+     search: string;
 }

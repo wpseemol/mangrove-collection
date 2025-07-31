@@ -70,3 +70,19 @@ interface FilterSearchParamType {
       */
      size?: string; // Optional filter for product size.
 }
+
+/**
+ * `SearchParamsType` represents the search parameters for product filtering.
+ * It includes category, price, size, and search query.
+ * This interface is used to define the structure of search parameters
+ * that can be passed to the product filtering functions.
+ * It is used in the ProductsPage component to handle product filtering.
+ * This interface is also used in the ProductSection component to fetch products based on the search parameters.
+ *
+ */
+export interface GetProductsParamsType {
+     categorisIds: string[] | null;
+     price: string | null;
+     size: string | null;
+     search: string | null;
+}

@@ -84,7 +84,7 @@ export default function FilterSection({
                                    duration: 0.3,
                                    ease: "easeInOut",
                               }}
-                              className={`col-span-1 content-center bg-white dark:bg-transparent dark:text-neutral-200 px-4 pb-6 shadow rounded overflow-hidden md:w-fit w-full mx-auto inline-block ${
+                              className={`col-span-1 content-center bg-white dark:bg-transparent dark:text-neutral-200 px-4 pb-6 shadow rounded overflow-hidden sm:pt-0 pt-6 lg:w-fit md:w-[calc(100vw-10rem)] sm:w-[calc(100vw-6.5rem)] w-[calc(100vw-1.5rem)] mx-auto inline-block ${
                                    filterShow ? "" : "hidden"
                               } md:sticky top-28`}
                          >

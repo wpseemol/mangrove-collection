@@ -79,7 +79,9 @@ export default function ProductViewChange({
           emptyMessage += ` size <b>${sizeParams}</b>`;
      }
      if (searchInputParams) {
-          emptyMessage += ` size <b>${decodeURI(searchInputParams)}</b>`;
+          emptyMessage += ` search by <b>${decodeURI(
+               searchInputParams
+          )}</b> product name`;
      }
      emptyMessage += `.`;
 

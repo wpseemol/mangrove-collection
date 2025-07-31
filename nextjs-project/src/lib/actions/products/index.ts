@@ -1,23 +1,24 @@
 "use server";
 
 import { sizeArray } from "@/app/(public)/products/_components/filter-section";
+
 import { connectMongoDB } from "@/db/connections";
 import { Category } from "@/lib/schemas/mongoose/category";
 import { Product } from "@/lib/schemas/mongoose/product";
 import { ProductDetailsType, ProductType } from "@/types/mongoose/product";
-import { CardProductType } from "@/types/product";
+import { CardProductType, GetProductsParamsType } from "@/types/product";
 import { replaceMongoIds } from "@/utils/replace";
 /**
- * getProduct searchproms information need
+ * getProduct searchProms information need
  * @param searchParams
  */
 export async function getProducts(
-     searchParams: SearchParams
+     searchParams: GetProductsParamsType
 ): Promise<CardProductType[]> {
      try {
           await connectMongoDB();
 
-          const { categorisIds, price, size } = searchParams;
+          const { categorisIds, price, size, search } = searchParams;
 
           const priceObj: PriceObj = {
                minPrice: null,
@@ -58,6 +59,13 @@ export async function getProducts(
                findOption = {
                     ...findOption,
                     size: size,
+               };
+          }
+
+          if (search) {
+               findOption = {
+                    ...findOption,
+                    $or: [{ name: { $regex: search, $options: "i" } }],
                };
           }
 
