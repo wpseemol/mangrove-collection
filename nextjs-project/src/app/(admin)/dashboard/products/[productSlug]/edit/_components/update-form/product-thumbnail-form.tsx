@@ -190,7 +190,7 @@ function PreviewThumbnailImage({
                     alt={productName}
                     width={200}
                     height={200}
-                    className="w-auto h-auto object-cover object-center rounded"
+                    className="w-full h-full object-cover object-center rounded"
                />
                <button
                     onClick={actionRemove}

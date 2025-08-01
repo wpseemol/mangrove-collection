@@ -143,7 +143,6 @@ export default function ProductImagesForm({
                               <Button variant="outline">Cancel</Button>
                          </DialogClose>
                          <Button
-                              title="Image auto update."
                               disabled={
                                    form.formState.isSubmitting ||
                                    isWaiting ||

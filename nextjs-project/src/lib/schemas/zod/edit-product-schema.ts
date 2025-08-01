@@ -44,3 +44,27 @@ export const productImagesSchema = z.object({
           })
      ),
 });
+
+export const productPriceVariantSchema = z.object({
+     variants: z.array(
+          z.object({
+               id: z.string(),
+               type: z.string().min(1, {
+                    message: "Please select variant type.",
+               }),
+               title: z.string().min(1, {
+                    message: "Please input variant title.",
+               }),
+          })
+     ),
+
+     price: z.array(
+          z.object({
+               variantId: z.string(),
+               price: z.coerce.number().min(1, {
+                    message: "Price input product price.",
+               }),
+               select: z.boolean(),
+          })
+     ),
+});

@@ -4,10 +4,12 @@ import { ProductDetailsType } from "@/types/mongoose/product";
 import Image from "next/image";
 import { PopupDialog } from "./popup-dialog";
 import ProductEditContainer from "./product-edit-container";
+import { InfoIcon, OnCheckmark } from "./svg";
 import "./tiptap-style.css";
 import ProductDescriptionForm from "./update-form/product-description-form";
 import ProductImagesForm from "./update-form/product-images-form";
 import ProductNameForm from "./update-form/product-name-form";
+import ProductPriceVariantForm from "./update-form/product-price-variant-form";
 import ProductSlugForm from "./update-form/product-slug-form";
 import ProductThumbnailForm from "./update-form/product-thumbnail-form";
 import ProductUnitForm from "./update-form/product-unit-form";
@@ -215,6 +217,73 @@ export default function ProductViewForEdit({
                                         )}
                                    </div>
                               </div>
+                         </div>
+                    </ProductEditContainer>
+               </div>
+
+               <div className="md:col-span-1 ">
+                    <ProductEditContainer
+                         title="Price Section"
+                         id="product-price"
+                    >
+                         <div className="bg-gray-100 md:px-2 px-1 md:py-3 py-1 rounded">
+                              <div className="flex items-center gap-2 mb-3">
+                                   <h3 className="text-lg font-semibold">
+                                        Product Price{" "}
+                                   </h3>
+                                   <PopupDialog
+                                        title="Update Product price."
+                                        withFit={true}
+                                   >
+                                        <ProductPriceVariantForm
+                                             productId={productDetails.id}
+                                             productUnit={productDetails.unit}
+                                             content={JSON.stringify({
+                                                  price: productDetails.price,
+                                                  variants:
+                                                       productDetails.variants,
+                                             })}
+                                             productCurrency={
+                                                  productDetails.currency
+                                             }
+                                        />
+                                   </PopupDialog>
+                              </div>
+
+                              <ul className=" px-2 border border-gray-800/10 rounded bg-white">
+                                   {productDetails.price &&
+                                        productDetails.price.length > 0 &&
+                                        productDetails.price.map((price) => {
+                                             const title =
+                                                  productDetails.variants.find(
+                                                       (variant) =>
+                                                            variant.id ===
+                                                            price.variantId
+                                                  )?.title || "Default";
+                                             return (
+                                                  <li
+                                                       key={price.variantId}
+                                                       className="flex items-center justify-around py-2 border-b border-neutral-700/10  last:border-0 p-2 px-4"
+                                                  >
+                                                       <p className="text-sm font-semibold capitalize">
+                                                            {title}:
+                                                       </p>
+                                                       -
+                                                       <span className="w-24">
+                                                            {price.price}
+                                                       </span>
+                                                       -
+                                                       <span>
+                                                            {price.select ? (
+                                                                 <OnCheckmark color="green" />
+                                                            ) : (
+                                                                 <InfoIcon color="green" />
+                                                            )}
+                                                       </span>
+                                                  </li>
+                                             );
+                                        })}
+                              </ul>
                          </div>
                     </ProductEditContainer>
                </div>
