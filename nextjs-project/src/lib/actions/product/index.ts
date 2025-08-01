@@ -5,6 +5,7 @@ import { userRoleCheck } from "@/lib/actions/user";
 import { Category } from "@/lib/schemas/mongoose/category";
 import { Product } from "@/lib/schemas/mongoose/product";
 import {
+     productCategorySchema,
      productDescriptionSchema,
      productImagesSchema,
      productNameSchema,
@@ -271,6 +272,22 @@ export async function productContentUpdate(
                     updateContent = parsedVariantAndPrice.data;
                     message = "Product variants and price update done.";
                     break;
+               case "category":
+                    const parsedCategory =
+                         productCategorySchema.safeParse(input);
+                    if (!parsedCategory.success) {
+                         return {
+                              success: false,
+                              message: getFirstErrorMessage(
+                                   parsedCategory.error
+                              ),
+                              errors: formatZodError(parsedCategory.error),
+                              fieldErrors: parsedCategory.error.flatten(),
+                         };
+                    }
+                    updateContent = parsedCategory.data;
+                    message = "Product category change done.";
+                    break;
           }
 
           if (!updateContent) {
@@ -333,6 +350,9 @@ type UpdateContentType =
                  select: boolean;
             }[];
        }
+     | {
+            category: string;
+       }
      | null;
 
 type UpdateFiledType =
@@ -342,4 +362,5 @@ type UpdateFiledType =
      | "description"
      | "thumbnail"
      | "images"
-     | "variants&price";
+     | "variants&price"
+     | "category";

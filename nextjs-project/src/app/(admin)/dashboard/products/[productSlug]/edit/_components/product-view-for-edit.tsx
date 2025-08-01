@@ -6,6 +6,7 @@ import { PopupDialog } from "./popup-dialog";
 import ProductEditContainer from "./product-edit-container";
 import { InfoIcon, OnCheckmark } from "./svg";
 import "./tiptap-style.css";
+import ProductCategoryForm from "./update-form/product-category-form";
 import ProductDescriptionForm from "./update-form/product-description-form";
 import ProductImagesForm from "./update-form/product-images-form";
 import ProductNameForm from "./update-form/product-name-form";
@@ -30,8 +31,8 @@ export default function ProductViewForEdit({
                     >
                          <div className="space-y-3">
                               {/* product name */}
-                              <div className="bg-gray-100 md:px-2 px-1 md:py-3 py-1 rounded">
-                                   <h3 className="text-xl font-semibold">
+                              <div className="bg-gray-600/10 md:px-2 px-1 md:py-3 py-1 rounded">
+                                   <h3 className="text-xl font-semibold mb-2">
                                         Product Name
                                    </h3>
                                    <div className="flex items-center justify-between px-2 border border-gray-800/10 rounded bg-white">
@@ -46,8 +47,8 @@ export default function ProductViewForEdit({
                               </div>
                               {/* product slug  */}
                               <div className="flex items-center ">
-                                   <div className="w-2/3 bg-gray-100 md:px-2 px-1 md:py-3 py-1 rounded">
-                                        <h3 className="text-lg font-semibold">
+                                   <div className="w-2/3 bg-gray-600/10 md:px-2 px-1 md:py-3 py-1 rounded">
+                                        <h3 className="text-lg font-semibold mb-2">
                                              Slug
                                         </h3>
                                         <div className="flex items-center justify-between px-2 border border-gray-800/10 rounded bg-white">
@@ -66,7 +67,7 @@ export default function ProductViewForEdit({
                                    </div>
 
                                    {/* product unit */}
-                                   <div className="ml-2 w-1/3 bg-gray-100 md:px-2 px-1 md:py-3 py-1 rounded">
+                                   <div className="ml-2 w-1/3 bg-gray-600/10 md:px-2 px-1 md:py-3 py-1 rounded">
                                         <h3 className="text-lg font-semibold">
                                              Unit
                                         </h3>
@@ -88,10 +89,10 @@ export default function ProductViewForEdit({
                                    </div>
                               </div>
 
-                              <div className="bg-gray-100 md:px-2 px-1 md:py-3 py-1 rounded">
+                              <div className="bg-gray-600/10 md:px-2 px-1 md:py-3 py-1 rounded">
                                    {/* product description  */}
                                    <div className="flex items-center gap-2">
-                                        <h3 className="text-lg font-semibold">
+                                        <h3 className="text-lg font-semibold mb-2">
                                              Product Description
                                         </h3>
                                         <PopupDialog
@@ -123,9 +124,9 @@ export default function ProductViewForEdit({
                     <ProductEditContainer title="Media" id="edit-media">
                          <div className="space-y-3">
                               {/* product thumbnail */}
-                              <div className="bg-gray-100 md:px-2 px-1 md:py-3 py-1 rounded">
+                              <div className="bg-gray-600/10 md:px-2 px-1 md:py-3 py-1 rounded">
                                    <div className="flex items-center gap-2">
-                                        <h3 className="text-lg font-semibold">
+                                        <h3 className="text-lg font-semibold mb-2">
                                              Product Thumbnail
                                         </h3>
                                         <PopupDialog title="Update Product thumbnail.">
@@ -154,9 +155,9 @@ export default function ProductViewForEdit({
                                    </figure>
                               </div>
 
-                              <div className="bg-gray-100 md:px-2 px-1 md:py-3 py-1 rounded ">
+                              <div className="bg-gray-600/10 md:px-2 px-1 md:py-3 py-1 rounded ">
                                    <div className="flex items-center gap-2">
-                                        <h3 className="text-lg font-semibold">
+                                        <h3 className="text-lg font-semibold mb-2">
                                              Product Images
                                         </h3>
                                         <PopupDialog
@@ -226,9 +227,9 @@ export default function ProductViewForEdit({
                          title="Price Section"
                          id="product-price"
                     >
-                         <div className="bg-gray-100 md:px-2 px-1 md:py-3 py-1 rounded">
-                              <div className="flex items-center gap-2 mb-3">
-                                   <h3 className="text-lg font-semibold">
+                         <div className="bg-gray-600/10 md:px-2 px-1 md:py-3 py-1 rounded">
+                              <div className="flex items-center gap-2 ">
+                                   <h3 className="text-lg font-semibold mb-2">
                                         Product Price{" "}
                                    </h3>
                                    <PopupDialog
@@ -284,6 +285,31 @@ export default function ProductViewForEdit({
                                              );
                                         })}
                               </ul>
+                         </div>
+                    </ProductEditContainer>
+
+                    <ProductEditContainer
+                         title="Other information"
+                         id="other-information"
+                    >
+                         {/* product category */}
+                         <div className=" bg-gray-600/10 md:px-2 px-1 md:py-3 py-1 rounded">
+                              <h3 className="text-lg font-semibold mb-2">
+                                   Category
+                              </h3>
+                              <div className="flex items-center justify-between px-2 border border-gray-800/10 rounded bg-white">
+                                   <p className="capitalize">
+                                        {productDetails.category.name.toLocaleLowerCase()}
+                                   </p>{" "}
+                                   <PopupDialog title="Update Product unit.">
+                                        <ProductCategoryForm
+                                             content={
+                                                  productDetails.category._id
+                                             }
+                                             productId={productDetails.id}
+                                        />
+                                   </PopupDialog>
+                              </div>
                          </div>
                     </ProductEditContainer>
                </div>

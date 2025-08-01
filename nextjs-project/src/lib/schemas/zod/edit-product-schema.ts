@@ -68,3 +68,9 @@ export const productPriceVariantSchema = z.object({
           })
      ),
 });
+
+export const productCategorySchema = z.object({
+     category: z.string().min(1, {
+          message: "Please select category, then submit again.",
+     }),
+});
