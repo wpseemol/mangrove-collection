@@ -103,7 +103,7 @@ export default function CategorySelect({
                                                   );
                                              }}
                                         >
-                                             + Add Variant
+                                             + Add Category
                                         </Button>
                                    </div>
                               </section>
