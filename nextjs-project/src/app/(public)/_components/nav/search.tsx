@@ -8,7 +8,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 
 export function Search() {
@@ -17,8 +17,9 @@ export function Search() {
      const searchParams = new URLSearchParams(searchParamsInstance);
      const [isShowSearchItem, setIsShowSearchItem] = useState<boolean>(false);
      const [searchValue, setSearchValue] = useState<string>("");
-     const [searchProducts, setSearchProducts] =
-          useState<SearchProductType[]>(null);
+     const [searchProducts, setSearchProducts] = useState<
+          SearchProductType[] | null
+     >(null);
      const [loading, setLoading] = useState<boolean>(false);
 
      function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -34,6 +35,7 @@ export function Search() {
           } else {
                searchParams.delete("search");
           }
+          setIsShowSearchItem(false);
      }
 
      async function handleInput(event: React.ChangeEvent<HTMLInputElement>) {

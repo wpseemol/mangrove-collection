@@ -91,12 +91,6 @@ export async function getProducts(
      }
 }
 
-interface SearchParams {
-     categorisIds: string[] | null;
-     price: string | null;
-     size: string | null;
-}
-
 interface PriceObj {
      minPrice: null | number;
      maxPrice: null | number;
