@@ -62,7 +62,7 @@ export const productPriceVariantSchema = z.object({
           z.object({
                variantId: z.string(),
                price: z.coerce.number().min(1, {
-                    message: "Price input product price.",
+                    message: "Please input product price.",
                }),
                select: z.boolean(),
           })

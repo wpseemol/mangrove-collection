@@ -8,6 +8,7 @@ import {
      productDescriptionSchema,
      productImagesSchema,
      productNameSchema,
+     productPriceVariantSchema,
      productSlugSchema,
      productThumbnailSchema,
      productUnitSchema,
@@ -251,6 +252,25 @@ export async function productContentUpdate(
                               ? "Product images update done."
                               : "Product images remove successful.";
                     break;
+               case "variants&price":
+                    const parsedVariantAndPrice =
+                         productPriceVariantSchema.safeParse(input);
+                    if (!parsedVariantAndPrice.success) {
+                         return {
+                              success: false,
+                              message: getFirstErrorMessage(
+                                   parsedVariantAndPrice.error
+                              ),
+                              errors: formatZodError(
+                                   parsedVariantAndPrice.error
+                              ),
+                              fieldErrors:
+                                   parsedVariantAndPrice.error.flatten(),
+                         };
+                    }
+                    updateContent = parsedVariantAndPrice.data;
+                    message = "Product variants and price update done.";
+                    break;
           }
 
           if (!updateContent) {
@@ -301,6 +321,18 @@ type UpdateContentType =
                  imgUrl: string;
             }[];
        }
+     | {
+            variants: {
+                 type: string;
+                 id: string;
+                 title: string;
+            }[];
+            price: {
+                 price: number;
+                 variantId: string;
+                 select: boolean;
+            }[];
+       }
      | null;
 
 type UpdateFiledType =
@@ -309,4 +341,5 @@ type UpdateFiledType =
      | "unit"
      | "description"
      | "thumbnail"
-     | "images";
+     | "images"
+     | "variants&price";

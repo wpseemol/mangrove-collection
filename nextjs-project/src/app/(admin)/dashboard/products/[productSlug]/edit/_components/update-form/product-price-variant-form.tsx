@@ -19,6 +19,7 @@ import {
      TooltipContent,
      TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { productContentUpdate } from "@/lib/actions/product";
 import { KG_VARIANTS, PC_VARIANTS } from "@/lib/constant";
 
 import { productPriceVariantSchema } from "@/lib/schemas/zod/edit-product-schema";
@@ -71,8 +72,18 @@ export default function ProductPriceVariantForm({
      }
 
      async function onSubmit(values: PriceVariantType) {
-          console.log("Form submitted with values:", values);
-          toast.success("Product price variants updated successfully!");
+          const response = await productContentUpdate(
+               productId,
+               values,
+               "variants&price",
+               pathName
+          );
+
+          if (response.success) {
+               toast.success(response.message);
+          } else {
+               toast.error(response.message);
+          }
      }
 
      const variantFiledStatus = form.getFieldState("variants");
@@ -86,7 +97,9 @@ export default function ProductPriceVariantForm({
                >
                     {/* Variants Section */}
                     <div className="space-y-2">
-                         <h3 className="font-medium text-gray-700">Variants</h3>
+                         <h3 className="font-medium text-gray-700 border-b border-gray-800/30 pb-1">
+                              Variants
+                         </h3>
                          <DefaultVariants form={form} />
 
                          {changeContent.variants.length > 0 &&
@@ -126,7 +139,9 @@ export default function ProductPriceVariantForm({
 
                     {/* Prices Section */}
                     <div className="space-y-2">
-                         <h3 className="font-medium text-gray-700">Prices</h3>
+                         <h3 className="font-medium text-gray-700 border-b border-gray-800/30 pb-1">
+                              Prices
+                         </h3>
                          {changeContent.price.length > 0 &&
                               changeContent.price.map((price, inx) => (
                                    <ChangePriceFiled
