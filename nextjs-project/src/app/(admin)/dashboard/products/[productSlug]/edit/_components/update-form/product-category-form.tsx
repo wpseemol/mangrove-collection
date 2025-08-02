@@ -23,7 +23,7 @@ import {
      productUnitSchema,
 } from "@/lib/schemas/zod/edit-product-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -42,6 +42,7 @@ export default function ProductCategoryForm({
      const [categories, setCategories] = useState<Categories[]>([]);
 
      const usePathName = usePathname();
+     const router = useRouter();
 
      const form = useForm<z.infer<typeof productCategorySchema>>({
           resolver: zodResolver(productCategorySchema),
@@ -116,6 +117,20 @@ export default function ProductCategoryForm({
                                                   ))}
                                         </SelectContent>
                                    </Select>
+                                   <div className="mt-1">
+                                        <Button
+                                             type="button"
+                                             variant="ghost"
+                                             className="cursor-pointer"
+                                             onClick={() => {
+                                                  router.push(
+                                                       "/dashboard/add-product/add-category"
+                                                  );
+                                             }}
+                                        >
+                                             + Add Category
+                                        </Button>
+                                   </div>
                               </FormItem>
                          )}
                     />

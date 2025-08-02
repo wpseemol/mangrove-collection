@@ -11,7 +11,9 @@ import ProductDescriptionForm from "./update-form/product-description-form";
 import ProductImagesForm from "./update-form/product-images-form";
 import ProductNameForm from "./update-form/product-name-form";
 import ProductPriceVariantForm from "./update-form/product-price-variant-form";
+import ProductShortDescriptionForm from "./update-form/product-short-description-form";
 import ProductSlugForm from "./update-form/product-slug-form";
+import ProductTagsForm from "./update-form/product-tags-form";
 import ProductThumbnailForm from "./update-form/product-thumbnail-form";
 import ProductUnitForm from "./update-form/product-unit-form";
 
@@ -301,7 +303,7 @@ export default function ProductViewForEdit({
                                    <p className="capitalize">
                                         {productDetails.category.name.toLocaleLowerCase()}
                                    </p>{" "}
-                                   <PopupDialog title="Update Product unit.">
+                                   <PopupDialog title="Update Product Category.">
                                         <ProductCategoryForm
                                              content={
                                                   productDetails.category._id
@@ -309,6 +311,61 @@ export default function ProductViewForEdit({
                                              productId={productDetails.id}
                                         />
                                    </PopupDialog>
+                              </div>
+                         </div>
+
+                         <div className="bg-gray-600/10 md:px-2 px-1 md:py-3 py-1 rounded">
+                              <h3 className="text-xl font-semibold mb-2">
+                                   Short Description
+                              </h3>
+                              <div className="flex items-center justify-between px-2 border border-gray-800/10 rounded bg-white">
+                                   <p>{productDetails.shortDescription}</p>{" "}
+                                   <PopupDialog title="Update Short Description.">
+                                        <ProductShortDescriptionForm
+                                             content={
+                                                  productDetails.shortDescription
+                                             }
+                                             productId={productDetails.id}
+                                        />
+                                   </PopupDialog>
+                              </div>
+                         </div>
+
+                         <div className="bg-gray-600/10 md:px-2 px-1 md:py-3 py-1 rounded">
+                              <div className="flex items-center gap-2">
+                                   <h3 className="text-xl font-semibold mb-2">
+                                        Tags
+                                   </h3>
+                                   <PopupDialog title="Update Short Description.">
+                                        <ProductTagsForm
+                                             content={
+                                                  productDetails.tags &&
+                                                  Array.isArray(
+                                                       productDetails.tags
+                                                  ) &&
+                                                  productDetails.tags.length > 0
+                                                       ? JSON.stringify(
+                                                              productDetails.tags
+                                                         )
+                                                       : ""
+                                             }
+                                             productId={productDetails.id}
+                                        />
+                                   </PopupDialog>
+                              </div>
+                              <div className="flex items-center gap-2 flex-wrap">
+                                   {productDetails.tags &&
+                                        productDetails.tags?.length > 0 &&
+                                        productDetails.tags.map(
+                                             (tag, index) => (
+                                                  <p
+                                                       key={tag}
+                                                       className="bg-white p-2.5 rounded-md"
+                                                  >
+                                                       {tag}
+                                                  </p>
+                                             )
+                                        )}
                               </div>
                          </div>
                     </ProductEditContainer>

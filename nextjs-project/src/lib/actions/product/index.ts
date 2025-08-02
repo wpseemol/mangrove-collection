@@ -10,7 +10,9 @@ import {
      productImagesSchema,
      productNameSchema,
      productPriceVariantSchema,
+     productShortDescriptionSchema,
      productSlugSchema,
+     productTagsSchema,
      productThumbnailSchema,
      productUnitSchema,
 } from "@/lib/schemas/zod/edit-product-schema";
@@ -288,6 +290,38 @@ export async function productContentUpdate(
                     updateContent = parsedCategory.data;
                     message = "Product category change done.";
                     break;
+               case "shortDescription":
+                    const parsedShortDescription =
+                         productShortDescriptionSchema.safeParse(input);
+                    if (!parsedShortDescription.success) {
+                         return {
+                              success: false,
+                              message: getFirstErrorMessage(
+                                   parsedShortDescription.error
+                              ),
+                              errors: formatZodError(
+                                   parsedShortDescription.error
+                              ),
+                              fieldErrors:
+                                   parsedShortDescription.error.flatten(),
+                         };
+                    }
+                    updateContent = parsedShortDescription.data;
+                    message = "Product short description content update done.";
+                    break;
+               case "tags":
+                    const parsedTags = productTagsSchema.safeParse(input);
+                    if (!parsedTags.success) {
+                         return {
+                              success: false,
+                              message: getFirstErrorMessage(parsedTags.error),
+                              errors: formatZodError(parsedTags.error),
+                              fieldErrors: parsedTags.error.flatten(),
+                         };
+                    }
+                    updateContent = parsedTags.data;
+                    message = "Product tags content update done.";
+                    break;
           }
 
           if (!updateContent) {
@@ -353,6 +387,12 @@ type UpdateContentType =
      | {
             category: string;
        }
+     | {
+            shortDescription: string;
+       }
+     | {
+            tags: string[];
+       }
      | null;
 
 type UpdateFiledType =
@@ -363,4 +403,6 @@ type UpdateFiledType =
      | "thumbnail"
      | "images"
      | "variants&price"
-     | "category";
+     | "category"
+     | "shortDescription"
+     | "tags";

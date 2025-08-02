@@ -74,3 +74,16 @@ export const productCategorySchema = z.object({
           message: "Please select category, then submit again.",
      }),
 });
+
+export const productShortDescriptionSchema = z.object({
+     shortDescription: z.string(),
+});
+
+export const productTagsSchema = z.object({
+     tags: z
+          .array(z.string())
+          .refine((tags) => new Set(tags).size === tags.length, {
+               message: "Tags must be unique.",
+               path: ["tags"],
+          }),
+});

@@ -28,9 +28,7 @@ export default function TagsComponent({
 
      // Sync tags with form
      useEffect(() => {
-          if (tags.length > 0) {
-               form.setValue("tags", tags);
-          }
+          form.setValue("tags", tags);
      }, [tags, form]);
 
      // if for rest
