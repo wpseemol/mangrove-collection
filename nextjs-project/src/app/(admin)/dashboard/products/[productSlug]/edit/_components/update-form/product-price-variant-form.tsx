@@ -243,9 +243,14 @@ function ChangeVariant({
      productUnit: string;
      error?: VariantErrorType | null;
 }) {
+     const [selectVariant, setSelectVariant] = useState<string>(
+          variant.type === "default" ? "" : variant.type
+     );
+
      if (variant.type === "default") {
           return;
      }
+
      const variantArrayObj = {
           pc: PC_VARIANTS,
           kg: KG_VARIANTS,
@@ -253,7 +258,6 @@ function ChangeVariant({
 
      const unit = productUnit as keyof typeof variantArrayObj;
 
-     const [selectVariant, setSelectVariant] = useState<string>(variant.type);
      lestSelectedVariantType = variant.type;
 
      /**
@@ -508,8 +512,6 @@ function ChangePriceFiled({
 }
 
 type PriceVariantType = z.infer<typeof productPriceVariantSchema>;
-
-type UnitType = "pc" | "kg";
 
 interface VariantType {
      id: string;

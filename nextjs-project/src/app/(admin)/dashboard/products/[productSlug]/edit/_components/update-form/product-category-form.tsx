@@ -18,10 +18,7 @@ import {
 } from "@/components/ui/select";
 import { getCategory } from "@/lib/actions/category";
 import { productContentUpdate } from "@/lib/actions/product";
-import {
-     productCategorySchema,
-     productUnitSchema,
-} from "@/lib/schemas/zod/edit-product-schema";
+import { productCategorySchema } from "@/lib/schemas/zod/edit-product-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -70,7 +67,7 @@ export default function ProductCategoryForm({
           fetchData();
      }, []);
 
-     async function onSubmit(values: z.infer<typeof productUnitSchema>) {
+     async function onSubmit(values: z.infer<typeof productCategorySchema>) {
           const response = await productContentUpdate(
                productId,
                values,

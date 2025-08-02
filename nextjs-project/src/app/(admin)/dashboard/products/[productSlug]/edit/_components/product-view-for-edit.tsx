@@ -323,7 +323,8 @@ export default function ProductViewForEdit({
                                    <PopupDialog title="Update Short Description.">
                                         <ProductShortDescriptionForm
                                              content={
-                                                  productDetails.shortDescription
+                                                  productDetails.shortDescription ||
+                                                  ""
                                              }
                                              productId={productDetails.id}
                                         />
@@ -356,16 +357,14 @@ export default function ProductViewForEdit({
                               <div className="flex items-center gap-2 flex-wrap">
                                    {productDetails.tags &&
                                         productDetails.tags?.length > 0 &&
-                                        productDetails.tags.map(
-                                             (tag, index) => (
-                                                  <p
-                                                       key={tag}
-                                                       className="bg-white p-2.5 rounded-md"
-                                                  >
-                                                       {tag}
-                                                  </p>
-                                             )
-                                        )}
+                                        productDetails.tags.map((tag) => (
+                                             <p
+                                                  key={tag}
+                                                  className="bg-white p-2.5 rounded-md"
+                                             >
+                                                  {tag}
+                                             </p>
+                                        ))}
                               </div>
                          </div>
                     </ProductEditContainer>
