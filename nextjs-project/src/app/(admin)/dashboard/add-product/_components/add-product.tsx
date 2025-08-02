@@ -69,7 +69,7 @@ export default function AddProduct({ allCategory }: { allCategory: string }) {
           }
 
           if (response.success) {
-               toast.success(response.message || "Login successful!");
+               toast.success(response.message || "Product added successfully.");
                form.reset();
                setIsFormReset(true);
                return;
