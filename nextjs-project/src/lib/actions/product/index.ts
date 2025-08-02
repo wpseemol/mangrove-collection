@@ -20,6 +20,7 @@ import { ProductDetailsType } from "@/types/mongoose/product";
 import { replaceMongoIds } from "@/utils/replace";
 import { formatZodError, getFirstErrorMessage } from "@/utils/zod-error";
 import { revalidatePath } from "next/cache";
+import { deleteUploadedImage } from "../media";
 
 /**
  * getProductForEdit function get product data from mongodb databases.
@@ -355,6 +356,90 @@ export async function productContentUpdate(
           return {
                success: false,
                message: "Product update error.",
+               errors: JSON.stringify(error),
+          };
+     }
+}
+
+/**
+ * deleteProduct function deletes a product from the database and its associated images.
+ * It checks if the user is authenticated and has the required role (admin or creator).
+ * It also deletes the images associated with the product from the cloud storage.
+ * @param productId string
+ * @param images {imageUrl: string, public_ids: string}[]
+ * @param pathName string | undefined
+ * @returns
+ */
+export async function deleteProduct(
+     productId: string,
+     images: string,
+     pathName?: string
+) {
+     try {
+          if (!productId) {
+               return {
+                    success: false,
+                    message: "Product id is required.",
+               };
+          }
+
+          const session = await auth();
+          if (!session || !session.user) {
+               return { success: false, message: "You are not login user." };
+          }
+
+          const isAdmin = await userRoleCheck(
+               session?.user.id,
+               session?.user.role,
+               "admin"
+          );
+
+          const isCreator = await userRoleCheck(
+               session?.user.id,
+               session?.user.role,
+               "creator"
+          );
+
+          if (!isAdmin && !isCreator) {
+               return {
+                    success: false,
+                    message: "Admin and Creator use only can delete product.",
+               };
+          }
+
+          const imagesArray = JSON.parse(images) as {
+               imgUrl: string;
+               public_ids: string;
+          }[];
+
+          const isImageDelete = await Promise.all(
+               imagesArray.map(async (image) => {
+                    const deleteResponse = await deleteUploadedImage({
+                         public_id: image.public_ids,
+                    });
+
+                    return deleteResponse;
+               })
+          );
+
+          await connectMongoDB();
+
+          const response = await Product.deleteOne({ _id: productId });
+
+          if (pathName) {
+               revalidatePath(pathName);
+          }
+
+          return {
+               success: true,
+               message: "Product deleted successfully.",
+               response,
+          };
+     } catch (error) {
+          console.log("Delete product error:", error);
+          return {
+               success: false,
+               message: "Delete product error.",
                errors: JSON.stringify(error),
           };
      }

@@ -84,14 +84,15 @@ export async function getProductManage() {
                     ...images,
                ];
 
-               const public_ids = picturesUrlWithId.map((imgObj) =>
-                    extractPublicIdFromUrl(imgObj.imgUrl)
-               );
+               const imagesObj = picturesUrlWithId.map((imgObj) => ({
+                    imgUrl: imgObj.imgUrl,
+                    public_ids: extractPublicIdFromUrl(imgObj.imgUrl) as string,
+               }));
 
                return {
                     ...rest,
                     price,
-                    public_ids,
+                    images: imagesObj,
                     author,
                     category: {
                          id: product.category._id.toString(),
@@ -180,5 +181,5 @@ export interface ProductManageType {
           name: string;
           email: string;
      };
-     public_ids: string[];
+     images: { imgUrl: string; public_ids: string }[];
 }
