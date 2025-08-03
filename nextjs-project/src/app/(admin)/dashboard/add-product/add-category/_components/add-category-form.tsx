@@ -21,8 +21,6 @@ import type { z } from "zod";
 import CategoryContainer from "./category-container";
 import CategoryImage from "./category-image";
 
-type FormData = z.infer<typeof addCategorySchema>;
-
 export function AddCategoryForm() {
      const [isFormReset, setIsFormReset] = useState<boolean>(false);
      const [isFileUpload, setIsFileUpload] = useState<boolean>(false);

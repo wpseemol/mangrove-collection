@@ -65,7 +65,6 @@ export default function CategoryEditImageInput({
           } else {
                form.setValue("imgUrl", "");
                setPreviewImages(null);
-               toast.error(response.message);
           }
 
           setLoading(null);

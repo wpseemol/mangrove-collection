@@ -49,7 +49,7 @@ export function CategoryUpdateForm({
      const changeInputFromContent = form.watch();
      useEffect(() => {
           setIsDisabled(content === JSON.stringify(changeInputFromContent));
-     }, [formDefaultValue, changeInputFromContent]);
+     }, [content, changeInputFromContent, setIsDisabled]);
 
      /**
       * form submit here.

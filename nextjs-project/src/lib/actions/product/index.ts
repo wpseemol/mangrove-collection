@@ -451,7 +451,7 @@ export async function deleteProduct({
                public_ids: string;
           }[];
 
-          const isImageDelete = await Promise.all(
+          await Promise.all(
                imagesArray.map(async (image) => {
                     const deleteResponse = await deleteUploadedImage({
                          public_id: image.public_ids,

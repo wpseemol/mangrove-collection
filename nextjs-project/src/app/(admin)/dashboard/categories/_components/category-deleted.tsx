@@ -36,7 +36,7 @@ export default function CategoryDeleted({
                });
 
                if (result.isConfirmed) {
-                    const loadingSwal = Swal.fire({
+                    Swal.fire({
                          title: "Deleting...",
                          text: "Please wait while the category is being deleted.",
                          allowOutsideClick: false,

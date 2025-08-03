@@ -27,7 +27,7 @@ export default function ProductDelete({
                });
 
                if (result.isConfirmed) {
-                    const loadingSwal = Swal.fire({
+                    Swal.fire({
                          title: "Deleting...",
                          text: "Please wait while the product is being deleted.",
                          allowOutsideClick: false,

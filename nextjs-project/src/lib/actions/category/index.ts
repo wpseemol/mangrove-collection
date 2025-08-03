@@ -363,6 +363,7 @@ interface Categories {
  * @property {string} role - The role of the author (e.g., admin, creator).
  */
 export interface AuthorForManage {
+     _id: unknown;
      id: string;
      name: string;
      email: string;
