@@ -108,3 +108,106 @@ export async function addCategoryAction(
           };
      }
 }
+
+/**
+ *  Updates an existing category in the database after validating user permissions and input data.
+ *  If successful, it returns a success message and the updated category data.
+ * @param categoryId Product ID to update
+ * @param input Category input data
+ * @param pathName current path name to revalidate
+ * @returns success message and updated category data
+ */
+export async function categoryUpdate(
+     categoryId: string,
+     input: CategorySchemaType,
+     pathName?: string
+) {
+     /**
+      * Category input validates.
+      */
+
+     if (!categoryId) {
+          return {
+               success: false,
+               message: "Product ID is required.",
+          };
+     }
+     const parsed = addCategorySchema.safeParse(input);
+     if (!parsed.success) {
+          return {
+               success: false,
+               message: getFirstErrorMessage(parsed.error),
+               errors: formatZodError(parsed.error),
+               fieldErrors: parsed.error.flatten(),
+          };
+     }
+
+     try {
+          /**
+           * Validates user and input, then adds a new product if authorized; returns operation result and errors if any.
+           */
+          const session = await auth();
+          if (!session || !session.user) {
+               return { success: false, message: "You are not login user." };
+          }
+
+          const isAdmin = await userRoleCheck(
+               session?.user.id,
+               session?.user.role,
+               "admin"
+          );
+
+          const isCreator = await userRoleCheck(
+               session?.user.id,
+               session?.user.role,
+               "creator"
+          );
+
+          if (!isAdmin && !isCreator) {
+               return {
+                    success: false,
+                    message: "Admin and Creator use only can add product.",
+               };
+          }
+
+          const { data } = parsed;
+
+          await connectMongoDB();
+          const isCreate = await Category.updateOne({ _id: categoryId }, data);
+
+          if (pathName) {
+               revalidatePath(pathName);
+          }
+
+          return {
+               success: true,
+               message: "Successful category created.",
+               isCreate: JSON.stringify(isCreate),
+          };
+     } catch (error) {
+          const typeError = error as MongoServerError;
+
+          if (typeError.code === 11000) {
+               const pattern: string | null =
+                    typeof typeError.keyPattern === "object"
+                         ? Object.keys(typeError.keyPattern)[0]
+                         : null;
+
+               let message = "";
+
+               if (pattern === "slug")
+                    message =
+                         "Category slug already exist, Slug value must be unique";
+
+               return {
+                    success: false,
+                    message,
+               };
+          }
+
+          return {
+               success: false,
+               message: "Inter nal server Error.",
+          };
+     }
+}

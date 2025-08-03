@@ -74,8 +74,6 @@ export function AddCategoryForm() {
       */
 
      async function onSubmit(values: z.infer<typeof addCategorySchema>) {
-          console.log("Form submitted with values:", values);
-
           const response = await addCategoryAction(values);
 
           if (!response.success) {

@@ -3,9 +3,10 @@
 import { auth } from "@/auth";
 import { connectMongoDB } from "@/db/connections";
 import { Category } from "@/lib/schemas/mongoose/category";
-import { User } from "@/lib/schemas/mongoose/user";
 import { replaceMongoIds } from "@/utils/replace";
 import { PipelineStage, Types } from "mongoose";
+import { revalidatePath } from "next/cache";
+import { deleteUploadedImage } from "../media";
 import { userRoleCheck } from "../user";
 
 export async function getCategory(): Promise<Categories[]> {
@@ -161,13 +162,40 @@ export async function getCategoryForManage() {
 
           await connectMongoDB();
 
-          const response = await Category.find({})
-               .populate({
-                    path: "author",
-                    model: User,
-                    select: "name email role",
-               })
-               .lean();
+          const pipeline: PipelineStage[] = [
+               {
+                    $lookup: {
+                         from: "products",
+                         localField: "_id",
+                         foreignField: "category",
+                         as: "products",
+                    },
+               },
+               {
+                    $lookup: {
+                         from: "users",
+                         localField: "author",
+                         foreignField: "_id",
+                         as: "author",
+                    },
+               },
+               { $sort: { createdAt: -1 } },
+               { $unwind: "$author" },
+               {
+                    $project: {
+                         name: 1,
+                         slug: 1,
+                         imgUrl: 1,
+                         "author._id": 1,
+                         "author.name": 1,
+                         "author.email": 1,
+                         "author.role": 1,
+                         productCount: { $size: "$products" },
+                    },
+               },
+          ];
+
+          const response = await Category.aggregate(pipeline);
 
           const responseReplaceId = replaceMongoIds(
                response
@@ -191,6 +219,100 @@ export async function getCategoryForManage() {
           return {
                success: false,
                message: "Error fetching categories for management.",
+               error: JSON.stringify(error),
+          };
+     }
+}
+
+/**
+ * Deletes a category from the database after validating the user's session and role.
+ * Also deletes the associated category image and optionally revalidates a specified path.
+ *
+ * @param {Object} params - The parameters for the category deletion action.
+ * @param {string} params.categoryId - The unique identifier of the category to be deleted.
+ * @param {string} params.categoryImageUrl - The URL of the category's associated image to be deleted.
+ * @param {string} [params.pathName] - An optional path to revalidate after the category is deleted.
+ *
+ * @returns {Promise<Object>} - A promise that resolves to an object containing the success status,
+ * a message, and optionally the response or error details.
+ *
+ * @throws {Error} - Throws an error if the deletion process encounters an issue.
+ *
+ * @remarks
+ * - The function checks if the user is authenticated and has the required role (`admin` or `creator`).
+ * - Deletes the category image using the `deleteUploadedImage` function.
+ * - Connects to the MongoDB database and deletes the category document.
+ * - Optionally revalidates the provided path using `revalidatePath`.
+ * - Returns a success or failure response with appropriate messages.
+ */
+export async function categoryDeletedAction({
+     categoryId,
+     categoryImageUrl,
+     pathName,
+}: {
+     categoryId: string;
+     categoryImageUrl: string;
+     pathName?: string;
+}) {
+     if (!categoryId || !categoryImageUrl) {
+          return {
+               success: false,
+               message: "Error fetching categories for management.",
+          };
+     }
+
+     try {
+          const session = await auth();
+          /**
+           * Validates user and input, then deletes a category if authorized; returns operation result and errors if any.
+           */
+          if (!session || !session.user) {
+               return {
+                    success: false,
+                    message: "You must be logged in to delete a category.",
+               };
+          }
+
+          const isAdmin = await userRoleCheck(
+               session?.user.id,
+               session?.user.role,
+               "admin"
+          );
+
+          const isCreator = await userRoleCheck(
+               session?.user.id,
+               session?.user.role,
+               "creator"
+          );
+
+          if (!isAdmin && !isCreator) {
+               return {
+                    success: false,
+                    message: "Only Admins and Creators are authorized to delete categories.",
+               };
+          }
+
+          await deleteUploadedImage({
+               url: categoryImageUrl,
+          });
+
+          await connectMongoDB();
+
+          const response = await Category.deleteOne({ _id: categoryId });
+
+          if (pathName) {
+               revalidatePath(pathName);
+          }
+
+          return {
+               success: true,
+               message: "Category deleted successfully.",
+               response: JSON.stringify(response),
+          };
+     } catch (error) {
+          return {
+               success: false,
+               message: "An error occurred while deleting the category.",
                error: JSON.stringify(error),
           };
      }
@@ -264,5 +386,5 @@ export interface CategoryForManage {
      slug: string;
      imgUrl: string;
      author: AuthorForManage;
-     createdAt: string;
+     productCount: number;
 }

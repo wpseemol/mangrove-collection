@@ -19,6 +19,7 @@ import {
 import { ProductDetailsType } from "@/types/mongoose/product";
 import { replaceMongoIds } from "@/utils/replace";
 import { formatZodError, getFirstErrorMessage } from "@/utils/zod-error";
+import { MongoServerError } from "mongodb";
 import { revalidatePath } from "next/cache";
 import { deleteUploadedImage } from "../media";
 
@@ -352,6 +353,27 @@ export async function productContentUpdate(
                update: JSON.stringify(response),
           };
      } catch (error) {
+          const typeError = error as MongoServerError;
+
+          if (typeError.code === 11000) {
+               const pattern: string | null =
+                    typeof typeError.keyPattern === "object"
+                         ? Object.keys(typeError.keyPattern)[0]
+                         : null;
+
+               let message = "";
+
+               if (pattern === "slug")
+                    message =
+                         "Product slug already exist, Slug value must be unique";
+
+               return {
+                    success: false,
+                    message,
+                    errors: JSON.stringify(error),
+               };
+          }
+
           console.log("Product update error:", error);
           return {
                success: false,
@@ -362,19 +384,36 @@ export async function productContentUpdate(
 }
 
 /**
- * deleteProduct function deletes a product from the database and its associated images.
- * It checks if the user is authenticated and has the required role (admin or creator).
- * It also deletes the images associated with the product from the cloud storage.
- * @param productId string
- * @param images {imageUrl: string, public_ids: string}[]
- * @param pathName string | undefined
- * @returns
+ * Deletes a product from the database and optionally revalidates a path.
+ *
+ * @param {Object} params - The parameters for deleting the product.
+ * @param {string} params.productId - The ID of the product to delete. This is required.
+ * @param {string} params.images - A JSON string representing an array of images associated with the product. Each image object should contain `imgUrl` and `public_ids`.
+ * @param {string} [params.pathName] - An optional path to revalidate after the product is deleted.
+ * @returns {Promise<{
+ *   success: boolean;
+ *   message: string;
+ *   response?: any;
+ *   errors?: string;
+ * }>} - A promise that resolves to an object indicating the success or failure of the operation, along with a message and optional response or error details.
+ *
+ * @throws {Error} - Throws an error if the deletion process encounters an issue.
+ *
+ * @remarks
+ * - The function checks if the user is authenticated and has the required role (`admin` or `creator`) to delete the product.
+ * - Deletes associated images from the storage using their `public_ids`.
+ * - Deletes the product from the MongoDB database.
+ * - Optionally revalidates a given path if `pathName` is provided.
  */
-export async function deleteProduct(
-     productId: string,
-     images: string,
-     pathName?: string
-) {
+export async function deleteProduct({
+     productId,
+     images,
+     pathName,
+}: {
+     productId: string;
+     images: string;
+     pathName?: string;
+}) {
      try {
           if (!productId) {
                return {

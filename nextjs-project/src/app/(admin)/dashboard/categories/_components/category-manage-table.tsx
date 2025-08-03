@@ -89,18 +89,34 @@ export const columns: ColumnDef<CategoryForManage>[] = [
      },
      {
           accessorKey: "slug",
-          header: "Slug",
-          enableSorting: false,
-          cell: ({ row }) => (
-               <span className="capitalize">
-                    {row.original.slug.toLocaleLowerCase()}
-               </span>
-          ),
+          header: ({ column }) => {
+               return (
+                    <Button
+                         variant="ghost"
+                         onClick={() =>
+                              column.toggleSorting(
+                                   column.getIsSorted() === "asc"
+                              )
+                         }
+                    >
+                         Slug
+                         <ArrowUpDown />
+                    </Button>
+               );
+          },
+          enableSorting: true,
+          cell: ({ row }) => <span className="">{row.original.slug}</span>,
      },
      {
           accessorKey: "author",
           header: "Author",
           cell: ({ row }) => <span>{row.original.author.name}</span>,
+          enableSorting: false,
+     },
+     {
+          accessorKey: "productCount",
+          header: "Product Count",
+          cell: ({ row }) => <span>{row.original.productCount}</span>,
           enableSorting: false,
      },
 
