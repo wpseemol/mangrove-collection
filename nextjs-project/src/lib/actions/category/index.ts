@@ -1,9 +1,12 @@
 "use server";
 
+import { auth } from "@/auth";
 import { connectMongoDB } from "@/db/connections";
 import { Category } from "@/lib/schemas/mongoose/category";
+import { User } from "@/lib/schemas/mongoose/user";
 import { replaceMongoIds } from "@/utils/replace";
 import { PipelineStage, Types } from "mongoose";
+import { userRoleCheck } from "../user";
 
 export async function getCategory(): Promise<Categories[]> {
      try {
@@ -127,6 +130,72 @@ export async function getCategoryWithCount(
      }
 }
 
+export async function getCategoryForManage() {
+     try {
+          const session = await auth();
+          /**
+           * Validates user and input, then adds a new product if authorized; returns operation result and errors if any.
+           */
+          if (!session || !session.user) {
+               return { success: false, message: "You are not login user." };
+          }
+
+          const isAdmin = await userRoleCheck(
+               session?.user.id,
+               session?.user.role,
+               "admin"
+          );
+
+          const isCreator = await userRoleCheck(
+               session?.user.id,
+               session?.user.role,
+               "creator"
+          );
+
+          if (!isAdmin && !isCreator) {
+               return {
+                    success: false,
+                    message: "Admin and Creator use only can add product.",
+               };
+          }
+
+          await connectMongoDB();
+
+          const response = await Category.find({})
+               .populate({
+                    path: "author",
+                    model: User,
+                    select: "name email role",
+               })
+               .lean();
+
+          const responseReplaceId = replaceMongoIds(
+               response
+          ) as CategoryForManage[];
+
+          /**
+           * Replace MongoDB `_id` with `id` and format author data
+           * remove array buffer related error.
+           */
+          const categories = responseReplaceId.map((category) => ({
+               ...category,
+               author: replaceMongoIds(category.author) as AuthorForManage,
+          }));
+
+          return {
+               success: true,
+               categories,
+               message: "Category fetched successfully.",
+          };
+     } catch (error) {
+          return {
+               success: false,
+               message: "Error fetching categories for management.",
+               error: JSON.stringify(error),
+          };
+     }
+}
+
 type Limit = "ALL" | number;
 
 /**
@@ -160,4 +229,40 @@ interface Categories {
      name: string;
      slug: string;
      imgUrl: string;
+}
+
+/**
+ * Represents an author with management details.
+ *
+ * @interface AuthorForManage
+ * @property {string} _id - The unique identifier for the author.
+ * @property {string} name - The name of the author.
+ * @property {string} email - The email address of the author.
+ * @property {string} role - The role of the author (e.g., admin, creator).
+ */
+export interface AuthorForManage {
+     id: string;
+     name: string;
+     email: string;
+     role: string;
+}
+
+/**
+ * Represents a category with additional management details.
+ *
+ * @interface CategoryForManage
+ * @property {string} id - The unique identifier for the category.
+ * @property {string} name - The name of the category.
+ * @property {string} slug - The URL-friendly identifier for the category, typically used in web URLs.
+ * @property {string} imgUrl - The URL of the image associated with the category.
+ * @property {AuthorForManage} author - The author of the category, containing their ID, name, email, and role.
+ * @property {string} createdAt - The date and time when the category was created.
+ */
+export interface CategoryForManage {
+     id: string;
+     name: string;
+     slug: string;
+     imgUrl: string;
+     author: AuthorForManage;
+     createdAt: string;
 }

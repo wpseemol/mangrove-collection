@@ -53,6 +53,22 @@ const adminMenus: MenuArraysType[] = [
           id: 1,
      },
      {
+          href: "/dashboard/categories",
+          icon: (
+               <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    width="1.2em"
+                    height="1.2em"
+               >
+                    <path d="M4 4h6v6H4V4zm0 10h6v6H4v-6zm10-10h6v6h-6V4zm0 10h6v6h-6v-6z" />
+               </svg>
+          ),
+          name: "Categories",
+          id: 2,
+     },
+     {
           href: "/dashboard/products",
           icon: (
                <svg
@@ -66,7 +82,7 @@ const adminMenus: MenuArraysType[] = [
                </svg>
           ),
           name: "Products",
-          id: 2,
+          id: 3,
      },
      {
           href: "/dashboard/orders",
@@ -99,31 +115,31 @@ const adminMenus: MenuArraysType[] = [
                </svg>
           ),
           name: "Orders",
-          id: 3,
+          id: 4,
      },
      {
           href: "/dashboard/users",
           icon: <FaUsersGear />,
           name: "Manage All User",
-          id: 4,
+          id: 5,
      },
 
      {
           href: "/dashboard/profile",
           icon: <ImProfile />,
           name: "Profile",
-          id: 5,
+          id: 6,
      },
      {
           href: "/dashboard/setting",
           icon: <IoSettings />,
           name: "Setting",
-          id: 6,
+          id: 7,
      },
      {
           href: "/dashboard/help",
           icon: <TbHelpHexagonFilled />,
           name: "Help",
-          id: 7,
+          id: 8,
      },
 ];

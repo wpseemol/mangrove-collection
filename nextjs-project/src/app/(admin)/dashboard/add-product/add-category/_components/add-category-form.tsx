@@ -134,7 +134,7 @@ export function AddCategoryForm() {
                                              render={({ field }) => (
                                                   <FormItem>
                                                        <FormLabel className="text-gray-700 font-medium">
-                                                            Product Slug*
+                                                            Category Slug*
                                                        </FormLabel>
                                                        <FormControl>
                                                             <Input

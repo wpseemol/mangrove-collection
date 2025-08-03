@@ -10,7 +10,12 @@ export default async function ProductPage() {
 
      if (!response.success || !response.products) {
           return (
-               <main className="p-4">
+               <motion.section
+                    className="p-4"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+               >
                     <motion.h1
                          className="text-2xl font-bold mb-2"
                          initial={{ opacity: 0, x: 20 }}
@@ -27,24 +32,22 @@ export default async function ProductPage() {
                     >
                          {response.message}
                     </motion.p>
-               </main>
+               </motion.section>
           );
      }
 
      const data = JSON.parse(response.products) as ProductManageType[];
 
      return (
-          <main className="p-4">
-               <motion.h1
-                    className="text-2xl font-bold mb-2"
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-               >
-                    Products
-               </motion.h1>
+          <motion.section
+               className="p-4"
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ duration: 0.5 }}
+          >
+               <h1 className="text-2xl font-bold">Products</h1>
 
                <ProductsManageTable data={data} />
-          </main>
+          </motion.section>
      );
 }
