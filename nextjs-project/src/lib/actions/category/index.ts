@@ -175,7 +175,7 @@ export async function getCategoryForManage() {
                          as: "author",
                     },
                },
-               { $sort: { createdAt: -1 } },
+
                { $unwind: "$author" },
                {
                     $project: {
@@ -187,11 +187,13 @@ export async function getCategoryForManage() {
                          "author.email": 1,
                          "author.role": 1,
                          productCount: { $size: "$products" },
+                         createdAt: 1,
                     },
                },
+               { $sort: { createdAt: -1 } },
           ];
 
-          const response = await Category.aggregate(pipeline);
+          const response = await Category.aggregate(pipeline).exec();
 
           const responseReplaceId = replaceMongoIds(
                response
