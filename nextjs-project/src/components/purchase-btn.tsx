@@ -31,8 +31,8 @@ export default function PurchaseBtn({
                 * [{productId:string , quantity: number,selectedPriceId:string}] }]
                 */
                await setPurchaseData(purchaseItems);
-          } catch (error) {
-               console.log("Product bye error:", error);
+          } catch {
+               // Silent error handling - no logging
           } finally {
                setLoading(false);
           }

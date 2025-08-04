@@ -57,11 +57,7 @@ export default function MultiDeletedBtn() {
                          };
                     });
 
-                    try {
-                         await cartProductDelete(deletedItemsIds);
-                    } catch (error) {
-                         console.log("Cart DELETE error:", error);
-                    }
+                    await cartProductDelete(deletedItemsIds);
                }
           });
      }

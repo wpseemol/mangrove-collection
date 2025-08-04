@@ -45,8 +45,6 @@ export default function Thumbnail({
           null
      );
 
-     // console.log(progress);
-
      async function handelImageDeleted() {
           setIsFileUpload(true);
           if (!uploadImage) return;

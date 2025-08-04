@@ -15,11 +15,7 @@ export default function CartQuantity({ row }: { row: Row<CartProductsType> }) {
       */
      const debouncedUpdateQuantity = debounce(
           async (id: string, updateQuantity: number) => {
-               try {
-                    await cartQuantityUpdate(id, updateQuantity);
-               } catch (error) {
-                    console.log("Purchus Patch error:", error);
-               }
+               await cartQuantityUpdate(id, updateQuantity);
           },
           350
      );

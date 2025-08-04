@@ -109,7 +109,6 @@ export default function ProductTagsForm({
      }, [tagsWatch, content]);
 
      async function onSubmit(values: z.infer<typeof productTagsSchema>) {
-          console.log(values);
           const response = await productContentUpdate(
                productId,
                values,

@@ -47,8 +47,6 @@ export default function CategoryImage({
           null
      );
 
-     // console.log(progress);
-
      async function handelImageDeleted() {
           setIsFileUpload(true);
           if (!uploadImage) return;

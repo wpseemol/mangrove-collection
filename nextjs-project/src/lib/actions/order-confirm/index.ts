@@ -41,7 +41,6 @@ export async function orderConfirm(details: string) {
           );
 
           if (!productDetails) {
-               console.log("Please selected Product then bye.");
                return false;
           }
 
@@ -118,8 +117,7 @@ export async function orderConfirm(details: string) {
                path: "/",
           });
           return true;
-     } catch (error) {
-          console.log("Order confirm error:", error);
+     } catch {
           return false;
      }
 }
@@ -135,7 +133,6 @@ export async function getAddressBookDataCookies() {
                COOKIE_KEY_ADDRESS_BOOK
           )?.value;
           if (!addressBookDataToken) {
-               console.log("address book data not found.");
                return false;
           }
 
@@ -148,12 +145,10 @@ export async function getAddressBookDataCookies() {
                };
 
                return cartItem.phone;
-          } catch (error) {
-               console.log("Invalid JWT:", error);
+          } catch {
                return false;
           }
-     } catch (error) {
-          console.log("address book data:", error);
+     } catch {
           return false;
      }
 }
@@ -162,7 +157,6 @@ export async function getOrderProducts() {
      try {
           const addressBookPhone = await getAddressBookDataCookies();
           if (!addressBookPhone) {
-               console.log("not found phone number.");
                return null;
           }
 
@@ -181,8 +175,7 @@ export async function getOrderProducts() {
           const orderProduct = replaceMongoIds(response);
 
           return JSON.stringify(orderProduct);
-     } catch (error) {
-          console.log("get order product error:", error);
+     } catch {
           return null;
      }
 }

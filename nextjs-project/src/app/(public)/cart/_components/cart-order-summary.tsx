@@ -51,8 +51,8 @@ export default function CartOrderSummary() {
                 * @returns boolean
                 */
                await setPurchaseData(purchaseItems);
-          } catch (error) {
-               console.log("Product bye error:", error);
+          } catch {
+               // Silent error handling - no logging
           }
 
           const deletedItemsIds = (cartSelectedProducts ?? []).map(
@@ -84,11 +84,7 @@ export default function CartOrderSummary() {
                };
           });
 
-          try {
-               await cartProductDelete(deletedItemsIds);
-          } catch (error) {
-               console.log("Cart DELETE error:", error);
-          }
+          await cartProductDelete(deletedItemsIds);
 
           setLoading(false);
 

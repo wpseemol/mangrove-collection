@@ -36,8 +36,8 @@ export default function DetailsBuyBtn({
                 * [{productId:string , quantity: number,selectedPriceId:string}] }]
                 */
                await setPurchaseData(purchaseProduct);
-          } catch (error) {
-               console.log("Details page Purchus error:", error);
+          } catch {
+               // Silent error handling - no logging
           } finally {
                setLoading(false);
           }

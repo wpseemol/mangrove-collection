@@ -28,13 +28,9 @@ export default function SocialShareBtn({
      const clearDescription = stripHtml(description);
 
      const handleCopy = async () => {
-          try {
-               await navigator.clipboard.writeText(fullUrl);
-               setCopied(true);
-               setTimeout(() => setCopied(false), 2000); // Reset after 2s
-          } catch (err) {
-               console.log("Failed to copy: ", err);
-          }
+          await navigator.clipboard.writeText(fullUrl);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000); // Reset after 2s
      };
 
      return (

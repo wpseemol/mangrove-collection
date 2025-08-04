@@ -94,11 +94,7 @@ export function CheckoutForm() {
 
      async function handelPhoneChange(phoneNumber: string) {
           if (!phoneNumber || phoneNumber.length < 10) return;
-          try {
-               delayDebounce(phoneNumber);
-          } catch (error) {
-               console.log("Checkout Form get error:", error);
-          }
+          delayDebounce(phoneNumber);
      }
 
      return (

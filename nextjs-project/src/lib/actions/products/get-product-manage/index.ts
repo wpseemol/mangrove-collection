@@ -107,8 +107,7 @@ export async function getProductManage() {
                message: "Product manage data fetched successfully.",
                products: JSON.stringify(products),
           };
-     } catch (error) {
-          console.log("Error in getProductManage:", error);
+     } catch {
           return {
                success: false,
                message: "Failed to fetch product manage data.",

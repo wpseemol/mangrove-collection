@@ -37,11 +37,7 @@ export default function CartItemRemove({
                };
           });
 
-          try {
-               await cartProductDelete(productId);
-          } catch (error) {
-               console.log("Cart DELETE error:", error);
-          }
+          await cartProductDelete(productId);
      }
 
      return (

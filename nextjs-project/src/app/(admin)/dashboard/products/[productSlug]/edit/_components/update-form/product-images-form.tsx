@@ -64,7 +64,6 @@ export default function ProductImagesForm({
      const inputImageValue = form.watch("images");
      useEffect(() => {
           setIsDisable(JSON.stringify(inputImageValue) === content);
-          console.log(JSON.stringify(inputImageValue) === content);
      }, [inputImageValue, content]);
 
      async function onSubmit(values: z.infer<typeof productImagesSchema>) {
@@ -274,8 +273,8 @@ function PreviewImage({
                               });
                               toast.error(response.message);
                          }
-                    } catch (error) {
-                         console.log("image edit upload error:", error);
+                    } catch {
+                         // Silent error handling - no logging
                     } finally {
                          setLoading(null);
                          actionWaiting(false);

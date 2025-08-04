@@ -74,8 +74,7 @@ export async function getOrderData() {
                message: "Order data fetched successfully.",
                orders: JSON.stringify(orders),
           };
-     } catch (error) {
-          console.error("Error fetching order data:", error);
+     } catch {
           return {
                success: false,
                message: "Failed to fetch order data.",

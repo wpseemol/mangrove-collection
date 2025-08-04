@@ -26,8 +26,8 @@ export default function CartBtn({
                          cartProductIds: isCart.cartProductIds,
                     });
                }
-          } catch (error) {
-               console.log("cart button error:", error);
+          } catch {
+               // Silent error handling - no logging
           } finally {
                setLoading(false);
           }

@@ -96,7 +96,6 @@ export async function getProductForEdit(productSlug: string) {
                message: "Success full get product info for edit.",
           };
      } catch (error) {
-          console.log("get product for edit error:", error);
           return {
                success: false,
                message: "get product for edit error.",
@@ -374,7 +373,6 @@ export async function productContentUpdate(
                };
           }
 
-          console.log("Product update error:", error);
           return {
                success: false,
                message: "Product update error.",
@@ -475,7 +473,6 @@ export async function deleteProduct({
                response,
           };
      } catch (error) {
-          console.log("Delete product error:", error);
           return {
                success: false,
                message: "Delete product error.",

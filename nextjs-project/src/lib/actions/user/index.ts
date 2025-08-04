@@ -24,7 +24,6 @@ import { MongoServerError } from "mongodb";
 export async function userRegister(loginInfo: string | null) {
      try {
           if (!loginInfo) {
-               console.log("No login information provided.");
                return {
                     success: false,
                     message: "No login information provided.",
@@ -35,12 +34,10 @@ export async function userRegister(loginInfo: string | null) {
                loginInfo
           ) as RegisterUser;
           if (!fullname || !email || !phone || !password || !conformPass) {
-               console.log("Register User: Missing required fields.");
                return { success: false, message: "Missing required fields." };
           }
 
           if (password !== conformPass) {
-               console.log("Register User: Passwords do not match.");
                return { success: false, message: "Passwords do not match." };
           }
 
@@ -90,7 +87,6 @@ export async function userRegister(loginInfo: string | null) {
                return { success: false, message: error.message };
           }
 
-          console.log("Error in userRegister:", error);
           return { success: false, message: "An unknown error occurred." };
      }
 }
@@ -109,7 +105,6 @@ export async function googolProviderUserCreate(googleUser: string | null) {
           ) as UserLoginResponse;
 
           if (!name || !email) {
-               console.log("Google User: Missing required fields.");
                return { success: false, message: "Missing required fields." };
           }
           await connectMongoDB();
@@ -169,7 +164,6 @@ export async function googolProviderUserCreate(googleUser: string | null) {
  */
 export async function userLogin(loginInfo: string | null) {
      if (!loginInfo) {
-          console.log("No login information provided.");
           return {
                success: false,
                message: "No login information provided.",
@@ -180,7 +174,6 @@ export async function userLogin(loginInfo: string | null) {
           const { email, password } = JSON.parse(loginInfo) as UserLoginInfo;
 
           if (!email || !password) {
-               console.log("Login User: Missing required fields.");
                return { success: false, message: "Missing required fields." };
           }
 
@@ -190,7 +183,6 @@ export async function userLogin(loginInfo: string | null) {
           const response = await User.findOne({ email }, projection).lean();
 
           if (!response) {
-               console.log("Login User: User not found.");
                return { success: false, message: "User not found." };
           }
 
@@ -206,7 +198,6 @@ export async function userLogin(loginInfo: string | null) {
           const isPasswordValid = await bcrypt.compare(password, user.password);
 
           if (!isPasswordValid) {
-               console.log("Login User: Invalid password.");
                return { success: false, message: "Password is not correct." };
           }
 
@@ -222,7 +213,6 @@ export async function userLogin(loginInfo: string | null) {
                },
           };
      } catch (error) {
-          console.log("Error in userLogin:", error);
           if (error instanceof Error) {
                return {
                     success: false,
@@ -247,7 +237,6 @@ export async function userLogin(loginInfo: string | null) {
 
 export async function signInServer(loginInfo: string | null) {
      if (!loginInfo) {
-          console.log("No login information provided.");
           return {
                success: false,
                message: "No login information provided.",
@@ -258,7 +247,6 @@ export async function signInServer(loginInfo: string | null) {
           const { email, password } = JSON.parse(loginInfo) as UserLoginInfo;
 
           if (!email || !password) {
-               console.log("Login User: Missing required fields.");
                return { success: false, message: "Missing required fields." };
           }
 
@@ -272,7 +260,6 @@ export async function signInServer(loginInfo: string | null) {
                message: "User logged in successfully.",
           };
      } catch (error) {
-          console.log("login error:", error);
           return {
                success: false,
                message: getErrorMessage(error),
@@ -307,8 +294,7 @@ export async function userRoleCheck(
           if (!userResponse) return false;
 
           return staticRole === userRole && userResponse.role === staticRole;
-     } catch (error) {
-          console.log("is admin Check error:", error);
+     } catch {
           return false;
      }
 }

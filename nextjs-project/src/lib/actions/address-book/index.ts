@@ -17,7 +17,6 @@ export async function getSearchAddressBookDataPhoneNumber(
      inputPhone: string
 ): Promise<string | null> {
      if (!inputPhone) {
-          console.log("inputPhone is empty");
           return null;
      }
      try {
@@ -28,7 +27,6 @@ export async function getSearchAddressBookDataPhoneNumber(
           }).lean();
 
           if (!existingAddressBookResponse) {
-               console.log("No address book found for the given phone number.");
                return null;
           }
 
@@ -37,8 +35,7 @@ export async function getSearchAddressBookDataPhoneNumber(
           ) as AddressBookType;
 
           return JSON.stringify(existingAddressBook.addresses);
-     } catch (error) {
-          console.log("Error fetching address book data:", error);
+     } catch {
           return null;
      }
 }
@@ -47,7 +44,6 @@ export async function getAddressBookData() {
      try {
           const cookiesPhoneNumber = await getAddressBookDataCookies();
           if (!cookiesPhoneNumber) {
-               console.log("No phone number found in cookies.");
                return null;
           }
 
@@ -58,7 +54,6 @@ export async function getAddressBookData() {
           }).lean();
 
           if (!existingAddressBookResponse) {
-               console.log("No address book found for the given phone number.");
                return null;
           }
 
@@ -67,8 +62,7 @@ export async function getAddressBookData() {
           ) as AddressBookType;
 
           return JSON.stringify(existingAddressBook);
-     } catch (error) {
-          console.log("Error fetching address book data:", error);
+     } catch {
           return null;
      }
 }

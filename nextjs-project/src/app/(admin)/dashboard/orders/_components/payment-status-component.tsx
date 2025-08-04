@@ -17,8 +17,10 @@ export default function PaymentStatusComponent({
      row: Row<OrderTableType>;
 }) {
      const handleStatusChange = (status: string) => {
+          return;
+          console.log("just for test:", status);
+          // const handleStatusChange = (status: string) => {
           // Add your status update logic here
-          console.log(`Changing status to: ${status}`);
           // Example: updateOrderStatus(row.original.id, status);
      };
 

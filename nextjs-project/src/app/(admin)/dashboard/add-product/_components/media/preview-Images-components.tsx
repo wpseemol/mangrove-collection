@@ -87,8 +87,8 @@ export default function PreviewImagesComponents({
                                         : item
                               );
                          });
-                    } catch (error) {
-                         console.error("Upload failed:", error);
+                    } catch {
+                         // Silent error handling - no logging
                     } finally {
                          // Cleanup
                          if (progressInterval) clearInterval(progressInterval);
@@ -97,7 +97,7 @@ export default function PreviewImagesComponents({
                     }
                };
 
-               uploadImage(previewImageDetails.file).catch(console.error);
+               uploadImage(previewImageDetails.file);
           }
 
           return () => {

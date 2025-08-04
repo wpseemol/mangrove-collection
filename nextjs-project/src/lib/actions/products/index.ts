@@ -85,8 +85,7 @@ export async function getProducts(
           ) as CardProductType[];
 
           return products;
-     } catch (error) {
-          console.log("get product error:", error);
+     } catch {
           return [];
      }
 }
@@ -120,8 +119,7 @@ export async function getNewArrivalProducts(): Promise<CardProductType[]> {
                response
           ) as CardProductType[];
           return newArrivalProducts;
-     } catch (error) {
-          console.log("Error fetching new arrival products:", error);
+     } catch {
           return [];
      }
 }
@@ -144,8 +142,7 @@ export async function getPopularProducts(): Promise<CardProductType[]> {
           ) as CardProductType[];
 
           return popularProducts;
-     } catch (error) {
-          console.log("Error fetching popular products:", error);
+     } catch {
           return [];
      }
 }
@@ -171,8 +168,7 @@ export async function getProductsDetails(slug: string) {
           ) as ProductDetailsType;
 
           return productDetails;
-     } catch (error) {
-          console.log("get product details error:", error);
+     } catch {
           return null;
      }
 }
@@ -183,7 +179,6 @@ export async function getRelatedProducts(
 ): Promise<CardProductType[]> {
      try {
           if (!categoryId || !skipId) {
-               console.log("CategoryId skip product id is rewired.");
                return [];
           }
 
@@ -208,8 +203,7 @@ export async function getRelatedProducts(
                relatedProductResponse
           ) as CardProductType[];
           return relatedProducts;
-     } catch (error) {
-          console.log("get related product error:", error);
+     } catch {
           return [];
      }
 }
@@ -227,7 +221,6 @@ export async function getOrderProductsDetails(ids: string): Promise<
        })[]
 > {
      if (!ids) {
-          console.log("get Order Products Details:", ids);
           return null;
      }
 
@@ -244,8 +237,7 @@ export async function getOrderProductsDetails(ids: string): Promise<
                id: string;
           })[];
           return productsDetails;
-     } catch (error) {
-          console.log("get Order Products Details:", error);
+     } catch {
           return null;
      }
 }
@@ -325,8 +317,7 @@ export async function getProductBySearch(
                message: `Get by search query ${searchQuery}:`,
                data: JSON.stringify(products),
           };
-     } catch (error) {
-          console.log("Search product error:", error);
+     } catch {
           return {
                success: false,
                message: "Failed to get search product.",

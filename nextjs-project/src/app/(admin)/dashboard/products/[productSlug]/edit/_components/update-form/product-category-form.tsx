@@ -58,8 +58,7 @@ export default function ProductCategoryForm({
                try {
                     const response = await getCategory();
                     setCategories(response);
-               } catch (error) {
-                    console.error("Fetch error:", error);
+               } catch {
                     setCategories([]);
                }
           };

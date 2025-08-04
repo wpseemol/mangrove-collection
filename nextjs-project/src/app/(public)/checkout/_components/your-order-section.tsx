@@ -44,20 +44,17 @@ export default function YourOrderSection({
      };
 
      /**
-      * remove frome Array
+      * remove form Array
       * @param id
       */
      const removeItem = async (id: string) => {
           setPurcheseProducts((prev) => prev.filter((item) => item.id !== id));
-          try {
-               await purchaseDataDelete(id);
-          } catch (error) {
-               console.log("Purchus DELETE error:", error);
-          }
+
+          await purchaseDataDelete(id);
      };
 
      /**
-      * sub totla
+      * sub total
       */
 
      const subtotal = purcheseProducts.reduce(
@@ -66,7 +63,7 @@ export default function YourOrderSection({
      );
 
      /**
-      * Price totle
+      * Price total
       */
      const total =
           subtotal + (purcheseProducts.length > 0 ? SHIPPING_CHARGE : 0);
@@ -80,12 +77,7 @@ export default function YourOrderSection({
      const debouncedUpdateQuantity = debounce(
           async (id: string, quantity: number) => {
                updateQuantity(id, quantity);
-
-               try {
-                    await purchaseQuantityUpdate(id, quantity);
-               } catch (error) {
-                    console.log("Purchus Patch error:", error);
-               }
+               await purchaseQuantityUpdate(id, quantity);
           },
           350
      );

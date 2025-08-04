@@ -37,7 +37,7 @@ export default function RegisterForm() {
      /**
       * Handle form submission
       * This function will be called when the form is submitted and all validations pass.
-      * You can replace the console.log with your actual form submission logic.
+      * You can replace the with your actual form submission logic.
       */
      async function onSubmit(values: z.infer<typeof registerSchema>) {
           const response = await userRegister(JSON.stringify(values));
@@ -47,7 +47,6 @@ export default function RegisterForm() {
           }
 
           if (response.success) {
-               console.log("Form submitted successfully response:", response);
                toast.success(response.message);
                setTimeout(() => {
                     router.push("/login");

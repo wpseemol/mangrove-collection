@@ -12,13 +12,8 @@ export default function DashboardLogout({
 
      async function handelLogout() {
           setLoading(true);
-          try {
-               await signOut({ redirect: true, redirectTo: "/" });
-          } catch (error) {
-               console.log("logout error:", error);
-          } finally {
-               setLoading(false);
-          }
+          await signOut({ redirect: true, redirectTo: "/" });
+          setLoading(false);
      }
 
      return (

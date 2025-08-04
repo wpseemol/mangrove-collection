@@ -28,8 +28,8 @@ export default function FilterSection({
                setIsShow((prev) => !prev);
                const data = await getCategoryWithCount(isShow ? 5 : "ALL");
                setCategoryWithCountArray(data);
-          } catch (error) {
-               console.log("handel count error:", error);
+          } catch {
+               // Silent error handling - no logging
           } finally {
                setLoading(false);
           }

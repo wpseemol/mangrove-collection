@@ -9,9 +9,8 @@ export default function LogoutBtn() {
           setLoading(true);
           try {
                await signOut({ redirect: true, redirectTo: "/" });
-               console.log("Logout initiated");
-          } catch (error) {
-               console.error("Error during logout:", error);
+          } catch {
+               // Silent error handling - no logging
           } finally {
                setLoading(false);
           }

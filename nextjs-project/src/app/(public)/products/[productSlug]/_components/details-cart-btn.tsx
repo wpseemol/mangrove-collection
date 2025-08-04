@@ -38,8 +38,8 @@ export default function DetailsCartBtn({
                          cartProductIds: isCart.cartProductIds,
                     });
                }
-          } catch (error) {
-               console.log("Details page Cart error:", error);
+          } catch {
+               // Silent error handling - no logging
           } finally {
                setLoading(false);
           }

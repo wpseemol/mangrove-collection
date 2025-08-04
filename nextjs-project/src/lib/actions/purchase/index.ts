@@ -28,7 +28,6 @@ export async function setPurchaseData(
            * if empty then return false
            */
           if (!purchaseItem || purchaseItem.length < 1) {
-               console.log("purchase data not found.");
                return false;
           }
 
@@ -45,8 +44,7 @@ export async function setPurchaseData(
                maxAge: 31536000, // 1 year
           });
           return true;
-     } catch (error) {
-          console.log("Error setting purchase data:", error);
+     } catch {
           return false;
      }
 }
@@ -76,17 +74,14 @@ export async function getPurchaseData(): Promise<PurchaseItemType[] | null> {
                ) as { purchases: PurchaseItemType[] };
 
                if (!purchaseItem || purchaseItem.purchases.length < 1) {
-                    console.log("purchase data not found.");
                     return null;
                }
 
                return purchaseItem.purchases;
-          } catch (error) {
-               console.log("Error verifying purchase data:", error);
+          } catch {
                return null;
           }
-     } catch (error) {
-          console.log("Error getting purchase data:", error);
+     } catch {
           return null;
      }
 }
@@ -105,7 +100,6 @@ export async function purchaseQuantityUpdate(
      quantity: number
 ): Promise<boolean> {
      if (!productId || !quantity) {
-          console.log("productId or quantity is empty.");
           return false;
      }
 
@@ -142,8 +136,7 @@ export async function purchaseQuantityUpdate(
           });
 
           return true;
-     } catch (error) {
-          console.log("Error updating purchase quantity:", error);
+     } catch {
           return false;
      }
 }
@@ -208,8 +201,7 @@ export async function getPurchaseProductData(): Promise<
           ) as PurchaseProductsType[];
 
           return purchaseProductDataWithQuantity;
-     } catch (error) {
-          console.log("Error getting purchase product data:", error);
+     } catch {
           return null;
      }
 }
@@ -224,7 +216,6 @@ export async function getPurchaseProductData(): Promise<
  */
 export async function purchaseDataDelete(productId: string): Promise<boolean> {
      if (!productId) {
-          console.log("productId is empty.");
           return false;
      }
 
@@ -259,8 +250,7 @@ export async function purchaseDataDelete(productId: string): Promise<boolean> {
                path: "/",
           });
           return true;
-     } catch (error) {
-          console.log("Error deleting purchase data:", error);
+     } catch {
           return false;
      }
 }

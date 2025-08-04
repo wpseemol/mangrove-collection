@@ -22,8 +22,7 @@ export function extractPublicIdFromUrl(url: string): string | null {
 
           // Remove file extension (e.g., ".jpg")
           return decodedPath.replace(/\.[^/.]+$/, "");
-     } catch (error) {
-          console.error("Error parsing Cloudinary URL:", error);
+     } catch {
           return null;
      }
 }

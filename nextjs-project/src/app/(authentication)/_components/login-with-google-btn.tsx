@@ -19,9 +19,8 @@ export default function LoginWithGoogleBtn() {
                     redirect: true,
                     callbackUrl: "/",
                });
-               console.log("Google login initiated");
-          } catch (error) {
-               console.error("Error during Google login:", error);
+          } catch {
+               // Silent error handling - no logging
           } finally {
                setLoading(false);
           }

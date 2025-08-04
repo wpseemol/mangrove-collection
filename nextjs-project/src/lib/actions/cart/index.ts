@@ -27,7 +27,6 @@ export async function setCartData(
      quantity: number
 ) {
      if (!productId || !selectedPriceId || !quantity) {
-          console.log("Please ProdcutId and selectedPriceId are required");
           return;
      }
 
@@ -77,8 +76,7 @@ export async function setCartData(
                cartItem: cart,
                carTotalItems: cart.length,
           };
-     } catch (error) {
-          console.log("set cart data error:", error);
+     } catch {
           return null;
      }
 }
@@ -105,7 +103,6 @@ export async function getCartData() {
                };
 
                if (!cartItem || cartItem.cart.length < 1) {
-                    console.log("cart data not found.");
                     return null;
                }
 
@@ -118,12 +115,10 @@ export async function getCartData() {
                     cartItem: cartItem.cart,
                     carTotalItems: cartItem.cart.length,
                };
-          } catch (error) {
-               console.log("Invalid JWT:", error);
+          } catch {
                return null;
           }
-     } catch (error) {
-          console.log("get cart data error:", error);
+     } catch {
           return null;
      }
 }
@@ -151,7 +146,6 @@ export async function getCartProductDetails(): Promise<
           const cartData = await getCartData();
 
           if (!cartData) {
-               console.log("cart data not found.");
                return null;
           }
 
@@ -196,8 +190,7 @@ export async function getCartProductDetails(): Promise<
           }) as CartProductsType[];
 
           return cartProduct;
-     } catch (error) {
-          console.log("get cart data product details error:", error);
+     } catch {
           return null;
      }
 }
@@ -257,7 +250,6 @@ export async function cartQuantityUpdate(
      quantity: number
 ): Promise<boolean> {
      if (!productId || !quantity) {
-          console.log("Please ProdcutId and quantity are required");
           return false;
      }
 
@@ -265,7 +257,6 @@ export async function cartQuantityUpdate(
           const cartData = await getCartData();
 
           if (!cartData) {
-               console.log("cart data not found.");
                return false;
           }
 
@@ -291,8 +282,7 @@ export async function cartQuantityUpdate(
           });
 
           return true;
-     } catch (error) {
-          console.log("cart quantity update error:", error);
+     } catch {
           return false;
      }
 }
@@ -310,7 +300,6 @@ export async function cartQuantityUpdate(
  */
 export async function cartProductDelete(productIds: string[] | string) {
      if (!productIds) {
-          console.log("Please ProdcutId are required");
           return false;
      }
 
@@ -318,7 +307,6 @@ export async function cartProductDelete(productIds: string[] | string) {
           const cartData = await getCartData();
 
           if (!cartData || cartData.cartItem.length < 1) {
-               console.log("cart data not found.");
                return false;
           }
 
@@ -353,8 +341,7 @@ export async function cartProductDelete(productIds: string[] | string) {
                maxAge: 31536000, // 1 year
           });
           return true;
-     } catch (error) {
-          console.log("cart product delete error:", error);
+     } catch {
           return false;
      }
 }

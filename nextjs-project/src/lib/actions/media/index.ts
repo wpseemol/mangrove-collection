@@ -48,7 +48,6 @@ export async function imagesUploadCloudinary(
                     },
                     (error, result) => {
                          if (error) {
-                              console.error("Cloudinary upload error:", error);
                               reject(error);
                          } else {
                               resolve({
@@ -68,8 +67,7 @@ export async function imagesUploadCloudinary(
                message: "Thumbnail uploaded successfully.",
                data: result as { public_id: string; secure_url: string },
           };
-     } catch (error) {
-          console.log("thumbnail upload error:", error);
+     } catch {
           return {
                success: false,
                message: "Something went wrong.",
@@ -125,8 +123,7 @@ export async function deleteUploadedImage({
                          ? "Image deleted successfully."
                          : "Failed to delete (invalid public_id or permissions).",
           };
-     } catch (error) {
-          console.error("Cloudinary delete error:", error);
+     } catch {
           return {
                success: false,
                message: "Server error during deletion.",

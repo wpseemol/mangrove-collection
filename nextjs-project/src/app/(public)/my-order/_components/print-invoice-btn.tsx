@@ -123,7 +123,7 @@ export default function PrintInvoiceBtn({
 
                const canvas = await html2canvas(invoiceRef.current, {
                     scale: 2, // Higher quality
-                    logging: false, // Disable console logging
+                    logging: false, // Disable logging
                     useCORS: true, // Handle cross-origin images
                     backgroundColor: "#ffffff", // White background
                });
@@ -133,8 +133,7 @@ export default function PrintInvoiceBtn({
                document.body.appendChild(link); // Required for Firefox
                link.click();
                document.body.removeChild(link); // Clean up
-          } catch (error) {
-               console.log("Image genarate:", error);
+          } catch {
                return;
           }
      };
