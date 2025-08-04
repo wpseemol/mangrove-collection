@@ -164,6 +164,46 @@ docker-compose up -d --force-recreate --build
           ```
 
 3. **File Permission Issues**:
+
      ```bash
      sudo chown -R $USER:$USER mangrove_mongodb_data
      ```
+
+# Upgrading Next.js with Codemod
+
+     To upgrade your Next.js project to the latest version using the official codemod tool, you can run the following command:
+
+```bash
+pnpm dlx @next/codemod@latest upgrade latest
+```
+
+### Steps:
+
+     1. **Install and Run Codemod**:
+
+          - The `pnpm dlx` command ensures you are using the latest version of the codemod without globally installing it.
+          - The `upgrade latest` argument automatically updates your project to the latest Next.js version.
+
+     2. **Review Changes**:
+
+          - The codemod will modify your codebase to align with the latest Next.js features and best practices.
+          - Review the changes in your version control system (e.g., `git diff`) before committing.
+
+     3. **Test Your Application**:
+
+          - After upgrading, run your application locally to ensure everything works as expected:
+               ```bash
+               pnpm dev
+               ```
+
+     4. **Update Dependencies**:
+          - Ensure all related dependencies are compatible with the new Next.js version:
+               ```bash
+               pnpm install
+               ```
+
+### Notes:
+
+     - Always back up your project or use version control before running codemods.
+     - Refer to the [Next.js release notes](https://nextjs.org/docs/upgrading) for additional guidance on breaking changes or new features.
+     - If you encounter issues, check the codemod logs for details on unsupported patterns or manual migration steps.
