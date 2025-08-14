@@ -8,5 +8,145 @@
           "sonner",
           "Swal",
           "uuidv"
+     ],
+     // Enable specific code actions on save
+     "editor.codeActionsOnSave": {
+          // Apply all ESLint fixes explicitly
+          "source.fixAll.eslint": "explicit",
+          // Apply all TSLint fixes explicitly (legacy, mostly unused now)
+          "source.fixAll.tslint": "explicit",
+          // Organize imports when saving the file
+          "source.organizeImports": "explicit",
+          // Apply all available fixes
+          "source.fixAll": "explicit"
+     },
+
+     // Set editor font size
+     "editor.fontSize": 22,
+
+     // Use a line style cursor in terminal
+     "terminal.integrated.cursorStyle": "line",
+
+     // Set terminal font size
+     "terminal.integrated.fontSize": 20,
+
+     // Enable word wrapping in the editor
+     "editor.wordWrap": "on",
+
+     // Set the overtype cursor style to a thin line
+     "editor.overtypeCursorStyle": "line-thin",
+
+     // Skip delete confirmation in the Explorer
+     "explorer.confirmDelete": false,
+
+     // Set the default formatter for JavaScript files
+     "[javascript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+     },
+
+     // Set Prettier as the default formatter for all files
+     "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+     // Automatically format code when saving files
+     "editor.formatOnSave": true,
+
+     // Run ESLint only when saving files
+     "eslint.run": "onSave",
+
+     // Enable Emmet support for JavaScript files
+     "emmet.includeLanguages": {
+          "javascript": "javascriptreact"
+     },
+
+     // Enable automatic path suggestions for imports
+     "path-autocomplete.extensionOnImport": true,
+
+     // Exclude these file types from path autocomplete suggestions
+     "path-autocomplete.excludedItems": {
+          "*/.js": {
+               "when": "**"
+          },
+          "*/.jsx": {
+               "when": "**"
+          },
+          "*/.tsx": {
+               "when": "**"
+          },
+          "*/.vue": {
+               "when": "**"
+          }
+     },
+
+     // Disable built-in JavaScript validation (using ESLint instead)
+     "javascript.validate.enable": false,
+
+     // Disable built-in TypeScript validation (using ESLint instead)
+     "typescript.validate.enable": false,
+
+     // Set the tab width in Prettier formatting to 5 spaces
+     "prettier.tabWidth": 5,
+
+     // Enable experimental project diagnostics in TypeScript server
+     "typescript.tsserver.experimental.enableProjectDiagnostics": true,
+
+     // Set the default terminal profile on Windows to Git Bash
+     "terminal.integrated.defaultProfile.windows": "Git Bash",
+
+     // Set default formatter for PHP files to Intelephense
+     "[php]": {
+          "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
+     },
+
+     // Apply specific settings to all user profiles
+     "workbench.settings.applyToAllProfiles": ["php.validate.executablePath"],
+
+     // Define custom terminal profiles for Windows
+     "terminal.integrated.profiles.windows": {
+          // PowerShell profile
+          "PowerShell": {
+               "source": "PowerShell",
+               "icon": "terminal-powershell"
+          },
+          // Command Prompt (cmd.exe) profile
+          "Command Prompt": {
+               "path": [
+                    "${env:windir}\\Sysnative\\cmd.exe",
+                    "${env:windir}\\System32\\cmd.exe"
+               ],
+               "args": [],
+               "icon": "terminal-cmd"
+          },
+          // Git Bash terminal profile
+          "Git Bash": {
+               "source": "Git Bash"
+          },
+          // Ubuntu WSL terminal profile
+          "Ubuntu (WSL)": {
+               "path": "C:\\WINDOWS\\System32\\wsl.exe",
+               "args": ["-d", "Ubuntu"]
+          }
+     },
+
+     // Allow access to WSL via UNC path
+     "security.allowedUNCHosts": ["wsl.localhost"],
+
+     // Ignore unknown CSS at-rules (e.g., for Tailwind or PostCSS)
+     "css.lint.unknownAtRules": "ignore",
+
+     // Automatically focus the terminal accessible view after command execution (accessibility feature)
+     "terminal.integrated.accessibleViewFocusOnCommandExecution": true,
+
+     // Disable verbosity in terminal accessibility mode
+     "accessibility.verbosity.terminal": false,
+
+     // Hide the accessibility overlay in VS Code
+     "accessibility.hideAccessibleView": true,
+
+     // Enable ESLint validation for specific file types
+     "eslint.validate": [
+          "javascript",
+          "javascriptreact",
+          "typescript",
+          "typescriptreact"
      ]
 }
