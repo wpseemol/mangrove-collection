@@ -7,6 +7,7 @@ import { orderConfirm } from "@/lib/actions/order-confirm";
 import { AddressType } from "@/types/address-book";
 import debounce from "@/utils/debounce";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -101,7 +102,12 @@ export function CheckoutForm() {
           <div className="bg-gray-100">
                <div className=" flex flex-col items-center py-8 pb-10 sticky top-[4rem] h-fit">
                     <div className="bg-blue-100 border-l-4 border-green-500 text-green-700 p-4 rounded-md shadow-md mb-4 md:mx-0 mx-2">
-                         <p className="text-sm">{message}</p>
+                         <Link
+                              href={`https://wa.me/+8801323846556?text=Hi,%20is%20there%20anyone%20to%20assist%20me?`}
+                              target="_blank"
+                         >
+                              <p className="text-sm">{message}</p>
+                         </Link>
                     </div>
                     <div className="mb-4">
                          <h2 className="text-2xl font-bold ">Payment Method</h2>

@@ -37,6 +37,7 @@ export default function Footer() {
                                         title="WhatsApp 01323846556"
                                         className="flex items-center p-1 hover:scale-105 duration-150 bg-[#21c45d] px-3 rounded-4xl"
                                         href={`https://wa.me/+8801323846556?text=Hi,%20is%20there%20anyone%20to%20assist%20me?`}
+                                        target="_blank"
                                    >
                                         <svg
                                              xmlns="http://www.w3.org/2000/svg"
