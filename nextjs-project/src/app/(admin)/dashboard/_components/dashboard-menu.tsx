@@ -1,7 +1,7 @@
 "use client";
 
 import DashboardLink from "@/components/dashboard-link";
-import { JSX } from "react";
+import { Dispatch, Fragment, JSX, SetStateAction } from "react";
 
 import { FaUpload } from "react-icons/fa";
 import { FaUsersGear } from "react-icons/fa6";
@@ -11,28 +11,57 @@ import { TbHelpHexagonFilled } from "react-icons/tb";
 
 export default function DashboardMenu({
      isDryerClose,
+     actionDryerClose,
 }: {
      isDryerClose: boolean;
+     actionDryerClose: Dispatch<SetStateAction<boolean>>;
 }) {
      return (
           <ul className="">
                {adminMenus.map((menu) => (
-                    <li key={menu?.id} className="my-1 mx-auto ">
-                         <DashboardLink href={menu?.href}>
-                              <p className="flex item-center text-xl gap-3 py-3 px-1">
-                                   <span className="text-2xl">
-                                        {menu?.icon}{" "}
-                                   </span>
-                                   <span
-                                        className={`${
-                                             isDryerClose ? "sm:hidden" : ""
-                                        }`}
-                                   >
-                                        {menu?.name}
-                                   </span>
-                              </p>
-                         </DashboardLink>
-                    </li>
+                    <Fragment key={menu.id}>
+                         <li className="my-1 mx-auto hidden sm:block">
+                              <DashboardLink href={menu.href}>
+                                   <p className="flex item-center text-xl gap-3 py-3 px-1">
+                                        <span className="text-2xl">
+                                             {menu?.icon}{" "}
+                                        </span>
+                                        <span
+                                             className={`${
+                                                  isDryerClose
+                                                       ? "sm:hidden"
+                                                       : ""
+                                             }`}
+                                        >
+                                             {menu?.name}
+                                        </span>
+                                   </p>
+                              </DashboardLink>
+                         </li>
+
+                         {/* mobile view */}
+                         <li className="sm:hidden">
+                              <DashboardLink
+                                   href={menu.href}
+                                   actionClick={() => actionDryerClose(false)}
+                              >
+                                   <p className="flex item-center text-xl gap-3 py-3 px-1">
+                                        <span className="text-2xl">
+                                             {menu?.icon}{" "}
+                                        </span>
+                                        <span
+                                             className={`${
+                                                  isDryerClose
+                                                       ? "sm:hidden"
+                                                       : ""
+                                             }`}
+                                        >
+                                             {menu?.name}
+                                        </span>
+                                   </p>
+                              </DashboardLink>
+                         </li>
+                    </Fragment>
                ))}
           </ul>
      );

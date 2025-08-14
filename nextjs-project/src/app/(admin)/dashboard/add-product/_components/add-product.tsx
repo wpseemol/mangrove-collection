@@ -81,7 +81,7 @@ export default function AddProduct({ allCategory }: { allCategory: string }) {
                <Form {...form}>
                     <form
                          onSubmit={form.handleSubmit(onSubmit)}
-                         className="grid md:grid-cols-3 grid-cols-1 gap-4 md:mx-5 mb-5"
+                         className="grid md:grid-cols-3 grid-cols-1 gap-4 "
                     >
                          <div className="md:col-span-2">
                               <ProductCategoryContainer

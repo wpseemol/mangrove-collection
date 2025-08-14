@@ -28,7 +28,7 @@ export default function DashboardMenuLayout({
                                    ? "md:w-20 sm:w-64 w-screen origin-left"
                                    : "md:w-64 w-0 origin-left"
                          } fixed top-0 left-0  z-20 min-h-screen
-            bg-[#111c43] dark:bg-neutral-800 dark:border-[#313335] 
+            bg-[#111c43] dark:bg-neutral-800  
             sm:border-r duration-300 overflow-x-hidden overflow-y-auto 
             text-neutral-300 `}
                     >
@@ -60,7 +60,10 @@ export default function DashboardMenuLayout({
 
                          <div className="px-2 py-4 flex flex-col md:items-center md:pl-0 pl-5 h-[calc(100vh-8rem)] overflow-x-hidden overflow-y-auto">
                               {/* dashboard menu here */}
-                              <DashboardMenu isDryerClose={isDryerClose} />
+                              <DashboardMenu
+                                   isDryerClose={isDryerClose}
+                                   actionDryerClose={setIsDryerClose}
+                              />
                          </div>
                          {/* log out btn */}
                          <DashboardLogout isDryerClose={isDryerClose} />

@@ -6,10 +6,12 @@ export default function DashboardLink({
      children,
      className,
      href,
+     actionClick,
 }: {
      children: React.ReactNode;
      className?: string;
      href: string;
+     actionClick?: () => void;
 }) {
      const pathName = usePathname();
 
@@ -19,6 +21,7 @@ export default function DashboardLink({
                     pathName === href ? "text-primary-foreground" : ""
                } ${className} hover:text-primary-foreground duration-200`}
                href={href}
+               onClick={actionClick}
           >
                {children}
           </Link>

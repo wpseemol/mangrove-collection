@@ -17,13 +17,13 @@ export default function DashboardLogout({
      }
 
      return (
-          <div className="flex justify-center">
+          <div className="flex justify-center sm:mt-0 -mt-16">
                <button
                     disabled={loading}
                     onClick={handelLogout}
                     className="flex items-center justify-center gap-2 bg-slate-800/60 hover:bg-slate-800/80 p-3 rounded font-bold hover:text-primary-foreground disabled:cursor-not-allowed"
                >
-                    <span className={`${isDryerClose ? "hidden" : ""} `}>
+                    <span className={`${isDryerClose ? "sm:hidden" : ""} `}>
                          Logout
                     </span>
 
