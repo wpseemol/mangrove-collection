@@ -20,7 +20,9 @@ export default async function CategorySection() {
 
                {categories.length > 0 && (
                     <motion.div
-                         className="grid grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-x-2 gap-y-2 md:gap-y-5 mt-10"
+                         className={`${
+                              categories.length < 8 ? "lg:flex grid" : "grid"
+                         } grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-x-2 gap-y-2 md:gap-y-5 mt-10 `}
                          initial={{ opacity: 0 }}
                          whileInView={{ opacity: 1 }}
                          viewport={{ once: true }}

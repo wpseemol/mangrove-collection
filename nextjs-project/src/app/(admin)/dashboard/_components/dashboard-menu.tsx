@@ -78,7 +78,7 @@ const adminMenus: MenuArraysType[] = [
      {
           href: "/dashboard/add-product",
           icon: <FaUpload />,
-          name: "Add Product",
+          name: "Add Product/Category",
           id: 1,
      },
      {
