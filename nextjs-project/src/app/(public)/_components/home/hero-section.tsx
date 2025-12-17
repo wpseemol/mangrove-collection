@@ -1,3 +1,4 @@
+import { SliderContent } from "@/types/home";
 import Image from "next/image";
 import Link from "next/link";
 import HeroSlickSlider from "./hero-slick-slider";
@@ -17,11 +18,11 @@ export default function HeroSection() {
                          <Link href={"#product1"}>
                               <figure className="">
                                    <Image
-                                        src="/assets/image/mangrove honey.jpg"
-                                        alt="Honey Collection"
-                                        className="object-cover object-center w-full h-auto hover:scale-105 duration-200 lg:w-min-[345px] lg:h-min-[215px] 2xl:w-min-[410px] 2xl:h-min-[245px]"
-                                        width={501}
-                                        height={300}
+                                        src={heroProductTop.imgUrl}
+                                        alt={heroProductTop.name}
+                                        className="object-cover object-center hover:scale-105 duration-200 lg:w-min-[345px] lg:h-min-[215px] 2xl:w-min-[410px] 2xl:h-min-[245px]"
+                                        width={655}
+                                        height={452}
                                    />
                               </figure>
                          </Link>
@@ -31,11 +32,11 @@ export default function HeroSection() {
                          <Link href={"#product2"}>
                               <figure className="">
                                    <Image
-                                        src="/assets/image/mangrove Fish.png"
-                                        alt="Mangrove Fish"
+                                        src={heroProductBottom.imgUrl}
+                                        alt={heroProductBottom.name}
                                         className="object-cover object-center hover:scale-105 duration-200 lg:w-min-[345px] lg:h-min-[215px] 2xl:w-min-[410px] 2xl:h-min-[245px]"
-                                        width={400}
-                                        height={245}
+                                        width={655}
+                                        height={452}
                                    />
                               </figure>
                          </Link>
@@ -45,3 +46,16 @@ export default function HeroSection() {
           </section>
      );
 }
+
+const heroProductTop: SliderContent = {
+     imgUrl: "/assets/image/vangal mass.jpg",
+     url: "/products/river-bhangor-fish",
+     id: 3,
+     name: "River bhangor fish",
+};
+const heroProductBottom: SliderContent = {
+     imgUrl: "/assets/image/chikri mass.jpg",
+     url: "/products/horina-cinri",
+     id: 3,
+     name: "Bagada cinri",
+};

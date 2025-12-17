@@ -85,8 +85,8 @@ function CustomSlide({ slidItem }: { slidItem: SliderContent }) {
                                         "/assets/logo/no-image.jpg"
                                    }
                                    alt={slidItem.name}
-                                   width={965}
-                                   height={514}
+                                   width={655}
+                                   height={452}
                               />
                          </motion.span>
                     </figure>
