@@ -29,16 +29,13 @@ export default async function AdminLayout({
      }
 
      return (
-          <>
+          
                <DashboardProviders>
                     <DashboardMenuLayout userMenu={<DashboardLoginUser />}>
                          {children}
                     </DashboardMenuLayout>
                </DashboardProviders>
-          </>
+          
      );
 }
 
-/**
- * test
- */
