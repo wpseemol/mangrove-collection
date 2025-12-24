@@ -7,7 +7,7 @@ import {
      updateFixedImage,
      updateSlide,
 } from "@/store/features/homeEditorSlice";
-import { useAppDispatch, useAppSelector } from "@/store/hook";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import FixedImageItem from "./fixed-image-item";
 import SlideItem from "./slide-item";
 
@@ -21,8 +21,13 @@ export default function ControlsPanel() {
           dispatch(addSlide());
      };
 
-     const handleUpdateSlide = (id: number, field: string, value: string) => {
-          dispatch(updateSlide({ id, field: field as any, value }));
+     const handleUpdateSlide = (
+          id: number,
+          field: string,
+          value: string | number
+     ) => {
+          // Validate before dispatching if needed
+          dispatch(updateSlide({ id, field: field as keyof Slide, value }));
      };
 
      const handleDeleteSlide = (id: number) => {

@@ -1,7 +1,7 @@
 "use client";
 
 import { addSlide } from "@/store/features/homeEditorSlice";
-import { useAppDispatch } from "@/store/hook";
+import { useAppDispatch } from "@/store/hooks";
 
 export default function MobileFAB() {
      const dispatch = useAppDispatch();

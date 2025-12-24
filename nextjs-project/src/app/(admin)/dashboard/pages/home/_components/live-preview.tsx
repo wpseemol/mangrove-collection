@@ -1,7 +1,7 @@
 "use client";
 
 import { setActiveView } from "@/store/features/homeEditorSlice";
-import { useAppDispatch, useAppSelector } from "@/store/hook";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 export default function LivePreview() {
      const dispatch = useAppDispatch();

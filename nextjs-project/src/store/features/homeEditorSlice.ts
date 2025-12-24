@@ -1,22 +1,23 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export type SlideStatus = "active" | "draft";
 export type ViewMode = "desktop" | "mobile";
 
 export interface Slide {
      id: number;
      title: string;
-     status: SlideStatus;
+     position: number; // Numeric position for ordering
      imageUrl: string;
      linkTarget: string;
+     linkStatus?: boolean;
 }
 
 export interface FixedImage {
      id: number;
      title: string;
-     position: "top" | "bottom";
+     position: "top" | "bottom"; // String position for top/bottom
      imageUrl: string;
      linkTarget: string;
+     linkStatus?: boolean;
 }
 
 interface HomeEditorState {
@@ -30,18 +31,11 @@ const initialState: HomeEditorState = {
      slides: [
           {
                id: 1,
+               position: 1,
                title: "Slide 1",
-               status: "active",
                imageUrl:
                     "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab",
                linkTarget: "collections/summer-sale",
-          },
-          {
-               id: 2,
-               title: "Slide 2",
-               status: "draft",
-               imageUrl: "",
-               linkTarget: "",
           },
      ],
      fixedImages: [
@@ -75,7 +69,7 @@ export const homeEditorSlice = createSlice({
                const newSlide: Slide = {
                     id: Math.max(0, ...state.slides.map((s) => s.id)) + 1,
                     title: `Slide ${state.slides.length + 1}`,
-                    status: "draft",
+                    position: state.slides.length + 1, // Add position
                     imageUrl: "",
                     linkTarget: "",
                };
@@ -86,7 +80,7 @@ export const homeEditorSlice = createSlice({
                action: PayloadAction<{
                     id: number;
                     field: keyof Slide;
-                    value: string;
+                    value: string | number; // Allow both string and number
                }>
           ) => {
                const { id, field, value } = action.payload;
@@ -99,6 +93,10 @@ export const homeEditorSlice = createSlice({
                state.slides = state.slides.filter(
                     (slide) => slide.id !== action.payload
                );
+               // Recalculate positions after deletion
+               state.slides.forEach((slide, index) => {
+                    slide.position = index + 1;
+               });
           },
           duplicateSlide: (state, action: PayloadAction<number>) => {
                const slideToDuplicate = state.slides.find(
@@ -109,7 +107,7 @@ export const homeEditorSlice = createSlice({
                          ...slideToDuplicate,
                          id: Math.max(0, ...state.slides.map((s) => s.id)) + 1,
                          title: `${slideToDuplicate.title} (Copy)`,
-                         status: "draft",
+                         position: state.slides.length + 1,
                     };
                     state.slides.push(duplicatedSlide);
                }
@@ -135,6 +133,23 @@ export const homeEditorSlice = createSlice({
                const { fromIndex, toIndex } = action.payload;
                const [removed] = state.slides.splice(fromIndex, 1);
                state.slides.splice(toIndex, 0, removed);
+
+               // Update positions after reordering
+               state.slides.forEach((slide, index) => {
+                    slide.position = index + 1;
+               });
+          },
+          updateSlidePosition: (
+               state,
+               action: PayloadAction<{ id: number; newPosition: number }>
+          ) => {
+               const { id, newPosition } = action.payload;
+               const slide = state.slides.find((s) => s.id === id);
+               if (slide) {
+                    slide.position = newPosition;
+                    // Sort slides by position
+                    state.slides.sort((a, b) => a.position - b.position);
+               }
           },
      },
 });
@@ -147,6 +162,7 @@ export const {
      duplicateSlide,
      updateFixedImage,
      reorderSlides,
+     updateSlidePosition,
 } = homeEditorSlice.actions;
 
 export default homeEditorSlice.reducer;
