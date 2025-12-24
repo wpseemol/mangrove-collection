@@ -1,7 +1,10 @@
-import MainComponents from "./_components/main-components";
+import HomePageEditor from "./_components/index-components";
+import { Providers } from "./_components/provider";
 
 export default function AdminHomeDesignPage() {
-    return (
-        <MainComponents />
-    );
-};
+     return (
+          <Providers>
+               <HomePageEditor />
+          </Providers>
+     );
+}
