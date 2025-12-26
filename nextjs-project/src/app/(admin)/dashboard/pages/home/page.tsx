@@ -1,10 +1,10 @@
 import HomePageEditor from "./_components";
-import { Providers } from "./_components/provider";
+import { HeroBannerProvider } from "./_components/hero-banner-provider";
 
 export default function AdminHomeDesignPage() {
      return (
-          <Providers>
+          <HeroBannerProvider>
                <HomePageEditor />
-          </Providers>
+          </HeroBannerProvider>
      );
 }

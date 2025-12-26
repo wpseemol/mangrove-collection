@@ -1,6 +1,7 @@
 import {
      CartContext,
      CartProductsContext,
+     HeroBannerContext,
      PurchaseContext,
      VariantUpdateContext,
 } from "@/contexts";
@@ -63,5 +64,24 @@ export const usePurchase = function () {
           throw new Error("usePurchase muse be used within a CartProvider");
      }
 
+     return context;
+};
+
+
+
+/**
+ * useHeroBanner hook to access HeroBannerContext values.
+ * @return {Object} An object containing slides and setSlides from HeroBannerContext.
+ * @example
+ * const { slides, setSlides } = useHeroBanner();
+ *   
+ */
+
+export const useHeroBanner = function () {
+     const context = useContext(HeroBannerContext);
+
+     if (!context) {
+          throw new Error("useHeroBanner muse be used within a HeroBannerProvider");
+     }    
      return context;
 };

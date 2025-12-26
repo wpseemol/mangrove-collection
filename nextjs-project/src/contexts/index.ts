@@ -1,3 +1,4 @@
+import { SlidesType } from "@/app/(admin)/dashboard/pages/home/_components/hero-banner-provider";
 import { CartProductsType } from "@/lib/actions/cart";
 import { createContext, Dispatch, SetStateAction } from "react";
 
@@ -67,3 +68,14 @@ export interface PurchaseProducts {
 }
 
 export type PaymentMethod = "cod" | "online-payment" | "card";
+
+
+/**
+ * @description hero-banner context
+ */
+export const HeroBannerContext = createContext<HeroBannerContextType | null>(null);
+
+export interface HeroBannerContextType {
+     slides: SlidesType[];
+     setSlides: Dispatch<SetStateAction<SlidesType[]>>;
+}

@@ -3,7 +3,7 @@
 import ControlsPanel from "./controls-panel";
 import Header from "./header";
 import LivePreview from "./live-preview";
-import MobileFAB from "./mobile-FAB";
+
 
 export default function HomePageEditor() {
      return (
@@ -19,7 +19,7 @@ export default function HomePageEditor() {
                          <LivePreview />
                     </div>
 
-                    <MobileFAB />
+                    
                </div>
           </div>
      );
