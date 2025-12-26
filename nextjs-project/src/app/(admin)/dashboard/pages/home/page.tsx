@@ -1,4 +1,4 @@
-import HomePageEditor from "./_components/index-components";
+import HomePageEditor from "./_components";
 import { Providers } from "./_components/provider";
 
 export default function AdminHomeDesignPage() {
