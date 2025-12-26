@@ -130,3 +130,65 @@ export async function deleteUploadedImage({
           };
      }
 }
+
+
+
+
+/***
+ *  get cloudinary all images in a folder
+ */
+
+
+export async function getAllCloudinaryImages(
+  folderName: string = "product-images",
+  maxResults: number = 500
+) {
+  try {
+    const images: Array<{
+      public_id: string;
+      secure_url: string;
+      created_at: string;
+      bytes: number;
+      format: string;
+      width: number;
+      height: number;
+      originalFilename?: string;
+    }> = [];
+    
+    let nextCursor: string | undefined;
+    
+    do {
+      // Fetch images with pagination
+      const result = await cloudinary.api.resources({
+        type: 'upload',
+        resource_type: 'image',
+        prefix: folderName, // Filter by folder
+        max_results: maxResults,
+        next_cursor: nextCursor,
+        context: true // Include custom metadata if needed
+      });
+      
+      // Add images to the array
+      images.push(...result.resources);
+      
+      // Get next cursor for pagination
+      nextCursor = result.next_cursor;
+    } while (nextCursor); // Continue until no more pages
+    
+    return {
+      success: true,
+      message: `Found ${images.length} images`,
+      data: images,
+      count: images.length
+    };
+    
+  } catch (error: any) {
+    console.error('Error fetching images from Cloudinary:', error);
+    return {
+      success: false,
+      message: error.message || "Failed to fetch images",
+      data: [],
+      count: 0
+    };
+  }
+}
