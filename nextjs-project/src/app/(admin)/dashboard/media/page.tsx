@@ -1,15 +1,14 @@
 import { getAllCloudinaryImages } from "@/lib/actions/media";
+import ImageData from "./_components";
 
 export default async function MedialPage() {
 
-        const images = await getAllCloudinaryImages()
-        console.log("images", images);
+        const images = await getAllCloudinaryImages("")
+        
 
     return (
-        <div className="p-3">
 
-            {JSON.stringify(images)}
-        </div>
+        images.success && <ImageData imageData={images.data} />
         
     );
 };
