@@ -1,6 +1,6 @@
 import {
   SlideFormData,
-  SliderFormData,
+  SlidersFormData,
   sliderFormSchema,
 } from "@/lib/schemas/zod/slide-schema";
 import { generateUniqueIds } from "@/utils/unique-id-generate";
@@ -19,10 +19,10 @@ export default function SlidesForm() {
   const [loading, setLoading] = React.useState(false);
   const { slides,setSlides } = useHeroBanner();
 
-  const form = useForm<SliderFormData>({
+  const form = useForm<SlidersFormData>({
     resolver: zodResolver(sliderFormSchema),
     defaultValues: {
-      slides
+      slides: slides.filter((slide) => slide.type === "slides"),
     },
   });
 
@@ -31,29 +31,17 @@ export default function SlidesForm() {
     name: "slides",
   });
 
-
-
- 
-
-
   // handle duplicate slide
   const handleAddSlide = (field: SlideFormData) => {
     append(field);
-
-    setSlides((prevSlides) => [...prevSlides, field]);
-
+    setSlides((prevSlides) => [...prevSlides, { ...field, type: "slides" }]);
   };
 
   const handleDeleteSlide = (index: number,) => {
     remove(index);
-
-    
-
-   
-    
   };
 
-  const onSubmit = (data: SliderFormData) => {
+  const onSubmit = (data: SlidersFormData) => {
     console.log("submit data:", data);
   };
 

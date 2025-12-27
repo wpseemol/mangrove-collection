@@ -3,7 +3,6 @@
 import { useHeroBanner } from "@/hooks";
 import { useState, useRef, useEffect } from "react";
 
-
 export default function LivePreview() {
   const { slides } = useHeroBanner();
   const [activeView, setActiveView] = useState<"desktop" | "mobile">("desktop");
@@ -11,25 +10,20 @@ export default function LivePreview() {
   const carouselRef = useRef<HTMLDivElement>(null);
 
   // Filter out slides without images for preview
-  const slidesWithImages = slides.filter(slide => slide.imageUrl && slide.imageUrl.trim() !== "");
-
-  // Default white/placeholder images
-  const defaultImages = {
-    mainBanner: "https://picsum.photos/800/400",
-    topRight: "https://picsum.photos/400/300",
-    bottomRight: "https://picsum.photos/400/300",
-  };
+  const bannerSlides = slides.filter(
+    (slide) => slide.type==="slides" 
+  );
 
   // Auto-slide functionality
   useEffect(() => {
-    if (slidesWithImages.length <= 1) return;
-    
+    if (bannerSlides.length <= 1) return;
+
     const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % slidesWithImages.length);
+      setActiveIndex((prev) => (prev + 1) % bannerSlides.length);
     }, 5000);
-    
+
     return () => clearInterval(interval);
-  }, [slidesWithImages.length]);
+  }, [bannerSlides.length]);
 
   // Handle next/previous slide
   const goToSlide = (index: number) => {
@@ -37,12 +31,19 @@ export default function LivePreview() {
   };
 
   const goToNextSlide = () => {
-    setActiveIndex((prev) => (prev + 1) % slidesWithImages.length);
+    setActiveIndex((prev) => (prev + 1) % bannerSlides.length);
   };
 
   const goToPrevSlide = () => {
-    setActiveIndex((prev) => (prev - 1 + slidesWithImages.length) % slidesWithImages.length);
+    setActiveIndex(
+      (prev) => (prev - 1 + bannerSlides.length) % bannerSlides.length
+    );
   };
+
+  const bannerTopRight = slides.find((slide) => slide.type === "right-top");
+  const bannerBottomRight = slides.find(
+    (slide) => slide.type === "right-bottom"
+  );
 
   return (
     <div className="lg:col-span-7 xl:col-span-8 sticky top-24 order-1 lg:order-2 hidden lg:block">
@@ -62,9 +63,10 @@ export default function LivePreview() {
               </span>
               Live Preview
             </h3>
-            {slidesWithImages.length > 0 && (
+            {bannerSlides.length > 0 && (
               <span className="text-xs bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 px-2 py-1 rounded">
-                {slidesWithImages.length} slide{slidesWithImages.length !== 1 ? 's' : ''}
+                {bannerSlides.length} slide
+                {bannerSlides.length !== 1 ? "s" : ""}
               </span>
             )}
           </div>
@@ -116,31 +118,34 @@ export default function LivePreview() {
             <div className="p-6">
               <div className="grid grid-cols-12 gap-4 h-[500px]">
                 {/* Left Main Banner - Custom Carousel */}
-                <div className="col-span-8 relative rounded-lg overflow-hidden h-full group" ref={carouselRef}>
-                  {slidesWithImages.length > 0 ? (
+                <div
+                  className="col-span-8 relative rounded-lg overflow-hidden h-full group"
+                  ref={carouselRef}
+                >
+                  {bannerSlides.length > 0 ? (
                     <div className="relative h-full overflow-hidden">
                       {/* Slides Container */}
                       <div className="relative h-full">
-                        {slidesWithImages.map((slide, index) => (
+                        {bannerSlides.map((slide, index) => (
                           <div
                             key={slide.id}
                             className={`absolute inset-0 transition-all duration-700 ease-in-out ${
                               index === activeIndex
-                                ? 'opacity-100 translate-x-0'
-                                : 'opacity-0 translate-x-full'
+                                ? "opacity-100 translate-x-0"
+                                : "opacity-0 translate-x-full"
                             }`}
                           >
                             <div
                               className="absolute inset-0 bg-center bg-cover bg-no-repeat"
                               style={{
-                                backgroundImage: `url('${slide.imageUrl}')`,
-                                backgroundSize: 'cover',
-                                backgroundPosition: 'center'
+                                backgroundImage: `url('${slide.imageUrl||"/assets/logo/no-image.jpg"}')`,
+                                backgroundSize: "cover",
+                                backgroundPosition: "center",
                               }}
                             >
                               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
                             </div>
-                            
+
                             {/* Slide Content Overlay */}
                             <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-12">
                               <span className="inline-block py-1 px-3 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-sm font-medium mb-4">
@@ -150,8 +155,8 @@ export default function LivePreview() {
                                 {slide.title || "Discover Collection"}
                               </h1>
                               <button className="bg-white text-slate-900 hover:bg-gray-100 px-8 py-3.5 rounded-full font-bold text-sm transition-all shadow-xl shadow-black/20 hover:scale-105">
-                                {slide.linkStatus && slide.linkTarget !== "#" 
-                                  ? "Shop Now" 
+                                {slide.linkStatus && slide.linkTarget !== "#"
+                                  ? "Shop Now"
                                   : "Explore Now"}
                               </button>
                             </div>
@@ -160,7 +165,7 @@ export default function LivePreview() {
                       </div>
 
                       {/* Navigation Arrows */}
-                      {slidesWithImages.length > 1 && (
+                      {bannerSlides.length > 1 && (
                         <>
                           <button
                             onClick={goToPrevSlide}
@@ -184,9 +189,9 @@ export default function LivePreview() {
                       )}
 
                       {/* Carousel Dots */}
-                      {slidesWithImages.length > 1 && (
+                      {bannerSlides.length > 1 && (
                         <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-10">
-                          {slidesWithImages.map((_, index) => (
+                          {bannerSlides.map((_, index) => (
                             <button
                               key={index}
                               onClick={() => goToSlide(index)}
@@ -206,14 +211,14 @@ export default function LivePreview() {
                       <div
                         className="absolute inset-0 bg-center bg-cover bg-no-repeat"
                         style={{
-                          backgroundImage: `url('${defaultImages.mainBanner}')`,
-                          backgroundSize: 'cover',
-                          backgroundPosition: 'center'
+                          backgroundImage: `url('${"/assets/logo/no-image.jpg"}')`,
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
                         }}
                       >
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
                       </div>
-                      
+
                       {/* Default Content */}
                       <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-12">
                         <span className="inline-block py-1 px-3 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-sm font-medium mb-4">
@@ -233,66 +238,70 @@ export default function LivePreview() {
                 {/* Right Side Banners */}
                 <div className="col-span-4 flex flex-col gap-4 h-full">
                   {/* Top Right Banner - Shows second slide or default */}
-                  <div className="flex-1 rounded-lg overflow-hidden relative group cursor-pointer">
-                    <div
-                      className="absolute inset-0 bg-center bg-cover bg-no-repeat transition-transform duration-500 group-hover:scale-105"
-                      style={{
-                        backgroundImage: `url('${slidesWithImages.length > 1 ? slidesWithImages[1]?.imageUrl : defaultImages.topRight}')`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center'
-                      }}
-                    >
-                      <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
-                    </div>
-                    
-                    {/* Banner Content */}
-                    <div className="absolute bottom-4 left-4 right-4">
-                      <span className="inline-block bg-white/90 backdrop-blur text-slate-900 text-xs font-bold px-3 py-1.5 rounded-md shadow-sm truncate max-w-full">
-                        {slidesWithImages.length > 1 
-                          ? (slidesWithImages[1]?.title || "Top Banner")
-                          : "Top Banner"
-                        }
-                      </span>
-                    </div>
+                  {bannerTopRight && (
+                    <div className="flex-1 rounded-lg overflow-hidden relative group cursor-pointer">
+                      <div
+                        className="absolute inset-0 bg-center bg-cover bg-no-repeat transition-transform duration-500 group-hover:scale-105"
+                        style={{
+                          backgroundImage: `url('${
+                            bannerTopRight.imageUrl ||
+                            "/assets/logo/no-image.jpg"
+                          }')`,
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
+                        }}
+                      >
+                        <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
+                      </div>
 
-                    {/* Hover Overlay */}
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <span className="text-white bg-black/50 px-4 py-2 rounded-full text-sm font-medium">
-                        View Collection
-                      </span>
+                      {/* Banner Content */}
+                      <div className="absolute bottom-4 left-4 right-4">
+                        <span className="inline-block bg-white/90 backdrop-blur text-slate-900 text-xs font-bold px-3 py-1.5 rounded-md shadow-sm truncate max-w-full">
+                          {bannerTopRight.title || "Top Banner"}
+                        </span>
+                      </div>
+
+                      {/* Hover Overlay */}
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <span className="text-white bg-black/50 px-4 py-2 rounded-full text-sm font-medium">
+                          View Collection
+                        </span>
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   {/* Bottom Right Banner - Shows third slide or default */}
-                  <div className="flex-1 rounded-lg overflow-hidden relative group cursor-pointer">
-                    <div
-                      className="absolute inset-0 bg-center bg-cover bg-no-repeat transition-transform duration-500 group-hover:scale-105"
-                      style={{
-                        backgroundImage: `url('${slidesWithImages.length > 2 ? slidesWithImages[2]?.imageUrl : defaultImages.bottomRight}')`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center'
-                      }}
-                    >
-                      <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
-                    </div>
-                    
-                    {/* Banner Content */}
-                    <div className="absolute bottom-4 left-4 right-4">
-                      <span className="inline-block bg-white/90 backdrop-blur text-slate-900 text-xs font-bold px-3 py-1.5 rounded-md shadow-sm truncate max-w-full">
-                        {slidesWithImages.length > 2 
-                          ? (slidesWithImages[2]?.title || "Bottom Banner")
-                          : "Bottom Banner"
-                        }
-                      </span>
-                    </div>
+                  {bannerBottomRight && (
+                    <div className="flex-1 rounded-lg overflow-hidden relative group cursor-pointer">
+                      <div
+                        className="absolute inset-0 bg-center bg-cover bg-no-repeat transition-transform duration-500 group-hover:scale-105"
+                        style={{
+                          backgroundImage: `url('${
+                            bannerBottomRight.imageUrl ||
+                            "/assets/logo/no-image.jpg"
+                          }')`,
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
+                        }}
+                      >
+                        <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
+                      </div>
 
-                    {/* Hover Overlay */}
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <span className="text-white bg-black/50 px-4 py-2 rounded-full text-sm font-medium">
-                        View Collection
-                      </span>
+                      {/* Banner Content */}
+                      <div className="absolute bottom-4 left-4 right-4">
+                        <span className="inline-block bg-white/90 backdrop-blur text-slate-900 text-xs font-bold px-3 py-1.5 rounded-md shadow-sm truncate max-w-full">
+                          {bannerBottomRight.title || "Bottom Banner"}
+                        </span>
+                      </div>
+
+                      {/* Hover Overlay */}
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <span className="text-white bg-black/50 px-4 py-2 rounded-full text-sm font-medium">
+                          View Collection
+                        </span>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -305,7 +314,7 @@ export default function LivePreview() {
             </div>
 
             {/* Current Slide Info */}
-            {slidesWithImages.length > 0 && (
+            {bannerSlides.length > 0 && (
               <div className="mx-6 mb-6 p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
                 <div className="flex items-center justify-between">
                   <div>
@@ -313,7 +322,8 @@ export default function LivePreview() {
                       Active Slide Preview
                     </h4>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                      Slide {activeIndex + 1}: {slidesWithImages[activeIndex]?.title || "Untitled"}
+                      Slide {activeIndex + 1}:{" "}
+                      {bannerSlides[activeIndex]?.title || "Untitled"}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
@@ -322,7 +332,9 @@ export default function LivePreview() {
                         link
                       </span>
                       <span>
-                        {slidesWithImages[activeIndex]?.linkStatus ? "Linked" : "No Link"}
+                        {bannerSlides[activeIndex]?.linkStatus
+                          ? "Linked"
+                          : "No Link"}
                       </span>
                     </div>
                   </div>

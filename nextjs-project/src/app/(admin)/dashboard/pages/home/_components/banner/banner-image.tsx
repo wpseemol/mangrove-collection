@@ -1,33 +1,39 @@
 import { useHeroBanner } from "@/hooks";
 import { imagesUploadCloudinary } from "@/lib/actions/media";
-import { SliderFormType } from "@/lib/schemas/zod/slide-schema";
+import { BannersFormType } from "@/lib/schemas/zod/slide-schema";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FileWithPath } from "react-dropzone";
 
 interface SlideImageProps {
   index: number;
-  form: SliderFormType;
+  form: BannersFormType;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function SlideImage({
+export default function BannerImage({
   index,
   form,
   setLoading,
 }: SlideImageProps) {
   const [selectedFile, setSelectedFile] = useState<FileWithPath | null>(null);
   const [imagePreview, setImagePreview] = useState<string>(
-    form.getValues(`slides.${index}.imageUrl`) || ""
+    form.getValues(`banners.${index}.imageUrl`) || ""
   );
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
 
-  const slide = form.watch(`slides.${index}`);
+  const slide = form.watch(`banners.${index}`);
 
   const { setSlides } = useHeroBanner();
+
+
+
+  useEffect(() => {
+    setImagePreview(slide.imageUrl || "");
+  }, [slide.imageUrl, index]);
 
   // Handle image file selection
   const handleImageSelect = async (
@@ -36,7 +42,7 @@ export default function SlideImage({
     const file = event.target.files?.[0];
     if (file) {
       setSelectedFile(file);
-      form.clearErrors(`slides.${index}.imageUrl`);
+      form.clearErrors(`banners.${index}.imageUrl`);
 
       // Create preview URL
       const previewUrl = URL.createObjectURL(file);
@@ -81,8 +87,8 @@ export default function SlideImage({
       ) {
         // Update form values
 
-        form.setValue(`slides.${index}.imageUrl`, response.data.secure_url);
-        form.clearErrors(`slides.${index}.imageUrl`);
+        form.setValue(`banners.${index}.imageUrl`, response.data.secure_url);
+        form.clearErrors(`banners.${index}.imageUrl`);
 
         // Update global state
         setSlides((prevSlides) =>
@@ -103,13 +109,13 @@ export default function SlideImage({
           setLoading(false);
         }, 500);
       } else {
-        form.setError(`slides.${index}.imageUrl`, {
+        form.setError(`banners.${index}.imageUrl`, {
           type: "manual",
           message: "Upload failed. Please try again.",
         });
       }
     } catch (error) {
-      form.setError(`slides.${index}.imageUrl`, {
+      form.setError(`banners.${index}.imageUrl`, {
         type: "manual",
         message: "Upload failed. Please try again.",
       });
@@ -237,13 +243,13 @@ export default function SlideImage({
       )}
 
       {/* Upload Error */}
-      {form.formState.errors.slides && form.formState.errors.slides[index]?.imageUrl && (
+      {form.formState.errors.banners && form.formState.errors.banners[index]?.imageUrl && (
         <div className="mt-2 p-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
           <p className="text-red-600 dark:text-red-400 text-xs">
             <span className="material-symbols-outlined text-xs align-middle mr-1">
               error
             </span>
-            {form.formState.errors.slides[index]?.imageUrl?.message}
+            {form.formState.errors.banners[index]?.imageUrl?.message}
           </p>
         </div>
       )}

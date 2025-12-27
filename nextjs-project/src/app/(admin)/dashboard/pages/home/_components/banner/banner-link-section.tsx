@@ -1,17 +1,17 @@
 import { useHeroBanner } from "@/hooks";
-import { SliderFormType } from "@/lib/schemas/zod/slide-schema";
+import { BannersFormType } from "@/lib/schemas/zod/slide-schema";
 import { useEffect } from "react";
 import { Controller } from "react-hook-form";
 
 
 interface LinkSectionProps {
   index: number;
-  form: SliderFormType;
+  form: BannersFormType;
 }
 
-export default function LinkSection({ index, form }: LinkSectionProps) {
+export default function BannerLinkSection({ index, form }: LinkSectionProps) {
 
-  const slide = form.watch(`slides.${index}`);
+  const slide = form.watch(`banners.${index}`);
   const { setSlides } = useHeroBanner();
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function LinkSection({ index, form }: LinkSectionProps) {
   return (
     <div className="border-t border-gray-200 dark:border-gray-700 p-4">
       <Controller
-        name={`slides.${index}.linkStatus`}
+        name={`banners.${index}.linkStatus`}
         control={form.control}
         render={({ field }) => (
           <div className="space-y-3">
@@ -77,7 +77,7 @@ export default function LinkSection({ index, form }: LinkSectionProps) {
                       /
                     </span>
                     <Controller
-                      name={`slides.${index}.linkTarget`}
+                      name={`banners.${index}.linkTarget`}
                       control={form.control}
                       render={({ field: linkField, fieldState: { error } }) => (
                         <input
@@ -94,9 +94,9 @@ export default function LinkSection({ index, form }: LinkSectionProps) {
                     />
                   </div>
 
-                  {form.formState.errors.slides && (
+                  {form.formState.errors.banners && (
                     <p className="text-red-500 text-xs">
-                      {form.formState.errors.slides[index]?.linkTarget?.message}
+                      {form.formState.errors.banners[index]?.linkTarget?.message}
                     </p>
                   )}
 
