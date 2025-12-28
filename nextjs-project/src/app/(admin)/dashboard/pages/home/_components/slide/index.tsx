@@ -1,3 +1,5 @@
+"use client";
+
 import {
         SlideFormData,
         SlidersFormData,
@@ -15,8 +17,9 @@ import SlideStatus from "./slide-status";
 import { useHeroBanner } from "@/hooks";
 import { updateHeroSliders } from "@/lib/actions/home-page-details";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
-export default function SlidesForm() {
+export default function SlidesForm({data}:{data:string}) {
         const [loading, setLoading] = React.useState(false);
         const { slides, setSlides } = useHeroBanner();
 
@@ -47,6 +50,8 @@ export default function SlidesForm() {
                 remove(index);
         };
 
+        const router = useRouter();
+
         const onSubmit = async (data: SlidersFormData) => {
                 const response = await updateHeroSliders(JSON.stringify(data));
                 if (!response.success) {
@@ -59,6 +64,7 @@ export default function SlidesForm() {
                                 response.message ||
                                         "Slider Image add Successful."
                         );
+                  router.refresh();
                         return;
                 }
         };
@@ -155,6 +161,7 @@ export default function SlidesForm() {
                                                 <SlideStatus
                                                         form={form}
                                                         loading={loading}
+                                                        data={data}
                                                 />
                                         </div>
                                 ))}

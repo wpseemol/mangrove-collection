@@ -1,35 +1,37 @@
-import { getHomePageDetails } from "@/lib/actions/home-page-details";
+
 import { SliderFormType } from "@/lib/schemas/zod/slide-schema";
 import { useEffect, useState } from "react";
 import { SlidesType } from "../hero-banner-provider";
 
+
 interface SlideStatusProps {
   form: SliderFormType;
   loading: boolean;
+  data:string
 }
 
-export default function SlideStatus({ form, loading }: SlideStatusProps) {
+export default function SlideStatus({ form, loading, data }: SlideStatusProps) {
   const { formState } = form;
   const { isDirty, errors } = formState;
   const [isDisable, setDisable] = useState(true);
 
-  useEffect(() => {
-    const checkNeedToSave = async () => {
-      const response = await getHomePageDetails();
-      
-      if (!response.success || !response.data) return;
+  useEffect(() => {  
 
-      const dbSlideData = JSON.parse(response.data) as { sliders: SlidesType[] };
-      const formSlides = form.getValues().slides;
-      
-      setDisable(JSON.stringify(dbSlideData.sliders) === JSON.stringify(formSlides));
-    };
+      const dbData = JSON.parse(data) as SlidesType[];
 
-    checkNeedToSave();
+      const dbDataVal = dbData.map(slide=>({title:slide.title,imageUrl: slide.imageUrl, linkStatus: slide.linkStatus, linkTarget: slide.linkTarget}))
+      const formDataVal = form.getValues().slides.map((slide)=>({title:slide.title,imageUrl: slide.imageUrl, linkStatus: slide.linkStatus, linkTarget: slide.linkTarget}))
+
+      setDisable(JSON.stringify(dbDataVal) === JSON.stringify(formDataVal));
+    
   }, [form, formState]);
 
   const hasErrors = !!errors?.slides;
   const currentLoading = loading || form.formState.isSubmitting;
+
+ 
+
+;
 
   return (
     <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700 px-4 pb-4">
