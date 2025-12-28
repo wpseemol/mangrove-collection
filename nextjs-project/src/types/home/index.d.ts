@@ -78,8 +78,8 @@ export interface Category {
  * @property {string} pageId - The unique identifier for the home page.
  * @property {string} pageTitle - The title of the home page.
  * @property {string} pageDescription - A brief description of the home page.
- * @property {SlidersType[]} sliders - An array of slider objects associated with the home page.
- * @property {BannersType[]} banners - An array of banner objects associated with the home page.
+ * @property {BannerSliderType[]} sliders - An array of slider objects associated with the home page.
+ * @property {BannerSliderType[]} banners - An array of banner objects associated with the home page.
  * 
  */
 
@@ -98,7 +98,7 @@ export interface HomePageDetailsType {
  *
  * @interface BannerSliderType
  * @property {string} id - The unique identifier for the banner.
- * @property {("right-top" | "right-bottom")} type - The type of the banner, either "right-top" or "right-bottom".
+ * @property {("right-top" | "right-bottom" | "slides")} type - The type of the banner, either "right-top", "right-bottom", or "slides".
  * @property {string} title - The title of the banner.
  * @property {string} imageUrl - The URL of the banner's image.
  * @property {string} linkTarget - The target URL for the banner link.
