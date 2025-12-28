@@ -1,7 +1,7 @@
 import {
-  SlideFormData,
-  SlidersFormData,
-  sliderFormSchema,
+        SlideFormData,
+        SlidersFormData,
+        sliderFormSchema,
 } from "@/lib/schemas/zod/slide-schema";
 import { generateUniqueIds } from "@/utils/unique-id-generate";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,107 +13,152 @@ import SlideImage from "./slide-image";
 import SlideTitle from "./slide-title";
 import SlideStatus from "./slide-status";
 import { useHeroBanner } from "@/hooks";
-
+import { updateHeroSliders } from "@/lib/actions/home-page-details";
+import { toast } from "sonner";
 
 export default function SlidesForm() {
-  const [loading, setLoading] = React.useState(false);
-  const { slides,setSlides } = useHeroBanner();
+        const [loading, setLoading] = React.useState(false);
+        const { slides, setSlides } = useHeroBanner();
 
-  const form = useForm<SlidersFormData>({
-    resolver: zodResolver(sliderFormSchema),
-    defaultValues: {
-      slides: slides.filter((slide) => slide.type === "slides"),
-    },
-  });
+        const form = useForm<SlidersFormData>({
+                resolver: zodResolver(sliderFormSchema),
+                defaultValues: {
+                        slides: slides.filter(
+                                (slide) => slide.type === "slides"
+                        ),
+                },
+        });
 
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: "slides",
-  });
+        const { fields, append, remove } = useFieldArray({
+                control: form.control,
+                name: "slides",
+        });
 
-  // handle duplicate slide
-  const handleAddSlide = (field: SlideFormData) => {
-    append(field);
-    setSlides((prevSlides) => [...prevSlides, { ...field, type: "slides" }]);
-  };
+        // handle duplicate slide
+        const handleAddSlide = (field: SlideFormData) => {
+                append(field);
+                setSlides((prevSlides) => [
+                        ...prevSlides,
+                        { ...field, type: "slides" },
+                ]);
+        };
 
-  const handleDeleteSlide = (index: number,) => {
-    remove(index);
-  };
+        const handleDeleteSlide = (index: number) => {
+                remove(index);
+        };
 
-  const onSubmit = (data: SlidersFormData) => {
-    console.log("submit data:", data);
-  };
+        const onSubmit = async (data: SlidersFormData) => {
+                const response = await updateHeroSliders(JSON.stringify(data));
+                if (!response.success) {
+                        toast.error(response.message);
+                        return;
+                }
 
-  return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="text-xl font-bold text-slate-900 dark:text-white">
-            Main Slider
-          </h3>
-          <p className="text-sm text-slate-500 dark:text-gray-400 mt-1">
-            Manage rotating slides
-          </p>
-        </div>
-        <button
-          onClick={() =>
-            handleAddSlide({
-              id: generateUniqueIds({ pattern: "****" }) as string,
-              title: "",
-              imageUrl: "",
-              linkTarget: "#",
-              linkStatus: false,
-            })
-          }
-          className="hidden lg:flex items-center gap-2 px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-sm font-bold rounded-lg hover:opacity-90 transition-opacity shadow-sm"
-        >
-          <span className="material-symbols-outlined text-[20px]">add</span>
-          Add Slide
-        </button>
-      </div>
+                if (response.success) {
+                        toast.success(
+                                response.message ||
+                                        "Slider Image add Successful."
+                        );
+                        return;
+                }
+        };
 
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        {fields.map((field, index) => (
-          <div
-            key={field.id}
-            className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden group transition-opacity"
-          >
-            {/* slider header */}
-            <SlideHeader
-              form={form}
-              index={index}
-              loading={loading}
-              isDelete={
-                fields.length <= 1
-                // Prevent deleting the last slide
-              }
-              onDuplicate={() =>
-                handleAddSlide({
-                  id: generateUniqueIds({
-                    pattern: "****",
-                  }) as string,
-                  title: field.title,
-                  imageUrl: field.imageUrl,
-                  linkStatus: field.linkStatus,
-                  linkTarget: field.linkTarget,
-                })
-              }
-              onDelete={() => handleDeleteSlide(index)}
-            />
+        return (
+                <div className="flex flex-col gap-6">
+                        <div className="flex items-center justify-between">
+                                <div>
+                                        <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                                                Main Slider
+                                        </h3>
+                                        <p className="text-sm text-slate-500 dark:text-gray-400 mt-1">
+                                                Manage rotating slides
+                                        </p>
+                                </div>
+                                <button
+                                        onClick={() =>
+                                                handleAddSlide({
+                                                        id: generateUniqueIds({
+                                                                pattern: "****",
+                                                        }) as string,
+                                                        title: "",
+                                                        imageUrl: "",
+                                                        linkTarget: "#",
+                                                        linkStatus: false,
+                                                })
+                                        }
+                                        className="hidden lg:flex items-center gap-2 px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-sm font-bold rounded-lg hover:opacity-90 transition-opacity shadow-sm"
+                                >
+                                        <span className="material-symbols-outlined text-[20px]">
+                                                add
+                                        </span>
+                                        Add Slide
+                                </button>
+                        </div>
 
-            {/* slider body */}
+                        <form onSubmit={form.handleSubmit(onSubmit)}>
+                                {fields.map((field, index) => (
+                                        <div
+                                                key={field.id}
+                                                className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border 
+            border-gray-200 dark:border-gray-700 overflow-hidden 
+            group transition-opacity mb-2"
+                                        >
+                                                {/* slider header */}
+                                                <SlideHeader
+                                                        form={form}
+                                                        index={index}
+                                                        loading={loading}
+                                                        isDelete={
+                                                                fields.length <=
+                                                                1
+                                                                // Prevent deleting the last slide
+                                                        }
+                                                        onDuplicate={() =>
+                                                                handleAddSlide({
+                                                                        id: generateUniqueIds(
+                                                                                {
+                                                                                        pattern: "****",
+                                                                                }
+                                                                        ) as string,
+                                                                        title: field.title,
+                                                                        imageUrl: field.imageUrl,
+                                                                        linkStatus: field.linkStatus,
+                                                                        linkTarget: field.linkTarget,
+                                                                })
+                                                        }
+                                                        onDelete={() =>
+                                                                handleDeleteSlide(
+                                                                        index
+                                                                )
+                                                        }
+                                                />
 
-            <SlideTitle form={form} index={index} loading={loading} />
+                                                {/* slider body */}
 
-            <SlideImage index={index} form={form} setLoading={setLoading} />
+                                                <SlideTitle
+                                                        form={form}
+                                                        index={index}
+                                                        loading={loading}
+                                                />
 
-            <LinkSection index={index} form={form} />
+                                                <SlideImage
+                                                        index={index}
+                                                        form={form}
+                                                        setLoading={setLoading}
+                                                />
 
-            <SlideStatus form={form} loading={loading} />
-          </div>
-        ))}
-      </form>
-    </div>
-  );
+                                                <LinkSection
+                                                        index={index}
+                                                        form={form}
+                                                />
+
+                                                <SlideStatus
+                                                        form={form}
+                                                        loading={loading}
+                                                />
+                                        </div>
+                                ))}
+                        </form>
+                </div>
+        );
 }

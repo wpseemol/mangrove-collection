@@ -9,12 +9,14 @@ interface SlideImageProps {
   index: number;
   form: SliderFormType;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  onChange?: () => void;
 }
 
 export default function SlideImage({
   index,
   form,
   setLoading,
+  onChange,
 }: SlideImageProps) {
   const [selectedFile, setSelectedFile] = useState<FileWithPath | null>(null);
   const [imagePreview, setImagePreview] = useState<string>(
@@ -92,6 +94,8 @@ export default function SlideImage({
               : prevSlide
           )
         );
+
+        onChange?.();
 
         // Update preview
         setImagePreview(response.data.secure_url);

@@ -7,14 +7,16 @@ import { Controller } from "react-hook-form";
 interface LinkSectionProps {
   index: number;
   form: SliderFormType;
+  onChange?: () => void;
 }
 
-export default function LinkSection({ index, form }: LinkSectionProps) {
+export default function LinkSection({ index, form, onChange }: LinkSectionProps) {
 
   const slide = form.watch(`slides.${index}`);
   const { setSlides } = useHeroBanner();
 
   useEffect(() => {
+    onChange?.();
     if (slide) {
       setSlides((prevSlides) =>
         prevSlides.map((prevSlide) =>

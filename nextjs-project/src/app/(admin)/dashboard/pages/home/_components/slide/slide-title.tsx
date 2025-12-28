@@ -8,14 +8,16 @@ interface SlideTitleProps {
   index: number;
   form: SliderFormType;
   loading: boolean;
+  onChange?: () => void;
 }
 
-export default function SlideTitle({ index, form, loading }: SlideTitleProps) {
+export default function SlideTitle({ index, form, loading, onChange }: SlideTitleProps) {
   const slideTitle = form.watch(`slides.${index}`);
 
   const { setSlides } = useHeroBanner();
 
   useEffect(() => {
+    
     setSlides((prevSlides) =>
       prevSlides.map((slide) =>
         slide.id === slideTitle.id
@@ -23,6 +25,9 @@ export default function SlideTitle({ index, form, loading }: SlideTitleProps) {
           : slide
       )
     );
+
+    onChange?.();
+
   }, [slideTitle.title, index]);
 
   return (

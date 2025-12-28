@@ -1,5 +1,7 @@
 "use client";
 
+
+import { Toaster } from "sonner";
 import BannerImages from "./banner";
 import SlidesForm from "./slide";
 
@@ -26,6 +28,7 @@ export default function ControlsPanel() {
         {/* Fixed Images List right top */}
         <BannerImages />
       </div>
+      <Toaster position="top-center" richColors closeButton />
     </div>
   );
 }

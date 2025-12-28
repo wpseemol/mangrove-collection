@@ -1,27 +1,38 @@
-import { createHomePageDetails, getHomePageDetails } from "@/lib/actions/home-page-details";
+import {
+  createHomePageDetails,
+  getHomePageDetails,
+} from "@/lib/actions/home-page-details";
 import HomePageEditor from "./_components";
-import { HeroBannerProvider } from "./_components/hero-banner-provider";
+import {
+  HeroBannerProvider,
+  SlidesType,
+} from "./_components/hero-banner-provider";
 
-export default function AdminHomeDesignPage() {
-     createIfNotExists()
-     return (
-          <HeroBannerProvider>
-               <HomePageEditor />
-          </HeroBannerProvider>
-     );
+export default async function AdminHomeDesignPage() {
+  const response = await getHomePageDetails();
+  
+  // Initialize banner data
+  let bannerSlideData: string = "[]";
+  
+  if (response.success && response.data) {
+    const data = JSON.parse(response.data) as {
+      sliders: SlidesType[];
+      banners: SlidesType[];
+    };
+    
+    // Combine sliders and banners into a single array
+    const combinedSlides = [...(data.sliders || []), ...(data.banners || [])];
+    bannerSlideData = JSON.stringify(combinedSlides);
+  } else {
+    // Create home page details if they don't exist
+    await createHomePageDetails();
+    // Default to empty array
+    bannerSlideData = "[]";
+  }
+
+  return (
+    <HeroBannerProvider bannerSlideData={bannerSlideData}>
+      <HomePageEditor />
+    </HeroBannerProvider>
+  );
 }
-
-
-
-     /**
-      * Create home page details if not exists database.
-      */
-     async function createIfNotExists()  {
-          const response = await getHomePageDetails();
-          if (!response.success || !response.data) {
-              const isCreate = await createHomePageDetails();
-              console.log("Home page details created:", isCreate);
-          }
-     }
-
-       
