@@ -112,3 +112,4 @@ export interface BannerSliderType {
     linkTarget: string;
     linkStatus: boolean;
 }
+
