@@ -33,6 +33,9 @@ export default function BannerImages() {
     console.log("submit data:", data);
   };
 
+
+  console.log(slides);
+
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
       {fields.map((field, index) => (
