@@ -5,7 +5,7 @@ import { auth } from "@/auth";
 import { connectMongoDB } from "@/db/connections";
 import { HomePageDetails } from "@/lib/schemas/mongoose/home-details";
 import { userRoleCheck } from "../user";
-import { sliderFormSchema } from "@/lib/schemas/zod/slide-schema";
+import { bannersSchema, sliderFormSchema } from "@/lib/schemas/zod/slide-schema";
 import { formatZodError, getFirstErrorMessage } from "@/utils/zod-error";
 
 /**
@@ -106,6 +106,16 @@ export async function getHomePageDetails() {
                                 sliders: 1,
                         }
                 ).lean()) ;
+
+                if(!homePageDetails){
+                        return {
+                            success: false,
+                        data: "",
+                        message: "Home page details fetched successfully. data not found.",    
+                        }
+                }
+
+
                 return {
                         success: true,
                         data: JSON.stringify(homePageDetails),
@@ -193,7 +203,86 @@ export async function updateHeroSliders(sliderDataString: string) {
         } catch (error) {
                 return {
                         success: false,
-                        data: null,
+                        data: "",
+                        error,
+                        message: "Error connecting to the database.",
+                };
+        }
+}
+
+
+
+/**
+ * 
+ * @param bannersDataString banner data pass
+ * @returns 
+ */
+
+export async function updateHeroBannerImages(bannersDataString: string){
+        try {
+                const session = await auth();
+                /**
+                 * Validates user and input, then adds a new product if authorized; returns operation result and errors if any.
+                 */
+                if (!session || !session.user) {
+                        return {
+                                success: false,
+                                message: "You are not login user.",
+                        };
+                }
+
+                const isAdmin = await userRoleCheck(
+                        session?.user.id,
+                        session?.user.role,
+                        "admin"
+                );
+
+                const isCreator = await userRoleCheck(
+                        session?.user.id,
+                        session?.user.role,
+                        "creator"
+                );
+
+                if (!isAdmin && !isCreator) {
+                        return {
+                                success: false,
+                                message: "Admin and Creator use only can add update data.",
+                        };
+                }
+                /**
+                 * Validates user and input, then adds a new product if authorized; returns operation result and errors if any.
+                 */
+
+                const inputData = JSON.parse(bannersDataString) as {
+                        slides: SlidesType[];
+                };
+
+                const bannerData = bannersSchema.safeParse(inputData);
+                if (!bannerData.success) {
+                        return {
+                                success: false,
+                                message: getFirstErrorMessage(bannerData.error),
+                                errors: formatZodError(bannerData.error),
+                                fieldErrors: bannerData.error.flatten(),
+                        };
+                }
+
+                const response = await HomePageDetails.updateOne(
+                        { pageId: "home-page" },
+                        {banners: bannerData.data.banners}
+                );
+
+                return {
+                        success: true,
+                        data: response as unknown,
+                        message: "Home page sliders updated successfully.",
+                };
+
+                // await connectMongoDB();
+        } catch (error) {
+                return {
+                        success: false,
+                        data: "",
                         error,
                         message: "Error connecting to the database.",
                 };

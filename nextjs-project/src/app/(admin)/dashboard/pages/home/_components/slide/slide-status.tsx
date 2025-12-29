@@ -44,7 +44,7 @@ export default function SlideStatus({ form, loading, data }: SlideStatusProps) {
                 const dbString = JSON.stringify(dbDataVal.map(sortObject));
                 const formString = JSON.stringify(formDataVal.map(sortObject));
                 setDisable(dbString === formString);
-        }, [form, formState]);
+        }, [form, formState,data]);
 
         const hasErrors = !!errors?.slides;
         const currentLoading = loading || form.formState.isSubmitting;

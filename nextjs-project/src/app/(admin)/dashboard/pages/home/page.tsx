@@ -20,18 +20,20 @@ export default async function AdminHomeDesignPage() {
   // Initialize banner data
   let bannerSlideData: string = "[]";
 
-  let dbData: string= "";
+  let dbSlidersData: string= "[]";
+  let bdBannersData: string= "[]";
   
-  if (response.success && response.data) {
+  if (response.success || response.data) {
     const data = JSON.parse(response.data) as {
       sliders: SlidesType[];
       banners: SlidesType[];
     };
 
-    dbData = JSON.stringify(data.sliders);
+    dbSlidersData = JSON.stringify(data?.sliders||[]);
+    bdBannersData = JSON.stringify(data?.banners||[])
     
     // Combine sliders and banners into a single array
-    const combinedSlides = [...(data.sliders || []), ...(data.banners || [])];
+    const combinedSlides = [...(data?.sliders || []), ...(data?.banners || [])];
     bannerSlideData = JSON.stringify(combinedSlides);
   } else {
     // Create home page details if they don't exist
@@ -53,7 +55,7 @@ export default async function AdminHomeDesignPage() {
                          <div className="lg:col-span-5 xl:col-span-4 flex flex-col gap-8 order-2 lg:order-1">
                                {/* Main Slider Section */}
                          
-                               <SlidesForm data={dbData} />
+                               <SlidesForm data={dbSlidersData} />
                          
                                <div className="h-px bg-gray-200 dark:bg-gray-700 w-full" />
                          
@@ -69,7 +71,7 @@ export default async function AdminHomeDesignPage() {
                                  </div>
                          
                                  {/* Fixed Images List right top */}
-                                 <BannerImages />
+                                 <BannerImages data={bdBannersData} />
                                </div>
                                <Toaster position="top-center" richColors closeButton />
                              </div>

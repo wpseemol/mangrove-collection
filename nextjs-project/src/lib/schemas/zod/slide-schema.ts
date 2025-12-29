@@ -60,7 +60,6 @@ export const bannerSchema = z.object({
 
   imageUrl: z
     .string()
-    .url("Image URL must be a valid URL")
     .refine(noHtml, { message: noHtmlMessage }),
 
   linkTarget: z
