@@ -1,4 +1,6 @@
 {
-     "workbench.colorTheme": "Learn with Sumit - Peace of the eye",
-     "cSpell.words": ["sonner", "uuidv"]
+        "workbench.colorTheme": "Learn with Sumit - Peace of the eye",
+        "cSpell.words": ["sonner", "uuidv"],
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
 }
