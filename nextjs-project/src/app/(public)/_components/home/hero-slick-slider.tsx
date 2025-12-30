@@ -119,8 +119,10 @@ function CustomSlide({ slidItem }: { slidItem: BannerSliderType }) {
                     className="object-cover object-center w-full 2xl:h-[515px] lg:h-[450px]"
                     src={slidItem.imageUrl || "/assets/logo/no-image.jpg"}
                     alt={slidItem.title}
-                    width={655}
-                    height={452}
+                    width={1800}
+                    height={1200}
+                    loading="eager" // Add this for above-the-fold images
+                    priority={true}
                 />
             </motion.span>
         </figure>
