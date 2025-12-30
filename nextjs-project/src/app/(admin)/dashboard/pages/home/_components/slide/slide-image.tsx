@@ -22,7 +22,7 @@ const ACCEPTED_IMAGE_TYPES = [
     "image/webp",
     "image/gif",
 ];
-const RECOMMENDED_DIMENSIONS = "1200x800 pixels";
+const RECOMMENDED_DIMENSIONS = "1800x1200 pixels";
 
 export default function SlideImage({
     index,

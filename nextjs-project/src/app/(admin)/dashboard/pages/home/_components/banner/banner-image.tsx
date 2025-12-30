@@ -21,7 +21,7 @@ const ACCEPTED_IMAGE_TYPES = [
     "image/webp",
     "image/gif",
 ];
-const RECOMMENDED_DIMENSIONS = "1200x800 pixels";
+const RECOMMENDED_DIMENSIONS = "600x400 pixels";
 
 export default function BannerImage({
     index,
