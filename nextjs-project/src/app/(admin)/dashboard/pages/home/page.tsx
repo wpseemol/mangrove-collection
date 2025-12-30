@@ -55,7 +55,7 @@ export default async function AdminHomeDesignPage() {
                     />
 
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                        <div className="lg:col-span-5 xl:col-span-4  flex-col gap-8 order-2 hidden lg:order-1">
+                        <div className="lg:col-span-5 xl:col-span-4  flex-col gap-8 order-2 flex lg:order-1">
                             {/* Main Slider Section */}
 
                             <SlidesForm data={dbSlidersData} />
@@ -82,8 +82,8 @@ export default async function AdminHomeDesignPage() {
                                 closeButton
                             />
                         </div>
+                        <LivePreview />
                     </div>
-                    <LivePreview />
                 </div>
             </div>
         </HeroBannerProvider>

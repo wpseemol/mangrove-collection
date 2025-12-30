@@ -46,7 +46,7 @@ export default function LivePreview() {
     );
 
     return (
-        <div className="lg:col-span-7 xl:col-span-8 sticky top-24 order-1 lg:order-2 lg:block">
+        <div className="lg:col-span-7 xl:col-span-8 sticky top-24 order-1 lg:order-2 hidden lg:block">
             <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-black/20 overflow-hidden flex flex-col h-[calc(100vh-8rem)]">
                 {/* Preview Header */}
                 <div className="border-b border-gray-200 dark:border-gray-800 px-6 py-4 flex items-center justify-between bg-white dark:bg-gray-800 z-10">
