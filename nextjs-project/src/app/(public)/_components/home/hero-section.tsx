@@ -11,9 +11,12 @@ export default async function HeroSection() {
         await getHeroSectionData();
 
     return (
-        <section className="container mx-auto flex flex-col justify-center 2xl:pt-10 md:pt-8 pb-5 sm:pb-0">
-            {/* hero slider section */}
-            <div className="grid grid-cols-2 lg:grid-cols-10 gap-3 lg:gap-6 p-3 md:p-0 2xl:h-[515px] lg:h-[450px]">
+        <section
+            // 2xl:pt-10 update 2xl:pt-6
+            className="container mx-auto flex flex-col justify-center 2xl:pt-6 md:pt-8 pb-5 sm:pb-0"
+        >
+            {/* hero slider section 2xl:h-[515px] make it 600px */}
+            <div className="grid grid-cols-2 lg:grid-cols-10 gap-3 lg:gap-6 p-3 md:p-0 2xl:h-[600px] lg:h-[450px]">
                 {/* slider section */}
                 <div className="lg:row-span-2 col-span-2 lg:col-span-7 border border-black/10 dark:border-white/80 shadow-sm lg:rounded-l-sm overflow-hidden">
                     <HeroSlickSlider sliderData={JSON.stringify(sliderData)} />

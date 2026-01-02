@@ -46,7 +46,7 @@ export default function HeroSlickSlider({
         speed: 500,
         autoplaySpeed: 5000,
         focusOnSelect: true,
-        dotsClass: "slick-dots xl:mb-[10rem] md:mb-10 mb-10",
+        dotsClass: "slick-dots 2xl:mb-[15rem] xl:mb-[10rem] md:mb-10 mb-10",
         centerPadding: "200px",
 
         nextArrow: <SampleNextArrow />,
@@ -85,7 +85,8 @@ function CustomSlide({ slidItem }: { slidItem: BannerSliderType }) {
                         className="w-full h-full"
                     >
                         <Image
-                            className="object-cover object-center w-full 2xl:h-[515px] lg:h-[450px]"
+                            // 2xl:h-[515px] make it 2xl:h-[600px]
+                            className="object-cover object-center w-full 2xl:h-[600px] lg:h-[450px]"
                             src={
                                 slidItem.imageUrl || "/assets/logo/no-image.jpg"
                             }
@@ -116,7 +117,7 @@ function CustomSlide({ slidItem }: { slidItem: BannerSliderType }) {
                 className="w-full h-full"
             >
                 <Image
-                    className="object-cover object-center w-full 2xl:h-[515px] lg:h-[450px]"
+                    className="object-cover object-center w-full 2xl:h-[600px] lg:h-[450px]"
                     src={slidItem.imageUrl || "/assets/logo/no-image.jpg"}
                     alt={slidItem.title}
                     width={1800}
