@@ -4,9 +4,9 @@ import { connectMongoDB } from "@/db/connections";
 import { COOKIE_KEY_PURCHASES, SECRET_KEY_PURCHASES } from "@/lib/constant";
 import { Product } from "@/lib/schemas/mongoose/product";
 import {
-     ProductType,
-     PurchaseItemType,
-     PurchaseProductsType,
+    ProductType,
+    PurchaseItemType,
+    PurchaseProductsType,
 } from "@/types/purchase";
 import { replaceMongoIds } from "@/utils/replace";
 import jwt from "jsonwebtoken";
@@ -20,33 +20,33 @@ import { cookies } from "next/headers";
  * @returns boolean
  */
 export async function setPurchaseData(
-     purchaseItem: PurchaseItemType[]
+    purchaseItem: PurchaseItemType[]
 ): Promise<boolean> {
-     try {
-          /**
-           * check purchaseItem is empty or not
-           * if empty then return false
-           */
-          if (!purchaseItem || purchaseItem.length < 1) {
-               return false;
-          }
+    try {
+        /**
+         * check purchaseItem is empty or not
+         * if empty then return false
+         */
+        if (!purchaseItem || purchaseItem.length < 1) {
+            return false;
+        }
 
-          const purchases = purchaseItem;
+        const purchases = purchaseItem;
 
-          const token = jwt.sign({ purchases }, SECRET_KEY_PURCHASES, {
-               expiresIn: "1y",
-          }) as string;
+        const token = jwt.sign({ purchases }, SECRET_KEY_PURCHASES, {
+            expiresIn: "1y",
+        }) as string;
 
-          const cookieStore = await cookies();
-          cookieStore.set(COOKIE_KEY_PURCHASES, token, {
-               httpOnly: true,
-               secure: true,
-               maxAge: 31536000, // 1 year
-          });
-          return true;
-     } catch {
-          return false;
-     }
+        const cookieStore = await cookies();
+        cookieStore.set(COOKIE_KEY_PURCHASES, token, {
+            httpOnly: true,
+            secure: true,
+            maxAge: 31536000, // 1 year
+        });
+        return true;
+    } catch {
+        return false;
+    }
 }
 
 /**
@@ -59,31 +59,30 @@ export async function setPurchaseData(
  *
  */
 export async function getPurchaseData(): Promise<PurchaseItemType[] | null> {
-     try {
-          const cookieStore = await cookies();
-          const purchaseDataToken =
-               cookieStore.get(COOKIE_KEY_PURCHASES)?.value;
-          if (!purchaseDataToken) {
-               return null;
-          }
+    try {
+        const cookieStore = await cookies();
+        const purchaseDataToken = cookieStore.get(COOKIE_KEY_PURCHASES)?.value;
+        if (!purchaseDataToken) {
+            return null;
+        }
 
-          try {
-               const purchaseItem = jwt.verify(
-                    purchaseDataToken,
-                    SECRET_KEY_PURCHASES
-               ) as { purchases: PurchaseItemType[] };
+        try {
+            const purchaseItem = jwt.verify(
+                purchaseDataToken,
+                SECRET_KEY_PURCHASES
+            ) as { purchases: PurchaseItemType[] };
 
-               if (!purchaseItem || purchaseItem.purchases.length < 1) {
-                    return null;
-               }
+            if (!purchaseItem || purchaseItem.purchases.length < 1) {
+                return null;
+            }
 
-               return purchaseItem.purchases;
-          } catch {
-               return null;
-          }
-     } catch {
-          return null;
-     }
+            return purchaseItem.purchases;
+        } catch {
+            return null;
+        }
+    } catch {
+        return null;
+    }
 }
 
 /**
@@ -96,49 +95,49 @@ export async function getPurchaseData(): Promise<PurchaseItemType[] | null> {
  * 3. return false if error or no purchase data found
  */
 export async function purchaseQuantityUpdate(
-     productId: string,
-     quantity: number
+    productId: string,
+    quantity: number
 ): Promise<boolean> {
-     if (!productId || !quantity) {
-          return false;
-     }
+    if (!productId || !quantity) {
+        return false;
+    }
 
-     try {
-          const purchaseData = await getPurchaseData();
-          if (!purchaseData) {
-               return false;
-          }
+    try {
+        const purchaseData = await getPurchaseData();
+        if (!purchaseData) {
+            return false;
+        }
 
-          const purchaseItem = purchaseData.map((item) => {
-               if (item.productId === productId) {
-                    return {
-                         ...item,
-                         quantity: quantity,
-                    };
-               }
-               return item;
-          });
+        const purchaseItem = purchaseData.map((item) => {
+            if (item.productId === productId) {
+                return {
+                    ...item,
+                    quantity: quantity,
+                };
+            }
+            return item;
+        });
 
-          const token = jwt.sign(
-               { purchases: purchaseItem },
-               SECRET_KEY_PURCHASES,
-               {
-                    expiresIn: "1y",
-               }
-          ) as string;
+        const token = jwt.sign(
+            { purchases: purchaseItem },
+            SECRET_KEY_PURCHASES,
+            {
+                expiresIn: "1y",
+            }
+        ) as string;
 
-          const cookieStore = await cookies();
-          cookieStore.set(COOKIE_KEY_PURCHASES, token, {
-               httpOnly: true,
-               secure: true,
-               maxAge: 31536000,
-               path: "/",
-          });
+        const cookieStore = await cookies();
+        cookieStore.set(COOKIE_KEY_PURCHASES, token, {
+            httpOnly: true,
+            secure: true,
+            maxAge: 31536000,
+            path: "/",
+        });
 
-          return true;
-     } catch {
-          return false;
-     }
+        return true;
+    } catch {
+        return false;
+    }
 }
 
 /**
@@ -150,60 +149,59 @@ export async function purchaseQuantityUpdate(
  * 4. return null if no purchase data found
  */
 export async function getPurchaseProductData(): Promise<
-     PurchaseProductsType[] | null
+    PurchaseProductsType[] | null
 > {
-     try {
-          const purchaseData = await getPurchaseData();
-          if (!purchaseData) {
-               return null;
-          }
+    try {
+        const purchaseData = await getPurchaseData();
+        if (!purchaseData) {
+            return null;
+        }
 
-          const purchaseProductIds = purchaseData.map((item) => item.productId);
+        const purchaseProductIds = purchaseData.map((item) => item.productId);
 
-          await connectMongoDB();
+        await connectMongoDB();
 
-          const showColumns = "name thumbnail slug price currency";
-          const productResponse = await Product.find(
-               {
-                    _id: { $in: purchaseProductIds },
-               },
-               showColumns
-          ).lean();
+        const showColumns = "name thumbnail slug price currency shippingCost";
+        const productResponse = await Product.find(
+            {
+                _id: { $in: purchaseProductIds },
+            },
+            showColumns
+        ).lean();
 
-          const purchaseProductData = replaceMongoIds(
-               productResponse
-          ) as ProductType[];
+        const purchaseProductData = replaceMongoIds(
+            productResponse
+        ) as ProductType[];
 
-          const purchaseProductDataWithQuantity = purchaseProductData.map(
-               (item) => {
-                    const purchaseItem = purchaseData.find(
-                         (purchaseItem) => purchaseItem.productId === item.id
-                    );
+        const purchaseProductDataWithQuantity = purchaseProductData.map(
+            (item) => {
+                const purchaseItem = purchaseData.find(
+                    (purchaseItem) => purchaseItem.productId === item.id
+                );
 
-                    const quantity = purchaseItem ? purchaseItem.quantity : 1;
-                    const selectedPriceId = purchaseItem
-                         ? purchaseItem.selectedPriceId
-                         : "";
-                    const findPrice = item.price.find(
-                         (price) =>
-                              price.variantId === purchaseItem?.selectedPriceId
-                    );
+                const quantity = purchaseItem ? purchaseItem.quantity : 1;
+                const selectedPriceId = purchaseItem
+                    ? purchaseItem.selectedPriceId
+                    : "";
+                const findPrice = item.price.find(
+                    (price) => price.variantId === purchaseItem?.selectedPriceId
+                );
 
-                    const price = findPrice ? findPrice.price : 0;
+                const price = findPrice ? findPrice.price : 0;
 
-                    return {
-                         ...item,
-                         quantity: quantity,
-                         price: price,
-                         selectedPriceId,
-                    };
-               }
-          ) as PurchaseProductsType[];
+                return {
+                    ...item,
+                    quantity: quantity,
+                    price: price,
+                    selectedPriceId,
+                };
+            }
+        ) as PurchaseProductsType[];
 
-          return purchaseProductDataWithQuantity;
-     } catch {
-          return null;
-     }
+        return purchaseProductDataWithQuantity;
+    } catch {
+        return null;
+    }
 }
 
 /**
@@ -215,42 +213,42 @@ export async function getPurchaseProductData(): Promise<
  * 3. return false if error or no purchase data found
  */
 export async function purchaseDataDelete(productId: string): Promise<boolean> {
-     if (!productId) {
-          return false;
-     }
+    if (!productId) {
+        return false;
+    }
 
-     try {
-          const purchaseData = await getPurchaseData();
-          if (!purchaseData) {
-               return false;
-          }
+    try {
+        const purchaseData = await getPurchaseData();
+        if (!purchaseData) {
+            return false;
+        }
 
-          const purchaseItem = purchaseData.filter(
-               (item) => item.productId !== productId
-          );
+        const purchaseItem = purchaseData.filter(
+            (item) => item.productId !== productId
+        );
 
-          const cookieStore = await cookies();
-          if (purchaseItem.length < 1) {
-               cookieStore.delete(COOKIE_KEY_PURCHASES);
-               return true;
-          }
+        const cookieStore = await cookies();
+        if (purchaseItem.length < 1) {
+            cookieStore.delete(COOKIE_KEY_PURCHASES);
+            return true;
+        }
 
-          const token = jwt.sign(
-               { purchases: purchaseItem },
-               SECRET_KEY_PURCHASES,
-               {
-                    expiresIn: "1y",
-               }
-          ) as string;
+        const token = jwt.sign(
+            { purchases: purchaseItem },
+            SECRET_KEY_PURCHASES,
+            {
+                expiresIn: "1y",
+            }
+        ) as string;
 
-          cookieStore.set(COOKIE_KEY_PURCHASES, token, {
-               httpOnly: true,
-               secure: true,
-               maxAge: 31536000,
-               path: "/",
-          });
-          return true;
-     } catch {
-          return false;
-     }
+        cookieStore.set(COOKIE_KEY_PURCHASES, token, {
+            httpOnly: true,
+            secure: true,
+            maxAge: 31536000,
+            path: "/",
+        });
+        return true;
+    } catch {
+        return false;
+    }
 }

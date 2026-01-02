@@ -1,3 +1,5 @@
+import { ShippingCostType } from "../mongoose/product";
+
 /**
  * @description PurchaseItemType is used to define the structure of a purchase item.
  * @property {string} productId - The ID of the product being purchased.
@@ -5,9 +7,9 @@
  * @property {string} selectedPriceId - The selected price ID for the product.
  */
 export interface PurchaseItemType {
-     productId: string;
-     quantity: number;
-     selectedPriceId: string;
+    productId: string;
+    quantity: number;
+    selectedPriceId: string;
 }
 
 /**
@@ -22,14 +24,14 @@ export interface PurchaseItemType {
  * @property {string} selectedPriceId - The selected price ID for the product.
  */
 export interface PurchaseProductsType {
-     id: string;
-     name: string;
-     thumbnail: string;
-     slug: string;
-     currency: string;
-     price: number;
-     quantity: number;
-     selectedPriceId: string;
+    id: string;
+    name: string;
+    thumbnail: string;
+    slug: string;
+    currency: string;
+    price: number;
+    quantity: number;
+    selectedPriceId: string;
 }
 
 /**
@@ -46,12 +48,13 @@ export interface PurchaseProductsType {
  *
  */
 export interface ProductType {
-     id: string;
-     name: string;
-     slug: string;
-     currency: string;
-     thumbnail: string;
-     price: PriceType[];
+    id: string;
+    name: string;
+    slug: string;
+    currency: string;
+    thumbnail: string;
+    price: PriceType[];
+    shippingCost: ShippingCostType[];
 }
 
 /**
@@ -61,7 +64,7 @@ export interface ProductType {
  * @property {boolean} select - Indicates if the variant is selected.
  */
 interface PriceType {
-     variantId: string;
-     price: number;
-     select: boolean;
+    variantId: string;
+    price: number;
+    select: boolean;
 }

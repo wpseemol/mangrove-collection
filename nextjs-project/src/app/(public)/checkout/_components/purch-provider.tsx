@@ -3,48 +3,48 @@
 import { PurchaseContext } from "@/contexts";
 import { Dispatch, SetStateAction, useState } from "react";
 
-export default function PurchProvider({
-     children,
+export default function CheckoutProvider({
+    children,
 }: Readonly<{
-     children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-     const [buyProducts, setBuyProducts] = useState<Products[] | null>(null);
-     const [shippingCost, setShippingCost] = useState<number | null>(null);
-     const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(
-          null
-     );
+    const [buyProducts, setBuyProducts] = useState<Products[] | null>(null);
+    const [shippingCost, setShippingCost] = useState<number | null>(null);
+    const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(
+        null
+    );
 
-     const value: PurchaseContextType = {
-          buyProducts,
-          setBuyProducts,
-          shippingCost,
-          setShippingCost,
-          paymentMethod,
-          setPaymentMethod,
-     };
+    const value: PurchaseContextType = {
+        buyProducts,
+        setBuyProducts,
+        shippingCost,
+        setShippingCost,
+        paymentMethod,
+        setPaymentMethod,
+    };
 
-     return (
-          <>
-               <PurchaseContext.Provider value={value}>
-                    {children}
-               </PurchaseContext.Provider>
-          </>
-     );
+    return (
+        <>
+            <PurchaseContext.Provider value={value}>
+                {children}
+            </PurchaseContext.Provider>
+        </>
+    );
 }
 
 interface PurchaseContextType {
-     paymentMethod: PaymentMethod | null;
-     setPaymentMethod: Dispatch<SetStateAction<PaymentMethod | null>>;
-     shippingCost: number | null;
-     setShippingCost: Dispatch<SetStateAction<number | null>>;
-     buyProducts: Products[] | null;
-     setBuyProducts: Dispatch<SetStateAction<Products[] | null>>;
+    paymentMethod: PaymentMethod | null;
+    setPaymentMethod: Dispatch<SetStateAction<PaymentMethod | null>>;
+    shippingCost: number | null;
+    setShippingCost: Dispatch<SetStateAction<number | null>>;
+    buyProducts: Products[] | null;
+    setBuyProducts: Dispatch<SetStateAction<Products[] | null>>;
 }
 
 interface Products {
-     productId: string;
-     quantity: number;
-     selectedPriceId: string;
+    productId: string;
+    quantity: number;
+    selectedPriceId: string;
 }
 
 type PaymentMethod = "cod" | "online-payment" | "card";

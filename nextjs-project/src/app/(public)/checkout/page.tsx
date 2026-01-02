@@ -1,21 +1,25 @@
 import { getPurchaseProductData } from "@/lib/actions/purchase";
-import { CheckoutForm } from "./_components/checkout-form";
-import PurchProvider from "./_components/purch-provider";
-import YourOrderSection from "./_components/your-order-section";
+
+import CheckoutProvider from "./_components/purch-provider";
+
+import TestCheckout from "./_components";
+import OrderSummary from "./_components/order-summary";
 
 export const dynamic = "force-dynamic";
 
 export default async function CheckoutPage() {
-     const purchasesProducts = await getPurchaseProductData();
+    const purchasesProducts = await getPurchaseProductData();
+    //     console.log(purchasesProducts);
 
-     return (
-          <main className="container mx-auto min-h-[calc(100vh-25.45rem)]">
-               <section className="grid md:grid-cols-2 grid-cols-1">
-                    <PurchProvider>
-                         <CheckoutForm />
-                         <YourOrderSection data={purchasesProducts} />
-                    </PurchProvider>
-               </section>
-          </main>
-     );
+    return (
+        <main className="container mx-auto min-h-[calc(100vh-25.45rem)]">
+            <section className="">
+                <CheckoutProvider>
+                    <TestCheckout />
+                    {/* <CheckoutForm /> */}
+                    {/* <YourOrderSection data={purchasesProducts} /> */}
+                </CheckoutProvider>
+            </section>
+        </main>
+    );
 }

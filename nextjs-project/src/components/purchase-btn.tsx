@@ -7,57 +7,57 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 
 export default function PurchaseBtn({
-     productId,
-     selectedPriceId,
+    productId,
+    selectedPriceId,
 }: {
-     productId: string;
-     selectedPriceId: string;
+    productId: string;
+    selectedPriceId: string;
 }) {
-     const router = useRouter();
-     const [loading, setLoading] = useState<boolean>(false);
+    const router = useRouter();
+    const [loading, setLoading] = useState<boolean>(false);
 
-     async function handlePurchase() {
-          setLoading(true);
-          const purchaseItems: PurchaseItemType[] = [
-               {
-                    productId: productId.toString(),
-                    quantity: 1,
-                    selectedPriceId: selectedPriceId,
-               },
-          ];
+    async function handlePurchase() {
+        setLoading(true);
+        const purchaseItems: PurchaseItemType[] = [
+            {
+                productId: productId.toString(),
+                quantity: 1,
+                selectedPriceId: selectedPriceId,
+            },
+        ];
 
-          try {
-               /**
-                * [{productId:string , quantity: number,selectedPriceId:string}] }]
-                */
-               await setPurchaseData(purchaseItems);
-          } catch {
-               // Silent error handling - no logging
-          } finally {
-               setLoading(false);
-          }
+        try {
+            /**
+             * [{productId:string , quantity: number,selectedPriceId:string}] }]
+             */
+            await setPurchaseData(purchaseItems);
+        } catch {
+            // Silent error handling - no logging
+        } finally {
+            setLoading(false);
+        }
 
-          router.push("/checkout");
-     }
+        router.push("/checkout");
+    }
 
-     return (
-          <Button
-               disabled={loading}
-               onClick={handlePurchase}
-               variant="default"
-               size="sm"
-               className={`text-neutral-100 hover:bg-primary-foreground 
+    return (
+        <Button
+            disabled={loading}
+            onClick={handlePurchase}
+            variant="default"
+            size="sm"
+            className={`text-neutral-100 hover:bg-primary-foreground 
                      group-hover:animate-jump animate-once animate-duration-[3000ms]
                      shadow-xl disabled:pointer-events-auto cursor-pointer text-xs ${
-                          loading
-                               ? "disabled:cursor-progress"
-                               : "disabled:cursor-not-allowed"
+                         loading
+                             ? "disabled:cursor-progress"
+                             : "disabled:cursor-not-allowed"
                      }`}
-          >
-               <span className="hidden sm:inline ">
-                    {loading ? "Buy..." : "Buy Now"}{" "}
-               </span>
-               <span className="sm:hidden">{loading ? "..." : "Buy"} </span>
-          </Button>
-     );
+        >
+            <span className="hidden sm:inline ">
+                {loading ? "Buy..." : "Buy Now"}{" "}
+            </span>
+            <span className="sm:hidden">{loading ? "..." : "Buy"} </span>
+        </Button>
+    );
 }
