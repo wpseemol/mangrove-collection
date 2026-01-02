@@ -1,5 +1,5 @@
-import { ProductType } from '@/types/mongoose/product';
-import mongoose from 'mongoose';
+import { ProductType } from "@/types/mongoose/product";
+import mongoose from "mongoose";
 
 interface IProduct extends ProductType, mongoose.Document {}
 
@@ -11,7 +11,7 @@ const productSchema = new mongoose.Schema<IProduct>({
     category: {
         type: mongoose.Schema.ObjectId,
         require: true,
-        ref: 'Category',
+        ref: "Category",
     },
     slug: {
         type: String,
@@ -35,6 +35,25 @@ const productSchema = new mongoose.Schema<IProduct>({
             },
         ],
         require: true,
+    },
+    shippingCost: {
+        type: [
+            {
+                shippingId: { type: String, required: true },
+                title: { type: String, required: true },
+                price: { type: Number, required: true },
+                shortDescription: { type: String, required: true },
+            },
+        ],
+        required: true,
+        default: [
+            {
+                shippingId: "default",
+                title: "Standard Shipping",
+                price: 160,
+                shortDescription: "",
+            },
+        ],
     },
     currency: {
         type: String,
@@ -100,6 +119,6 @@ const productSchema = new mongoose.Schema<IProduct>({
 
 const Product =
     mongoose.models.Product ||
-    mongoose.model<IProduct>('Product', productSchema);
+    mongoose.model<IProduct>("Product", productSchema);
 
 export { Product };
