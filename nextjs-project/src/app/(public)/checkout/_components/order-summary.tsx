@@ -1,8 +1,10 @@
 "use client";
 import { CheckoutFormType } from "@/lib/schemas/zod/checkout-schema";
+import { PurchaseProductsType } from "@/types/purchase";
 
 interface OrderSummaryProps {
     form: CheckoutFormType;
+    buyProductData: PurchaseProductsType[];
 }
 
 export default function OrderSummary({ form }: OrderSummaryProps) {
@@ -12,7 +14,7 @@ export default function OrderSummary({ form }: OrderSummaryProps) {
     } = form;
 
     return (
-        <div className="lg:w-[380px] flex-shrink-0 h-fit sticky top-[5rem]">
+        <div className="lg:w-[calc(100%/3-16px)] flex-shrink-0 h-fit sticky top-[5rem]">
             <div className="rounded-xl border border-neutral-200 bg-white p-6 shadow-sm dark:border-neutral-800 dark:bg-[#1e1e1e]">
                 <h2 className="text-lg font-bold text-primary dark:text-white mb-6">
                     Order Summary

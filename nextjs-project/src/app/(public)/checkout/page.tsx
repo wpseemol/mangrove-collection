@@ -14,9 +14,11 @@ export default async function CheckoutPage() {
         <main className="container mx-auto min-h-[calc(100vh-25.45rem)]">
             <section className="">
                 <CheckoutProvider>
-                    <CheckoutFormComponent />
-                    {/* <CheckoutForm /> */}
-                    {/* <YourOrderSection data={purchasesProducts} /> */}
+                    {purchasesProducts && (
+                        <CheckoutFormComponent
+                            purchasesData={JSON.stringify(purchasesProducts)}
+                        />
+                    )}
                 </CheckoutProvider>
             </section>
         </main>

@@ -38,19 +38,19 @@ export const USER = "user";
  * Product units array. unit array nao [{ id: 'kg', title: 'KG' }, { id: 'pc', title: 'PC' }].,
  */
 export const PRODUCT_UNITS = [
-     { id: "kg", title: "KG" },
-     { id: "pc", title: "PC" },
+    { id: "kg", title: "KG" },
+    { id: "pc", title: "PC" },
 ];
 
 /**
  * Pc variants array it's. { id: 1, type: 'Size', value: 'size' }[],
  */
 export const PC_VARIANTS = [
-     { id: 1, type: "Color", value: "color" },
-     { id: 2, type: "Size", value: "size" },
-     { id: 3, type: "Material", value: "material" },
-     { id: 4, type: "Style", value: "style" },
-     { id: 5, type: "Title", value: "title" },
+    { id: 1, type: "Color", value: "color" },
+    { id: 2, type: "Size", value: "size" },
+    { id: 3, type: "Material", value: "material" },
+    { id: 4, type: "Style", value: "style" },
+    { id: 5, type: "Title", value: "title" },
 ];
 
 /**
@@ -62,8 +62,8 @@ export const KG_VARIANTS = [{ id: 1, type: "Size", value: "size" }];
  * Price unit array.
  */
 export const PRICE_CURRENCY = [
-     { id: "taka", title: "&#2547; টাকা" },
-     { id: "dollar", title: "&#36; Dollar" },
+    { id: "taka", title: "&#2547; টাকা" },
+    { id: "dollar", title: "&#36; Dollar" },
 ];
 
 /**
@@ -74,3 +74,12 @@ export const PRICE_CURRENCY = [
  * @constant {string} COOKIE_USER_ID - The key used for storing the unique user ID in cookies.
  */
 export const COOKIE_USER_ID = "_unique_id";
+
+/**
+ * Delivery location type constants for distinguishing between different delivery zones.
+ *
+ * @constant {string} INSIDE_DHAKA - Represents delivery locations within Dhaka city area.
+ * @constant {string} OUTSIDE_DHAKA - Represents delivery locations outside Dhaka city area.
+ */
+export const INSIDE_DHAKA = "inside-dhaka";
+export const OUTSIDE_DHAKA = "outside-dhaka";

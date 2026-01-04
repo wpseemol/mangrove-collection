@@ -32,6 +32,7 @@ export interface PurchaseProductsType {
     price: number;
     quantity: number;
     selectedPriceId: string;
+    shippingCost: ShippingCostType[];
 }
 
 /**

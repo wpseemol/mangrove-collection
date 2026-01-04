@@ -9,7 +9,18 @@ import {
     CheckoutSchemaType,
 } from "@/lib/schemas/zod/checkout-schema";
 
-export default function CheckoutFormComponent() {
+import { PurchaseProductsType } from "@/types/purchase";
+import { INSIDE_DHAKA } from "@/lib/constant";
+
+interface CheckoutFormComponentsProps {
+    purchasesData: string;
+}
+
+export default function CheckoutFormComponent({
+    purchasesData,
+}: CheckoutFormComponentsProps) {
+    const buyProductData = JSON.parse(purchasesData) as PurchaseProductsType[];
+
     const form = useForm<CheckoutSchemaType>({
         resolver: zodResolver(checkoutSchema),
         defaultValues: {
@@ -20,6 +31,8 @@ export default function CheckoutFormComponent() {
             fullName: "",
             termsAccepted: false,
             zipCode: "",
+            shippingCostId: INSIDE_DHAKA,
+            paymentMethod: "cod",
         },
     });
 
@@ -36,9 +49,9 @@ export default function CheckoutFormComponent() {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="flex flex-col lg:flex-row gap-10 "
             >
-                <FormItem form={form} />
+                <FormItem form={form} buyProductData={buyProductData} />
                 {/* order summary */}
-                <OrderSummary form={form} />
+                <OrderSummary form={form} buyProductData={buyProductData} />
             </form>
 
             <footer className="mt-auto border-t border-[#ededed] bg-white py-12 dark:border-neutral-800 dark:bg-[#1e1e1e]">

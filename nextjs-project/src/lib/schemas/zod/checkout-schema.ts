@@ -2,26 +2,80 @@ import { UseFormReturn } from "react-hook-form";
 import z from "zod";
 
 export const checkoutSchema = z.object({
-    fullName: z.string().min(1, "Full Name is required"),
-    phoneNumber: z.string().regex(/^01[3-9]\d{8}$/, "Invalid BD phone number"),
-    fullAddress: z.string().min(10, "Address must be at least 10 characters"),
+    fullName: z
+        .string()
+        .trim()
+        .min(1, "Full Name is required")
+        .max(100, "Name is too long")
+        .regex(/^[a-zA-Z\s.'-]+$/, "Name contains invalid characters"),
+
+    phoneNumber: z
+        .string()
+        .trim()
+        .regex(
+            /^01[3-9]\d{8}$/,
+            "Invalid BD phone number (must be 11 digits starting with 01[3-9])"
+        )
+        .length(11, "Phone number must be exactly 11 digits"),
+
+    fullAddress: z
+        .string()
+        .trim()
+        .min(10, "Address must be at least 10 characters")
+        .max(500, "Address is too long")
+        .refine(
+            (val) => !/[<>{}[\]`]/.test(val),
+            "Address contains invalid characters"
+        ),
 
     // District field
-    district: z.string().min(1, "District is required"),
+    district: z
+        .string()
+        .trim()
+        .min(1, "District is required.")
+        .max(100, "District name is too long.")
+        .regex(/^[a-zA-Z\s.-]+$/, "District contains invalid characters."),
 
-    // City field (could be optional if it's part of full address)
-    city: z.string().min(1, "City is required"),
+    // City field
+    city: z
+        .string()
+        .trim()
+        .min(1, "City is required.")
+        .max(100, "City name is too long.")
+        .regex(/^[a-zA-Z\s.-]+$/, "City contains invalid characters."),
 
     // Updated zip code with proper validation
     zipCode: z
         .string()
-        .min(4, "Postal code must be at least 4 digits")
-        .max(6, "Postal code must be at most 6 digits")
-        .regex(/^\d+$/, "Postal code must contain only numbers")
-        .optional(),
+        .min(1, "Postal Code required to order.")
+        .trim()
+        .transform((val) => (val === "" ? undefined : val)) // Convert empty string to undefined
+        .optional()
+        .refine(
+            (val) => !val || (val.length >= 4 && val.length <= 6),
+            "Postal code must be between 4-6 digits."
+        )
+        .refine(
+            (val) => !val || /^\d+$/.test(val),
+            "Postal code must contain only numbers."
+        ),
+
+    // Shipping Cost ID
+    shippingCostId: z
+        .string()
+        .min(1, "Shipping method is required")
+        .refine(
+            (val) => /^[a-zA-Z0-9_-]+$/.test(val),
+            "Invalid shipping ID format."
+        ),
+
+    // Payment Method
+    paymentMethod: z.enum(["bKash", "rocket", "nagad", "cod"], {
+        errorMap: () => ({ message: "Please select a valid payment method." }),
+    }),
 
     termsAccepted: z.boolean().refine((val) => val === true, {
-        message: "You must accept the terms and conditions",
+        message: "You must accept the terms and conditions.",
     }),
 });
 

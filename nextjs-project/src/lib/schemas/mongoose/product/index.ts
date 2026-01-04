@@ -1,3 +1,4 @@
+import { INSIDE_DHAKA, OUTSIDE_DHAKA } from "@/lib/constant";
 import { ProductType } from "@/types/mongoose/product";
 import mongoose from "mongoose";
 
@@ -48,10 +49,16 @@ const productSchema = new mongoose.Schema<IProduct>({
         required: true,
         default: [
             {
-                shippingId: "default",
-                title: "Standard Shipping",
+                shippingId: INSIDE_DHAKA,
+                title: "Inside Dhaka",
                 price: 160,
-                shortDescription: "",
+                shortDescription: "2-3 business days",
+            },
+            {
+                shippingId: OUTSIDE_DHAKA,
+                title: "Outside Dhaka",
+                price: 160,
+                shortDescription: "3-5 business days",
             },
         ],
     },
