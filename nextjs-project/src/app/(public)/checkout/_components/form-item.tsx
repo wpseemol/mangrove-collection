@@ -4,6 +4,8 @@ import { CheckoutFormType } from "@/lib/schemas/zod/checkout-schema";
 import { PurchaseProductsType } from "@/types/purchase";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import CheckoutFormProductDetails from "./checkout-form-product-detals";
+import CheckoutFormDistrict from "./checkout-form-district";
 
 interface FormItemProps {
     form: CheckoutFormType;
@@ -19,9 +21,7 @@ export default function FormItem({ form, buyProductData }: FormItemProps) {
     } = form;
     const [phoneNumber, setPhoneNumber] = useState("");
 
-    // Watch form values
     const watchedPhone = watch("phoneNumber");
-    const shippingCostId = watch("shippingCostId");
     const paymentMethod = watch("paymentMethod");
 
     // Handle phone number input changes
@@ -41,11 +41,6 @@ export default function FormItem({ form, buyProductData }: FormItemProps) {
         return `+88 ${phone.replace(/(\d{2})(\d{4})(\d{5})/, "$1 $2 $3")}`;
     };
 
-    // Handle shipping cost selection
-    const handleShippingCostSelect = (shippingId: string) => {
-        setValue("shippingCostId", shippingId, { shouldValidate: true });
-    };
-
     // Handle payment method selection
     const handlePaymentMethodSelect = (
         method: "bKash" | "rocket" | "nagad" | "cod"
@@ -55,7 +50,7 @@ export default function FormItem({ form, buyProductData }: FormItemProps) {
 
     return (
         <div className="flex-1 min-w-0 space-y-8">
-            <div>
+            <div className="px-6">
                 <h1 className="text-3xl font-extrabold tracking-tight text-primary dark:text-white sm:text-4xl my-2">
                     Checkout
                 </h1>
@@ -167,35 +162,7 @@ export default function FormItem({ form, buyProductData }: FormItemProps) {
                         )}
                     </label>
                     <div className="grid gap-6 sm:grid-cols-2">
-                        <label className="block">
-                            <span className="text-sm font-medium text-primary dark:text-neutral-200">
-                                District *
-                            </span>
-                            <select
-                                {...register("district")}
-                                className={`mt-2 block w-full rounded-lg border-neutral-200 bg-[#f7f7f7] px-4 py-3 text-sm focus:border-primary focus:ring-primary dark:border-neutral-700 dark:bg-neutral-800 dark:text-white ${
-                                    errors.district
-                                        ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-                                        : ""
-                                }`}
-                            >
-                                <option value="">Select District</option>
-                                <option value="Dhaka">Dhaka</option>
-                                <option value="Chittagong">Chittagong</option>
-                                <option value="Sylhet">Sylhet</option>
-                                <option value="Khulna">Khulna</option>
-                                <option value="Rajshahi">Rajshahi</option>
-                                <option value="Barisal">Barisal</option>
-                                <option value="Rangpur">Rangpur</option>
-                                <option value="Mymensingh">Mymensingh</option>
-                                {/* Add more districts as needed */}
-                            </select>
-                            {errors.district && (
-                                <p className="mt-1 text-sm text-red-500">
-                                    {errors.district.message}
-                                </p>
-                            )}
-                        </label>
+                        <CheckoutFormDistrict form={form} />
                         <label className="block">
                             <span className="text-sm font-medium text-primary dark:text-neutral-200">
                                 City *
@@ -217,125 +184,14 @@ export default function FormItem({ form, buyProductData }: FormItemProps) {
                             )}
                         </label>
                     </div>
-                    <div className="grid gap-6 sm:grid-cols-2">
-                        <label className="block">
-                            <span className="text-sm font-medium text-primary dark:text-neutral-200">
-                                Postal Code
-                            </span>
-                            <input
-                                {...register("zipCode")}
-                                className={`mt-2 block w-full rounded-lg border-neutral-200 bg-[#f7f7f7] px-4 py-3 text-sm focus:border-primary focus:ring-primary dark:border-neutral-700 dark:bg-neutral-800 dark:text-white ${
-                                    errors.zipCode
-                                        ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-                                        : ""
-                                }`}
-                                placeholder="1212"
-                                type="text"
-                                maxLength={6}
-                                inputMode="numeric"
-                            />
-                            {errors.zipCode && (
-                                <p className="mt-1 text-sm text-red-500">
-                                    {errors.zipCode.message}
-                                </p>
-                            )}
-                        </label>
-                    </div>
                 </div>
             </section>
 
             {/* Delivery Method Section */}
-            <section className="rounded-xl border border-neutral-200 bg-white p-6 shadow-sm dark:border-neutral-800 dark:bg-[#1e1e1e]">
-                <h2 className="flex items-center gap-2 text-lg font-bold text-primary dark:text-white mb-6">
-                    <span className="material-symbols-outlined text-primary dark:text-white">
-                        local_shipping
-                    </span>
-                    Delivery Method
-                </h2>
-
-                {/* Hidden input for form registration */}
-                <input type="hidden" {...register("shippingCostId")} />
-
-                {errors.shippingCostId && (
-                    <p className="mb-4 text-sm text-red-500">
-                        {errors.shippingCostId.message}
-                    </p>
-                )}
-
-                <div className="space-y-4">
-                    {buyProductData.map((product) => (
-                        <div key={product.id} className="space-y-3">
-                            <h3 className="font-medium text-primary dark:text-white">
-                                {product.name}
-                            </h3>
-                            {product.shippingCost.map((productShippingCost) => (
-                                <label
-                                    key={productShippingCost.shippingId}
-                                    className="group relative block cursor-pointer"
-                                    onClick={() =>
-                                        handleShippingCostSelect(
-                                            productShippingCost.shippingId
-                                        )
-                                    }
-                                >
-                                    <input
-                                        {...register("shippingCostId")}
-                                        className="peer sr-only"
-                                        type="radio"
-                                        value={productShippingCost.shippingId}
-                                        checked={
-                                            shippingCostId ===
-                                            productShippingCost.shippingId
-                                        }
-                                        onChange={() =>
-                                            handleShippingCostSelect(
-                                                productShippingCost.shippingId
-                                            )
-                                        }
-                                    />
-                                    <div
-                                        className={`custom-radio-border flex items-center justify-between rounded-lg border p-4 transition-all ${
-                                            shippingCostId ===
-                                            productShippingCost.shippingId
-                                                ? "border-primary bg-primary/5 ring-1 ring-primary dark:border-primary dark:bg-primary/20"
-                                                : "border-neutral-200 hover:border-neutral-300 dark:border-neutral-700 dark:hover:border-neutral-600"
-                                        }`}
-                                    >
-                                        <div className="flex items-center gap-4">
-                                            <div
-                                                className={`radio-indicator flex size-5 items-center justify-center rounded-full border ${
-                                                    shippingCostId ===
-                                                    productShippingCost.shippingId
-                                                        ? "border-primary bg-primary dark:border-primary"
-                                                        : "border-neutral-300 bg-white dark:border-neutral-600 dark:bg-neutral-800"
-                                                }`}
-                                            >
-                                                {shippingCostId ===
-                                                    productShippingCost.shippingId && (
-                                                    <div className="size-2.5 rounded-full bg-primary dark:bg-white"></div>
-                                                )}
-                                            </div>
-                                            <div>
-                                                <p className="font-bold text-primary dark:text-white">
-                                                    {productShippingCost.title ||
-                                                        "Shipping Option"}
-                                                </p>
-                                                <p className="text-xs text-neutral-500">
-                                                    {productShippingCost.shortDescription ||
-                                                        "2-3 business days"}
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <p className="font-bold text-primary dark:text-white">
-                                            ৳ {productShippingCost.price || 0}
-                                        </p>
-                                    </div>
-                                </label>
-                            ))}
-                        </div>
-                    ))}
-                </div>
-            </section>
+            <CheckoutFormProductDetails
+                buyProductData={buyProductData}
+                form={form}
+            />
 
             {/* Payment Method Section */}
             <section className="rounded-xl border border-neutral-200 bg-white p-6 shadow-sm dark:border-neutral-800 dark:bg-[#1e1e1e]">

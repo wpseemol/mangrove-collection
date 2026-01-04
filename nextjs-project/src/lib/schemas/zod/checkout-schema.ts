@@ -44,23 +44,6 @@ export const checkoutSchema = z.object({
         .max(100, "City name is too long.")
         .regex(/^[a-zA-Z\s.-]+$/, "City contains invalid characters."),
 
-    // Updated zip code with proper validation
-    zipCode: z
-        .string()
-        .min(1, "Postal Code required to order.")
-        .trim()
-        .transform((val) => (val === "" ? undefined : val)) // Convert empty string to undefined
-        .optional()
-        .refine(
-            (val) => !val || (val.length >= 4 && val.length <= 6),
-            "Postal code must be between 4-6 digits."
-        )
-        .refine(
-            (val) => !val || /^\d+$/.test(val),
-            "Postal code must contain only numbers."
-        ),
-
-    // Shipping Cost ID
     shippingCostId: z
         .string()
         .min(1, "Shipping method is required")

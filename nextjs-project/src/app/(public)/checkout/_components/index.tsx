@@ -1,5 +1,5 @@
 "use client";
-import DynamicBreadcrumb from "@/components/dynamic-breadcrumb";
+
 import OrderSummary from "./order-summary";
 import FormItem from "./form-item";
 import { useForm } from "react-hook-form";
@@ -11,6 +11,9 @@ import {
 
 import { PurchaseProductsType } from "@/types/purchase";
 import { INSIDE_DHAKA } from "@/lib/constant";
+import { orderConfirm } from "@/lib/actions/order-confirm";
+import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
 
 interface CheckoutFormComponentsProps {
     purchasesData: string;
@@ -30,21 +33,30 @@ export default function CheckoutFormComponent({
             fullAddress: "",
             fullName: "",
             termsAccepted: false,
-            zipCode: "",
             shippingCostId: INSIDE_DHAKA,
             paymentMethod: "cod",
         },
     });
 
+    const router = useRouter();
+
     async function onSubmit(data: CheckoutSchemaType) {
-        console.log("submit:", data);
+        const isConfirm = await orderConfirm(JSON.stringify(data));
+        if (isConfirm.success) {
+            Swal.fire({
+                position: "center",
+                icon: "success",
+
+                title: isConfirm.message || "Successful your product checkout.",
+                showConfirmButton: false,
+                timer: 1500,
+            });
+            router.push("/my-order");
+        }
     }
 
     return (
         <>
-            {/* breadcrumb Product page*/}
-            <DynamicBreadcrumb />
-
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="flex flex-col lg:flex-row gap-10 "
@@ -53,14 +65,6 @@ export default function CheckoutFormComponent({
                 {/* order summary */}
                 <OrderSummary form={form} buyProductData={buyProductData} />
             </form>
-
-            <footer className="mt-auto border-t border-[#ededed] bg-white py-12 dark:border-neutral-800 dark:bg-[#1e1e1e]">
-                <div className="mx-auto max-w-[1280px] px-4 text-center sm:px-6 lg:px-8">
-                    <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                        © 2023 ShopName Inc. All rights reserved.
-                    </p>
-                </div>
-            </footer>
         </>
     );
 }
