@@ -9,7 +9,7 @@ import {
     CheckoutSchemaType,
 } from "@/lib/schemas/zod/checkout-schema";
 
-export default function TestCheckout() {
+export default function CheckoutFormComponent() {
     const form = useForm<CheckoutSchemaType>({
         resolver: zodResolver(checkoutSchema),
         defaultValues: {
