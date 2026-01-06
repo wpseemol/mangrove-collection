@@ -51,6 +51,7 @@ export interface ProductDetailsType {
     unit: string;
     size?: string;
     price: Price[];
+    shippingCost: ShippingCostType[];
     currency: string;
     offer?: number;
     shortDescription?: string;

@@ -10,7 +10,7 @@ export default async function CategorySection() {
     const categories = await getCategory();
 
     return (
-        <section className="container mx-auto md:pb-10 pb-5 px-2 md:px-0">
+        <section className="container mx-auto md:py-10 py-5 px-2 md:px-0">
             <HomeTitle>
                 <samp className="uppercase">Our Product Category</samp>
             </HomeTitle>
