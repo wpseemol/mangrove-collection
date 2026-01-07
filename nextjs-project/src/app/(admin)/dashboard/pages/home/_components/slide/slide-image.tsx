@@ -185,10 +185,9 @@ export default function SlideImage({
         if (currentImageUrl) {
             try {
                 setLoading(true);
-                const result = await deleteUploadedImage({
+                await deleteUploadedImage({
                     url: currentImageUrl,
                 });
-                console.log("Delete result:", result);
             } catch (error) {
                 console.error("Delete error:", error);
             } finally {

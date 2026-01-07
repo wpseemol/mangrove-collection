@@ -25,8 +25,6 @@ export default function ProductViewForEdit({
 }) {
     const productDetails = JSON.parse(stringDetails) as ProductDetailsType;
 
-    console.log(productDetails);
-
     return (
         <div className="grid md:grid-cols-3 grid-cols-1 gap-4 md:mx-5 mb-5">
             <div className="md:col-span-2">
