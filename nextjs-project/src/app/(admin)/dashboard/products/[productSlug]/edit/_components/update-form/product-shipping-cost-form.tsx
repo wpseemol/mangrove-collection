@@ -60,8 +60,6 @@ export default function ProductShippingCostForm({
         } else {
             toast.error(response.message);
         }
-        console.log("submit data:", submitData);
-        console.log("product id:", productId);
     }
 
     return (

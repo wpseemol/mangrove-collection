@@ -1,55 +1,56 @@
 import { getOrderData, OrderTableType } from "@/lib/actions/order/getOrderData";
 import * as motion from "framer-motion/client";
 import { OrderManageTable } from "./_components/order-manage-table";
+import { Toaster } from "sonner";
 
 export default async function OrderPage() {
-     const response = await getOrderData();
+    const response = await getOrderData();
 
-     if (!response.success || !response.orders) {
-          return (
-               <main className="p-4">
-                    <section className="p-4 pb-0">
-                         <motion.div
-                              className=""
-                              initial={{ opacity: 0, y: 20 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ duration: 0.6, ease: "easeOut" }}
-                         >
-                              <h1 className="text-3xl font-bold text-gray-800 ">
-                                   Orders
-                              </h1>
-                              <p className="text-red-400">{response.message}</p>
-                         </motion.div>
-                    </section>
-               </main>
-          );
-     }
-
-     const data = JSON.parse(response.orders) as OrderTableType[];
-
-     return (
-          <main>
-               <section className="p-4 pb-0">
+    if (!response.success || !response.orders) {
+        return (
+            <main className="p-4">
+                <section className="p-4 pb-0">
                     <motion.div
-                         className=""
-                         initial={{ opacity: 0, y: 20 }}
-                         animate={{ opacity: 1, y: 0 }}
-                         transition={{ duration: 0.6, ease: "easeOut" }}
+                        className=""
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, ease: "easeOut" }}
                     >
-                         <h1 className="text-3xl font-bold text-gray-800 ">
-                              Orders
-                         </h1>
-                         <p className="text-gray-600">
-                              Manage your orders here.
-                         </p>
+                        <h1 className="text-3xl font-bold text-gray-800 ">
+                            Orders
+                        </h1>
+                        <p className="text-red-400">{response.message}</p>
                     </motion.div>
-               </section>
+                </section>
+            </main>
+        );
+    }
 
-               {response.orders && (
-                    <section className="p-4 pt-0">
-                         <OrderManageTable data={data} />
-                    </section>
-               )}
-          </main>
-     );
+    const data = JSON.parse(response.orders) as OrderTableType[];
+
+    return (
+        <main>
+            <section className="p-4 pb-0">
+                <motion.div
+                    className=""
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                >
+                    <h1 className="text-3xl font-bold text-gray-800 ">
+                        Orders
+                    </h1>
+                    <p className="text-gray-600">Manage your orders here.</p>
+                </motion.div>
+            </section>
+
+            {response.orders && (
+                <section className="p-4 pt-0">
+                    <OrderManageTable data={data} />
+                </section>
+            )}
+
+            <Toaster position="top-center" richColors closeButton />
+        </main>
+    );
 }
