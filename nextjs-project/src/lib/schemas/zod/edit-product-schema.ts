@@ -91,16 +91,22 @@ export const productTagsSchema = z.object({
 export const shippingCostSchema = z.object({
     shippingId: z.string().min(1, { message: "Shipping ID is required" }),
 
-    title: z.string().min(1, { message: "Title is required" }),
+    title: z
+        .string()
+        .min(1, { message: "Title is required" })
+        .max(100, "Title is to log."),
 
     price: z.coerce.number().positive({ message: "Price must be positive" }),
 
-    shortDescription: z.string().min(1, { message: "Description is required" }),
+    shortDescription: z
+        .string()
+        .min(1, { message: "Description is required" })
+        .max(150, "Short description is to log."),
 });
 
 // Schema for an array of shipping cost objects
 export const shippingCostArraySchema = z.object({
-    shippingOptions: z.array(shippingCostSchema),
+    shippingCost: z.array(shippingCostSchema),
 });
 
 // Type inference

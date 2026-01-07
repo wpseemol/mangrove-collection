@@ -271,6 +271,7 @@ export default function ProductViewForEdit({
                                 withFit={true}
                             >
                                 <ProductShippingCostForm
+                                    currency={productDetails.currency}
                                     productId={productDetails.id}
                                     content={JSON.stringify(
                                         productDetails.shippingCost

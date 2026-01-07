@@ -5,16 +5,18 @@ import { userRoleCheck } from "@/lib/actions/user";
 import { Category } from "@/lib/schemas/mongoose/category";
 import { Product } from "@/lib/schemas/mongoose/product";
 import {
-     productCategorySchema,
-     productDescriptionSchema,
-     productImagesSchema,
-     productNameSchema,
-     productPriceVariantSchema,
-     productShortDescriptionSchema,
-     productSlugSchema,
-     productTagsSchema,
-     productThumbnailSchema,
-     productUnitSchema,
+    productCategorySchema,
+    productDescriptionSchema,
+    productImagesSchema,
+    productNameSchema,
+    productPriceVariantSchema,
+    productShortDescriptionSchema,
+    productSlugSchema,
+    productTagsSchema,
+    productThumbnailSchema,
+    productUnitSchema,
+    ShippingCostArray,
+    shippingCostArraySchema,
 } from "@/lib/schemas/zod/edit-product-schema";
 import { ProductDetailsType } from "@/types/mongoose/product";
 import { replaceMongoIds } from "@/utils/replace";
@@ -29,79 +31,77 @@ import { deleteUploadedImage } from "../media";
  * @returns objects
  */
 export async function getProductForEdit(productSlug: string) {
-     try {
-          /**
-           * Validates user and input, then adds a new product if authorized; returns operation result and errors if any.
-           */
-          if (!productSlug) {
-               return {
-                    success: false,
-                    message: "Find product need to Product id.",
-               };
-          }
+    try {
+        /**
+         * Validates user and input, then adds a new product if authorized; returns operation result and errors if any.
+         */
+        if (!productSlug) {
+            return {
+                success: false,
+                message: "Find product need to Product id.",
+            };
+        }
 
-          const session = await auth();
-          /**
-           * Validates user and input, then adds a new product if authorized; returns operation result and errors if any.
-           */
-          if (!session || !session.user) {
-               return { success: false, message: "You are not login user." };
-          }
+        const session = await auth();
+        /**
+         * Validates user and input, then adds a new product if authorized; returns operation result and errors if any.
+         */
+        if (!session || !session.user) {
+            return { success: false, message: "You are not login user." };
+        }
 
-          const isAdmin = await userRoleCheck(
-               session?.user.id,
-               session?.user.role,
-               "admin"
-          );
+        const isAdmin = await userRoleCheck(
+            session?.user.id,
+            session?.user.role,
+            "admin"
+        );
 
-          const isCreator = await userRoleCheck(
-               session?.user.id,
-               session?.user.role,
-               "creator"
-          );
+        const isCreator = await userRoleCheck(
+            session?.user.id,
+            session?.user.role,
+            "creator"
+        );
 
-          if (!isAdmin && !isCreator) {
-               return {
-                    success: false,
-                    message: "Admin and Creator use only can add product.",
-               };
-          }
+        if (!isAdmin && !isCreator) {
+            return {
+                success: false,
+                message: "Admin and Creator use only can add product.",
+            };
+        }
 
-          await connectMongoDB();
+        await connectMongoDB();
 
-          const response = await Product.findOne({
-               slug: productSlug,
-          })
-               .populate({
-                    path: "category",
-                    model: Category,
-                    select: "name slug",
-               })
-               .lean();
+        const response = await Product.findOne({
+            slug: productSlug,
+        })
+            .populate({
+                path: "category",
+                model: Category,
+                select: "name slug",
+            })
+            .lean();
 
-          if (!response) {
-               return {
-                    success: false,
-                    message: "Edit product not found.",
-               };
-          }
+        if (!response) {
+            return {
+                success: false,
+                message: "Edit product not found.",
+            };
+        }
 
-          const productDetails = replaceMongoIds(
-               response
-          ) as ProductDetailsType;
+        const productDetails = replaceMongoIds(response) as ProductDetailsType;
 
-          return {
-               success: true,
-               product: JSON.stringify(productDetails),
-               message: "Success full get product info for edit.",
-          };
-     } catch (error) {
-          return {
-               success: false,
-               message: "get product for edit error.",
-               errors: JSON.stringify(error),
-          };
-     }
+        return {
+            success: true,
+            product: JSON.stringify(productDetails),
+            message: "Success full get product info for edit.",
+        };
+    } catch (error) {
+        return {
+            success: false,
+            message: "get product for edit error.",
+            errors: JSON.stringify(error),
+        };
+    }
 }
 
 /**
@@ -125,261 +125,313 @@ export async function getProductForEdit(productSlug: string) {
  *
  */
 export async function productContentUpdate(
-     productId: string,
-     input: UpdateContentType,
-     updateFiled: UpdateFiledType,
-     url: string | null = null
+    productId: string,
+    input: UpdateContentType,
+    updateFiled: UpdateFiledType,
+    url: string | null = null
 ) {
-     try {
-          if (!productId || !input || !updateFiled) {
-               return {
-                    success: false,
-                    message: "Update Product productId updateContent and updateFiled required",
-               };
-          }
+    try {
+        if (!productId || !input || !updateFiled) {
+            return {
+                success: false,
+                message:
+                    "Update Product productId updateContent and updateFiled required",
+            };
+        }
 
-          const session = await auth();
-          /**
-           * Validates user and input, then adds a new product if authorized; returns operation result and errors if any.
-           */
-          if (!session || !session.user) {
-               return { success: false, message: "You are not login user." };
-          }
+        const session = await auth();
+        /**
+         * Validates user and input, then adds a new product if authorized; returns operation result and errors if any.
+         */
+        if (!session || !session.user) {
+            return { success: false, message: "You are not login user." };
+        }
 
-          const isAdmin = await userRoleCheck(
-               session?.user.id,
-               session?.user.role,
-               "admin"
-          );
+        const isAdmin = await userRoleCheck(
+            session?.user.id,
+            session?.user.role,
+            "admin"
+        );
 
-          const isCreator = await userRoleCheck(
-               session?.user.id,
-               session?.user.role,
-               "creator"
-          );
+        const isCreator = await userRoleCheck(
+            session?.user.id,
+            session?.user.role,
+            "creator"
+        );
 
-          if (!isAdmin && !isCreator) {
-               return {
-                    success: false,
-                    message: "Admin and Creator use only can add product.",
-               };
-          }
+        if (!isAdmin && !isCreator) {
+            return {
+                success: false,
+                message: "Admin and Creator use only can add product.",
+            };
+        }
 
-          let updateContent: UpdateContentType = null;
-          let message = "";
+        let updateContent: UpdateContentType = null;
+        let message = "";
 
-          switch (updateFiled) {
-               case "name":
-                    const parsedName = productNameSchema.safeParse(input);
-                    if (!parsedName.success) {
-                         return {
-                              success: false,
-                              message: getFirstErrorMessage(parsedName.error),
-                              errors: formatZodError(parsedName.error),
-                              fieldErrors: parsedName.error.flatten(),
-                         };
-                    }
-                    updateContent = parsedName.data;
-                    message = "Product name filed content update.";
-                    break;
-               case "slug":
-                    const parsedSlug = productSlugSchema.safeParse(input);
-                    if (!parsedSlug.success) {
-                         return {
-                              success: false,
-                              message: getFirstErrorMessage(parsedSlug.error),
-                              errors: formatZodError(parsedSlug.error),
-                              fieldErrors: parsedSlug.error.flatten(),
-                         };
-                    }
-                    updateContent = parsedSlug.data;
-                    message = "Product slug filed content update.";
-                    break;
-               case "unit":
-                    const parsedUnit = productUnitSchema.safeParse(input);
-                    if (!parsedUnit.success) {
-                         return {
-                              success: false,
-                              message: getFirstErrorMessage(parsedUnit.error),
-                              errors: formatZodError(parsedUnit.error),
-                              fieldErrors: parsedUnit.error.flatten(),
-                         };
-                    }
-                    updateContent = parsedUnit.data;
-                    message = "Product unit filed content change.";
-                    break;
-               case "description":
-                    const parsedDescription =
-                         productDescriptionSchema.safeParse(input);
-                    if (!parsedDescription.success) {
-                         return {
-                              success: false,
-                              message: getFirstErrorMessage(
-                                   parsedDescription.error
-                              ),
-                              errors: formatZodError(parsedDescription.error),
-                              fieldErrors: parsedDescription.error.flatten(),
-                         };
-                    }
-                    updateContent = parsedDescription.data;
-                    message = "Product description filed content change.";
-                    break;
-               case "thumbnail":
-                    const parsedThumbnail =
-                         productThumbnailSchema.safeParse(input);
-                    if (!parsedThumbnail.success) {
-                         return {
-                              success: false,
-                              message: getFirstErrorMessage(
-                                   parsedThumbnail.error
-                              ),
-                              errors: formatZodError(parsedThumbnail.error),
-                              fieldErrors: parsedThumbnail.error.flatten(),
-                         };
-                    }
-                    updateContent = parsedThumbnail.data;
-                    message = "Product thumbnail remove successful.";
-                    break;
-               case "images":
-                    const parsedImages = productImagesSchema.safeParse(input);
-                    if (!parsedImages.success) {
-                         return {
-                              success: false,
-                              message: getFirstErrorMessage(parsedImages.error),
-                              errors: formatZodError(parsedImages.error),
-                              fieldErrors: parsedImages.error.flatten(),
-                         };
-                    }
-                    updateContent = parsedImages.data;
-                    message =
-                         parsedImages.data.images.length > 0
-                              ? "Product images update done."
-                              : "Product images remove successful.";
-                    break;
-               case "variants&price":
-                    const parsedVariantAndPrice =
-                         productPriceVariantSchema.safeParse(input);
-                    if (!parsedVariantAndPrice.success) {
-                         return {
-                              success: false,
-                              message: getFirstErrorMessage(
-                                   parsedVariantAndPrice.error
-                              ),
-                              errors: formatZodError(
-                                   parsedVariantAndPrice.error
-                              ),
-                              fieldErrors:
-                                   parsedVariantAndPrice.error.flatten(),
-                         };
-                    }
-                    updateContent = parsedVariantAndPrice.data;
-                    message = "Product variants and price update done.";
-                    break;
-               case "category":
-                    const parsedCategory =
-                         productCategorySchema.safeParse(input);
-                    if (!parsedCategory.success) {
-                         return {
-                              success: false,
-                              message: getFirstErrorMessage(
-                                   parsedCategory.error
-                              ),
-                              errors: formatZodError(parsedCategory.error),
-                              fieldErrors: parsedCategory.error.flatten(),
-                         };
-                    }
-                    updateContent = parsedCategory.data;
-                    message = "Product category change done.";
-                    break;
-               case "shortDescription":
-                    const parsedShortDescription =
-                         productShortDescriptionSchema.safeParse(input);
-                    if (!parsedShortDescription.success) {
-                         return {
-                              success: false,
-                              message: getFirstErrorMessage(
-                                   parsedShortDescription.error
-                              ),
-                              errors: formatZodError(
-                                   parsedShortDescription.error
-                              ),
-                              fieldErrors:
-                                   parsedShortDescription.error.flatten(),
-                         };
-                    }
-                    updateContent = parsedShortDescription.data;
-                    message = "Product short description content update done.";
-                    break;
-               case "tags":
-                    const parsedTags = productTagsSchema.safeParse(input);
-                    if (!parsedTags.success) {
-                         return {
-                              success: false,
-                              message: getFirstErrorMessage(parsedTags.error),
-                              errors: formatZodError(parsedTags.error),
-                              fieldErrors: parsedTags.error.flatten(),
-                         };
-                    }
-                    updateContent = parsedTags.data;
-                    message = "Product tags content update done.";
-                    break;
-          }
+        switch (updateFiled) {
+            case "name":
+                const parsedName = productNameSchema.safeParse(input);
+                if (!parsedName.success) {
+                    return {
+                        success: false,
+                        message: getFirstErrorMessage(parsedName.error),
+                        errors: formatZodError(parsedName.error),
+                        fieldErrors: parsedName.error.flatten(),
+                    };
+                }
+                updateContent = parsedName.data;
+                message = "Product name filed content update.";
+                break;
+            case "slug":
+                const parsedSlug = productSlugSchema.safeParse(input);
+                if (!parsedSlug.success) {
+                    return {
+                        success: false,
+                        message: getFirstErrorMessage(parsedSlug.error),
+                        errors: formatZodError(parsedSlug.error),
+                        fieldErrors: parsedSlug.error.flatten(),
+                    };
+                }
+                updateContent = parsedSlug.data;
+                message = "Product slug filed content update.";
+                break;
+            case "unit":
+                const parsedUnit = productUnitSchema.safeParse(input);
+                if (!parsedUnit.success) {
+                    return {
+                        success: false,
+                        message: getFirstErrorMessage(parsedUnit.error),
+                        errors: formatZodError(parsedUnit.error),
+                        fieldErrors: parsedUnit.error.flatten(),
+                    };
+                }
+                updateContent = parsedUnit.data;
+                message = "Product unit filed content change.";
+                break;
+            case "description":
+                const parsedDescription =
+                    productDescriptionSchema.safeParse(input);
+                if (!parsedDescription.success) {
+                    return {
+                        success: false,
+                        message: getFirstErrorMessage(parsedDescription.error),
+                        errors: formatZodError(parsedDescription.error),
+                        fieldErrors: parsedDescription.error.flatten(),
+                    };
+                }
+                updateContent = parsedDescription.data;
+                message = "Product description filed content change.";
+                break;
+            case "thumbnail":
+                const parsedThumbnail = productThumbnailSchema.safeParse(input);
+                if (!parsedThumbnail.success) {
+                    return {
+                        success: false,
+                        message: getFirstErrorMessage(parsedThumbnail.error),
+                        errors: formatZodError(parsedThumbnail.error),
+                        fieldErrors: parsedThumbnail.error.flatten(),
+                    };
+                }
+                updateContent = parsedThumbnail.data;
+                message = "Product thumbnail remove successful.";
+                break;
+            case "images":
+                const parsedImages = productImagesSchema.safeParse(input);
+                if (!parsedImages.success) {
+                    return {
+                        success: false,
+                        message: getFirstErrorMessage(parsedImages.error),
+                        errors: formatZodError(parsedImages.error),
+                        fieldErrors: parsedImages.error.flatten(),
+                    };
+                }
+                updateContent = parsedImages.data;
+                message =
+                    parsedImages.data.images.length > 0
+                        ? "Product images update done."
+                        : "Product images remove successful.";
+                break;
+            case "variants&price":
+                const parsedVariantAndPrice =
+                    productPriceVariantSchema.safeParse(input);
+                if (!parsedVariantAndPrice.success) {
+                    return {
+                        success: false,
+                        message: getFirstErrorMessage(
+                            parsedVariantAndPrice.error
+                        ),
+                        errors: formatZodError(parsedVariantAndPrice.error),
+                        fieldErrors: parsedVariantAndPrice.error.flatten(),
+                    };
+                }
+                updateContent = parsedVariantAndPrice.data;
+                message = "Product variants and price update done.";
+                break;
+            case "category":
+                const parsedCategory = productCategorySchema.safeParse(input);
+                if (!parsedCategory.success) {
+                    return {
+                        success: false,
+                        message: getFirstErrorMessage(parsedCategory.error),
+                        errors: formatZodError(parsedCategory.error),
+                        fieldErrors: parsedCategory.error.flatten(),
+                    };
+                }
+                updateContent = parsedCategory.data;
+                message = "Product category change done.";
+                break;
+            case "shortDescription":
+                const parsedShortDescription =
+                    productShortDescriptionSchema.safeParse(input);
+                if (!parsedShortDescription.success) {
+                    return {
+                        success: false,
+                        message: getFirstErrorMessage(
+                            parsedShortDescription.error
+                        ),
+                        errors: formatZodError(parsedShortDescription.error),
+                        fieldErrors: parsedShortDescription.error.flatten(),
+                    };
+                }
+                updateContent = parsedShortDescription.data;
+                message = "Product short description content update done.";
+                break;
+            case "tags":
+                const parsedTags = productTagsSchema.safeParse(input);
+                if (!parsedTags.success) {
+                    return {
+                        success: false,
+                        message: getFirstErrorMessage(parsedTags.error),
+                        errors: formatZodError(parsedTags.error),
+                        fieldErrors: parsedTags.error.flatten(),
+                    };
+                }
+                updateContent = parsedTags.data;
+                message = "Product tags content update done.";
+                break;
 
-          if (!updateContent) {
-               return {
-                    success: false,
-                    message: "Product update content is require",
-               };
-          }
+            case "shippingCost":
+                const shippingCostData =
+                    shippingCostArraySchema.safeParse(input);
+                if (!shippingCostData.success) {
+                    return {
+                        success: false,
+                        message: getFirstErrorMessage(shippingCostData.error),
+                        errors: formatZodError(shippingCostData.error),
+                        fieldErrors: shippingCostData.error.flatten(),
+                    };
+                }
+                updateContent = shippingCostData.data;
+                message = "Product tags content update done.";
 
-          /**
-           * Mongodb Connection stablish.
-           */
-          await connectMongoDB();
+                break;
+        }
 
-          const response = await Product.updateOne(
-               { _id: productId },
-               updateContent
-          );
+        if (!updateContent) {
+            return {
+                success: false,
+                message: "Product update content is require",
+            };
+        }
 
-          if (url) {
-               revalidatePath(url);
-          }
+        /**
+         * Mongodb Connection stablish.
+         */
+        await connectMongoDB();
 
-          return {
-               success: true,
-               message,
-               update: JSON.stringify(response),
-          };
-     } catch (error) {
-          const typeError = error as MongoServerError;
+        const response = await Product.updateOne(
+            { _id: productId },
+            updateContent
+        );
 
-          if (typeError.code === 11000) {
-               const pattern: string | null =
-                    typeof typeError.keyPattern === "object"
-                         ? Object.keys(typeError.keyPattern)[0]
-                         : null;
+        if (url) {
+            revalidatePath(url);
+        }
 
-               let message = "";
+        return {
+            success: true,
+            message,
+            update: JSON.stringify(response),
+        };
+    } catch (error) {
+        const typeError = error as MongoServerError;
 
-               if (pattern === "slug")
-                    message =
-                         "Product slug already exist, Slug value must be unique";
+        if (typeError.code === 11000) {
+            const pattern: string | null =
+                typeof typeError.keyPattern === "object"
+                    ? Object.keys(typeError.keyPattern)[0]
+                    : null;
 
-               return {
-                    success: false,
-                    message,
-                    errors: JSON.stringify(error),
-               };
-          }
+            let message = "";
 
-          return {
-               success: false,
-               message: "Product update error.",
-               errors: JSON.stringify(error),
-          };
-     }
+            if (pattern === "slug")
+                message =
+                    "Product slug already exist, Slug value must be unique";
+
+            return {
+                success: false,
+                message,
+                errors: JSON.stringify(error),
+            };
+        }
+
+        return {
+            success: false,
+            message: "Product update error.",
+            errors: JSON.stringify(error),
+        };
+    }
 }
+
+type UpdateContentType =
+    | { name: string }
+    | { slug: string }
+    | { unit: "pc" | "kg" }
+    | { description: string }
+    | { thumbnail: string }
+    | {
+          images: {
+              id: string;
+              imgUrl: string;
+          }[];
+      }
+    | {
+          variants: {
+              type: string;
+              id: string;
+              title: string;
+          }[];
+          price: {
+              price: number;
+              variantId: string;
+              select: boolean;
+          }[];
+      }
+    | {
+          category: string;
+      }
+    | {
+          shortDescription: string;
+      }
+    | {
+          tags: string[];
+      }
+    | ShippingCostArray
+    | null;
+
+type UpdateFiledType =
+    | "name"
+    | "slug"
+    | "unit"
+    | "description"
+    | "thumbnail"
+    | "images"
+    | "variants&price"
+    | "category"
+    | "shortDescription"
+    | "tags"
+    | "shippingCost";
 
 /**
  * Deletes a product from the database and optionally revalidates a path.
@@ -404,126 +456,79 @@ export async function productContentUpdate(
  * - Optionally revalidates a given path if `pathName` is provided.
  */
 export async function deleteProduct({
-     productId,
-     images,
-     pathName,
+    productId,
+    images,
+    pathName,
 }: {
-     productId: string;
-     images: string;
-     pathName?: string;
+    productId: string;
+    images: string;
+    pathName?: string;
 }) {
-     try {
-          if (!productId) {
-               return {
-                    success: false,
-                    message: "Product id is required.",
-               };
-          }
+    try {
+        if (!productId) {
+            return {
+                success: false,
+                message: "Product id is required.",
+            };
+        }
 
-          const session = await auth();
-          if (!session || !session.user) {
-               return { success: false, message: "You are not login user." };
-          }
+        const session = await auth();
+        if (!session || !session.user) {
+            return { success: false, message: "You are not login user." };
+        }
 
-          const isAdmin = await userRoleCheck(
-               session?.user.id,
-               session?.user.role,
-               "admin"
-          );
+        const isAdmin = await userRoleCheck(
+            session?.user.id,
+            session?.user.role,
+            "admin"
+        );
 
-          const isCreator = await userRoleCheck(
-               session?.user.id,
-               session?.user.role,
-               "creator"
-          );
+        const isCreator = await userRoleCheck(
+            session?.user.id,
+            session?.user.role,
+            "creator"
+        );
 
-          if (!isAdmin && !isCreator) {
-               return {
-                    success: false,
-                    message: "Admin and Creator use only can delete product.",
-               };
-          }
+        if (!isAdmin && !isCreator) {
+            return {
+                success: false,
+                message: "Admin and Creator use only can delete product.",
+            };
+        }
 
-          const imagesArray = JSON.parse(images) as {
-               imgUrl: string;
-               public_ids: string;
-          }[];
+        const imagesArray = JSON.parse(images) as {
+            imgUrl: string;
+            public_ids: string;
+        }[];
 
-          await Promise.all(
-               imagesArray.map(async (image) => {
-                    const deleteResponse = await deleteUploadedImage({
-                         public_id: image.public_ids,
-                    });
+        await Promise.all(
+            imagesArray.map(async (image) => {
+                const deleteResponse = await deleteUploadedImage({
+                    public_id: image.public_ids,
+                });
 
-                    return deleteResponse;
-               })
-          );
+                return deleteResponse;
+            })
+        );
 
-          await connectMongoDB();
+        await connectMongoDB();
 
-          const response = await Product.deleteOne({ _id: productId });
+        const response = await Product.deleteOne({ _id: productId });
 
-          if (pathName) {
-               revalidatePath(pathName);
-          }
+        if (pathName) {
+            revalidatePath(pathName);
+        }
 
-          return {
-               success: true,
-               message: "Product deleted successfully.",
-               response,
-          };
-     } catch (error) {
-          return {
-               success: false,
-               message: "Delete product error.",
-               errors: JSON.stringify(error),
-          };
-     }
+        return {
+            success: true,
+            message: "Product deleted successfully.",
+            response,
+        };
+    } catch (error) {
+        return {
+            success: false,
+            message: "Delete product error.",
+            errors: JSON.stringify(error),
+        };
+    }
 }
-
-type UpdateContentType =
-     | { name: string }
-     | { slug: string }
-     | { unit: "pc" | "kg" }
-     | { description: string }
-     | { thumbnail: string }
-     | {
-            images: {
-                 id: string;
-                 imgUrl: string;
-            }[];
-       }
-     | {
-            variants: {
-                 type: string;
-                 id: string;
-                 title: string;
-            }[];
-            price: {
-                 price: number;
-                 variantId: string;
-                 select: boolean;
-            }[];
-       }
-     | {
-            category: string;
-       }
-     | {
-            shortDescription: string;
-       }
-     | {
-            tags: string[];
-       }
-     | null;
-
-type UpdateFiledType =
-     | "name"
-     | "slug"
-     | "unit"
-     | "description"
-     | "thumbnail"
-     | "images"
-     | "variants&price"
-     | "category"
-     | "shortDescription"
-     | "tags";
