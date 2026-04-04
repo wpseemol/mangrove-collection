@@ -7,12 +7,14 @@
 
 <body class="">
 
-    <x-layouts::home.header />
+    <x-layouts::home.header.index />
     <main class="container mx-auto py-10">
         {{ $slot }}
     </main>
 
-    <x-layouts::home.footer />
+    <x-layouts::home.footer.index />
+
+    @livewireScripts
 </body>
 
 </html>

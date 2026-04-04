@@ -83,3 +83,7 @@ select:focus[data-flux-control] {
         font-family: var(--font-poppins);
     }
 }
+
+[x-cloak] {
+    display: none !important;
+}
