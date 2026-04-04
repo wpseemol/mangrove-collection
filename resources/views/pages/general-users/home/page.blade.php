@@ -1,4 +1,4 @@
-<x-layouts::general-users :title="__('Mangrove Collection')">
+<x-layouts::general-users :title="__('Home')">
 
     <h2>
 

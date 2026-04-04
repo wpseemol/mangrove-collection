@@ -8,8 +8,9 @@
 <body class="">
 
     <x-layouts::home.header />
-
-    {{ $slot }}
+    <main class="container mx-auto py-10">
+        {{ $slot }}
+    </main>
 
     <x-layouts::home.footer />
 </body>
