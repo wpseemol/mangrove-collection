@@ -64,14 +64,14 @@ new class extends Component {
             <div x-ref="categorySwiper" class="swiper overflow-hidden pb-12 px-1">
                 <div class="swiper-wrapper">
                     @foreach($categories as $category)
-                    <div class="swiper-slide !h-auto">
+                    <div class="swiper-slide h-auto!">
                         <livewire:home.category-item
                             :category="$category"
                             :key="'cat-'.$loop->index" />
                     </div>
                     @endforeach
                 </div>
-                <div class="swiper-pagination !-bottom-2"></div>
+                <div class="swiper-pagination -bottom-2!"></div>
             </div>
         </div>
         @else
