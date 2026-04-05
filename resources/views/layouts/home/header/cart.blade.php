@@ -5,7 +5,9 @@
         </div>
     </a>
     <div class="hidden xl:block">
-        <p class="text-sm font-semibold leading-none">Cart</p>
-        <p class="text-[11px] text-gray-400 mt-1">Add items</p>
+        <a href="{{ route('cart') }}" wire:navigate>
+            <p class="text-sm font-semibold leading-none">Cart</p>
+            <p class="text-[11px] text-gray-400 mt-1">Add items</p>
+        </a>
     </div>
 </div>

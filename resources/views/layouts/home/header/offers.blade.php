@@ -5,7 +5,9 @@
         </div>
     </a>
     <div class="hidden xl:block">
-        <p class="text-sm font-semibold leading-none">Offers</p>
-        <p class="text-[11px] text-gray-400 mt-1">Latest Offers</p>
+        <a href="{{ route('offers') }}" wire:navigate>
+            <p class="text-sm font-semibold leading-none">Offers</p>
+            <p class="text-[11px] text-gray-400 mt-1">Latest Offers</p>
+        </a>
     </div>
 </div>
