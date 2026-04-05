@@ -8,7 +8,7 @@
 <body class="">
 
     <x-layouts::home.header.index />
-    <main class="container mx-auto py-10">
+    <main class="container mx-auto py-6">
         {{ $slot }}
     </main>
 
