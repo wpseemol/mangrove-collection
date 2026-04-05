@@ -1,18 +1,22 @@
 <div class="flex items-center gap-3 cursor-pointer group">
     @auth
     {{-- Show this when the user IS logged in --}}
-    <div class="w-10 h-10 rounded-full bg-emerald-500/10 border border-primary-light flex items-center justify-center text-primary-light font-bold text-xl group-hover:bg-primary-light group-hover:text-white transition-all">
-        {{-- Gets the first letter of the User's Name (e.g., 'S' for Seemol) --}}
-        {{ substr(auth()->user()->name, 0, 1) }}
-    </div>
+    <a href="{{ route('dashboard') }}" wire:navigate class="flex items-center gap-3 cursor-pointer group">
+        <div class="w-10 h-10 rounded-full bg-emerald-500/10 border border-primary-light flex items-center justify-center text-primary-light font-bold text-xl group-hover:bg-primary-light group-hover:text-white transition-all">
+            {{-- Gets the first letter of the User's Name (e.g., 'S' for Seemol) --}}
+            {{ substr(auth()->user()->name, 0, 1) }}
+        </div>
+    </a>
 
     <div class="hidden xl:block">
-        <p class="text-sm font-semibold leading-none text-gray-800 group-hover:text-primary-light transition-colors">
-            {{ auth()->user()->name }} {{-- Shows First Name/Full Name --}}
-        </p>
-        <p class="text-[11px] text-gray-400 mt-1">
-            {{ auth()->user()->email }} {{-- Shows Email --}}
-        </p>
+        <a href="{{ route('dashboard') }}" wire:navigate>
+            <p class="text-sm font-semibold leading-none">
+                {{ auth()->user()->name }} {{-- Shows First Name/Full Name --}}
+            </p>
+            <p class="text-[11px] text-gray-400 mt-1">
+                {{ auth()->user()->email }} {{-- Shows Email --}}
+            </p>
+        </a>
     </div>
     @endauth
 
