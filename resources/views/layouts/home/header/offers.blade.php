@@ -1,6 +1,6 @@
 <div class="flex items-center gap-3 cursor-pointer group">
     <a href="{{ route('offers') }}" wire:navigate>
-        <div class="text-emerald-500 text-2xl group-hover:scale-110 transition duration-200">
+        <div class="text-primary-light text-2xl group-hover:scale-110 transition duration-200">
             <i class="fa-solid fa-dollar-sign"></i>
         </div>
     </a>
