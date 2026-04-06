@@ -3,9 +3,15 @@
 use Livewire\Component;
 
 new class extends Component {
+    /**
+     * @var array{name: string, image: string, count: int | string} $category
+     */
     public array $category;
 
-    public function mount($category)
+    /**
+     * @param array{name: string, image: string, count: int | string} $category
+     */
+    public function mount(array $category): void
     {
         $this->category = $category;
     }
