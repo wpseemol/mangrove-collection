@@ -50,13 +50,13 @@ new class extends Component {
                     class="absolute inset-0 bg-cover bg-center"
                     style="background-image: url('{{ $banner->image_url  }}');">
 
-                    <div class="absolute inset-0 bg-linear-to-t from-[#064e3b]/90 via-black/20 to-transparent p-8 md:p-16 flex flex-col justify-end">
+                    <div class="absolute inset-0 bg-linear-to-t from-brand-dark/70 via-black/90 to-transparent p-8 md:p-16 flex flex-col justify-end">
                         <div x-show="active === {{ $index }}"
                             x-transition:enter="transition ease-out delay-300 duration-700"
                             x-transition:enter-start="opacity-0 translate-y-8"
                             x-transition:enter-end="opacity-100 translate-y-0">
 
-                            <span class="text-amber-400 font-bold tracking-[0.3em] uppercase text-[10px] md:text-xs mb-3 block">Sundarban's Finest</span>
+                            <span class="text-primary font-bold tracking-[0.3em] uppercase text-[10px] md:text-xs mb-3 block">Sundarban's Finest</span>
                             <h2 class="text-4xl md:text-7xl font-black text-white uppercase tracking-tighter leading-[0.85] mb-6">
                                 {{ $banner->title }}
                             </h2>
@@ -66,14 +66,14 @@ new class extends Component {
 
                             <div class="flex items-center gap-4">
                                 <a href="{{ $banner->button_link }}"
-                                    class="bg-amber-500 hover:bg-white text-[#064e3b] px-10 py-4 rounded-2xl font-black transition-all transform hover:-translate-y-1 shadow-xl uppercase text-sm tracking-widest">
+                                    class="bg-primary text-accent-foreground hover:bg-white hover:text-accent-content px-10 py-4 rounded-2xl font-black transition-all transform hover:-translate-y-1 shadow-xl uppercase text-sm tracking-widest">
                                     {{ $banner->button_text }}
                                 </a>
                                 <div class="hidden md:flex gap-3 ml-6 border-l border-white/20 pl-6">
-                                    <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-amber-500 hover:text-[#064e3b] transition-all text-white">
+                                    <a href="https://wa.me/+8801323846556" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-all text-white">
                                         <i class="fa-brands fa-whatsapp"></i>
                                     </a>
-                                    <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-amber-500 hover:text-[#064e3b] transition-all text-white">
+                                    <a href="https://facebook.com/mangrove.collection" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-all text-white">
                                         <i class="fa-brands fa-facebook-f"></i>
                                     </a>
                                 </div>
@@ -87,7 +87,7 @@ new class extends Component {
                     <div class="flex gap-2">
                         @foreach($banners as $index => $banner)
                         <button @click="active = {{ $index }}"
-                            :class="active === {{ $index }} ? 'w-12 bg-amber-500' : 'w-3 bg-white/30'"
+                            :class="active === {{ $index }} ? 'w-12 bg-primary' : 'w-3 bg-white/30'"
                             class="h-1.5 rounded-full transition-all duration-500"></button>
                         @endforeach
                     </div>
@@ -102,16 +102,18 @@ new class extends Component {
                     </div>
                     <h3 class="font-black text-[#064e3b] uppercase text-sm tracking-tight">Daily Fresh Catch</h3>
                     <p class="text-[11px] text-gray-500 mt-2 leading-snug">Sustainably sourced from the coastal waters of the Bay of Bengal.</p>
-                    <i class="fa-solid fa-arrow-right-long absolute bottom-6 right-6 text-gray-300 group-hover:text-amber-500 transition-colors"></i>
+                    <i class="fa-solid fa-arrow-right-long absolute bottom-6 right-6 text-gray-300 group-hover:text-primary transition-colors"></i>
                 </div>
 
-                <div class="flex-1 bg-[#064e3b] rounded-4xl p-8 shadow-2xl relative overflow-hidden text-white flex flex-col justify-center">
+                <div
+                    class="flex-1 bg-accent-content from-brand-dark/70 via-black/90 to-transparent rounded-4xl p-8 shadow-2xl relative overflow-hidden text-white flex flex-col justify-center border 
+                    ">
                     <div class="relative z-10">
-                        <h3 class="font-black text-2xl leading-tight">Sundarbans<br><span class="text-amber-500">Pure Organic</span></h3>
+                        <h3 class="font-black text-2xl leading-tight">Sundarbans<br><span class="text-primary">Pure Organic</span></h3>
                         <p class="text-emerald-300 text-[10px] mt-4 tracking-[0.2em] uppercase font-bold">Safe & Natural Products</p>
                         <a href="/about" class="mt-8 flex items-center gap-3 group/btn">
                             <span class="text-xs font-bold uppercase tracking-widest group-hover:text-amber-500 transition-colors">Our Story</span>
-                            <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover/btn:bg-amber-500 group-hover/btn:text-[#064e3b] transition-all">
+                            <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover/btn:bg-white group-hover/btn:text-primary transition-all">
                                 <i class="fa-solid fa-chevron-right text-[10px]"></i>
                             </div>
                         </a>

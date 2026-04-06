@@ -23,17 +23,17 @@ new class extends Component {
 }; ?>
 
 <section class="py-12 bg-white font-poppins">
-    <div class="container mx-auto ">
+    <div class="container mx-auto">
         <div class="text-center mb-6">
             <h2 class="text-3xl md:text-4xl font-black text-primary uppercase tracking-tight">Our Product Category</h2>
             <p class="text-gray-500 mt-2">Get your desired product from a featured category</p>
-            <div class="w-20 h-1.5 bg-secondary mx-auto mt-4 rounded-full"></div>
+            <div class="w-20 h-1.5 bg-primary-light mx-auto mt-4 rounded-full"></div>
         </div>
 
         @if($useSlider)
         <div x-data="{ 
                 init() {
-                    new Swiper($refs.categorySwiper, {
+                    const swiper = new Swiper($refs.categorySwiper, {
                         slidesPerView: 2.2,
                         spaceBetween: 15,
                         loop: true,
@@ -44,43 +44,24 @@ new class extends Component {
                         pagination: { el: '.swiper-pagination', clickable: true },
                         breakpoints: {
                             640: { slidesPerView: 3.2 },
-                            1024: { slidesPerView: 5, spaceBetween: 20 } // Exactly 5 on desktop
+                            1024: { slidesPerView: 5, spaceBetween: 20 }
                         }
-                    })
+                    });
+                    // Reveal the slider once JS is ready
+                    $refs.categorySwiper.classList.remove('opacity-0');
                 }
             }" class="relative group py-2 z-50">
 
-            <button class="swiper-button-prev-cat absolute -left-5 top-1/2 -translate-y-1/2 z-30 w-10 h-10 bg-white shadow-xl rounded-full flex items-center justify-center text-[#064e3b] opacity-0 group-hover:opacity-100 transition-all border border-gray-100 hover:bg-amber-500 hover:text-white">
+            <button class="swiper-button-prev-cat absolute -left-5 top-1/2 -translate-y-1/2 z-30 w-10 h-10 bg-white shadow-xl rounded-full flex items-center justify-center text-[#064e3b] opacity-0 group-hover:opacity-100 transition-all border border-gray-100 hover:bg-primary hover:text-white">
                 <i class="fa-solid fa-chevron-left text-sm"></i>
             </button>
 
-            <button class="swiper-button-next-cat absolute -right-5 top-1/2 -translate-y-1/2 z-30 w-10 h-10 bg-white shadow-xl rounded-full flex items-center justify-center text-[#064e3b] opacity-0 group-hover:opacity-100 transition-all border border-gray-100 hover:bg-amber-500 hover:text-white">
+            <button class="swiper-button-next-cat absolute -right-5 top-1/2 -translate-y-1/2 z-30 w-10 h-10 bg-white shadow-xl rounded-full flex items-center justify-center text-[#064e3b] opacity-0 group-hover:opacity-100 transition-all border border-gray-100 hover:bg-primary hover:text-white">
                 <i class="fa-solid fa-chevron-right text-sm"></i>
             </button>
 
-
-            <style>
-                /* Active dot color (Honey Gold) */
-                .swiper-pagination-bullet-active {
-                    background: #d97706 !important;
-                    width: 24px !important;
-                    /* Makes the active dot an elongated 'pill' shape */
-                    border-radius: 5px !important;
-                    transition: all 0.3s ease;
-
-
-                }
-
-                /* Inactive dots */
-                .swiper-pagination-bullet {
-                    background: #064e3b;
-                    /* Forest Green */
-
-                    opacity: 1;
-                }
-            </style>
-            <div x-ref="categorySwiper" class="swiper overflow-hidden pb-12 px-1">
-                <div class="swiper-wrapper">
+            <div x-ref="categorySwiper" class="swiper category-slider-container overflow-hidden pb-12 px-1 opacity-0 transition-opacity duration-300">
+                <div class="swiper-wrapper category-pre-js-fix">
                     @foreach($categories as $category)
                     <div class="swiper-slide h-auto">
                         <livewire:home.category-item
@@ -105,8 +86,46 @@ new class extends Component {
     </div>
 
     <style>
+        /* --- SERVER-SIDE LOAD FIX --- */
+
+        /* 1. Show 5 columns on desktop immediately before JS loads */
+        @media (min-width: 1024px) {
+            .category-slider-container:not(.swiper-initialized) .category-pre-js-fix {
+                display: grid !important;
+                grid-template-columns: repeat(5, 1fr) !important;
+                gap: 20px !important;
+            }
+        }
+
+        /* 2. Show a horizontal row on mobile before JS loads */
+        @media (max-width: 1023px) {
+            .category-slider-container:not(.swiper-initialized) .category-pre-js-fix {
+                display: flex !important;
+                overflow-x: hidden !important;
+            }
+
+            .category-slider-container:not(.swiper-initialized) .swiper-slide {
+                min-width: 40% !important;
+                margin-right: 15px !important;
+            }
+        }
+
+        /* 3. Reveal the container once Swiper adds the initialized class */
+        .category-slider-container.swiper-initialized {
+            opacity: 1 !important;
+        }
+
+        /* Existing Pagination Styles */
         .swiper-pagination-bullet-active {
-            background: #d97706 !important;
+            background-color: var(--color-primary-light) !important;
+            width: 24px !important;
+            border-radius: 5px !important;
+            transition: all 0.3s ease;
+        }
+
+        .swiper-pagination-bullet {
+            background-color: var(--color-primary);
+            opacity: 1;
         }
     </style>
 </section>
