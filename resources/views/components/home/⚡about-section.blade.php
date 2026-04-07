@@ -70,31 +70,51 @@ new class extends Component {
             <div class="lg:col-span-4">
                 <div class="bg-[#f9fafb] border border-slate-100 rounded-2xl p-6 space-y-8 sticky top-24">
                     @php
+                    // Prepare these to come from a database in the future
                     $features = [
-                    ['title' => '100% Organic', 'icon' => 'leaf', 'color' => 'emerald', 'desc' => 'Directly sourced from the deep Sundarban forest.'],
-                    ['title' => 'Quality Certified', 'icon' => 'shield-check', 'color' => 'amber', 'desc' => 'Strict lab testing for purity and nutrition.'],
-                    ['title' => 'Fast Delivery', 'icon' => 'truck-fast', 'color' => 'blue', 'desc' => 'Ensuring freshness with controlled shipping.'],
+                    [
+                    'title' => '100% Organic',
+                    'icon' => 'leaf',
+                    'color' => 'emerald',
+                    'desc' => 'Directly sourced from the deep Sundarban forest.'
+                    ],
+                    [
+                    'title' => 'Quality Certified',
+                    'icon' => 'certificate', // Changed to 'certificate' for better Free version support
+                    'color' => 'amber',
+                    'desc' => 'Strict lab testing for purity and nutrition.'
+                    ],
+                    [
+                    'title' => 'Fast Delivery',
+                    'icon' => 'truck-fast',
+                    'color' => 'blue',
+                    'desc' => 'Ensuring freshness with controlled shipping.'
+                    ],
                     ];
 
                     $cat_text = "Explore Our Products";
                     @endphp
 
-                    @foreach($features as $feature)
-                    <div class="flex items-start gap-4">
-                        <div class="w-12 h-12 bg-{{ $feature['color'] }}-100 text-{{ $feature['color'] }}-600 rounded-full flex items-center justify-center shrink-0">
-                            <i class="fa-solid fa-{{ $feature['icon'] }} text-xl"></i>
+                    <div class="bg-[#f9fafb] border border-slate-100 rounded-2xl p-6 space-y-8 sticky top-24">
+                        @foreach($features as $feature)
+                        <div class="flex items-start gap-4">
+                            {{-- Dynamic Background and Text colors --}}
+                            <div class="w-12 h-12 bg-{{ $feature['color'] }}-100 text-{{ $feature['color'] }}-600 rounded-full flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-{{ $feature['icon'] }} text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800">{{ $feature['title'] }}</h4>
+                                <p class="text-xs text-slate-500 mt-1">{{ $feature['desc'] }}</p>
+                            </div>
                         </div>
-                        <div>
-                            <h4 class="font-bold text-slate-800">{{ $feature['title'] }}</h4>
-                            <p class="text-xs text-slate-500 mt-1">{{ $feature['desc'] }}</p>
-                        </div>
-                    </div>
-                    @endforeach
+                        @endforeach
 
-                    <div class="pt-4">
-                        <button class="w-full bg-[#064e3b] text-white font-bold py-3 rounded-xl hover:bg-primary-light transition-colors flex items-center justify-center gap-2">
-                            {{ $cat_text }} <i class="fa-solid fa-arrow-right"></i>
-                        </button>
+                        <div class="pt-4">
+                            <button class="w-full bg-[#064e3b] text-white font-bold py-3 rounded-xl hover:bg-primary-light transition-colors flex items-center justify-center gap-2 group">
+                                {{ $cat_text }}
+                                <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

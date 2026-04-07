@@ -35,7 +35,7 @@ $menuData = [
 @endphp
 
 
-@include('partials.sub-menu')
+
 <div class="md:flex justify-center border border-e-accent/20 bg-e-accent/10 hidden">
     <nav class="flex items-center  gap-8">
         @foreach($menuData as $title => $data)
