@@ -91,3 +91,8 @@ select:focus[data-flux-control] {
 [x-cloak] {
     display: none !important;
 }
+
+/* home page scroll behavior */
+html {
+    scroll-behavior: smooth;
+}

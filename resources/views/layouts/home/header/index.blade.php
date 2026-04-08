@@ -17,6 +17,7 @@ $menuData = [
 ],
 'Products' => [
 'icon' => 'fa-solid fa-basket-shopping',
+'href' => '/products',
 'children' => [
 ['label' => 'New Arrivals', 'href' => '/new', 'desc' => 'Just harvested items'],
 ['label' => 'Best Sellers', 'href' => '/popular', 'desc' => 'Customer favorites'],
@@ -29,7 +30,7 @@ $menuData = [
 ],
 'About' => [
 'icon' => 'fa-solid fa-circle-info',
-'href' => '/about'
+'href' => '#about'
 ],
 ];
 @endphp
@@ -41,8 +42,13 @@ $menuData = [
         @foreach($menuData as $title => $data)
         <div class="relative group py-4">
             <a href="{{ $data['href'] ?? '#' }}"
+                {{-- Only use wire:navigate if the link is NOT a hash link --}}
+                @if(!str_contains($data['href'] ?? '' , '#' )) wire:navigate @endif
+
                 class="flex items-center gap-1 text-sm font-bold text-gray-800 hover:text-emerald-700 transition-colors uppercase tracking-wide">
+
                 {{ $title }}
+
                 @isset($data['children'])
                 <i class="fa-solid fa-chevron-down text-[10px] group-hover:rotate-180 transition-transform"></i>
                 @endisset

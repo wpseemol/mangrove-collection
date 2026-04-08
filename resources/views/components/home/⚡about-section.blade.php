@@ -24,7 +24,14 @@ new class extends Component {
                 ],
                 [
                     'title' => 'Why Choose Us',
-                    'description' => 'We ensure high-quality products, direct sourcing, and complete trust for our customers.'
+                    'description' => 'We ensure high-quality products,  direct sourcing, and complete trust for our customers.
+                    We ensure high-quality products,  direct sourcing, and complete trust for our customers.
+                    We ensure high-quality products,  direct sourcing, and complete trust for our customers.
+                    We ensure high-quality products,  direct sourcing, and complete trust for our customers.
+                    We ensure high-quality products,  direct sourcing, and complete trust for our customers.
+                    We ensure high-quality products,  direct sourcing, and complete trust for our customers.
+                    We ensure high-quality products,  direct sourcing, and complete trust for our customers.
+                    '
                 ],
                 [
                     'title' => 'Sundarban Honey',
@@ -43,7 +50,7 @@ new class extends Component {
     }
 }; ?>
 
-<section class="py-16 bg-white font-poppins">
+<section class="py-16 bg-white font-poppins" id="about">
     <div class="container mx-auto px-4">
         <div class="mb-10">
             <h2 class="text-2xl md:text-3xl font-bold text-slate-800 leading-tight">
