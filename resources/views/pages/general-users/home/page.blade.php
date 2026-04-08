@@ -5,5 +5,6 @@
     <livewire:home.top-selling-products />
     <livewire:home.top-new-arrival />
     <livewire:home.about-section />
+    <livewire:whatsapp-floating-button />
 
 </x-layouts::general-users>

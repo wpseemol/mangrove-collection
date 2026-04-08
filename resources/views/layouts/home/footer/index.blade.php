@@ -18,6 +18,9 @@ $allCompany = [
 @endphp
 
 <footer class="bg-brand-dark text-gray-400 pt-16 pb-24 md:pb-12 border-t border-emerald-900/20">
+
+
+
     <div class="container mx-auto px-6 lg:px-16">
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">

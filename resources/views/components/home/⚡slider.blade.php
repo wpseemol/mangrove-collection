@@ -34,8 +34,8 @@ new class extends Component {
     }
 }; ?>
 
-<section class="bg-zinc-50 font-poppins">
-    <div class="mx-auto mt-10 md:mt-0">
+<section class="font-poppins pt-6">
+    <div class="container mx-auto mt-10 md:mt-0">
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
 
             <div x-data="{ active: 0, count: {{ $banners->count() }} }"
