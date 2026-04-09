@@ -1,35 +1,38 @@
 <?php
 
+use App\Models\Category;
 use Livewire\Component;
 
 new class extends Component {
     public function with(): array
     {
-        $categories = collect([
-            ['name' => 'Mangrove Raw Honey', 'image' => 'https://images.unsplash.com/photo-1589927986089-35812388d1f4?w=400', 'count' => '12 Products'],
-            ['name' => 'Seawater Fish', 'image' => 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=400', 'count' => '24 Products'],
-            ['name' => 'Sundarban Crabs', 'image' => 'https://images.unsplash.com/photo-1551730459-92db2a308d6a?w=400', 'count' => '8 Products'],
-            ['name' => 'Fresh Prawns', 'image' => 'https://images.unsplash.com/photo-1559737558-2f5a35f4523b?w=400', 'count' => '15 Products'],
-            ['name' => 'Organic Ghee', 'image' => 'https://images.unsplash.com/photo-1596733430284-f7437764b1a9?w=400', 'count' => '5 Products'],
-            // Adding a 6th item will now trigger the slider
-            ['name' => 'Dry Fish', 'image' => 'https://images.unsplash.com/photo-1534948216015-843149f72be3?w=400', 'count' => '10 Products'],
-        ]);
+        // 1. Fetch real data from the database using your Model method
+        // This will return the collection containing your "Mangrove Raw Honey"
+        $get_categories = Category::getCategories();
 
         return [
-            'categories' => $categories,
-            'useSlider' => $categories->count() > 5
+            'categories' => $get_categories,
+            // The slider only triggers if you have more than 5 real categories
+            'useSlider' => $get_categories->count() > 5
         ];
     }
 }; ?>
 
 <section class="py-12 bg-white font-poppins">
-    <div class="container mx-auto">
+    <div class="container mx-auto px-4">
         <div class="text-center mb-6">
             <h2 class="text-3xl md:text-4xl font-black text-primary uppercase tracking-tight">Our Product Category</h2>
             <p class="text-gray-500 mt-2">Get your desired product from a featured category</p>
             <div class="w-20 h-1.5 bg-primary-light mx-auto mt-4 rounded-full"></div>
         </div>
 
+        @if($categories->isEmpty())
+        <div class="text-center py-20">
+            <p class="text-gray-400">No categories available at the moment.</p>
+        </div>
+        @endif
+
+        {{-- If you have more than 5 categories, we use the slider. Otherwise, we show a simple grid. --}}
         @if($useSlider)
         <div x-data="{ 
                 init() {
@@ -47,7 +50,6 @@ new class extends Component {
                             1024: { slidesPerView: 5, spaceBetween: 20 }
                         }
                     });
-                    // Reveal the slider once JS is ready
                     $refs.categorySwiper.classList.remove('opacity-0');
                 }
             }" class="relative group py-2 z-50">
@@ -64,31 +66,32 @@ new class extends Component {
                 <div class="swiper-wrapper category-pre-js-fix">
                     @foreach($categories as $category)
                     <div class="swiper-slide h-auto">
+                        {{-- We pass the Eloquent object. Note: we manually set count to 0 for now --}}
                         <livewire:home.category-item
                             :category="$category"
-                            :key="'cat-'.$loop->index" />
+                            count="0 Products"
+                            :key="'cat-'.$category->id" />
                     </div>
                     @endforeach
                 </div>
-
                 <div class="swiper-pagination relative! pt-2"></div>
             </div>
         </div>
         @else
+        {{-- Standard Grid if categories <= 5 --}}
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
             @foreach($categories as $category)
             <livewire:home.category-item
                 :category="$category"
-                :key="'cat-'.$loop->index" />
+                count="0 Products"
+                :key="'cat-'.$category->id" />
             @endforeach
         </div>
         @endif
     </div>
 
+    {{-- CSS Styles remain the same --}}
     <style>
-        /* --- SERVER-SIDE LOAD FIX --- */
-
-        /* 1. Show 5 columns on desktop immediately before JS loads */
         @media (min-width: 1024px) {
             .category-slider-container:not(.swiper-initialized) .category-pre-js-fix {
                 display: grid !important;
@@ -97,7 +100,6 @@ new class extends Component {
             }
         }
 
-        /* 2. Show a horizontal row on mobile before JS loads */
         @media (max-width: 1023px) {
             .category-slider-container:not(.swiper-initialized) .category-pre-js-fix {
                 display: flex !important;
@@ -110,22 +112,19 @@ new class extends Component {
             }
         }
 
-        /* 3. Reveal the container once Swiper adds the initialized class */
         .category-slider-container.swiper-initialized {
             opacity: 1 !important;
         }
 
-        /* Existing Pagination Styles */
         .swiper-pagination-bullet-active {
-            background-color: var(--color-primary-light) !important;
+            background-color: #064e3b !important;
             width: 24px !important;
             border-radius: 5px !important;
-            transition: all 0.3s ease;
         }
 
         .swiper-pagination-bullet {
-            background-color: var(--color-primary);
-            opacity: 1;
+            background-color: #064e3b;
+            opacity: 0.5;
         }
     </style>
 </section>

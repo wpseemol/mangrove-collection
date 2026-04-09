@@ -1,26 +1,30 @@
 <?php
 
 use Livewire\Component;
+use App\Models\Category;
 
 new class extends Component {
     /**
-     * @var array{name: string, image: string, count: int | string} $category
+     * Define the properties with strict types.
+     * The '?' before Category allows it to be null initially if needed.
      */
-    public array $category;
+    public Category $category;
+    public string $count;
 
     /**
-     * @param array{name: string, image: string, count: int | string} $category
+     * Correct syntax: type comes BEFORE the variable.
      */
-    public function mount(array $category): void
+    public function mount(Category $category, string $count = '0 Products'): void
     {
         $this->category = $category;
+        $this->count = $count;
     }
 }; ?>
 
 <div class="category-cart-item group cursor-pointer bg-white border border-gray-100 py-2 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-2 text-center">
     <div class="relative overflow-hidden rounded-2xl aspect-square flex items-center justify-center px-4 pt-4 pb-2">
-        <img src="{{ $category['image'] }}"
-            alt="{{ $category['name'] }}"
+        <img src="{{ $category->image }}"
+            alt="{{ $category->name }}"
             class="w-full h-full object-cover rounded-xl  transition-transform duration-700">
 
 
@@ -33,10 +37,10 @@ new class extends Component {
     </div>
 
     <h3 class="text-primary-light font-bold text-sm md:text-base category-name transition-colors">
-        {{ $category['name'] }}
+        {{ $category->name }}
     </h3>
     <p class="text-[10px] md:text-xs text-gray-400 font-medium uppercase tracking-widest">
-        {{ $category['count'] }}
+        {{ $count }}
     </p>
 
     <style>
