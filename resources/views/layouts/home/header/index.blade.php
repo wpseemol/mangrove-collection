@@ -37,7 +37,7 @@ $menuData = [
 
 
 
-<div class="md:flex justify-center border border-e-accent/20 bg-e-accent/10 hidden">
+<div class="md:flex justify-center border border-e-accent/20 bg-e-accent/10 hidden bg-white">
     <nav class="flex items-center  gap-8">
         @foreach($menuData as $title => $data)
         <div class="relative group py-4">

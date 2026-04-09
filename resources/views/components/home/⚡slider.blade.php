@@ -34,7 +34,7 @@ new class extends Component {
     }
 }; ?>
 
-<section class="font-poppins pt-6">
+<section class="font-poppins pt-6 bg-white">
     <div class="container mx-auto mt-10 md:mt-0">
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
 

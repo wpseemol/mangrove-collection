@@ -44,14 +44,18 @@
     --breakpoint-2xl: 87.5rem; /* 1400px */
 }
 
+/*
 @layer theme {
     .dark {
         /* In dark mode, we make the gold more prominent */
+/*
+
         --color-accent: var(--color-secondary-light);
         --color-accent-content: var(--color-secondary-light);
         --color-accent-foreground: var(--color-zinc-950);
     }
 }
+*/
 
 @layer base {
     *,
