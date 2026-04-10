@@ -69,8 +69,6 @@ export interface Category {
     imgUrl: string;
 }
 
-
-
 /**
  * Represents the details of a home page, including its ID, title, description, sliders, and banners.
  *
@@ -80,7 +78,7 @@ export interface Category {
  * @property {string} pageDescription - A brief description of the home page.
  * @property {BannerSliderType[]} sliders - An array of slider objects associated with the home page.
  * @property {BannerSliderType[]} banners - An array of banner objects associated with the home page.
- * 
+ *
  */
 
 export interface HomePageDetailsType {
@@ -89,10 +87,9 @@ export interface HomePageDetailsType {
     pageDescription: string;
     sliders: BannerSliderType[];
     banners: BannerSliderType[];
+    detailsSections: DetailsSectionType[];
 }
 
-
-      
 /**
  * Represents a banner item with its properties.
  *
@@ -113,3 +110,8 @@ export interface BannerSliderType {
     linkStatus: boolean;
 }
 
+export interface DetailsSectionType {
+    id: string;
+    title: string;
+    description: string;
+}

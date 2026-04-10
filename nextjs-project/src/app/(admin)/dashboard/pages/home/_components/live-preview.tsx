@@ -2,11 +2,12 @@
 
 import { useHeroBanner } from "@/hooks";
 import { useState, useRef, useEffect } from "react";
+import AboutSectionLivePreview from "./about-section/about-section-live-priviue";
 
 export default function LivePreview() {
     const { slides } = useHeroBanner();
     const [activeView, setActiveView] = useState<"desktop" | "mobile">(
-        "desktop"
+        "desktop",
     );
     const [activeIndex, setActiveIndex] = useState(0);
     const carouselRef = useRef<HTMLDivElement>(null);
@@ -36,17 +37,17 @@ export default function LivePreview() {
 
     const goToPrevSlide = () => {
         setActiveIndex(
-            (prev) => (prev - 1 + bannerSlides.length) % bannerSlides.length
+            (prev) => (prev - 1 + bannerSlides.length) % bannerSlides.length,
         );
     };
 
     const bannerTopRight = slides.find((slide) => slide.type === "right-top");
     const bannerBottomRight = slides.find(
-        (slide) => slide.type === "right-bottom"
+        (slide) => slide.type === "right-bottom",
     );
 
     return (
-        <div className="lg:col-span-7 xl:col-span-8 sticky top-24 order-1 lg:order-2 hidden lg:block">
+        <>
             <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-black/20 overflow-hidden flex flex-col h-[calc(100vh-8rem)]">
                 {/* Preview Header */}
                 <div className="border-b border-gray-200 dark:border-gray-800 px-6 py-4 flex items-center justify-between bg-white dark:bg-gray-800 z-10">
@@ -172,7 +173,7 @@ export default function LivePreview() {
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                    )
+                                                    ),
                                                 )}
                                             </div>
 
@@ -209,7 +210,7 @@ export default function LivePreview() {
                                                                 key={index}
                                                                 onClick={() =>
                                                                     goToSlide(
-                                                                        index
+                                                                        index,
                                                                     )
                                                                 }
                                                                 className={`h-2 rounded-full transition-all duration-300 ${
@@ -222,7 +223,7 @@ export default function LivePreview() {
                                                                     index + 1
                                                                 }`}
                                                             />
-                                                        )
+                                                        ),
                                                     )}
                                                 </div>
                                             )}
@@ -376,9 +377,12 @@ export default function LivePreview() {
                                 <div className="w-32 h-6 bg-gray-800 dark:bg-gray-900 rounded-b-xl" />
                             </div>
                         )}
+                        {/* about section live preview */}
+
+                        <AboutSectionLivePreview />
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }

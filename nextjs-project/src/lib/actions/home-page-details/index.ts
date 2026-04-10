@@ -10,6 +10,10 @@ import {
     sliderFormSchema,
 } from "@/lib/schemas/zod/slide-schema";
 import { formatZodError, getFirstErrorMessage } from "@/utils/zod-error";
+import {
+    aboutSectionSchema,
+    AboutSectionValues,
+} from "@/lib/schemas/zod/about-section-schema";
 
 /**
  * Create home page details in the database.
@@ -32,13 +36,13 @@ export async function createHomePageDetails() {
         const isAdmin = await userRoleCheck(
             session?.user.id,
             session?.user.role,
-            "admin"
+            "admin",
         );
 
         const isCreator = await userRoleCheck(
             session?.user.id,
             session?.user.role,
-            "creator"
+            "creator",
         );
 
         if (!isAdmin && !isCreator) {
@@ -108,7 +112,7 @@ export async function getHomePageDetails() {
                 _id: 0,
                 banners: 1,
                 sliders: 1,
-            }
+            },
         ).lean();
 
         if (!homePageDetails) {
@@ -159,13 +163,13 @@ export async function updateHeroSliders(sliderDataString: string) {
         const isAdmin = await userRoleCheck(
             session?.user.id,
             session?.user.role,
-            "admin"
+            "admin",
         );
 
         const isCreator = await userRoleCheck(
             session?.user.id,
             session?.user.role,
-            "creator"
+            "creator",
         );
 
         if (!isAdmin && !isCreator) {
@@ -194,7 +198,7 @@ export async function updateHeroSliders(sliderDataString: string) {
 
         const response = await HomePageDetails.updateOne(
             { pageId: "home-page" },
-            { sliders: slideData.data.slides }
+            { sliders: slideData.data.slides },
         );
 
         return {
@@ -236,13 +240,13 @@ export async function updateHeroBannerImages(bannersDataString: string) {
         const isAdmin = await userRoleCheck(
             session?.user.id,
             session?.user.role,
-            "admin"
+            "admin",
         );
 
         const isCreator = await userRoleCheck(
             session?.user.id,
             session?.user.role,
-            "creator"
+            "creator",
         );
 
         if (!isAdmin && !isCreator) {
@@ -273,7 +277,7 @@ export async function updateHeroBannerImages(bannersDataString: string) {
 
         const response = await HomePageDetails.updateOne(
             { pageId: "home-page" },
-            { banners: bannerData.data.banners }
+            { banners: bannerData.data.banners },
         );
 
         return {
@@ -289,6 +293,114 @@ export async function updateHeroBannerImages(bannersDataString: string) {
             data: "",
             error,
             message: "Error connecting to the database.",
+        };
+    }
+}
+
+// Function to fetch about section data (placeholder for future implementation)
+export async function getAboutSectionData() {
+    try {
+        await connectMongoDB();
+
+        const homePageDetails = await HomePageDetails.findOne(
+            { pageId: "home-page" },
+            {
+                _id: 0,
+                detailsSections: 1,
+            },
+        ).lean();
+
+        if (!homePageDetails) {
+            return {
+                success: false,
+                data: "",
+                message:
+                    "Home page details fetched successfully. data not found.",
+            };
+        }
+
+        return {
+            success: true,
+            data: JSON.stringify(homePageDetails),
+            message: "Home page details fetched successfully.",
+        };
+    } catch (error) {
+        return {
+            success: false,
+            data: "",
+            error,
+            message: "Error connecting to the database.",
+        };
+    }
+}
+
+export async function addUpdateAboutSectionDetails(aboutDataString: string) {
+    // Placeholder for future implementation
+
+    try {
+        const session = await auth();
+        /**
+         * Validates user and input, then adds a new product if authorized; returns operation result and errors if any.
+         */
+        if (!session || !session.user) {
+            return {
+                success: false,
+                message: "You are not login user.",
+            };
+        }
+
+        const isAdmin = await userRoleCheck(
+            session?.user.id,
+            session?.user.role,
+            "admin",
+        );
+
+        const isCreator = await userRoleCheck(
+            session?.user.id,
+            session?.user.role,
+            "creator",
+        );
+
+        if (!isAdmin && !isCreator) {
+            return {
+                success: false,
+                message: "Admin and Creator use only can add update data.",
+            };
+        }
+
+        const inputData = JSON.parse(aboutDataString) as AboutSectionValues;
+
+        const aboutSectionData = aboutSectionSchema.safeParse(inputData);
+        if (!aboutSectionData.success) {
+            return {
+                success: false,
+                message: getFirstErrorMessage(aboutSectionData.error),
+                errors: formatZodError(aboutSectionData.error),
+                fieldErrors: aboutSectionData.error.flatten(),
+            };
+        }
+
+        await connectMongoDB();
+
+        const response = await HomePageDetails.updateOne(
+            { pageId: "home-page" },
+            { detailsSections: aboutSectionData.data.sections },
+        );
+
+        return {
+            success: true,
+            data: response as unknown,
+            message: "Home page about section updated successfully.",
+        };
+
+        /**
+         * Validates user and input, then adds a new product if authorized; returns operation result and errors if any.
+         */
+    } catch (error) {
+        return {
+            success: false,
+            data: "",
+            message: "This function is not implemented yet.",
         };
     }
 }

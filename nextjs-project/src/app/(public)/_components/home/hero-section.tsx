@@ -123,10 +123,10 @@ async function getHeroSectionData() {
             sliderData = data.sliders.length > 0 ? data.sliders : sliderContent;
 
             const rightTopBanner = data.banners.find(
-                (banner) => banner.type === "right-top"
+                (banner) => banner.type === "right-top",
             );
             const rightBottomBanner = data.banners.find(
-                (banner) => banner.type === "right-bottom"
+                (banner) => banner.type === "right-bottom",
             );
 
             if (rightTopBanner) {

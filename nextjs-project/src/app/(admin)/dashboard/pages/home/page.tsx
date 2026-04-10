@@ -1,5 +1,6 @@
 import {
     createHomePageDetails,
+    getAboutSectionData,
     getHomePageDetails,
 } from "@/lib/actions/home-page-details";
 
@@ -13,9 +14,13 @@ import LivePreview from "./_components/live-preview";
 import SlidesForm from "./_components/slide";
 import BannerImages from "./_components/banner";
 import { Toaster } from "sonner";
+import AboutEditUpdateForm from "./_components/about-section/about-edit-update-form";
+import AboutSectionProvider from "./_components/about-section/about-section-provider";
 
 export default async function AdminHomeDesignPage() {
     const response = await getHomePageDetails();
+
+    const aboutResponse = await getAboutSectionData();
 
     // Initialize banner data
     let bannerSlideData: string = "[]";
@@ -47,45 +52,54 @@ export default async function AdminHomeDesignPage() {
 
     return (
         <HeroBannerProvider bannerSlideData={bannerSlideData}>
-            <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 md:p-6">
-                <div className="max-w-7xl mx-auto">
-                    <Header
-                        title="Home Page Editor"
-                        subtitle="Manage your homepage content including slides and banners"
-                    />
+            <AboutSectionProvider data={aboutResponse.data}>
+                <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 md:p-6">
+                    <div className="container mx-auto">
+                        <Header
+                            title="Home Page Editor"
+                            subtitle="Manage your homepage content including slides and banners"
+                        />
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                            <div className="lg:col-span-5 xl:col-span-4  flex-col gap-8 order-2 flex lg:order-1">
+                                {/* Main Slider Section */}
 
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                        <div className="lg:col-span-5 xl:col-span-4  flex-col gap-8 order-2 flex lg:order-1">
-                            {/* Main Slider Section */}
+                                <SlidesForm data={dbSlidersData} />
 
-                            <SlidesForm data={dbSlidersData} />
+                                <div className="h-px bg-gray-200 dark:bg-gray-700 w-full" />
 
-                            <div className="h-px bg-gray-200 dark:bg-gray-700 w-full" />
+                                {/* Fixed Images Section */}
+                                <div className="flex flex-col gap-6">
+                                    <div>
+                                        <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                                            Fixed Images
+                                        </h3>
+                                        <p className="text-sm text-slate-500 dark:text-gray-400 mt-1">
+                                            Manage static side banners
+                                        </p>
+                                    </div>
 
-                            {/* Fixed Images Section */}
-                            <div className="flex flex-col gap-6">
-                                <div>
-                                    <h3 className="text-xl font-bold text-slate-900 dark:text-white">
-                                        Fixed Images
-                                    </h3>
-                                    <p className="text-sm text-slate-500 dark:text-gray-400 mt-1">
-                                        Manage static side banners
-                                    </p>
+                                    {/* Fixed Images List right top */}
+                                    <BannerImages data={bdBannersData} />
+                                    <br />
+                                    {/* about section edit form */}
+                                    <AboutEditUpdateForm />
                                 </div>
-
-                                {/* Fixed Images List right top */}
-                                <BannerImages data={bdBannersData} />
+                                <Toaster
+                                    position="top-center"
+                                    richColors
+                                    closeButton
+                                />
                             </div>
-                            <Toaster
-                                position="top-center"
-                                richColors
-                                closeButton
-                            />
+                            <div className="lg:col-span-7 xl:col-span-8 sticky top-24 order-1 lg:order-2 hidden lg:block">
+                                <LivePreview />
+
+                                {/* about section live preview */}
+                            </div>
                         </div>
-                        <LivePreview />
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"></div>
                     </div>
                 </div>
-            </div>
+            </AboutSectionProvider>
         </HeroBannerProvider>
     );
 }

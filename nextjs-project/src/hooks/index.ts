@@ -1,9 +1,10 @@
 import {
-     CartContext,
-     CartProductsContext,
-     HeroBannerContext,
-     PurchaseContext,
-     VariantUpdateContext,
+    AboutSectionContext,
+    CartContext,
+    CartProductsContext,
+    HeroBannerContext,
+    PurchaseContext,
+    VariantUpdateContext,
 } from "@/contexts";
 import { useContext } from "react";
 
@@ -12,15 +13,15 @@ import { useContext } from "react";
  * @returns { variantSelectId, setVariantSelectId }
  */
 export const useVariantUpdate = function () {
-     const context = useContext(VariantUpdateContext);
+    const context = useContext(VariantUpdateContext);
 
-     if (!context) {
-          throw new Error(
-               "useVariantUpdate muse be used within a VariantUpdateProvider"
-          );
-     }
+    if (!context) {
+        throw new Error(
+            "useVariantUpdate muse be used within a VariantUpdateProvider",
+        );
+    }
 
-     return context;
+    return context;
 };
 
 /**
@@ -28,13 +29,13 @@ export const useVariantUpdate = function () {
  * @returns {cart, setCart}
  */
 export const useCart = function () {
-     const context = useContext(CartContext);
+    const context = useContext(CartContext);
 
-     if (!context) {
-          throw new Error("useCart muse be used within a CartProvider");
-     }
+    if (!context) {
+        throw new Error("useCart muse be used within a CartProvider");
+    }
 
-     return context;
+    return context;
 };
 
 /**
@@ -42,15 +43,15 @@ export const useCart = function () {
  * @returns {loading,setLoading,cartProducts,setCartProducts}
  */
 export const useCartProducts = function () {
-     const context = useContext(CartProductsContext);
+    const context = useContext(CartProductsContext);
 
-     if (!context) {
-          throw new Error(
-               "useCartProducts muse be used within a CartProductsContext"
-          );
-     }
+    if (!context) {
+        throw new Error(
+            "useCartProducts muse be used within a CartProductsContext",
+        );
+    }
 
-     return context;
+    return context;
 };
 
 /**
@@ -58,30 +59,40 @@ export const useCartProducts = function () {
  * @returns {buyProducts,setBuyProducts,shippingCost,setShippingCost,paymentMethod, setPaymentMethod}
  */
 export const usePurchase = function () {
-     const context = useContext(PurchaseContext);
+    const context = useContext(PurchaseContext);
 
-     if (!context) {
-          throw new Error("usePurchase muse be used within a CartProvider");
-     }
+    if (!context) {
+        throw new Error("usePurchase muse be used within a CartProvider");
+    }
 
-     return context;
+    return context;
 };
-
-
 
 /**
  * useHeroBanner hook to access HeroBannerContext values.
  * @return {Object} An object containing slides and setSlides from HeroBannerContext.
  * @example
  * const { slides, setSlides } = useHeroBanner();
- *   
+ *
  */
 
 export const useHeroBanner = function () {
-     const context = useContext(HeroBannerContext);
+    const context = useContext(HeroBannerContext);
 
-     if (!context) {
-          throw new Error("useHeroBanner muse be used within a HeroBannerProvider");
-     }    
-     return context;
+    if (!context) {
+        throw new Error(
+            "useHeroBanner muse be used within a HeroBannerProvider",
+        );
+    }
+    return context;
+};
+
+export const useAboutSection = function () {
+    const context = useContext(AboutSectionContext);
+    if (!context) {
+        throw new Error(
+            "useAboutSection muse be used within a AboutSectionProvider",
+        );
+    }
+    return context;
 };

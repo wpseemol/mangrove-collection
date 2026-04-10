@@ -1,58 +1,59 @@
 import { SlidesType } from "@/app/(admin)/dashboard/pages/home/_components/hero-banner-provider";
 import { CartProductsType } from "@/lib/actions/cart";
+import { DetailsSectionType } from "@/types/home";
 import { createContext, Dispatch, SetStateAction } from "react";
 
 export const VariantUpdateContext =
-     createContext<VariantUpdateContextType | null>(null);
+    createContext<VariantUpdateContextType | null>(null);
 
 interface VariantUpdateContextType {
-     variantSelectId: string | null;
-     setVariantSelectId: Dispatch<SetStateAction<string | null>>;
+    variantSelectId: string | null;
+    setVariantSelectId: Dispatch<SetStateAction<string | null>>;
 }
 
 export const CartContext = createContext<CartType | null>(null);
 
 export type CartType = {
-     cart: Cart;
-     setCart: Dispatch<SetStateAction<Cart>>;
+    cart: Cart;
+    setCart: Dispatch<SetStateAction<Cart>>;
 };
 
 interface Cart {
-     cartCount: number | null;
-     cartProductIds: string[];
+    cartCount: number | null;
+    cartProductIds: string[];
 }
 
 export const CartProductsContext =
-     createContext<CartProductsContextType | null>(null);
+    createContext<CartProductsContextType | null>(null);
 
 interface CartProductsContextType {
-     loading: boolean;
-     setLoading: Dispatch<SetStateAction<boolean>>;
-     cartProducts: CartProductsType[] | null;
-     setCartProducts: Dispatch<SetStateAction<CartProductsType[] | null>>;
-     cartSelectedProducts: CartSelectedProductsType[] | null;
-     setCartSelectedProducts: Dispatch<
-          SetStateAction<CartSelectedProductsType[] | null>
-     >;
+    loading: boolean;
+    setLoading: Dispatch<SetStateAction<boolean>>;
+    cartProducts: CartProductsType[] | null;
+    setCartProducts: Dispatch<SetStateAction<CartProductsType[] | null>>;
+    cartSelectedProducts: CartSelectedProductsType[] | null;
+    setCartSelectedProducts: Dispatch<
+        SetStateAction<CartSelectedProductsType[] | null>
+    >;
 }
 
 interface CartSelectedProductsType {
-     id: string;
-     quantity: number;
-     currency: string;
-     price: number;
-     selectedPriceId: string;
+    id: string;
+    quantity: number;
+    currency: string;
+    price: number;
+    selectedPriceId: string;
 }
 
 export const PurchaseContext = createContext<PurchaseContextType | null>(null);
 
 interface PurchaseContextType {
-     paymentMethod: PaymentMethod | null;
-     setPaymentMethod: Dispatch<SetStateAction<PaymentMethod | null>>;
-     shippingCost: number | null;
-     setShippingCost: Dispatch<SetStateAction<number | null>>;
-     buyProducts: PurchaseProducts[] | null;
-     setBuyProducts: Dispatch<SetStateAction<PurchaseProducts[] | null>>;
+    paymentMethod: PaymentMethod | null;
+    setPaymentMethod: Dispatch<SetStateAction<PaymentMethod | null>>;
+    shippingCost: number | null;
+    setShippingCost: Dispatch<SetStateAction<number | null>>;
+    buyProducts: PurchaseProducts[] | null;
+    setBuyProducts: Dispatch<SetStateAction<PurchaseProducts[] | null>>;
 }
 
 /**
@@ -62,20 +63,29 @@ interface PurchaseContextType {
  * @property {string} selectedPriceId - The selected price ID for the product.
  */
 export interface PurchaseProducts {
-     productId: string;
-     quantity: number;
-     selectedPriceId: string;
+    productId: string;
+    quantity: number;
+    selectedPriceId: string;
 }
 
 export type PaymentMethod = "cod" | "online-payment" | "card";
 
-
 /**
  * @description hero-banner context
  */
-export const HeroBannerContext = createContext<HeroBannerContextType | null>(null);
+export const HeroBannerContext = createContext<HeroBannerContextType | null>(
+    null,
+);
 
 export interface HeroBannerContextType {
-     slides: SlidesType[];
-     setSlides: Dispatch<SetStateAction<SlidesType[]>>;
+    slides: SlidesType[];
+    setSlides: Dispatch<SetStateAction<SlidesType[]>>;
+}
+
+export const AboutSectionContext =
+    createContext<AboutSectionContextType | null>(null);
+
+export interface AboutSectionContextType {
+    sections: DetailsSectionType[];
+    setSections: Dispatch<SetStateAction<DetailsSectionType[]>>;
 }
