@@ -29,7 +29,7 @@ export default function AboutEditUpdateForm() {
         register,
         control,
         handleSubmit,
-        formState: { errors }, // 2. Extract errors
+        formState: { errors, isSubmitting }, // 2. Extract errors
     } = useForm<FormValues>({
         resolver: zodResolver(aboutSectionSchema), // 3. Connect Resolver
         defaultValues: {
@@ -183,6 +183,7 @@ export default function AboutEditUpdateForm() {
 
                 <div className="flex flex-col md:flex-row gap-4 sticky bottom-6 bg-white/80 backdrop-blur-md p-4 rounded-xl border border-gray-100 shadow-lg">
                     <button
+                        disabled={isSubmitting}
                         type="button"
                         onClick={() =>
                             append({
@@ -200,6 +201,7 @@ export default function AboutEditUpdateForm() {
                     </button>
 
                     <button
+                        disabled={isSubmitting}
                         type="submit"
                         className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-green-600 text-white font-bold rounded-xl hover:bg-green-700 transition-all shadow-md active:scale-[0.98]"
                     >

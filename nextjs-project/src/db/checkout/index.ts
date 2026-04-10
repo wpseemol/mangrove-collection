@@ -6,7 +6,7 @@ export const PAYMENT_METHODS = [
         icon: "send_to_mobile",
         color: "#e2136e",
         description:
-            "01710110733 bKash,Nagad,(Rocket +6) Personal Account এখানে Send Money করে এর স্ক্রিনশট আমাদের Whatsapp করুন । Whatsapp: 01626328524",
+            "+880 1323 846556 bKash,Nagad,(Rocket +6) Personal Account এখানে Send Money করে এর স্ক্রিনশট আমাদের Whatsapp করুন । Whatsapp: +880 1323 846556",
         shortDescription: "Send money to bKash account",
         infoAlert:
             "After payment, please send the transaction ID to our WhatsApp",
