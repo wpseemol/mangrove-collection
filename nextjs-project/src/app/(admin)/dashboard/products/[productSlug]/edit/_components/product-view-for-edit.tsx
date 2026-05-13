@@ -5,7 +5,6 @@ import Image from "next/image";
 import { PopupDialog } from "./popup-dialog";
 import ProductEditContainer from "./product-edit-container";
 import { InfoIcon, OnCheckmark } from "./svg";
-import "./tiptap-style.css";
 import ProductCategoryForm from "./update-form/product-category-form";
 import ProductDescriptionForm from "./update-form/product-description-form";
 import ProductImagesForm from "./update-form/product-images-form";
@@ -157,8 +156,8 @@ export default function ProductViewForEdit({
                                                 (item) => ({
                                                     id: item.id,
                                                     imgUrl: item.imgUrl,
-                                                })
-                                            )
+                                                }),
+                                            ),
                                         )}
                                         productName={productDetails.name}
                                         productId={productDetails.id}
@@ -231,7 +230,7 @@ export default function ProductViewForEdit({
                                     const title =
                                         productDetails.variants.find(
                                             (variant) =>
-                                                variant.id === price.variantId
+                                                variant.id === price.variantId,
                                         )?.title || "Default";
                                     return (
                                         <li
@@ -272,7 +271,7 @@ export default function ProductViewForEdit({
                                     currency={productDetails.currency}
                                     productId={productDetails.id}
                                     content={JSON.stringify(
-                                        productDetails.shippingCost
+                                        productDetails.shippingCost,
                                     )}
                                 />
                             </PopupDialog>
@@ -349,7 +348,7 @@ export default function ProductViewForEdit({
                                         Array.isArray(productDetails.tags) &&
                                         productDetails.tags.length > 0
                                             ? JSON.stringify(
-                                                  productDetails.tags
+                                                  productDetails.tags,
                                               )
                                             : ""
                                     }

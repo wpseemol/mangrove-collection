@@ -28,7 +28,10 @@ export default async function HeroSection() {
                         <Link href={bannerRightTop.linkTarget}>
                             <figure>
                                 <Image
-                                    src={bannerRightTop.imageUrl}
+                                    src={
+                                        bannerRightTop.imageUrl ||
+                                        "/assets/logo/no-image.jpg"
+                                    }
                                     alt={bannerRightTop.title}
                                     className="object-cover object-center hover:scale-105 duration-200 lg:min-w-[345px] lg:min-h-[215px] 2xl:min-w-[410px] 2xl:min-h-[245px]"
                                     width={600}
@@ -43,7 +46,10 @@ export default async function HeroSection() {
                     ) : (
                         <figure>
                             <Image
-                                src={bannerRightTop.imageUrl}
+                                src={
+                                    bannerRightTop.imageUrl ||
+                                    "/assets/logo/no-image.jpg"
+                                }
                                 alt={bannerRightTop.title}
                                 className="object-cover object-center hover:scale-105 duration-200 lg:min-w-[345px] lg:min-h-[215px] 2xl:min-w-[410px] 2xl:min-h-[245px]"
                                 width={600}
@@ -62,7 +68,10 @@ export default async function HeroSection() {
                         <Link href={bannerRightBottom.linkTarget}>
                             <figure>
                                 <Image
-                                    src={bannerRightBottom.imageUrl}
+                                    src={
+                                        bannerRightBottom.imageUrl ||
+                                        "/assets/logo/no-image.jpg"
+                                    }
                                     alt={bannerRightBottom.title}
                                     className="object-cover object-center hover:scale-105 duration-200 lg:min-w-[345px] lg:min-h-[215px] 2xl:min-w-[410px] 2xl:min-h-[245px]"
                                     width={600}
@@ -74,7 +83,10 @@ export default async function HeroSection() {
                     ) : (
                         <figure>
                             <Image
-                                src={bannerRightBottom.imageUrl}
+                                src={
+                                    bannerRightBottom.imageUrl ||
+                                    "/assets/logo/no-image.jpg"
+                                }
                                 alt={bannerRightBottom.title}
                                 className="object-cover object-center hover:scale-105 duration-200 lg:min-w-[345px] lg:min-h-[215px] 2xl:min-w-[410px] 2xl:min-h-[245px]"
                                 width={600}

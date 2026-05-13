@@ -24,30 +24,32 @@ export default async function OtherDetails() {
 
                 {/* Dynamic Data Loop */}
                 <div className="space-y-8">
-                    {aboutData.map((item, index) => (
-                        <motion.div
-                            key={item.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.2 }}
-                            viewport={{ once: true }}
-                            className=" flex flex-col"
-                        >
-                            {/* Title with Editable Option */}
-                            <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2 mb-4">
-                                <span className="text-green-500">●</span>
-                                {item.title}
-                            </h3>
+                    {aboutData &&
+                        aboutData.length > 0 &&
+                        aboutData.map((item, index) => (
+                            <motion.div
+                                key={item.id}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ delay: index * 0.2 }}
+                                viewport={{ once: true }}
+                                className=" flex flex-col"
+                            >
+                                {/* Title with Editable Option */}
+                                <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-2 mb-4">
+                                    <span className="text-green-500">🚣</span>
+                                    {item.title}
+                                </h3>
 
-                            {/* Description with Editable Option */}
-                            <div
-                                className="text-slate-600 leading-relaxed flex-grow tiptap ProseMirror prose prose-sm focus:outline-none"
-                                dangerouslySetInnerHTML={{
-                                    __html: item.description,
-                                }}
-                            />
-                        </motion.div>
-                    ))}
+                                {/* Description with Editable Option */}
+                                <div
+                                    className="text-slate-600 leading-relaxed flex-grow tiptap ProseMirror prose prose-sm focus:outline-none"
+                                    dangerouslySetInnerHTML={{
+                                        __html: item.description,
+                                    }}
+                                />
+                            </motion.div>
+                        ))}
                 </div>
             </div>
         </section>

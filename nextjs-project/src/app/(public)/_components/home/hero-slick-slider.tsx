@@ -56,9 +56,11 @@ export default function HeroSlickSlider({
     return (
         <div className="slider-container md:w-full h-full ">
             <Slider {...settings}>
-                {sliderContent.map((slidItem) => (
-                    <CustomSlide key={slidItem.id} slidItem={slidItem} />
-                ))}
+                {sliderContent &&
+                    sliderContent.length > 0 &&
+                    sliderContent.map((slidItem) => (
+                        <CustomSlide key={slidItem.id} slidItem={slidItem} />
+                    ))}
             </Slider>
         </div>
     );
