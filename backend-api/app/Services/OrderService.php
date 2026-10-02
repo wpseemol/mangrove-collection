@@ -22,6 +22,7 @@ class OrderService
     public function __construct(
         protected SettingsService $settings,
         protected SmsService $sms,
+        protected PaymentService $payments,
     ) {}
 
     /**
@@ -30,6 +31,7 @@ class OrderService
      *     shipping_method_id: int,
      *     address: array<string, string|null>,
      *     payment_method: string,
+     *     payment_account_id?: int|null,
      *     transaction_id?: string|null,
      *     payment_sender_number?: string|null,
      *     customer_note?: string|null,
@@ -39,9 +41,13 @@ class OrderService
     {
         $paymentMethod = PaymentMethod::from($data['payment_method']);
 
-        if (! in_array($paymentMethod->value, (array) $this->settings->get('payment_methods', ['cod']), true)) {
+        if (! $this->payments->isAvailable($paymentMethod)) {
             throw ValidationException::withMessages(['payment_method' => 'This payment method is not available.']);
         }
+
+        $paymentAccount = $paymentMethod->isWallet()
+            ? $this->payments->resolveAccount($paymentMethod, $data['payment_account_id'] ?? null)
+            : null;
 
         $shippingMethod = ShippingMethod::query()->active()->find($data['shipping_method_id']);
 
@@ -49,7 +55,7 @@ class OrderService
             throw ValidationException::withMessages(['shipping_method_id' => 'The selected shipping method is not available.']);
         }
 
-        $order = DB::transaction(function () use ($data, $user, $paymentMethod, $shippingMethod) {
+        $order = DB::transaction(function () use ($data, $user, $paymentMethod, $paymentAccount, $shippingMethod) {
             $quantities = collect($data['items'])
                 ->groupBy('variant_id')
                 ->map(fn ($rows) => (int) $rows->sum('quantity'));
@@ -122,8 +128,6 @@ class OrderService
                 'total' => round($subtotal + $shippingCost, 2),
                 'payment_method' => $paymentMethod,
                 'payment_status' => PaymentStatus::Pending,
-                'transaction_id' => $data['transaction_id'] ?? null,
-                'payment_sender_number' => $data['payment_sender_number'] ?? null,
                 'status' => OrderStatus::Pending,
                 'customer_note' => $data['customer_note'] ?? null,
             ]);
@@ -138,12 +142,16 @@ class OrderService
                 $line['variant']->product->increment('popularity', $line['attributes']['quantity']);
             }
 
+            if ($paymentAccount) {
+                $this->payments->submit($order, $paymentAccount, (string) $data['transaction_id'], (string) $data['payment_sender_number']);
+            }
+
             return $order;
         });
 
         $this->notifyPlaced($order);
 
-        return $order->load('items');
+        return $order->load(['items', 'latestPayment']);
     }
 
     public function shippingCostFor(ShippingMethod $method, float $subtotal): float

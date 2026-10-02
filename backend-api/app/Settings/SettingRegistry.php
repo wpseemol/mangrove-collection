@@ -23,8 +23,6 @@ final class SettingRegistry
 {
     public const SOCIAL_NETWORKS = ['facebook', 'instagram', 'youtube', 'linkedin', 'twitter'];
 
-    public const PAYMENT_METHODS = ['cod', 'bkash', 'nagad', 'rocket'];
-
     /**
      * @return array<string, array<string, array{type: string, public?: bool, encrypted?: bool, raw?: bool, default?: mixed, options?: list<string>, rules?: list<string|ValidationRule>, each?: list<string|ValidationRule>}>>
      */
@@ -66,16 +64,8 @@ final class SettingRegistry
             'commerce' => [
                 'currency' => ['type' => 'string', 'public' => true, 'default' => 'BDT', 'rules' => ['max:10']],
                 'currency_symbol' => ['type' => 'string', 'public' => true, 'default' => '৳', 'rules' => ['max:5']],
-                'payment_methods' => [
-                    'type' => 'json',
-                    'public' => true,
-                    'default' => ['cod'],
-                    'rules' => ['list', 'min:1'],
-                    'each' => ['string', 'distinct', 'in:'.implode(',', self::PAYMENT_METHODS)],
-                ],
-                'bkash_number' => ['type' => 'phone', 'public' => true, 'default' => null],
-                'nagad_number' => ['type' => 'phone', 'public' => true, 'default' => null],
-                'rocket_number' => ['type' => 'phone', 'public' => true, 'default' => null],
+                // bKash / Nagad / Rocket accounts live in the payment_accounts table.
+                'cod_enabled' => ['type' => 'boolean', 'public' => true, 'default' => true],
                 'free_shipping_threshold' => ['type' => 'float', 'public' => true, 'default' => null, 'rules' => ['min:0', 'max:10000000']],
                 'low_stock_threshold' => ['type' => 'integer', 'public' => false, 'default' => 5, 'rules' => ['min:0', 'max:100000']],
                 'order_notification_email' => ['type' => 'email', 'public' => false, 'default' => null],
@@ -112,6 +102,14 @@ final class SettingRegistry
                 'sms_order_status_template' => [
                     'type' => 'text',
                     'default' => 'Dear {name}, your order {order_number} is now {status}. - Mangrove Collection',
+                ],
+                'sms_payment_verified_template' => [
+                    'type' => 'text',
+                    'default' => 'Dear {name}, we received your {method} payment of {currency} {amount} for order {order_number}. Thank you! - Mangrove Collection',
+                ],
+                'sms_payment_rejected_template' => [
+                    'type' => 'text',
+                    'default' => 'Dear {name}, we could not verify your {method} payment for order {order_number}: {reason}. Please submit the correct transaction ID. - Mangrove Collection',
                 ],
             ],
 

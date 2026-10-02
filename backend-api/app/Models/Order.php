@@ -9,13 +9,14 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 
 #[Fillable([
     'order_number', 'user_id', 'customer_name', 'customer_email', 'customer_phone', 'shipping_address',
     'shipping_method_id', 'shipping_method_title', 'currency', 'subtotal', 'shipping_cost', 'discount', 'total',
-    'payment_method', 'payment_status', 'transaction_id', 'payment_sender_number', 'status',
+    'payment_method', 'payment_status', 'status',
     'customer_note', 'admin_note', 'cancelled_at', 'delivered_at',
 ])]
 class Order extends Model
@@ -66,6 +67,33 @@ class Order extends Model
     public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    /**
+     * @return HasMany<Payment, $this>
+     */
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class)->latest('id');
+    }
+
+    /**
+     * @return HasOne<Payment, $this>
+     */
+    public function latestPayment(): HasOne
+    {
+        return $this->hasOne(Payment::class)->latestOfMany();
+    }
+
+    /**
+     * A customer may send (or re-send) a wallet transaction ID while the order is
+     * open and no submission is already paid or waiting for review.
+     */
+    public function acceptsPaymentSubmission(): bool
+    {
+        return $this->payment_method->isWallet()
+            && $this->status !== OrderStatus::Cancelled
+            && in_array($this->payment_status, [PaymentStatus::Pending, PaymentStatus::Failed], true);
     }
 
     /**

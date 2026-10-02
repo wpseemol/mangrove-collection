@@ -31,11 +31,7 @@ class CheckoutRequest extends FormRequest
 
             'shipping_method_id' => ['required', 'integer'],
             'payment_method' => ['required', Rule::enum(PaymentMethod::class)],
-            'transaction_id' => [
-                Rule::requiredIf(fn () => PaymentMethod::tryFrom((string) $this->input('payment_method'))?->requiresTransactionId()),
-                'nullable', 'string', 'max:100', 'regex:/^[A-Za-z0-9\-]+$/',
-            ],
-            'payment_sender_number' => ['nullable', 'string', 'max:32', new PhoneNumber],
+            ...$this->walletRules(),
             'customer_note' => ['nullable', 'string', 'max:1000', new SafeText],
 
             'address_id' => ['nullable', 'integer'],
