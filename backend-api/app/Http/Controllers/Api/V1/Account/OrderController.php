@@ -21,7 +21,7 @@ class OrderController extends Controller
         ]);
 
         $orders = $request->user()->orders()
-            ->with('items')
+            ->with(['items', 'latestPayment'])
             ->when($request->query('status'), fn ($q, $status) => $q->where('status', $status))
             ->latest()
             ->paginate(min((int) $request->query('per_page', 10), 50));
@@ -31,14 +31,14 @@ class OrderController extends Controller
 
     public function show(Request $request, string $orderNumber): OrderResource
     {
-        return new OrderResource($this->find($request, $orderNumber)->load('items'));
+        return new OrderResource($this->find($request, $orderNumber)->load(['items', 'latestPayment']));
     }
 
     public function cancel(Request $request, string $orderNumber, OrderService $orders): OrderResource
     {
         $order = $orders->cancel($this->find($request, $orderNumber));
 
-        return new OrderResource($order->load('items'));
+        return new OrderResource($order->load(['items', 'latestPayment']));
     }
 
     protected function find(Request $request, string $orderNumber): Order

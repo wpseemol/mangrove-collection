@@ -1,7 +1,7 @@
 import type { SettingMeta, SettingValue } from '@/lib/types'
 import { isUnsafeText, UNSAFE_TEXT_MESSAGE } from '@/lib/validation'
 
-import { PAYMENT_METHODS, SOCIAL_NETWORKS, type FieldDef } from './sections'
+import { SOCIAL_NETWORKS, type FieldDef } from './sections'
 
 export type DraftValue = string | boolean | string[] | Record<string, string>
 export type Draft = Record<string, DraftValue>
@@ -26,8 +26,6 @@ export function toDraftValue(field: FieldDef, value: SettingValue | undefined): 
   switch (field.kind) {
     case 'switch':
       return Boolean(value)
-    case 'payments':
-      return Array.isArray(value) ? value.filter((v) => PAYMENT_METHODS.some((m) => m.value === v)) : []
     case 'social': {
       const links = value && typeof value === 'object' && !Array.isArray(value) ? value : {}
       return Object.fromEntries(SOCIAL_NETWORKS.map(({ key }) => [key, typeof links[key] === 'string' ? links[key] : '']))
@@ -46,8 +44,6 @@ export function toPayloadValue(field: FieldDef, value: DraftValue): SettingValue
   switch (field.kind) {
     case 'switch':
       return Boolean(value)
-    case 'payments':
-      return value as string[]
     case 'social':
       return Object.fromEntries(
         Object.entries(value as Record<string, string>)
@@ -90,11 +86,6 @@ export function validateField(field: FieldDef, value: DraftValue): Errors {
   }
 
   if (field.kind === 'switch') return errors
-
-  if (field.kind === 'payments') {
-    if (!(value as string[]).length) fail('Enable at least one payment method.')
-    return errors
-  }
 
   if (field.kind === 'social') {
     for (const { key, label } of SOCIAL_NETWORKS) {

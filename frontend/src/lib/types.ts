@@ -83,6 +83,41 @@ export type ShippingMethod = {
 };
 
 export type PaymentMethod = "cod" | "bkash" | "nagad" | "rocket";
+export type WalletMethod = Exclude<PaymentMethod, "cod">;
+export type PaymentAccountType = "personal" | "agent" | "merchant";
+
+export type PaymentAccount = {
+  id: number;
+  method: WalletMethod;
+  account_type: PaymentAccountType;
+  /** The wallet menu option to use: "Send Money", "Cash Out" or "Payment". */
+  action: string;
+  account_number: string;
+  account_name: string | null;
+  instructions: string | null;
+};
+
+export type PaymentOption = {
+  method: PaymentMethod;
+  label: string;
+  accounts: PaymentAccount[];
+};
+
+export type Payment = {
+  id: number;
+  method: WalletMethod;
+  account_type: PaymentAccountType | null;
+  action: string | null;
+  account_number: string | null;
+  amount: number;
+  currency: string;
+  sender_number: string | null;
+  transaction_id: string;
+  status: "submitted" | "verified" | "rejected";
+  rejection_reason: string | null;
+  reviewed_at: string | null;
+  created_at: string;
+};
 
 export type PublicSettings = {
   site_name: string;
@@ -100,10 +135,7 @@ export type PublicSettings = {
   whatsapp_button_position: "right" | "left";
   currency: string;
   currency_symbol: string;
-  payment_methods: PaymentMethod[];
-  bkash_number: string | null;
-  nagad_number: string | null;
-  rocket_number: string | null;
+  cod_enabled: boolean;
   free_shipping_threshold: number | null;
   google_login_enabled: boolean;
   google_client_id: string | null;
@@ -158,7 +190,7 @@ export type Address = {
 export type AddressInput = Omit<Address, "id" | "is_default"> & { is_default?: boolean };
 
 export type OrderStatus = "pending" | "processing" | "shipped" | "delivered" | "cancelled";
-export type PaymentStatus = "pending" | "paid" | "failed" | "refunded";
+export type PaymentStatus = "pending" | "verifying" | "paid" | "failed" | "refunded";
 
 export type OrderItem = {
   id: number;
@@ -179,7 +211,9 @@ export type Order = {
   status: OrderStatus;
   payment_status: PaymentStatus;
   payment_method: PaymentMethod;
-  transaction_id: string | null;
+  /** Latest wallet transaction ID submitted for this order, if any. */
+  payment: Payment | null;
+  can_submit_payment: boolean;
   customer: { name: string; email: string | null; phone: string };
   shipping_address: Omit<Address, "id" | "is_default" | "label">;
   shipping_method: string | null;

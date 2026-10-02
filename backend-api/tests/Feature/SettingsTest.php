@@ -132,27 +132,27 @@ class SettingsTest extends TestCase
             ->assertJsonValidationErrors(['settings.whatsapp_message', 'settings.whatsapp_button_position']);
     }
 
-    public function test_social_links_and_payment_methods_are_strictly_validated(): void
+    public function test_social_links_and_cod_toggle_are_strictly_validated(): void
     {
         Sanctum::actingAs(User::factory()->admin()->create());
 
         $this->putJson('/v1/admin/settings', ['settings' => [
             'social_links' => ['facebook' => 'javascript:alert(1)', 'myspace' => 'https://myspace.com/x'],
-            'payment_methods' => ['cod', 'paypal'],
+            'cod_enabled' => 'sometimes',
             'contact_phone' => 'not a phone',
         ]])
             ->assertUnprocessable()
-            ->assertJsonValidationErrors(['settings.social_links', 'settings.social_links.facebook', 'settings.payment_methods.1', 'settings.contact_phone']);
+            ->assertJsonValidationErrors(['settings.social_links', 'settings.social_links.facebook', 'settings.cod_enabled', 'settings.contact_phone']);
 
         $this->putJson('/v1/admin/settings', ['settings' => [
             'social_links' => ['facebook' => 'https://facebook.com/mangrove', 'youtube' => 'https://youtube.com/@mangrove'],
-            'payment_methods' => ['cod', 'bkash'],
+            'cod_enabled' => false,
             'contact_phone' => '+880 1712-345678',
         ]])->assertOk();
 
         $this->getJson('/v1/settings')
             ->assertJsonPath('data.social_links.facebook', 'https://facebook.com/mangrove')
-            ->assertJsonPath('data.payment_methods', ['cod', 'bkash']);
+            ->assertJsonPath('data.cod_enabled', false);
     }
 
     public function test_only_admins_can_read_or_change_settings(): void

@@ -1,9 +1,10 @@
 import { Check } from "lucide-react";
 import Link from "next/link";
 
+import { OrderPaymentSummary, PaymentResubmitPanel } from "@/components/payment/order-payment-panel";
 import { RemoteImage } from "@/components/shared/remote-image";
 import { Separator } from "@/components/ui/separator";
-import { formatDate, formatPrice, ORDER_STATUS_LABEL, PAYMENT_METHOD_LABEL } from "@/lib/format";
+import { formatDate, formatPrice, ORDER_STATUS_LABEL } from "@/lib/format";
 import type { Order, OrderStatus } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -44,7 +45,21 @@ export function OrderProgress({ status }: { status: OrderStatus }) {
   );
 }
 
-export function OrderDetails({ order, actions }: { order: Order; actions?: React.ReactNode }) {
+/**
+ * Pass onOrderUpdated to let the customer (re)submit a wallet transaction ID;
+ * guests must also pass the phone number they verified the order with.
+ */
+export function OrderDetails({
+  order,
+  actions,
+  onOrderUpdated,
+  guestPhone,
+}: {
+  order: Order;
+  actions?: React.ReactNode;
+  onOrderUpdated?: (order: Order) => void;
+  guestPhone?: string;
+}) {
   const address = order.shipping_address;
 
   return (
@@ -104,17 +119,18 @@ export function OrderDetails({ order, actions }: { order: Order; actions?: React
           </p>
         </div>
         <div className="rounded-2xl border bg-card p-5 text-sm">
-          <h3 className="mb-2 font-medium text-foreground">Payment</h3>
-          <p className="text-foreground">{PAYMENT_METHOD_LABEL[order.payment_method] ?? order.payment_method}</p>
-          {order.transaction_id && <p className="text-muted-foreground">Transaction ID: {order.transaction_id}</p>}
+          <h3 className="mb-3 font-medium text-foreground">Payment</h3>
+          <OrderPaymentSummary order={order} />
           {order.customer_note && (
             <>
-              <h3 className="mt-3 mb-1 font-medium text-foreground">Note</h3>
+              <h3 className="mt-4 mb-1 font-medium text-foreground">Note</h3>
               <p className="text-muted-foreground">{order.customer_note}</p>
             </>
           )}
         </div>
       </div>
+
+      {order.can_submit_payment && onOrderUpdated && <PaymentResubmitPanel order={order} phone={guestPhone} onUpdated={onOrderUpdated} />}
     </div>
   );
 }

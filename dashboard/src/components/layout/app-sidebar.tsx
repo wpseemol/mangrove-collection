@@ -1,4 +1,16 @@
-import { ChevronsUpDown, ExternalLink, FolderTree, LayoutDashboard, LogOut, Package, PackagePlus, Settings } from 'lucide-react'
+import {
+  ChevronsUpDown,
+  ExternalLink,
+  FolderTree,
+  LayoutDashboard,
+  LogOut,
+  Package,
+  PackagePlus,
+  ReceiptText,
+  Settings,
+  Wallet,
+  type LucideIcon,
+} from 'lucide-react'
 import { Link, useLocation } from 'react-router'
 
 import { useLogout } from '@/components/layout/use-logout'
@@ -20,19 +32,34 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
+  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
   useSidebar,
 } from '@/components/ui/sidebar'
 import { STOREFRONT_URL } from '@/lib/config'
+import { useAwaitingPaymentsCount } from '@/lib/queries'
 import { isAdmin } from '@/lib/types'
 import { useAuthStore } from '@/stores/auth'
 
-const NAV = [
+type NavItem = {
+  title: string
+  to: string
+  icon: LucideIcon
+  exact: boolean
+  adminOnly?: boolean
+  badge?: 'payments'
+}
+
+const NAV: { label: string; items: NavItem[] }[] = [
   {
     label: 'Overview',
     items: [{ title: 'Dashboard', to: '/', icon: LayoutDashboard, exact: true }],
+  },
+  {
+    label: 'Sales',
+    items: [{ title: 'Payments', to: '/payments', icon: ReceiptText, exact: true, badge: 'payments' }],
   },
   {
     label: 'Catalog',
@@ -44,8 +71,10 @@ const NAV = [
   },
   {
     label: 'Store',
-    adminOnly: true,
-    items: [{ title: 'Settings', to: '/settings', icon: Settings, exact: false }],
+    items: [
+      { title: 'Payment accounts', to: '/payment-accounts', icon: Wallet, exact: true, adminOnly: true },
+      { title: 'Settings', to: '/settings', icon: Settings, exact: false, adminOnly: true },
+    ],
   },
 ]
 
@@ -53,7 +82,11 @@ export function AppSidebar() {
   const { pathname } = useLocation()
   const { isMobile, setOpenMobile } = useSidebar()
   const admin = isAdmin(useAuthStore((state) => state.user))
-  const nav = NAV.filter((group) => !group.adminOnly || admin)
+  const { data: awaitingPayments } = useAwaitingPaymentsCount()
+  const badges = { payments: awaitingPayments ?? 0 }
+  const nav = NAV.map((group) => ({ ...group, items: group.items.filter((item) => !item.adminOnly || admin) })).filter(
+    (group) => group.items.length > 0,
+  )
 
   const isActive = (to: string, exact: boolean) =>
     exact ? pathname === to || (to === '/products' && /^\/products\/\d+/.test(pathname)) : pathname.startsWith(to)
@@ -96,6 +129,11 @@ export function AppSidebar() {
                         <span>{item.title}</span>
                       </Link>
                     </SidebarMenuButton>
+                    {item.badge && badges[item.badge] > 0 && (
+                      <SidebarMenuBadge className="bg-brand text-white peer-hover/menu-button:text-white peer-data-[active=true]/menu-button:text-white">
+                        {badges[item.badge]}
+                      </SidebarMenuBadge>
+                    )}
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>

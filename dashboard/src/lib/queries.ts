@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { api } from '@/lib/api'
-import type { AdminSettings, Category, CategoryIcon, SessionResponse } from '@/lib/types'
+import type { AdminSettings, Category, CategoryIcon, PaymentAccount, PaymentQueue, SessionResponse } from '@/lib/types'
 import { useAuthStore } from '@/stores/auth'
 
 export const sessionQueryKey = ['session'] as const
@@ -41,6 +41,27 @@ export function useAdminSettings() {
   return useQuery({
     queryKey: settingsQueryKey,
     queryFn: () => api<{ data: AdminSettings }>('/admin/settings').then((r) => r.data),
+  })
+}
+
+export const paymentAccountsQueryKey = ['admin', 'payment-accounts'] as const
+
+export function usePaymentAccounts() {
+  return useQuery({
+    queryKey: paymentAccountsQueryKey,
+    queryFn: () => api<{ data: PaymentAccount[] }>('/admin/payment-accounts').then((r) => r.data),
+  })
+}
+
+export const paymentsQueryKey = ['admin', 'payments'] as const
+
+/** Number of submitted transaction IDs waiting for review, polled for the sidebar badge. */
+export function useAwaitingPaymentsCount(enabled = true) {
+  return useQuery({
+    queryKey: [...paymentsQueryKey, 'awaiting-count'],
+    queryFn: () => api<PaymentQueue>('/admin/payments', { query: { status: 'submitted', per_page: 1 } }).then((r) => r.counts.submitted),
+    refetchInterval: 60_000,
+    enabled,
   })
 }
 

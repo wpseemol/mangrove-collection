@@ -8,7 +8,7 @@ import { Logo } from "@/components/shared/logo";
 import { useHydrated } from "@/hooks/use-hydrated";
 import { DASHBOARD_LOGIN_URL, DASHBOARD_URL } from "@/lib/config";
 import { PAYMENT_METHOD_LABEL } from "@/lib/format";
-import { useSettings } from "@/lib/queries";
+import { usePaymentOptions, useSettings } from "@/lib/queries";
 import { isStaff } from "@/lib/types";
 import { useAuthStore } from "@/stores/auth";
 
@@ -51,7 +51,8 @@ export function SiteFooter() {
   const staff = hydrated && isStaff(user);
   const social = settings?.social_links ?? {};
   const siteName = settings?.site_name ?? "Mangrove Collection";
-  const payments = settings?.payment_methods?.length ? settings.payment_methods : ["cod"];
+  const { data: paymentOptions } = usePaymentOptions();
+  const payments = paymentOptions?.map((option) => option.method) ?? [];
 
   const socials = [
     social.facebook && { href: social.facebook, label: "Facebook", icon: FacebookIcon },
@@ -142,14 +143,16 @@ export function SiteFooter() {
               {staff ? "Open dashboard" : "Admin login"}
             </a>
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            <span className="mr-1">We accept</span>
-            {payments.map((method) => (
-              <span key={method} className="rounded-md border border-white/15 bg-white/5 px-2.5 py-1 font-medium text-white/80">
-                {PAYMENT_METHOD_LABEL[method] ?? method}
-              </span>
-            ))}
-          </div>
+          {payments.length > 0 && (
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <span className="mr-1">We accept</span>
+              {payments.map((method) => (
+                <span key={method} className="rounded-md border border-white/15 bg-white/5 px-2.5 py-1 font-medium text-white/80">
+                  {PAYMENT_METHOD_LABEL[method] ?? method}
+                </span>
+              ))}
+            </div>
+          )}
         </Container>
       </div>
     </footer>

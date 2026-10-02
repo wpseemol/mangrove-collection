@@ -14,7 +14,6 @@ export type FieldKind =
   | 'image'
   | 'code'
   | 'social'
-  | 'payments'
 
 export type FieldDef = {
   key: string
@@ -53,13 +52,6 @@ export const SOCIAL_NETWORKS = [
   { key: 'youtube', label: 'YouTube', placeholder: 'https://youtube.com/@your-channel' },
   { key: 'linkedin', label: 'LinkedIn', placeholder: 'https://linkedin.com/company/your-company' },
   { key: 'twitter', label: 'X (Twitter)', placeholder: 'https://x.com/your-account' },
-] as const
-
-export const PAYMENT_METHODS = [
-  { value: 'cod', label: 'Cash on delivery' },
-  { value: 'bkash', label: 'bKash' },
-  { value: 'nagad', label: 'Nagad' },
-  { value: 'rocket', label: 'Rocket' },
 ] as const
 
 export const SECTIONS: SectionDef[] = [
@@ -169,14 +161,9 @@ export const SECTIONS: SectionDef[] = [
         ],
       },
       {
-        title: 'Payment methods',
-        description: 'Customers choose one of the enabled methods at checkout.',
-        fields: [
-          { key: 'payment_methods', label: 'Enabled methods', kind: 'payments', wide: true },
-          { key: 'bkash_number', label: 'bKash number', kind: 'phone', placeholder: '01712-345678' },
-          { key: 'nagad_number', label: 'Nagad number', kind: 'phone', placeholder: '01712-345678' },
-          { key: 'rocket_number', label: 'Rocket number', kind: 'phone', placeholder: '01712-345678' },
-        ],
+        title: 'Cash on delivery',
+        description: 'bKash, Nagad and Rocket numbers are managed under Payment accounts.',
+        fields: [{ key: 'cod_enabled', label: 'Accept cash on delivery', kind: 'switch', wide: true }],
       },
       {
         title: 'Orders & stock',
@@ -338,6 +325,14 @@ export const SECTIONS: SectionDef[] = [
         fields: [
           { key: 'sms_order_placed_template', label: 'Order placed', kind: 'textarea', max: 480, wide: true },
           { key: 'sms_order_status_template', label: 'Status changed', kind: 'textarea', max: 480, wide: true },
+        ],
+      },
+      {
+        title: 'Payment templates',
+        description: 'Sent when staff verify or reject a bKash / Nagad / Rocket payment. Placeholders: {name}, {order_number}, {method}, {currency}, {amount}, {reason}.',
+        fields: [
+          { key: 'sms_payment_verified_template', label: 'Payment verified', kind: 'textarea', max: 480, wide: true },
+          { key: 'sms_payment_rejected_template', label: 'Payment rejected', kind: 'textarea', max: 480, wide: true },
         ],
       },
     ],

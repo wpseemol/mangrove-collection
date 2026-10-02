@@ -143,6 +143,59 @@ export type OrderSummary = {
   created_at: string
 }
 
+export type PaymentMethod = 'cod' | 'bkash' | 'nagad' | 'rocket'
+export type WalletMethod = Exclude<PaymentMethod, 'cod'>
+export type PaymentAccountType = 'personal' | 'agent' | 'merchant'
+export type PaymentReviewStatus = 'submitted' | 'verified' | 'rejected'
+export type PaymentStatus = 'pending' | 'verifying' | 'paid' | 'failed' | 'refunded'
+
+export type PaymentAccount = {
+  id: number
+  method: WalletMethod
+  account_type: PaymentAccountType
+  action: string
+  account_number: string
+  account_name: string | null
+  instructions: string | null
+  is_active: boolean
+  sort_order: number
+  payments_count?: number
+  created_at: string
+  updated_at: string
+}
+
+export type PaymentAccountInput = Pick<PaymentAccount, 'method' | 'account_type' | 'account_number' | 'account_name' | 'instructions' | 'is_active' | 'sort_order'>
+
+export type Payment = {
+  id: number
+  method: WalletMethod
+  account_type: PaymentAccountType | null
+  action: string | null
+  account_number: string | null
+  amount: number
+  currency: string
+  sender_number: string | null
+  transaction_id: string
+  status: PaymentReviewStatus
+  rejection_reason: string | null
+  reviewed_at: string | null
+  reviewer?: { id: number; name: string } | null
+  order?: {
+    id: number
+    order_number: string
+    customer_name: string
+    customer_phone: string
+    total: number
+    currency: string
+    status: OrderStatus
+    payment_status: PaymentStatus
+    created_at: string
+  }
+  created_at: string
+}
+
+export type PaymentQueue = Paginated<Payment> & { counts: Record<PaymentReviewStatus, number> }
+
 export type DashboardStats = {
   totals: {
     revenue: number
@@ -151,6 +204,7 @@ export type DashboardStats = {
     orders_period: number
     customers: number
     products: number
+    payments_awaiting: number
   }
   orders_by_status: Partial<Record<OrderStatus, number>>
   sales_chart: { date: string; orders: number; revenue: number }[]

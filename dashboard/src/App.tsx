@@ -7,6 +7,8 @@ import { CategoriesPage } from '@/pages/categories'
 import { ForgotPasswordPage } from '@/pages/forgot-password'
 import { LoginPage } from '@/pages/login'
 import { OverviewPage } from '@/pages/overview'
+import { PaymentAccountsPage } from '@/pages/payment-accounts'
+import { PaymentsPage } from '@/pages/payments'
 import { ProductsPage } from '@/pages/products/list'
 import { ProductCreatePage, ProductEditPage } from '@/pages/products/product-form'
 import { ResetPasswordPage } from '@/pages/reset-password'
@@ -25,7 +27,9 @@ export default function App() {
           <Route path="products/new" element={<ProductCreatePage />} />
           <Route path="products/:id/edit" element={<ProductEditPage />} />
           <Route path="categories" element={<CategoriesPage />} />
+          <Route path="payments" element={<PaymentsPage />} />
           <Route element={<RequireAdmin />}>
+            <Route path="payment-accounts" element={<PaymentAccountsPage />} />
             <Route path="settings" element={<SettingsPage />} />
           </Route>
         </Route>

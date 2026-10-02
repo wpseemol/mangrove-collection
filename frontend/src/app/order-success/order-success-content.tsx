@@ -8,6 +8,7 @@ import { useSyncExternalStore } from "react";
 import { OrderDetails } from "@/components/order/order-details";
 import { Container } from "@/components/shared/container";
 import { Button } from "@/components/ui/button";
+import { PAYMENT_METHOD_LABEL } from "@/lib/format";
 import { readLastOrder } from "@/lib/last-order";
 import { useAuthStore } from "@/stores/auth";
 
@@ -22,6 +23,10 @@ export function OrderSuccessContent() {
     () => null,
   );
   const order = raw ? readLastOrder(orderNumber) : null;
+  const nextStep =
+    order?.payment_status === "verifying"
+      ? `We are verifying your ${PAYMENT_METHOD_LABEL[order.payment_method] ?? ""} payment and will confirm your order as soon as it is done.`
+      : "We will call you shortly to confirm it.";
 
   return (
     <Container className="max-w-3xl py-14">
@@ -33,10 +38,10 @@ export function OrderSuccessContent() {
         <p className="mt-2 text-muted-foreground">
           {orderNumber ? (
             <>
-              Your order <strong className="font-mono text-foreground">{orderNumber}</strong> has been placed. We will call you shortly to confirm it.
+              Your order <strong className="font-mono text-foreground">{orderNumber}</strong> has been placed. {nextStep}
             </>
           ) : (
-            "Your order has been placed. We will call you shortly to confirm it."
+            `Your order has been placed. ${nextStep}`
           )}
         </p>
       </div>

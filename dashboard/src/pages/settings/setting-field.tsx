@@ -3,7 +3,6 @@ import { useState } from 'react'
 
 import { FormField, Optional } from '@/components/form-field'
 import { SingleImageUpload } from '@/components/image-upload'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
@@ -11,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
 
 import type { DraftValue, Errors } from './draft'
-import { PAYMENT_METHODS, SOCIAL_NETWORKS, type FieldDef } from './sections'
+import { SOCIAL_NETWORKS, type FieldDef } from './sections'
 
 const SECRET_MASK = '********'
 
@@ -147,29 +146,6 @@ export function SettingField({
             )
           })}
         </div>
-      )
-    }
-
-    case 'payments': {
-      const selected = value as string[]
-      return (
-        <fieldset className={cn('space-y-2', className)}>
-          <legend className="mb-2 text-sm font-medium">{field.label}</legend>
-          <div className="grid gap-2 sm:grid-cols-4">
-            {PAYMENT_METHODS.map((method) => (
-              <label key={method.value} className="flex items-center gap-2 rounded-lg border p-2.5 text-sm has-data-[state=checked]:border-primary">
-                <Checkbox
-                  checked={selected.includes(method.value)}
-                  onCheckedChange={(checked) =>
-                    onChange(checked ? [...selected, method.value] : selected.filter((v) => v !== method.value))
-                  }
-                />
-                {method.label}
-              </label>
-            ))}
-          </div>
-          {error && <p className="text-xs text-destructive">{error}</p>}
-        </fieldset>
       )
     }
 

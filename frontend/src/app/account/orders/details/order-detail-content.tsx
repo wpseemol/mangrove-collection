@@ -55,6 +55,10 @@ export function OrderDetailContent() {
         <div className="rounded-2xl border bg-card p-6">
           <OrderDetails
             order={order}
+            onOrderUpdated={(updated) => {
+              queryClient.setQueryData(["my-order", orderNumber], updated);
+              queryClient.invalidateQueries({ queryKey: ["my-orders"] });
+            }}
             actions={
               order.can_cancel && (
                 <Dialog>

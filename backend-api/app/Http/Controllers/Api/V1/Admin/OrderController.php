@@ -32,6 +32,7 @@ class OrderController extends Controller
         ]);
 
         $orders = Order::query()
+            ->with('latestPayment')
             ->withCount('items')
             ->when($request->query('q'), fn (Builder $q, $term) => $q->where(fn (Builder $q) => $q
                 ->where('order_number', 'like', Search::like($term))
@@ -52,7 +53,7 @@ class OrderController extends Controller
 
     public function show(Order $order): OrderResource
     {
-        return new OrderResource($order->load(['items', 'user']));
+        return new OrderResource($order->load(['items', 'user', 'latestPayment', 'payments.reviewer:id,name']));
     }
 
     public function update(Request $request, Order $order, OrderService $orders): OrderResource
@@ -60,7 +61,6 @@ class OrderController extends Controller
         $data = $request->validate([
             'status' => ['sometimes', Rule::enum(OrderStatus::class)],
             'payment_status' => ['sometimes', Rule::enum(PaymentStatus::class)],
-            'transaction_id' => ['nullable', 'string', 'max:100', 'regex:/^[A-Za-z0-9\-]+$/'],
             'admin_note' => ['nullable', 'string', 'max:5000', new SafeText],
         ]);
 
@@ -74,7 +74,7 @@ class OrderController extends Controller
             $orders->updateStatus($order, OrderStatus::from($data['status']));
         }
 
-        return new OrderResource($order->fresh(['items', 'user']));
+        return new OrderResource($order->fresh(['items', 'user', 'latestPayment', 'payments.reviewer:id,name']));
     }
 
     public function destroy(Order $order, OrderService $orders): JsonResponse

@@ -22,3 +22,11 @@ export const PAYMENT_METHOD_LABEL: Record<string, string> = {
   nagad: "Nagad",
   rocket: "Rocket",
 };
+
+export const PAYMENT_STATUS_LABEL: Record<string, string> = {
+  pending: "Payment pending",
+  verifying: "Verifying payment",
+  paid: "Paid",
+  failed: "Payment not verified",
+  refunded: "Refunded",
+};

@@ -19,8 +19,9 @@ class OrderResource extends JsonResource
             'status' => $this->status,
             'payment_status' => $this->payment_status,
             'payment_method' => $this->payment_method,
-            'transaction_id' => $this->transaction_id,
-            'payment_sender_number' => $this->payment_sender_number,
+            'payment' => $this->whenLoaded('latestPayment', fn () => $this->latestPayment ? new PaymentResource($this->latestPayment) : null),
+            'payments' => $this->when($isStaff && $this->relationLoaded('payments'), fn () => PaymentResource::collection($this->payments)),
+            'can_submit_payment' => $this->acceptsPaymentSubmission(),
             'customer' => [
                 'name' => $this->customer_name,
                 'email' => $this->customer_email,

@@ -23,7 +23,7 @@ class CheckoutController extends Controller
         $address = $request->shippingAddress();
 
         $order = $orders->place([
-            ...$request->safe()->only(['items', 'shipping_method_id', 'payment_method', 'transaction_id', 'payment_sender_number', 'customer_note']),
+            ...$request->safe()->only(['items', 'shipping_method_id', 'payment_method', 'payment_account_id', 'transaction_id', 'payment_sender_number', 'customer_note']),
             'address' => $address,
         ], $user);
 
@@ -50,7 +50,7 @@ class CheckoutController extends Controller
         $order = Order::query()
             ->where('order_number', $data['order_number'])
             ->where('customer_phone', $data['phone'])
-            ->with('items')
+            ->with(['items', 'latestPayment'])
             ->firstOrFail();
 
         return new OrderResource($order);

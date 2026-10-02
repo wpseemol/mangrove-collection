@@ -6,6 +6,7 @@ use App\Enums\PaymentMethod;
 use App\Models\Address;
 use App\Rules\PhoneNumber;
 use App\Rules\SafeText;
+use App\Rules\TransactionId;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
@@ -49,6 +50,37 @@ class CheckoutRequest extends FormRequest
     }
 
     /**
+     * @return array<string, list<mixed>>
+     */
+    protected function walletRules(): array
+    {
+        $wallet = PaymentMethod::tryFrom((string) $this->input('payment_method'))?->isWallet() ?? false;
+        $required = $wallet ? 'required' : 'nullable';
+
+        return [
+            'payment_account_id' => ['nullable', 'integer'],
+            'transaction_id' => [$required, 'string', new TransactionId],
+            'payment_sender_number' => [$required, 'string', 'max:32', new PhoneNumber],
+        ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $wallet = PaymentMethod::tryFrom((string) $this->input('payment_method'))?->isWallet() ?? false;
+
+        if (! $wallet) {
+            $this->merge(['payment_account_id' => null, 'transaction_id' => null, 'payment_sender_number' => null]);
+
+            return;
+        }
+
+        $this->merge([
+            'transaction_id' => TransactionId::normalize($this->input('transaction_id')),
+            'payment_sender_number' => is_string($this->input('payment_sender_number')) ? trim($this->input('payment_sender_number')) : $this->input('payment_sender_number'),
+        ]);
+    }
+
+    /**
      * @return array<string, string>
      */
     public function attributes(): array
@@ -57,6 +89,7 @@ class CheckoutRequest extends FormRequest
             'items.*.variant_id' => 'product',
             'items.*.quantity' => 'quantity',
             'shipping_method_id' => 'delivery method',
+            'payment_account_id' => 'payment account',
             'transaction_id' => 'transaction ID',
             'payment_sender_number' => 'sender number',
             'address.name' => 'name',

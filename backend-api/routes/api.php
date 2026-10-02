@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\V1\Storefront\CategoryController;
 use App\Http\Controllers\Api\V1\Storefront\CategoryIconController;
 use App\Http\Controllers\Api\V1\Storefront\CheckoutController;
 use App\Http\Controllers\Api\V1\Storefront\ContentController;
+use App\Http\Controllers\Api\V1\Storefront\PaymentController;
 use App\Http\Controllers\Api\V1\Storefront\ProductController;
 use App\Http\Controllers\Api\V1\Storefront\SettingController;
 use Illuminate\Support\Facades\Route;
@@ -59,8 +60,11 @@ Route::prefix('v1')->name('v1.')->group(function () {
     Route::get('pages/{slug}', [ContentController::class, 'page'])->name('pages.show');
     Route::get('shipping-methods', [ContentController::class, 'shippingMethods'])->name('shipping-methods');
 
+    Route::get('payment-methods', [PaymentController::class, 'methods'])->name('payment-methods');
+
     Route::post('checkout', [CheckoutController::class, 'store'])->middleware('throttle:checkout')->name('checkout');
     Route::get('orders/track', [CheckoutController::class, 'track'])->middleware('throttle:tracking')->name('orders.track');
+    Route::post('orders/{orderNumber}/payment', [PaymentController::class, 'store'])->middleware('throttle:checkout')->name('orders.payment');
 
     // ------------------------------------------------------------- Account
     Route::middleware(['auth:sanctum', 'active', 'throttle:writes'])->prefix('account')->name('account.')->group(function () {
@@ -91,6 +95,10 @@ Route::prefix('v1')->name('v1.')->group(function () {
 
         Route::apiResource('orders', Admin\OrderController::class)->except('store');
 
+        Route::get('payments', [Admin\PaymentController::class, 'index'])->name('payments.index');
+        Route::post('payments/{payment}/verify', [Admin\PaymentController::class, 'verify'])->name('payments.verify');
+        Route::post('payments/{payment}/reject', [Admin\PaymentController::class, 'reject'])->name('payments.reject');
+
         Route::apiResource('media', Admin\MediaController::class)->only(['index', 'destroy']);
 
         Route::apiResource('banners', Admin\BannerController::class);
@@ -102,9 +110,11 @@ Route::prefix('v1')->name('v1.')->group(function () {
 
         Route::apiResource('shipping-methods', Admin\ShippingMethodController::class);
 
-        // Admin-only: user management and site configuration.
+        // Admin-only: user management, where payments are sent, and site configuration.
         Route::middleware('role:admin')->group(function () {
             Route::apiResource('users', Admin\UserController::class);
+
+            Route::apiResource('payment-accounts', Admin\PaymentAccountController::class);
 
             Route::get('settings', [Admin\SettingController::class, 'index'])->name('settings.index');
             Route::put('settings', [Admin\SettingController::class, 'update'])->name('settings.update');

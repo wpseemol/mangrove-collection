@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { AlertTriangle, Banknote, Package, PackagePlus, ShoppingBag, Users } from 'lucide-react'
+import { AlertTriangle, Banknote, Package, PackagePlus, ReceiptText, ShoppingBag, Users } from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router'
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts'
@@ -85,6 +85,20 @@ export function OverviewPage() {
           </>
         }
       />
+
+      {data && data.totals.payments_awaiting > 0 && (
+        <Link
+          to="/payments"
+          className="flex items-center gap-3 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-900 transition-colors hover:bg-sky-100 dark:border-sky-500/25 dark:bg-sky-500/10 dark:text-sky-200 dark:hover:bg-sky-500/15"
+        >
+          <ReceiptText className="size-4 shrink-0" />
+          <span className="flex-1">
+            <strong>{formatNumber(data.totals.payments_awaiting)}</strong> mobile{' '}
+            {data.totals.payments_awaiting === 1 ? 'payment is' : 'payments are'} waiting to be verified.
+          </span>
+          <span className="font-medium">Review now →</span>
+        </Link>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map((stat) => (

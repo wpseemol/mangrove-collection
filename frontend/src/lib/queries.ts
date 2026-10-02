@@ -10,6 +10,7 @@ import type {
   CmsPage,
   Order,
   Paginated,
+  PaymentOption,
   Product,
   PublicSettings,
   SessionResponse,
@@ -86,6 +87,14 @@ export function usePage(slug: string) {
     queryFn: () => api<{ data: CmsPage }>(`/pages/${slug}`).then((r) => r.data),
     staleTime: FIVE_MINUTES,
     retry: false,
+  });
+}
+
+export function usePaymentOptions() {
+  return useQuery({
+    queryKey: ["payment-methods"],
+    queryFn: () => api<{ data: PaymentOption[] }>("/payment-methods").then((r) => r.data),
+    staleTime: 60 * 1000,
   });
 }
 

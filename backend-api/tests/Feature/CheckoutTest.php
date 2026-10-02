@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Order;
+use App\Models\PaymentAccount;
 use App\Models\Product;
 use App\Models\ShippingMethod;
 use App\Models\User;
@@ -69,22 +70,24 @@ class CheckoutTest extends TestCase
         $this->assertDatabaseCount('orders', 0);
     }
 
-    public function test_checkout_rejects_disabled_payment_methods_and_requires_transaction_id(): void
+    public function test_wallets_need_an_active_account_and_cod_can_be_switched_off(): void
     {
         $variant = Product::factory()->withVariant()->create()->variants->first();
+        $wallet = ['payment_method' => 'bkash', 'transaction_id' => 'TX1234567', 'payment_sender_number' => '01811111111'];
 
-        $this->postJson('/v1/checkout', $this->payload($variant->id, 1, ['payment_method' => 'bkash', 'transaction_id' => 'TX1']))
+        $this->postJson('/v1/checkout', $this->payload($variant->id, 1, $wallet))
             ->assertUnprocessable()
             ->assertJsonValidationErrors('payment_method');
 
-        app(SettingsService::class)->update(['payment_methods' => ['cod', 'bkash']]);
+        PaymentAccount::factory()->create();
 
-        $this->postJson('/v1/checkout', $this->payload($variant->id, 1, ['payment_method' => 'bkash']))
+        $this->postJson('/v1/checkout', $this->payload($variant->id, 1, $wallet))->assertCreated();
+
+        app(SettingsService::class)->update(['cod_enabled' => false]);
+
+        $this->postJson('/v1/checkout', $this->payload($variant->id, 1))
             ->assertUnprocessable()
-            ->assertJsonValidationErrors('transaction_id');
-
-        $this->postJson('/v1/checkout', $this->payload($variant->id, 1, ['payment_method' => 'bkash', 'transaction_id' => 'TX1']))
-            ->assertCreated();
+            ->assertJsonValidationErrors('payment_method');
     }
 
     public function test_free_shipping_threshold_from_settings_is_applied(): void

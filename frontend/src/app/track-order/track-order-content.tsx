@@ -19,11 +19,13 @@ export function TrackOrderContent() {
   const params = useSearchParams();
   const [orderNumber, setOrderNumber] = useState(params.get("number") ?? "");
   const [phone, setPhone] = useState("");
+  const [updated, setUpdated] = useState<Order | null>(null);
 
   const track = useMutation({
-    mutationFn: () =>
-      api<{ data: Order }>("/orders/track", { query: { order_number: orderNumber.trim(), phone: phone.trim() } }).then((r) => r.data),
+    mutationFn: (lookup: { order_number: string; phone: string }) => api<{ data: Order }>("/orders/track", { query: lookup }).then((r) => r.data),
+    onMutate: () => setUpdated(null),
   });
+  const order = updated ?? track.data;
 
   const error = track.error instanceof ApiError ? track.error : null;
   const notFound = error?.status === 404;
@@ -37,7 +39,7 @@ export function TrackOrderContent() {
             className="grid gap-4 sm:grid-cols-[1fr_1fr_auto] sm:items-end"
             onSubmit={(e) => {
               e.preventDefault();
-              track.mutate();
+              track.mutate({ order_number: orderNumber.trim(), phone: phone.trim() });
             }}
           >
             <FormField id="order_number" label="Order number" error={error?.field("order_number")}>
@@ -61,9 +63,9 @@ export function TrackOrderContent() {
           )}
         </div>
 
-        {track.data && (
+        {order && track.variables && (
           <div className="mt-6 rounded-2xl border bg-card p-6">
-            <OrderDetails order={track.data} />
+            <OrderDetails order={order} guestPhone={track.variables.phone} onOrderUpdated={setUpdated} />
           </div>
         )}
       </Container>

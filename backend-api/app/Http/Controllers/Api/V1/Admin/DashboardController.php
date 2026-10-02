@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Api\V1\Admin;
 
 use App\Enums\OrderStatus;
+use App\Enums\PaymentReviewStatus;
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use App\Models\Payment;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\User;
@@ -68,6 +70,7 @@ class DashboardController extends Controller
                 'orders_period' => Order::query()->where('created_at', '>=', $from)->count(),
                 'customers' => User::query()->where('role', UserRole::Customer)->count(),
                 'products' => Product::query()->count(),
+                'payments_awaiting' => Payment::query()->where('status', PaymentReviewStatus::Submitted)->count(),
             ],
             'orders_by_status' => collect(OrderStatus::cases())->mapWithKeys(fn (OrderStatus $status) => [
                 $status->value => Order::query()->where('status', $status)->count(),
