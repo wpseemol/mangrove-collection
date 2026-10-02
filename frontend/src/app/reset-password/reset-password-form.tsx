@@ -47,7 +47,7 @@ export function ResetPasswordForm() {
   if (mutation.isSuccess) {
     return (
       <div className="text-center">
-        <CircleCheck className="mx-auto mb-3 size-12 text-brand" />
+        <CircleCheck className="mx-auto mb-3 size-12 text-primary" />
         <p className="text-sm text-gray-700">Your password has been reset. You can now log in with your new password.</p>
         <Button asChild className="mt-5">
           <Link href="/login">Log in</Link>
@@ -73,7 +73,7 @@ export function ResetPasswordForm() {
       <FormField id="password_confirmation" label="Confirm new password">
         <PasswordInput id="password_confirmation" value={confirmation} onChange={(e) => setConfirmation(e.target.value)} autoComplete="new-password" required />
       </FormField>
-      <Button type="submit" size="lg" className="h-10 w-full shadow-md shadow-primary/30" disabled={mutation.isPending}>
+      <Button type="submit" size="lg" className="w-full" disabled={mutation.isPending}>
         {mutation.isPending && <Loader2 className="size-4 animate-spin" />}
         Reset password
       </Button>

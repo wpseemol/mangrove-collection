@@ -118,6 +118,8 @@ export type User = {
   created_at: string;
 };
 
+export const isStaff = (user: User | null | undefined): boolean => user?.role === "admin" || user?.role === "manager";
+
 export type AuthResponse = {
   token: string;
   token_type: "Bearer";

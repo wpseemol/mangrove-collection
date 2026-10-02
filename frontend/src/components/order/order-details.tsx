@@ -13,7 +13,7 @@ const STEPS: OrderStatus[] = ["pending", "processing", "shipped", "delivered"];
 
 export function OrderProgress({ status }: { status: OrderStatus }) {
   if (status === "cancelled") {
-    return <p className="rounded-sm bg-red-50 px-4 py-3 text-sm text-red-700">This order has been cancelled.</p>;
+    return <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">This order has been cancelled.</p>;
   }
 
   const current = STEPS.indexOf(status);
@@ -64,11 +64,11 @@ export function OrderDetails({ order, actions }: { order: Order; actions?: React
 
       <OrderProgress status={order.status} />
 
-      <div className="overflow-hidden rounded-sm border">
+      <div className="overflow-hidden rounded-2xl border bg-white">
         <ul className="divide-y">
           {order.items?.map((item) => (
-            <li key={item.id} className="flex gap-3 p-3">
-              <div className="relative size-16 shrink-0 overflow-hidden rounded-sm bg-muted">
+            <li key={item.id} className="flex gap-4 p-4">
+              <div className="relative size-16 shrink-0 overflow-hidden rounded-xl border bg-muted">
                 <RemoteImage src={item.image} alt={item.product_name} sizes="64px" />
               </div>
               <div className="min-w-0 flex-1">
@@ -84,7 +84,7 @@ export function OrderDetails({ order, actions }: { order: Order; actions?: React
             </li>
           ))}
         </ul>
-        <div className="space-y-1.5 bg-surface p-4 text-sm">
+        <div className="space-y-2 bg-surface/70 p-5 text-sm">
           <Row label="Subtotal" value={formatPrice(order.subtotal)} />
           <Row label={`Shipping${order.shipping_method ? ` (${order.shipping_method})` : ""}`} value={order.shipping_cost > 0 ? formatPrice(order.shipping_cost) : "Free"} />
           {order.discount > 0 && <Row label="Discount" value={`- ${formatPrice(order.discount)}`} />}
@@ -94,7 +94,7 @@ export function OrderDetails({ order, actions }: { order: Order; actions?: React
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="rounded-sm border p-4 text-sm">
+        <div className="rounded-2xl border bg-white p-5 text-sm">
           <h3 className="mb-2 font-medium text-gray-900">Delivery address</h3>
           <p className="text-gray-800">{address.name}</p>
           <p className="text-muted-foreground">{address.phone}</p>
@@ -103,7 +103,7 @@ export function OrderDetails({ order, actions }: { order: Order; actions?: React
             {[address.full_address, address.landmark, address.zone, address.city, address.region].filter(Boolean).join(", ")}
           </p>
         </div>
-        <div className="rounded-sm border p-4 text-sm">
+        <div className="rounded-2xl border bg-white p-5 text-sm">
           <h3 className="mb-2 font-medium text-gray-900">Payment</h3>
           <p className="text-gray-800">{PAYMENT_METHOD_LABEL[order.payment_method] ?? order.payment_method}</p>
           {order.transaction_id && <p className="text-muted-foreground">Transaction ID: {order.transaction_id}</p>}

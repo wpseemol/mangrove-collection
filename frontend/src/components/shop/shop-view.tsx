@@ -5,7 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { ProductGrid } from "@/components/product/product-grid";
 import { Container } from "@/components/shared/container";
-import { PageBreadcrumb } from "@/components/shared/page-breadcrumb";
+import { PageHeader } from "@/components/shared/page-breadcrumb";
 import { SimplePagination } from "@/components/shared/simple-pagination";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -24,10 +24,12 @@ const SORT_OPTIONS = [
 ] as const;
 
 export function ShopView({
-  title = "Products",
+  title = "Shop",
+  description = "Fresh fish, crab, prawn and pure honey — straight from the Sundarbans.",
   baseFilters = {},
 }: {
   title?: string;
+  description?: string;
   baseFilters?: ProductFilters;
 }) {
   const router = useRouter();
@@ -75,20 +77,22 @@ export function ShopView({
   const filtersKey = `${categories.join(",")}|${minPrice}|${maxPrice}`;
 
   return (
+    <>
+    <PageHeader title={title} description={description} breadcrumb={[{ label: title }]} />
     <Container>
-      <PageBreadcrumb items={[{ label: title }]} />
-
-      <div className="grid gap-6 lg:grid-cols-[240px_1fr]">
+      <div className="grid gap-8 lg:grid-cols-[260px_1fr]">
         <aside className="hidden lg:block">
-          <ShopFilters key={filtersKey} values={filterValues} onChange={onFilterChange} />
+          <div className="sticky top-28">
+            <ShopFilters key={filtersKey} values={filterValues} onChange={onFilterChange} />
+          </div>
         </aside>
 
         <section className="min-w-0">
-          <div className="mb-4 flex flex-wrap items-center gap-2 border-b border-gray-800 pb-2">
-            <div className="flex items-center gap-1">
+          <div className="mb-6 flex flex-wrap items-center gap-3 rounded-xl border bg-white p-2 pl-3">
+            <div className="flex items-center gap-1 rounded-lg bg-muted p-0.5">
               <Button
                 size="icon-sm"
-                variant={view === "grid" ? "default" : "outline"}
+                variant={view === "grid" ? "default" : "ghost"}
                 aria-label="Grid view"
                 onClick={() => update({ view: null }, false)}
               >
@@ -96,7 +100,7 @@ export function ShopView({
               </Button>
               <Button
                 size="icon-sm"
-                variant={view === "list" ? "default" : "outline"}
+                variant={view === "list" ? "default" : "ghost"}
                 aria-label="List view"
                 onClick={() => update({ view: "list" }, false)}
               >
@@ -120,13 +124,20 @@ export function ShopView({
               </SheetContent>
             </Sheet>
 
-            <p className={cn("text-xs text-muted-foreground sm:text-sm", isFetching && "opacity-60")}>
-              {data ? `${data.meta.total} product${data.meta.total === 1 ? "" : "s"}` : ""}
+            <p className={cn("text-sm text-muted-foreground", isFetching && "opacity-60")}>
+              {data ? (
+                <>
+                  <span className="font-semibold text-gray-900">{data.meta.total}</span> product{data.meta.total === 1 ? "" : "s"}
+                </>
+              ) : (
+                ""
+              )}
             </p>
 
-            <div className="ml-auto">
+            <div className="ml-auto flex items-center gap-2">
+              <span className="hidden text-sm text-muted-foreground sm:inline">Sort by</span>
               <Select value={sort} onValueChange={(value) => update({ sort: value === "latest" ? null : value })}>
-                <SelectTrigger size="sm" className="w-44" aria-label="Sort products">
+                <SelectTrigger size="sm" className="w-44 rounded-lg" aria-label="Sort products">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -141,17 +152,17 @@ export function ShopView({
           </div>
 
           {q && (
-            <div className="mb-4 flex items-center gap-2 text-sm">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-secondary py-1 pr-1 pl-4 text-sm text-primary">
               <span>
-                Search results for <strong>“{q}”</strong>
+                Results for <strong>“{q}”</strong>
               </span>
-              <Button variant="ghost" size="icon-xs" aria-label="Clear search" onClick={() => update({ q: null })}>
+              <Button variant="ghost" size="icon-xs" className="rounded-full hover:bg-white" aria-label="Clear search" onClick={() => update({ q: null })}>
                 <X />
               </Button>
             </div>
           )}
 
-          <ProductGrid products={data?.data} loading={isLoading} columns={5} layout={view} skeletons={10} />
+          <ProductGrid products={data?.data} loading={isLoading} columns={4} layout={view} skeletons={8} />
 
           <SimplePagination
             page={data?.meta.current_page ?? page}
@@ -164,5 +175,6 @@ export function ShopView({
         </section>
       </div>
     </Container>
+    </>
   );
 }

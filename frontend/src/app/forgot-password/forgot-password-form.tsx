@@ -22,7 +22,7 @@ export function ForgotPasswordForm() {
   if (mutation.isSuccess) {
     return (
       <div className="text-center">
-        <MailCheck className="mx-auto mb-3 size-12 text-brand" />
+        <MailCheck className="mx-auto mb-3 size-12 text-primary" />
         <p className="text-sm text-gray-700">{mutation.data.message}</p>
         <Button asChild variant="link" className="mt-4">
           <Link href="/login">Back to log in</Link>
@@ -42,7 +42,7 @@ export function ForgotPasswordForm() {
       <FormField id="email" label="Email" error={error?.field("email") ?? error?.message}>
         <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" required />
       </FormField>
-      <Button type="submit" size="lg" className="h-10 w-full shadow-md shadow-primary/30" disabled={mutation.isPending}>
+      <Button type="submit" size="lg" className="w-full" disabled={mutation.isPending}>
         {mutation.isPending && <Loader2 className="size-4 animate-spin" />}
         Send reset link
       </Button>

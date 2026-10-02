@@ -36,9 +36,9 @@ export function ShopFilters({
   const applyPrice = () => onChange({ minPrice: price.min, maxPrice: price.max });
 
   return (
-    <div className="space-y-7 rounded-sm bg-white p-4 shadow-[0_1px_6px_rgba(0,0,0,0.1)]">
+    <div className="space-y-7 rounded-2xl border bg-white p-5">
       <section>
-        <h2 className="mb-3 text-base font-medium tracking-wide text-gray-800 uppercase">Categories</h2>
+        <h2 className="mb-4 text-sm font-semibold text-gray-900">Categories</h2>
         <ul className="space-y-2.5">
           {isLoading &&
             Array.from({ length: 3 }).map((_, i) => (
@@ -56,23 +56,23 @@ export function ShopFilters({
                   onCheckedChange={(checked) => toggleCategory(category.slug, checked === true)}
                   className="mt-0.5"
                 />
-                <label htmlFor={id} className="flex flex-1 cursor-pointer justify-between gap-2 text-sm text-gray-600">
+                <label htmlFor={id} className="flex flex-1 cursor-pointer justify-between gap-2 text-sm text-gray-700 hover:text-primary">
                   <span>{category.name}</span>
-                  <span>({category.products_count ?? 0})</span>
+                  <span className="rounded-full bg-muted px-2 text-xs leading-5 text-muted-foreground">{category.products_count ?? 0}</span>
                 </label>
               </li>
             );
           })}
         </ul>
         {(categories?.length ?? 0) > VISIBLE_CATEGORIES && (
-          <Button variant="outline" size="sm" className="mt-3 w-full" onClick={() => setShowAll((v) => !v)}>
-            {showAll ? "See less" : "See more..."}
+          <Button variant="link" size="sm" className="mt-2 h-auto px-0" onClick={() => setShowAll((v) => !v)}>
+            {showAll ? "Show less" : `Show all ${categories?.length}`}
           </Button>
         )}
       </section>
 
-      <section>
-        <h2 className="mb-3 text-base font-medium tracking-wide text-gray-800 uppercase">Price</h2>
+      <section className="border-t pt-6">
+        <h2 className="mb-4 text-sm font-semibold text-gray-900">Price range (৳)</h2>
         <form
           className="space-y-2"
           onSubmit={(event) => {
@@ -85,26 +85,26 @@ export function ShopFilters({
               type="number"
               min={0}
               inputMode="numeric"
-              placeholder="min"
+              placeholder="Min"
               aria-label="Minimum price"
               value={price.min}
               onChange={(e) => setPrice((p) => ({ ...p, min: e.target.value }))}
-              className="h-8"
+              className="h-9"
             />
             <span className="text-muted-foreground">-</span>
             <Input
               type="number"
               min={0}
               inputMode="numeric"
-              placeholder="max"
+              placeholder="Max"
               aria-label="Maximum price"
               value={price.max}
               onChange={(e) => setPrice((p) => ({ ...p, max: e.target.value }))}
-              className="h-8"
+              className="h-9"
             />
           </div>
-          <Button type="submit" size="sm" className="w-full">
-            Apply
+          <Button type="submit" variant="secondary" className="w-full">
+            Apply price
           </Button>
         </form>
       </section>

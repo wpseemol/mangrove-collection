@@ -15,11 +15,11 @@ export default function OffersPage() {
     <Suspense
       fallback={
         <Container className="py-12">
-          <ProductGrid loading columns={5} skeletons={10} />
+          <ProductGrid loading columns={4} skeletons={8} />
         </Container>
       }
     >
-      <ShopView title="Latest Offers" baseFilters={{ featured: true }} />
+      <ShopView title="Today's offers" description="Featured products and special prices, hand-picked for you." baseFilters={{ featured: true }} />
     </Suspense>
   );
 }

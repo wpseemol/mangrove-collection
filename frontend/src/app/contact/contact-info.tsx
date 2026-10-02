@@ -26,8 +26,8 @@ export function ContactInfo() {
       {items.length > 0 && (
         <div className="grid gap-4 sm:grid-cols-3">
           {items.map(({ icon: Icon, label, value, href }) => (
-            <div key={label} className="rounded-sm border p-5 text-center">
-              <span className="mx-auto mb-3 flex size-11 items-center justify-center rounded-full bg-secondary text-primary">
+            <div key={label} className="rounded-2xl border bg-white p-6 text-center transition-shadow hover:shadow-lg hover:shadow-black/5">
+              <span className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full bg-secondary text-primary">
                 <Icon className="size-5" />
               </span>
               <p className="text-xs tracking-wide text-muted-foreground uppercase">{label}</p>
@@ -44,12 +44,12 @@ export function ContactInfo() {
       )}
 
       {whatsapp && (
-        <div className="flex flex-col items-center gap-3 rounded-sm bg-primary p-6 text-center text-white sm:flex-row sm:justify-between sm:text-left">
+        <div className="flex flex-col items-center gap-4 rounded-2xl bg-gradient-to-br from-primary to-forest p-8 text-center text-white sm:flex-row sm:justify-between sm:text-left">
           <div>
-            <p className="font-medium">Need help with an order?</p>
-            <p className="text-sm text-white/80">Message us on WhatsApp and we&apos;ll reply as soon as possible.</p>
+            <p className="font-heading text-xl font-semibold">Need help with an order?</p>
+            <p className="mt-1 text-sm text-white/80">Message us on WhatsApp and we&apos;ll reply as soon as possible.</p>
           </div>
-          <Button asChild className="bg-brand text-ink hover:bg-brand/90">
+          <Button asChild size="lg" className="bg-[#25d366] text-white hover:bg-[#25d366]/90">
             <a href={whatsappHref(whatsapp)} target="_blank" rel="noopener noreferrer">
               <WhatsAppIcon className="size-4" /> Chat on WhatsApp
             </a>

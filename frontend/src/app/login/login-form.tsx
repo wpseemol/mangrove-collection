@@ -51,7 +51,7 @@ export function LoginForm() {
         >
           <PasswordInput id="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" required />
         </FormField>
-        <Button type="submit" size="lg" className="h-10 w-full shadow-md shadow-primary/30" disabled={mutation.isPending}>
+        <Button type="submit" size="lg" className="w-full" disabled={mutation.isPending}>
           {mutation.isPending && <Loader2 className="size-4 animate-spin" />}
           Log in
         </Button>

@@ -1,6 +1,6 @@
 "use client";
 
-import { DollarSign, Menu, Search, ShoppingBasket, ShoppingCart, UserRound } from "lucide-react";
+import { LayoutDashboard, Menu, Package, Phone, Search, ShoppingBag, Truck, UserRound } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -10,8 +10,13 @@ import { Logo } from "@/components/shared/logo";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useHydrated } from "@/hooks/use-hydrated";
+import { dashboardHandoffUrl } from "@/lib/config";
+import { formatPrice } from "@/lib/format";
+import { useSettings } from "@/lib/queries";
+import { isStaff } from "@/lib/types";
+import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/stores/auth";
-import { cartCount, useCartStore } from "@/stores/cart";
+import { cartCount, cartSubtotal, useCartStore } from "@/stores/cart";
 
 import { NAV_LINKS } from "./main-nav";
 
@@ -29,117 +34,176 @@ function SearchForm({ className, onSubmitted }: { className?: string; onSubmitte
         onSubmitted?.();
       }}
     >
-      <div className="flex h-9 w-full overflow-hidden rounded-sm border border-white/80 bg-black">
+      <div className="flex h-11 w-full items-center overflow-hidden rounded-full border bg-muted/60 pl-4 transition-colors focus-within:border-primary/50 focus-within:bg-white focus-within:ring-3 focus-within:ring-primary/10">
+        <Search className="size-4 shrink-0 text-muted-foreground" />
         <input
           type="search"
           value={term}
           onChange={(event) => setTerm(event.target.value)}
-          placeholder="Search"
+          placeholder="Search fish, crab, prawn, honey…"
           aria-label="Search products"
-          className="min-w-0 flex-1 bg-transparent px-3 text-sm text-white placeholder:text-white/80 focus:outline-none"
+          className="min-w-0 flex-1 bg-transparent px-3 text-sm text-gray-900 placeholder:text-muted-foreground focus:outline-none"
         />
-        <button type="submit" aria-label="Search" className="flex w-10 items-center justify-center bg-primary text-white hover:bg-primary/85">
-          <Search className="size-4" />
+        <button type="submit" className="mr-1 h-9 rounded-full bg-primary px-5 text-sm font-medium text-white transition-colors hover:bg-primary/90">
+          Search
         </button>
       </div>
     </form>
   );
 }
 
-function HeaderLink({
+function HeaderAction({
   href,
   icon: Icon,
-  title,
-  subtitle,
+  label,
+  caption,
   badge,
+  className,
 }: {
   href: string;
-  icon: typeof DollarSign;
-  title: string;
-  subtitle: string;
+  icon: typeof UserRound;
+  label: string;
+  caption?: string;
   badge?: number;
+  className?: string;
 }) {
   return (
-    <Link href={href} className="group flex items-center gap-2 text-white">
-      <span className="relative">
-        <Icon className="size-6 text-brand transition-transform group-hover:scale-110" strokeWidth={1.8} />
+    <Link href={href} className={cn("group flex items-center gap-2.5 rounded-lg px-2 py-1.5 transition-colors hover:bg-muted", className)}>
+      <span className="relative flex size-10 items-center justify-center rounded-full bg-secondary text-primary transition-colors group-hover:bg-primary group-hover:text-white">
+        <Icon className="size-5" strokeWidth={1.8} />
         {badge ? (
-          <span className="absolute -top-2 -right-2 flex size-4.5 items-center justify-center rounded-full bg-brand text-[10px] font-semibold text-black">
+          <span className="absolute -top-1 -right-1 flex min-w-5 items-center justify-center rounded-full bg-gold px-1 text-[10px] leading-5 font-semibold text-white ring-2 ring-white">
             {badge > 99 ? "99+" : badge}
           </span>
         ) : null}
       </span>
-      <span className="hidden leading-tight lg:block">
-        <span className="block text-sm font-medium">{title}</span>
-        <span className="block text-xs text-white/80">{subtitle}</span>
+      <span className="hidden leading-tight xl:block">
+        <span className="block text-[11px] text-muted-foreground">{caption}</span>
+        <span className="block text-sm font-semibold text-gray-900">{label}</span>
       </span>
     </Link>
+  );
+}
+
+function TopBar() {
+  const { data: settings } = useSettings();
+  const threshold = settings?.free_shipping_threshold;
+
+  return (
+    <div className="bg-forest text-xs text-white/80">
+      <Container className="flex h-9 items-center justify-between gap-4">
+        <p className="flex items-center gap-2 truncate">
+          <Truck className="size-3.5 shrink-0 text-brand" />
+          {threshold ? `Free home delivery on orders over ${formatPrice(threshold)}` : "Home delivery all over Bangladesh"}
+        </p>
+        <div className="hidden items-center gap-5 sm:flex">
+          {settings?.contact_phone && (
+            <a href={`tel:${settings.contact_phone}`} className="flex items-center gap-1.5 hover:text-white">
+              <Phone className="size-3.5" /> {settings.contact_phone}
+            </a>
+          )}
+          <Link href="/track-order" className="hover:text-white">
+            Track order
+          </Link>
+          <Link href="/contact" className="hover:text-white">
+            Help &amp; contact
+          </Link>
+        </div>
+      </Container>
+    </div>
   );
 }
 
 export function SiteHeader() {
   const hydrated = useHydrated();
   const items = useCartStore((s) => s.items);
-  const user = useAuthStore((s) => s.user);
+  const { user, token } = useAuthStore();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const count = hydrated ? cartCount(items) : 0;
   const signedIn = hydrated && Boolean(user);
+  const staffToken = signedIn && token && isStaff(user) ? token : null;
 
   return (
-    <header className="sticky top-0 z-40 bg-black">
-      <Container className="flex h-16 items-center gap-4 lg:gap-8">
-        <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 hover:text-white md:hidden" aria-label="Open menu">
-              <Menu className="size-5" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="w-72">
-            <SheetHeader>
-              <SheetTitle>Menu</SheetTitle>
-            </SheetHeader>
-            <nav className="flex flex-col px-4">
-              {[{ href: "/", label: "Home" }, ...NAV_LINKS, { href: "/offers", label: "Offers" }, { href: "/track-order", label: "Track Order" }].map(
-                (link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setMenuOpen(false)}
-                    className="border-b py-3 text-sm font-medium text-gray-800 hover:text-primary"
-                  >
-                    {link.label}
-                  </Link>
-                ),
-              )}
-            </nav>
-          </SheetContent>
-        </Sheet>
+    <>
+      <TopBar />
+      <header className="sticky top-0 z-40 border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/85">
+        <Container className="flex h-[72px] items-center gap-3 lg:gap-8">
+          <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="-ml-2 md:hidden" aria-label="Open menu">
+                <Menu className="size-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-80">
+              <SheetHeader className="border-b">
+                <SheetTitle asChild>
+                  <div>
+                    <Logo />
+                  </div>
+                </SheetTitle>
+              </SheetHeader>
+              <nav className="flex flex-col px-2">
+                {[{ href: "/", label: "Home" }, ...NAV_LINKS, { href: "/offers", label: "Offers" }, { href: "/track-order", label: "Track order" }].map(
+                  (link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setMenuOpen(false)}
+                      className="rounded-lg px-3 py-3 text-[15px] font-medium text-gray-800 hover:bg-muted hover:text-primary"
+                    >
+                      {link.label}
+                    </Link>
+                  ),
+                )}
+                {staffToken && (
+                  <a href={dashboardHandoffUrl(staffToken)} className="mt-2 flex items-center gap-2 rounded-lg bg-secondary px-3 py-3 text-[15px] font-medium text-primary">
+                    <LayoutDashboard className="size-4" /> Open dashboard
+                  </a>
+                )}
+              </nav>
+            </SheetContent>
+          </Sheet>
 
-        <Logo className="shrink-0" />
+          <Logo className="shrink-0" />
 
-        <SearchForm className="hidden flex-1 md:block md:max-w-xs lg:max-w-sm" />
+          <SearchForm className="mx-auto hidden w-full max-w-xl flex-1 md:block" />
 
-        <nav className="ml-auto flex items-center gap-5 lg:gap-8" aria-label="Shortcuts">
-          <span className="hidden sm:block">
-            <HeaderLink href="/offers" icon={DollarSign} title="Offers" subtitle="Latest Offers" />
-          </span>
-          <HeaderLink href="/cart" icon={ShoppingBasket} title="Cart" subtitle="Add items" badge={count} />
-          <span className="hidden sm:block">
-            <HeaderLink href={signedIn ? "/account/orders" : "/track-order"} icon={ShoppingCart} title="Order" subtitle="My Order" />
-          </span>
-          <HeaderLink
-            href={signedIn ? "/account" : "/login"}
-            icon={UserRound}
-            title="Account"
-            subtitle={signedIn ? (user?.name.split(" ")[0] ?? "My Account") : "Register or Login"}
-          />
-        </nav>
-      </Container>
+          <nav className="ml-auto flex items-center gap-1 md:ml-0" aria-label="Shortcuts">
+            {staffToken && (
+              <Button asChild variant="outline" size="sm" className="mr-2 hidden rounded-full border-primary/30 text-primary lg:inline-flex">
+                <a href={dashboardHandoffUrl(staffToken)}>
+                  <LayoutDashboard /> Dashboard
+                </a>
+              </Button>
+            )}
+            <HeaderAction
+              href={signedIn ? "/account" : "/login"}
+              icon={UserRound}
+              caption={signedIn ? `Hi, ${user?.name.split(" ")[0] ?? "there"}` : "Welcome"}
+              label={signedIn ? "My account" : "Sign in"}
+            />
+            <HeaderAction
+              href={signedIn ? "/account/orders" : "/track-order"}
+              icon={Package}
+              caption="Track your"
+              label="Orders"
+              className="hidden sm:flex"
+            />
+            <HeaderAction
+              href="/cart"
+              icon={ShoppingBag}
+              caption={`${count} item${count === 1 ? "" : "s"}`}
+              label={hydrated ? formatPrice(cartSubtotal(items)) : "Cart"}
+              badge={count}
+            />
+          </nav>
+        </Container>
 
-      <Container className="pb-3 md:hidden">
-        <SearchForm />
-      </Container>
-    </header>
+        <Container className="pb-3 md:hidden">
+          <SearchForm />
+        </Container>
+      </header>
+    </>
   );
 }

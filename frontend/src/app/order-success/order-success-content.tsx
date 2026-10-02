@@ -24,10 +24,12 @@ export function OrderSuccessContent() {
   const order = raw ? readLastOrder(orderNumber) : null;
 
   return (
-    <Container className="max-w-3xl py-10">
-      <div className="mb-8 text-center">
-        <CircleCheck className="mx-auto mb-3 size-14 text-brand" />
-        <h1 className="text-2xl font-semibold text-gray-900">Thank you for your order!</h1>
+    <Container className="max-w-3xl py-14">
+      <div className="mb-10 text-center">
+        <span className="mx-auto mb-5 flex size-20 items-center justify-center rounded-full bg-secondary ring-8 ring-secondary/40">
+          <CircleCheck className="size-10 text-primary" />
+        </span>
+        <h1 className="font-heading text-3xl font-semibold text-gray-900 md:text-4xl">Thank you for your order!</h1>
         <p className="mt-2 text-muted-foreground">
           {orderNumber ? (
             <>
@@ -40,7 +42,7 @@ export function OrderSuccessContent() {
       </div>
 
       {order && (
-        <div className="rounded-sm border p-5">
+        <div className="rounded-2xl border bg-white p-6">
           <OrderDetails order={order} />
         </div>
       )}

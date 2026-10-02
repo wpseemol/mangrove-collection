@@ -1,9 +1,9 @@
 "use client";
 
+import { ShoppingBag } from "lucide-react";
 import Link from "next/link";
 
 import { RemoteImage } from "@/components/shared/remote-image";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useCartActions } from "@/hooks/use-cart-actions";
 import { formatPrice } from "@/lib/format";
@@ -20,46 +20,73 @@ function CardActions({ product, className }: { product: Product; className?: str
   const disabled = product.in_stock === false;
 
   return (
-    <div className={cn("flex flex-wrap items-center justify-center gap-2", className)}>
-      <Button size="sm" disabled={disabled} className="h-8 px-3 text-xs font-medium shadow-md shadow-primary/30" onClick={() => buyNow(product)}>
-        Buy Now
+    <div className={cn("flex items-center gap-2", className)}>
+      <Button disabled={disabled} className="h-9 flex-1 rounded-lg text-[13px]" onClick={() => buyNow(product)}>
+        {disabled ? "Out of stock" : "Buy now"}
       </Button>
-      <Button size="sm" disabled={disabled} className="h-8 px-3 text-xs font-medium" onClick={() => addToCart(product)}>
-        Add to Cart
+      <Button
+        variant="outline"
+        size="icon"
+        disabled={disabled}
+        className="rounded-lg border-primary/25 text-primary hover:border-primary hover:bg-primary hover:text-white"
+        aria-label={`Add ${product.name} to cart`}
+        title="Add to cart"
+        onClick={() => addToCart(product)}
+      >
+        <ShoppingBag className="size-4" />
       </Button>
     </div>
   );
 }
 
-export function ProductCard({ product, layout = "grid" }: { product: Product; layout?: "grid" | "list" }) {
-  const href = `/product?slug=${product.slug}`;
+function Badges({ product }: { product: Product }) {
   const discount = discountPercent(product);
   const outOfStock = product.in_stock === false;
 
-  const badges = (
-    <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
-      {discount && <Badge className="bg-red-600 text-white">-{discount}%</Badge>}
-      {outOfStock && <Badge variant="secondary">Stock out</Badge>}
+  if (!discount && !outOfStock && !product.is_featured) return null;
+
+  return (
+    <div className="absolute top-3 left-3 z-10 flex flex-col items-start gap-1.5">
+      {discount && <span className="rounded-full bg-red-600 px-2.5 py-0.5 text-[11px] font-semibold text-white">-{discount}%</span>}
+      {product.is_featured && !discount && <span className="rounded-full bg-gold px-2.5 py-0.5 text-[11px] font-semibold text-white">Featured</span>}
+      {outOfStock && <span className="rounded-full bg-gray-900/80 px-2.5 py-0.5 text-[11px] font-semibold text-white">Sold out</span>}
     </div>
   );
+}
+
+function Price({ product, className }: { product: Product; className?: string }) {
+  return (
+    <p className={cn("flex flex-wrap items-baseline gap-x-2", className)}>
+      <span className="text-base font-semibold text-primary">{formatPrice(product.price)}</span>
+      {product.compare_price && product.price && product.compare_price > product.price ? (
+        <span className="text-xs text-muted-foreground line-through">{formatPrice(product.compare_price)}</span>
+      ) : null}
+      {product.unit && <span className="text-xs text-muted-foreground">/ {product.unit}</span>}
+    </p>
+  );
+}
+
+export function ProductCard({ product, layout = "grid" }: { product: Product; layout?: "grid" | "list" }) {
+  const href = `/product?slug=${product.slug}`;
 
   if (layout === "list") {
     return (
-      <article className="flex gap-4 rounded-md border bg-white p-3 shadow-sm transition-shadow hover:shadow-md">
-        <Link href={href} className="relative aspect-square w-28 shrink-0 overflow-hidden rounded-sm bg-muted sm:w-40">
-          {badges}
-          <RemoteImage src={product.thumbnail} alt={product.name} sizes="160px" />
+      <article className="flex gap-5 rounded-2xl border bg-white p-3 transition-shadow hover:shadow-lg hover:shadow-black/5">
+        <Link href={href} className="relative aspect-square w-28 shrink-0 overflow-hidden rounded-xl bg-muted sm:w-44">
+          <Badges product={product} />
+          <RemoteImage src={product.thumbnail} alt={product.name} sizes="176px" />
         </Link>
-        <div className="flex min-w-0 flex-1 flex-col justify-between gap-2">
+        <div className="flex min-w-0 flex-1 flex-col justify-between gap-3 py-1 pr-1">
           <div>
-            <Link href={href} className="font-bangla text-lg leading-snug text-gray-900 hover:text-primary">
+            {product.category && <p className="text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">{product.category.name}</p>}
+            <Link href={href} className="font-bangla mt-1 block text-lg leading-snug text-gray-900 hover:text-primary">
               {product.name}
             </Link>
-            {product.short_description && <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{product.short_description}</p>}
+            {product.short_description && <p className="mt-1.5 line-clamp-2 text-sm text-muted-foreground">{product.short_description}</p>}
           </div>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <Price product={product} />
-            <CardActions product={product} className="justify-start" />
+            <CardActions product={product} className="w-full sm:w-56" />
           </div>
         </div>
       </article>
@@ -67,29 +94,19 @@ export function ProductCard({ product, layout = "grid" }: { product: Product; la
   }
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-sm bg-white shadow-[0_1px_6px_rgba(0,0,0,0.12)] transition-shadow hover:shadow-[0_4px_14px_rgba(0,0,0,0.16)]">
-      <Link href={href} className="relative block aspect-[6/5] overflow-hidden bg-muted">
-        {badges}
-        <RemoteImage src={product.thumbnail} alt={product.name} className="transition-transform duration-300 group-hover:scale-105" />
+    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border bg-white transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/20 hover:shadow-xl hover:shadow-black/5">
+      <Link href={href} className="relative block aspect-square overflow-hidden bg-muted">
+        <Badges product={product} />
+        <RemoteImage src={product.thumbnail} alt={product.name} className="transition-transform duration-500 group-hover:scale-105" />
       </Link>
-      <div className="flex flex-1 flex-col px-2 pt-2 pb-4 text-center">
-        <Link href={href} className="font-bangla line-clamp-2 text-[15px] leading-snug text-gray-900 hover:text-primary">
+      <div className="flex flex-1 flex-col p-4">
+        {product.category && <p className="text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">{product.category.name}</p>}
+        <Link href={href} className="font-bangla mt-1 line-clamp-2 text-[15px] leading-snug text-gray-900 hover:text-primary">
           {product.name}
         </Link>
-        <Price product={product} className="mt-1 justify-center" />
-        <CardActions product={product} className="mt-auto pt-3" />
+        <Price product={product} className="mt-2" />
+        <CardActions product={product} className="mt-auto pt-4" />
       </div>
     </article>
-  );
-}
-
-function Price({ product, className }: { product: Product; className?: string }) {
-  return (
-    <p className={cn("flex items-baseline gap-2 text-sm", className)}>
-      <span className="font-medium text-gray-900">{formatPrice(product.price)}</span>
-      {product.compare_price && product.price && product.compare_price > product.price ? (
-        <span className="text-xs text-muted-foreground line-through">{formatPrice(product.compare_price)}</span>
-      ) : null}
-    </p>
   );
 }

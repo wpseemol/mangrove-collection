@@ -78,7 +78,7 @@ export function AddressesContent() {
   return (
     <div>
       <div className="mb-4 flex items-center justify-between gap-3">
-        <h1 className="text-xl font-semibold text-gray-900">Saved addresses</h1>
+        <h1 className="font-heading text-3xl font-semibold text-gray-900">Saved addresses</h1>
         <Button size="sm" onClick={() => open({ id: null, label: "", is_default: !addresses?.length, values: EMPTY_ADDRESS })}>
           <Plus className="size-4" /> Add address
         </Button>
@@ -89,7 +89,7 @@ export function AddressesContent() {
       ) : addresses?.length ? (
         <div className="grid gap-4 sm:grid-cols-2">
           {addresses.map((address) => (
-            <div key={address.id} className="flex flex-col rounded-sm border p-4 text-sm">
+            <div key={address.id} className="flex flex-col rounded-2xl border bg-white p-5 text-sm">
               <div className="mb-2 flex items-center gap-2">
                 <p className="font-medium text-gray-900">{address.label || address.name}</p>
                 {address.is_default && <Badge className="bg-secondary text-primary">Default</Badge>}

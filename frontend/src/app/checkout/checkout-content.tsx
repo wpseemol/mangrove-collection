@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Loader2, ShoppingBasket } from "lucide-react";
+import { Loader2, Lock, ShoppingBasket } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
@@ -11,7 +11,7 @@ import { AddressFields, EMPTY_ADDRESS, type AddressValues } from "@/components/o
 import { Container } from "@/components/shared/container";
 import { EmptyState } from "@/components/shared/empty-state";
 import { FormField } from "@/components/shared/form-field";
-import { PageBreadcrumb } from "@/components/shared/page-breadcrumb";
+import { PageHeader } from "@/components/shared/page-breadcrumb";
 import { RemoteImage } from "@/components/shared/remote-image";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -36,9 +36,9 @@ const NEW_ADDRESS = "new";
 
 function Section({ step, title, children }: { step: number; title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-sm border bg-white p-5">
-      <h2 className="mb-4 flex items-center gap-2 font-medium text-gray-900">
-        <span className="flex size-6 items-center justify-center rounded-full bg-primary text-xs text-white">{step}</span>
+    <section className="rounded-2xl border bg-white p-6">
+      <h2 className="mb-5 flex items-center gap-3 text-lg font-semibold text-gray-900">
+        <span className="flex size-8 items-center justify-center rounded-full bg-primary text-sm text-white">{step}</span>
         {title}
       </h2>
       {children}
@@ -51,8 +51,8 @@ function OptionCard({ value, checked, children }: { value: string; checked: bool
     <Label
       htmlFor={`option-${value}`}
       className={cn(
-        "flex cursor-pointer items-start gap-3 rounded-sm border p-3 font-normal transition-colors",
-        checked ? "border-primary bg-secondary/60" : "hover:border-primary/40",
+        "flex cursor-pointer items-start gap-3 rounded-xl border p-4 font-normal transition-colors",
+        checked ? "border-primary bg-secondary/60 ring-1 ring-primary" : "hover:border-primary/40",
       )}
     >
       <RadioGroupItem value={value} id={`option-${value}`} className="mt-0.5" />
@@ -140,7 +140,7 @@ export function CheckoutContent() {
 
   if (items.length === 0 && !checkout.isSuccess) {
     return (
-      <Container className="py-10">
+      <Container className="py-12">
         <EmptyState
           icon={ShoppingBasket}
           title="Your cart is empty"
@@ -167,12 +167,11 @@ export function CheckoutContent() {
   };
 
   return (
+    <>
+    <PageHeader title="Checkout" description="Just a few details and your order is on its way." breadcrumb={[{ label: "Cart", href: "/cart" }, { label: "Checkout" }]} />
     <Container>
-      <PageBreadcrumb items={[{ label: "Cart", href: "/cart" }, { label: "Checkout" }]} />
-      <h1 className="font-heading mb-6 text-xl font-medium tracking-[0.12em] uppercase">Checkout</h1>
-
       {!token && (
-        <p className="mb-4 rounded-sm bg-surface px-4 py-3 text-sm text-gray-700">
+        <p className="mb-6 rounded-xl border bg-secondary/60 px-5 py-4 text-sm text-gray-700">
           Already have an account?{" "}
           <Link href="/login?redirect=/checkout" className="font-medium text-primary underline-offset-4 hover:underline">
             Log in
@@ -257,7 +256,7 @@ export function CheckoutContent() {
             {fieldError("payment_method") && <p className="mt-2 text-xs text-destructive">{fieldError("payment_method")}</p>}
 
             {selectedPayment !== "cod" && (
-              <div className="mt-4 space-y-4 rounded-sm bg-surface p-4">
+              <div className="mt-4 space-y-4 rounded-xl border bg-surface/60 p-5">
                 <p className="text-sm text-gray-700">
                   Send <strong>{formatPrice(total)}</strong> via {PAYMENT_METHOD_LABEL[selectedPayment]} (Send Money)
                   {paymentNumber ? (
@@ -285,14 +284,18 @@ export function CheckoutContent() {
           </Section>
         </div>
 
-        <aside className="h-fit space-y-4 rounded-sm border bg-surface p-5 lg:sticky lg:top-28">
-          <h2 className="font-medium text-gray-900">Your order</h2>
-          <ul className="max-h-72 space-y-3 overflow-y-auto pr-1">
+        <aside className="h-fit space-y-5 rounded-2xl border bg-white p-6 lg:sticky lg:top-28">
+          <h2 className="font-heading text-xl font-semibold text-gray-900">Your order</h2>
+          <ul className="max-h-72 space-y-4 overflow-y-auto pt-2 pr-1">
             {items.map((item) => (
               <li key={item.variantId} className="flex gap-3">
-                <div className="relative size-14 shrink-0 overflow-hidden rounded-sm bg-muted">
-                  <RemoteImage src={item.image} alt={item.name} sizes="56px" />
-                  <span className="absolute top-0 right-0 rounded-bl-sm bg-primary px-1.5 text-[10px] text-white">{item.quantity}</span>
+                <div className="relative size-14 shrink-0 rounded-lg border bg-muted">
+                  <div className="absolute inset-0 overflow-hidden rounded-lg">
+                    <RemoteImage src={item.image} alt={item.name} sizes="56px" />
+                  </div>
+                  <span className="absolute -top-2 -right-2 flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-semibold text-white ring-2 ring-white">
+                    {item.quantity}
+                  </span>
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="font-bangla line-clamp-2 text-sm text-gray-900">{item.name}</p>
@@ -303,30 +306,31 @@ export function CheckoutContent() {
             ))}
           </ul>
           <Separator />
-          <div className="space-y-1.5 text-sm">
+          <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span>Subtotal</span>
-              <span>{formatPrice(subtotal)}</span>
+              <span className="text-muted-foreground">Subtotal</span>
+              <span className="font-medium text-gray-900">{formatPrice(subtotal)}</span>
             </div>
             <div className="flex justify-between">
-              <span>Delivery</span>
-              <span>{freeShipping ? "Free" : formatPrice(shippingCost)}</span>
+              <span className="text-muted-foreground">Delivery</span>
+              <span className="font-medium text-gray-900">{freeShipping ? "Free" : formatPrice(shippingCost)}</span>
             </div>
           </div>
           <Separator />
-          <div className="flex justify-between text-base font-semibold text-gray-900">
+          <div className="flex justify-between text-lg font-semibold text-gray-900">
             <span>Total</span>
-            <span>{formatPrice(total)}</span>
+            <span className="text-primary">{formatPrice(total)}</span>
           </div>
-          <Button type="submit" size="lg" className="w-full shadow-md shadow-primary/30" disabled={checkout.isPending || !selectedShipping}>
-            {checkout.isPending && <Loader2 className="size-4 animate-spin" />}
+          <Button type="submit" size="lg" className="w-full" disabled={checkout.isPending || !selectedShipping}>
+            {checkout.isPending ? <Loader2 className="size-4 animate-spin" /> : <Lock className="size-4" />}
             Place order
           </Button>
-          <Button asChild variant="link" className="w-full">
+          <Button asChild variant="ghost" className="w-full">
             <Link href="/cart">Back to cart</Link>
           </Button>
         </aside>
       </form>
     </Container>
+    </>
   );
 }

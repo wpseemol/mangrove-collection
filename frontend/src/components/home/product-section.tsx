@@ -9,29 +9,30 @@ import { SectionHeading } from "@/components/shared/section-heading";
 import { type ProductFilters, useProducts } from "@/lib/queries";
 
 export function ProductSection({
+  eyebrow,
   title,
-  icon,
+  subtitle,
   filters,
   viewAllHref,
 }: {
+  eyebrow?: string;
   title: string;
-  icon?: string;
+  subtitle?: string;
   filters: ProductFilters;
   viewAllHref: string;
 }) {
-  const { data, isLoading } = useProducts({ per_page: 12, ...filters });
+  const { data, isLoading } = useProducts({ per_page: 10, ...filters });
 
   if (!isLoading && !data?.data.length) return null;
 
   return (
-    <Container className="mt-12">
-      <SectionHeading title={title}>{icon && <span className="ml-1">{icon}</span>}</SectionHeading>
-      <ProductGrid products={data?.data} loading={isLoading} skeletons={6} />
-      <div className="mt-6 text-center">
-        <Link href={viewAllHref} className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+    <Container className="mt-20">
+      <SectionHeading eyebrow={eyebrow} title={title} subtitle={subtitle} align="left">
+        <Link href={viewAllHref} className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-primary hover:underline">
           View all <ArrowRight className="size-4" />
         </Link>
-      </div>
+      </SectionHeading>
+      <ProductGrid products={data?.data} loading={isLoading} skeletons={5} />
     </Container>
   );
 }

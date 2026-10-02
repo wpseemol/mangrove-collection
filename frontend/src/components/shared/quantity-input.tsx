@@ -18,10 +18,10 @@ export function QuantityInput({
   size?: "default" | "sm";
 }) {
   const limit = Math.min(max ?? 100, 100);
-  const box = size === "sm" ? "size-7" : "size-9";
+  const box = size === "sm" ? "size-8" : "size-12";
 
   return (
-    <div className={cn("inline-flex items-center rounded-sm border", className)}>
+    <div className={cn("inline-flex items-center overflow-hidden rounded-lg border bg-white", className)}>
       <button
         type="button"
         aria-label="Decrease quantity"

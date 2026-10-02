@@ -7,12 +7,12 @@ import type { Order } from "@/lib/types";
 
 export function OrdersList({ orders }: { orders: Order[] }) {
   return (
-    <ul className="divide-y rounded-sm border">
+    <ul className="divide-y overflow-hidden rounded-2xl border bg-white">
       {orders.map((order) => (
         <li key={order.id}>
           <Link
             href={`/account/orders/details?number=${encodeURIComponent(order.order_number)}`}
-            className="flex items-center gap-4 p-4 transition-colors hover:bg-surface"
+            className="flex items-center gap-4 p-5 transition-colors hover:bg-surface/60"
           >
             <div className="min-w-0 flex-1">
               <p className="font-mono text-sm font-medium text-gray-900">{order.order_number}</p>

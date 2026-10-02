@@ -52,7 +52,7 @@ export function OrderDetailContent() {
       ) : isError || !order ? (
         <EmptyState icon={PackageX} title="Order not found" description="We couldn't find this order in your account." />
       ) : (
-        <div className="rounded-sm border p-5">
+        <div className="rounded-2xl border bg-white p-6">
           <OrderDetails
             order={order}
             actions={

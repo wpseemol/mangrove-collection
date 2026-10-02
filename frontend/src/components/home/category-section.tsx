@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 
 import { Container } from "@/components/shared/container";
@@ -9,17 +10,44 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useCategories } from "@/lib/queries";
 import type { Category } from "@/lib/types";
 
+export const CATEGORY_GRID = "grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6";
+
 export function CategoryTile({ category }: { category: Category }) {
   return (
-    <Link
-      href={`/shop?category=${category.slug}`}
-      className="group flex w-40 flex-col items-center gap-2 rounded-sm border bg-white p-2.5 text-center shadow-sm transition-shadow hover:border-primary/40 hover:shadow-md sm:w-44"
-    >
-      <span className="relative block h-16 w-full overflow-hidden rounded-sm bg-muted">
-        <RemoteImage src={category.image} alt={category.name} sizes="176px" className="transition-transform group-hover:scale-105" />
+    <Link href={`/shop?category=${category.slug}`} className="group flex flex-col overflow-hidden rounded-2xl border bg-white transition-all hover:-translate-y-0.5 hover:border-primary/20 hover:shadow-lg hover:shadow-black/5">
+      <span className="relative block aspect-[4/3] overflow-hidden bg-muted">
+        <RemoteImage src={category.image} alt={category.name} sizes="(max-width: 640px) 50vw, 240px" className="transition-transform duration-500 group-hover:scale-105" />
       </span>
-      <span className="text-sm font-medium text-gray-800 group-hover:text-primary">{category.name}</span>
+      <span className="flex items-center justify-between gap-2 p-3.5">
+        <span className="min-w-0">
+          <span className="block truncate text-sm font-semibold text-gray-900 group-hover:text-primary">{category.name}</span>
+          {category.products_count !== undefined && (
+            <span className="block text-xs text-muted-foreground">
+              {category.products_count} product{category.products_count === 1 ? "" : "s"}
+            </span>
+          )}
+        </span>
+        <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-secondary text-primary transition-colors group-hover:bg-primary group-hover:text-white">
+          <ArrowUpRight className="size-4" />
+        </span>
+      </span>
     </Link>
+  );
+}
+
+export function CategoryGridSkeleton({ count = 6 }: { count?: number }) {
+  return (
+    <div className={CATEGORY_GRID}>
+      {Array.from({ length: count }).map((_, i) => (
+        <div key={i} className="overflow-hidden rounded-2xl border">
+          <Skeleton className="aspect-[4/3] rounded-none" />
+          <div className="space-y-2 p-3.5">
+            <Skeleton className="h-4 w-2/3" />
+            <Skeleton className="h-3 w-1/3" />
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -29,13 +57,21 @@ export function CategorySection() {
   if (!isLoading && !categories?.length) return null;
 
   return (
-    <Container className="mt-12">
-      <SectionHeading title="Our Product Category" subtitle="Get your desired product from a featured category" />
-      <div className="flex flex-wrap justify-center gap-3">
-        {isLoading
-          ? Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-28 w-40 sm:w-44" />)
-          : categories?.map((category) => <CategoryTile key={category.id} category={category} />)}
-      </div>
+    <Container className="mt-20">
+      <SectionHeading eyebrow="Shop by category" title="Explore our collection" subtitle="Hand-picked produce from the Sundarbans, sorted for you." align="left">
+        <Link href="/categories" className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-primary hover:underline">
+          All categories <ArrowRight className="size-4" />
+        </Link>
+      </SectionHeading>
+      {isLoading ? (
+        <CategoryGridSkeleton />
+      ) : (
+        <div className={CATEGORY_GRID}>
+          {categories?.slice(0, 12).map((category) => (
+            <CategoryTile key={category.id} category={category} />
+          ))}
+        </div>
+      )}
     </Container>
   );
 }

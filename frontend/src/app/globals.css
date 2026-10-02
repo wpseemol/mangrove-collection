@@ -7,14 +7,16 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-roboto), var(--font-hind), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-roboto-mono), ui-monospace, monospace;
-  --font-heading: var(--font-roboto-mono), ui-monospace, monospace;
-  --font-bangla: var(--font-bangla-serif), var(--font-roboto), serif;
+  --font-sans: var(--font-inter), var(--font-hind), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-heading: var(--font-fraunces), Georgia, serif;
+  --font-bangla: var(--font-bangla-serif), var(--font-inter), serif;
 
-  /* Mangrove brand palette (sampled from the previous storefront design) */
+  /* Mangrove brand palette */
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
+  --color-forest: var(--forest);
+  --color-gold: var(--gold);
   --color-ink: var(--ink);
   --color-surface: var(--surface);
 
@@ -57,43 +59,45 @@
 }
 
 :root {
-  --brand: #22c55e;
+  --brand: #3fae6a;
   --brand-foreground: #ffffff;
+  --forest: #062b20;
+  --gold: #c99a2e;
   --ink: #0d0d0d;
-  --surface: #f3f4f6;
+  --surface: #f6f5f0;
 
   --background: #ffffff;
-  --foreground: #111827;
+  --foreground: #18201c;
   --card: #ffffff;
-  --card-foreground: #111827;
+  --card-foreground: #18201c;
   --popover: #ffffff;
-  --popover-foreground: #111827;
-  --primary: #003e29;
+  --popover-foreground: #18201c;
+  --primary: #0d4a36;
   --primary-foreground: #ffffff;
-  --secondary: #ecf5f0;
-  --secondary-foreground: #003e29;
-  --muted: #f3f4f6;
-  --muted-foreground: #6b7280;
-  --accent: #ecf5f0;
-  --accent-foreground: #003e29;
+  --secondary: #eaf3ee;
+  --secondary-foreground: #0d4a36;
+  --muted: #f3f3ef;
+  --muted-foreground: #66706b;
+  --accent: #eaf3ee;
+  --accent-foreground: #0d4a36;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: #e5e7eb;
-  --input: #d1d5db;
-  --ring: #16a34a;
-  --chart-1: #003e29;
-  --chart-2: #22c55e;
-  --chart-3: #16a34a;
+  --border: #e6e4dd;
+  --input: #d9d6ce;
+  --ring: #2f855a;
+  --chart-1: #0d4a36;
+  --chart-2: #3fae6a;
+  --chart-3: #c99a2e;
   --chart-4: #86efac;
-  --chart-5: #14532d;
-  --radius: 0.375rem;
-  --sidebar: #fafafa;
-  --sidebar-foreground: #111827;
-  --sidebar-primary: #003e29;
+  --chart-5: #062b20;
+  --radius: 0.625rem;
+  --sidebar: #fafaf7;
+  --sidebar-foreground: #18201c;
+  --sidebar-primary: #0d4a36;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #ecf5f0;
-  --sidebar-accent-foreground: #003e29;
-  --sidebar-border: #e5e7eb;
-  --sidebar-ring: #16a34a;
+  --sidebar-accent: #eaf3ee;
+  --sidebar-accent-foreground: #0d4a36;
+  --sidebar-border: #e6e4dd;
+  --sidebar-ring: #2f855a;
 }
 
 @layer base {
@@ -115,29 +119,32 @@
 @layer components {
   /* Rich text coming from the dashboard (product descriptions, CMS pages). */
   .prose-content {
-    @apply space-y-3 leading-relaxed text-gray-700;
+    @apply space-y-4 text-[15px] leading-7 text-gray-700;
   }
   .prose-content h1,
   .prose-content h2,
   .prose-content h3 {
-    @apply font-semibold text-gray-900;
+    @apply font-heading font-semibold text-gray-900;
   }
   .prose-content h2 {
-    @apply text-xl;
+    @apply pt-2 text-2xl;
   }
   .prose-content h3 {
-    @apply text-lg;
+    @apply text-xl;
   }
   .prose-content ul {
-    @apply list-disc space-y-1 pl-5;
+    @apply list-disc space-y-1.5 pl-5;
   }
   .prose-content ol {
-    @apply list-decimal space-y-1 pl-5;
+    @apply list-decimal space-y-1.5 pl-5;
   }
   .prose-content a {
     @apply text-primary underline underline-offset-2;
   }
   .prose-content img {
-    @apply rounded-md;
+    @apply rounded-xl;
+  }
+  .prose-content blockquote {
+    @apply border-l-4 border-primary/30 pl-4 text-gray-600 italic;
   }
 }

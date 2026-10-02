@@ -101,7 +101,7 @@ export function GoogleButton({ label = "Continue with Google" }: { label?: strin
       <div className="my-5 flex items-center gap-3 text-xs text-muted-foreground uppercase">
         <span className="h-px flex-1 bg-border" /> or <span className="h-px flex-1 bg-border" />
       </div>
-      <Button type="button" variant="outline" className="h-10 w-full" onClick={start} disabled={pending}>
+      <Button type="button" variant="outline" size="lg" className="w-full" onClick={start} disabled={pending}>
         {pending ? <Loader2 className="size-4 animate-spin" /> : <GoogleIcon />}
         {label}
       </Button>

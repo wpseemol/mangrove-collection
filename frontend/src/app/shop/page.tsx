@@ -15,7 +15,7 @@ export default function ShopPage() {
     <Suspense
       fallback={
         <Container className="py-12">
-          <ProductGrid loading columns={5} skeletons={10} />
+          <ProductGrid loading columns={4} skeletons={8} />
         </Container>
       }
     >

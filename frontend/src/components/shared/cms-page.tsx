@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 import { Container } from "@/components/shared/container";
 import { EmptyState } from "@/components/shared/empty-state";
-import { PageBreadcrumb } from "@/components/shared/page-breadcrumb";
+import { PageHeader } from "@/components/shared/page-breadcrumb";
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePage } from "@/lib/queries";
 
@@ -20,39 +20,39 @@ export function CmsPageView({ slug, title, children }: { slug: string; title: st
   const sections = page?.sections?.filter((section) => section.title || section.description) ?? [];
 
   return (
-    <Container className="max-w-4xl">
-      <PageBreadcrumb items={[{ label: heading }]} />
-      <h1 className="font-heading mb-6 text-2xl font-medium tracking-[0.12em] text-gray-900 uppercase">{heading}</h1>
+    <>
+      <PageHeader title={heading} description={page?.meta_description ?? undefined} breadcrumb={[{ label: heading }]} />
+      <Container className="max-w-4xl">
+        {isLoading ? (
+          <div className="space-y-3">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-11/12" />
+            <Skeleton className="h-4 w-4/5" />
+          </div>
+        ) : isError || (!page?.content && sections.length === 0) ? (
+          !children && <EmptyState icon={FileText} title="Content coming soon" description="This page hasn't been published yet." />
+        ) : (
+          <>
+            {page?.content && <div className="prose-content" dangerouslySetInnerHTML={{ __html: page.content }} />}
+            {sections.length > 0 && (
+              <div className="mt-10 grid gap-5 sm:grid-cols-2">
+                {sections.map((section, index) => (
+                  <div key={section.id ?? index} className="rounded-2xl border bg-surface/60 p-6">
+                    {section.title && <h2 className="font-heading mb-2 text-lg font-semibold text-gray-900">{section.title}</h2>}
+                    {section.description?.split("\n").map((line, i) => (
+                      <p key={i} className="text-sm leading-relaxed text-gray-600">
+                        {line}
+                      </p>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        )}
 
-      {isLoading ? (
-        <div className="space-y-3">
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-11/12" />
-          <Skeleton className="h-4 w-4/5" />
-        </div>
-      ) : isError || (!page?.content && sections.length === 0) ? (
-        !children && <EmptyState icon={FileText} title="Content coming soon" description="This page hasn't been published yet." />
-      ) : (
-        <>
-          {page?.content && <div className="prose-content" dangerouslySetInnerHTML={{ __html: page.content }} />}
-          {sections.length > 0 && (
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
-              {sections.map((section, index) => (
-                <div key={section.id ?? index} className="rounded-sm bg-surface p-5">
-                  {section.title && <h2 className="mb-2 font-medium text-gray-900">{section.title}</h2>}
-                  {section.description?.split("\n").map((line, i) => (
-                    <p key={i} className="text-sm leading-relaxed text-gray-700">
-                      {line}
-                    </p>
-                  ))}
-                </div>
-              ))}
-            </div>
-          )}
-        </>
-      )}
-
-      {children}
-    </Container>
+        {children}
+      </Container>
+    </>
   );
 }

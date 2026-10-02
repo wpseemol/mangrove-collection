@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Hind_Siliguri, Noto_Serif_Bengali, Roboto, Roboto_Mono } from "next/font/google";
+import { Fraunces, Hind_Siliguri, Inter, Noto_Serif_Bengali } from "next/font/google";
 
 import { FloatingSocial } from "@/components/layout/floating-social";
 import { MainNav } from "@/components/layout/main-nav";
@@ -10,10 +10,15 @@ import { Providers } from "@/components/providers";
 import { SITE_URL } from "@/lib/config";
 import "./globals.css";
 
-const roboto = Roboto({
-  variable: "--font-roboto",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
+});
+
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
 });
 
 const hind = Hind_Siliguri({
@@ -25,12 +30,6 @@ const hind = Hind_Siliguri({
 const banglaSerif = Noto_Serif_Bengali({
   variable: "--font-bangla-serif",
   subsets: ["bengali"],
-  weight: ["400", "500"],
-});
-
-const robotoMono = Roboto_Mono({
-  variable: "--font-roboto-mono",
-  subsets: ["latin"],
   weight: ["400", "500"],
 });
 
@@ -51,15 +50,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="bn"
-      className={`${roboto.variable} ${hind.variable} ${banglaSerif.variable} ${robotoMono.variable} h-full antialiased`}
-    >
+    <html lang="bn" className={`${inter.variable} ${fraunces.variable} ${hind.variable} ${banglaSerif.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col bg-white">
         <Providers>
           <SiteHeader />
           <MainNav />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1 pb-20">{children}</main>
           <SiteFooter />
           <FloatingSocial />
           <SiteScripts />
