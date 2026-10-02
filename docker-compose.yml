@@ -1,39 +1,32 @@
 services:
     mysql:
-        build:
-            context: .
-            dockerfile: Dockerfile.mysql
-        container_name: mangrove_mysql
-        restart: unless-stopped
+        image: mysql:8.0
+        container_name: mangrove_collection_db_mysql
         volumes:
-            - mangrove_mysql_data:/var/lib/mysql
+            - mangrove_collection_db_mysql_data:/var/lib/mysql
         ports:
             - "3306:3306"
         env_file:
             - .env.dev
         networks:
-            - mangroveDbNetwork
+            - mangroveCollectionDbNetwork
 
     phpmyadmin:
-        image: phpmyadmin:latest
-        container_name: mangrove_phpmyadmin
-        restart: unless-stopped
+        image: phpmyadmin
+        container_name: mangrove_collection_db_phpmyadmin
         ports:
             - "8183:80"
-        environment:
-            PMA_HOST: mysql
-            PMA_PORT: 3306
         env_file:
             - .env.dev
         depends_on:
             - mysql
         networks:
-            - mangroveDbNetwork
+            - mangroveCollectionDbNetwork
 
 networks:
-    mangroveDbNetwork:
+    mangroveCollectionDbNetwork:
         driver: bridge
 
 volumes:
-    mangrove_mysql_data:
-        name: mangrove_mysql_data
+    mangrove_collection_db_mysql_data:
+        name: mangrove_collection_db_mysql_data
