@@ -5,7 +5,7 @@
     "dev": "pnpm --parallel --filter frontend --filter dashboard dev",
     "dev:frontend": "pnpm --filter frontend dev",
     "dev:dashboard": "pnpm --filter dashboard dev",
-    "api": "php backend-api/artisan serve --port=8080",
+    "api": "pnpm --filter mangrove-collection-api dev",
     "build": "pnpm --filter frontend --filter dashboard build",
     "lint": "pnpm --filter frontend --filter dashboard lint"
   },

@@ -1,6 +1,7 @@
 packages:
   - frontend
   - dashboard
+  - backend-api
 
 ignoredBuiltDependencies:
   - sharp

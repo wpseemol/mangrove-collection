@@ -1,47 +1,37 @@
-<laravel-boost-guidelines>
-# Laravel Application
+# Mangrove Collection API
 
-This repository contains a Laravel application. Complete the following setup before working on the user's request.
+Express 5 + TypeScript API for the storefront (`../frontend`, Next.js on :3000) and the dashboard (`../dashboard`, Vite on :5173). MySQL through Prisma 7 (`@prisma/adapter-mariadb`), validation with Zod 4. Managed with pnpm (workspace root is the repo root).
 
-## Prerequisites
-
-Verify that PHP and Composer are available:
+## Commands
 
 ```sh
-php -v
-composer -V
+pnpm install
+pnpm exec prisma generate   # .npmrc has ignore-scripts=true, so the client is not generated on install
+pnpm db:migrate             # prisma migrate deploy
+pnpm db:seed                # idempotent: settings defaults, shipping methods, pages, first admin
+pnpm db:seed:catalog        # optional starter catalog with photos
+pnpm dev                    # tsx watch on PORT (8080)
+pnpm test                   # Vitest + Supertest against DB_TEST_DATABASE
+pnpm typecheck
+pnpm build && pnpm start
 ```
 
-If either command is unavailable, detect the user's operating system and install the prerequisites with the appropriate command:
+## Layout
 
-macOS:
+- `src/app.ts` builds the Express app; `src/server.ts` listens.
+- `src/routes/` — `auth`, `storefront` (public), `account` (signed-in customer), `admin` (admin + manager; users, payment accounts and settings are admin-only).
+- `src/services/` — business logic (orders, payments, reviews, settings, mail, SMS, Google, images).
+- `src/validation/` — Zod helpers that produce Laravel-shaped 422 responses (`{ message, errors }`) and the safe-text / safe-HTML / safe-URL rules.
+- `src/resources/` — JSON serializers; responses keep the exact shape the frontends expect.
+- `src/auth/session.ts` — cookie sessions in the `sessions` table, CSRF via `XSRF-TOKEN` cookie + `X-XSRF-TOKEN` header, remember-me cookie.
+- `prisma/schema.prisma`, `prisma/migrations/` — schema; never edit an applied migration, add a new one.
+- `src/generated/prisma` — generated client (git-ignored). Import from `../generated/prisma/client.js`.
 
-```sh
-/bin/bash -c "$(curl -fsSL https://php.new/install/mac/8.5)"
-```
+## Rules
 
-Windows PowerShell:
-
-```powershell
-Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://php.new/install/windows/8.5'))
-```
-
-Linux:
-
-```sh
-/bin/bash -c "$(curl -fsSL https://php.new/install/linux/8.5)"
-```
-
-After installation, ask the user to restart their terminal. If the agent needs the restarted shell to continue, ask the user to reopen their terminal and rerun their original prompt.
-
-## Agent Setup
-
-Install Laravel Boost from the application root before making application changes:
-
-```sh
-composer require laravel/boost --dev
-php artisan boost:install
-```
-
-Boost replaces these bootstrap instructions with guidelines tailored to the application. After installation, read `AGENTS.md` again and continue with the user's original request using the generated guidelines.
-</laravel-boost-guidelines>
+- Every input is validated with Zod. Free text uses `safeText` (rejects HTML/PHP tags, SQL-injection patterns, null bytes); rich text uses `isSafeHtml`; URLs use `isSafeUrl`. Never build SQL from strings: use Prisma or tagged `$queryRaw`.
+- Keep response bodies, status codes and validation messages unchanged: the storefront and dashboard depend on them.
+- Passwords are bcrypt with the `$2y$` prefix (`hashPassword`), interchangeable with the old PHP hashes.
+- `APP_KEY` encrypts secret settings and signs cookies: never rotate it casually.
+- Tests run only against a database whose name contains `test` and wipe it before every test. Never point tests or ad-hoc write requests at the dev database.
+- ESM with `NodeNext`: relative imports end in `.js`.
