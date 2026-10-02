@@ -6,6 +6,7 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router'
 
 import { Toaster } from '@/components/ui/sonner'
+import { TooltipProvider } from '@/components/ui/tooltip'
 import { ApiError } from '@/lib/api'
 
 import App from './App'
@@ -23,9 +24,11 @@ const queryClient = new QueryClient({
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <TooltipProvider delayDuration={0}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </TooltipProvider>
       <Toaster position="top-center" richColors />
     </QueryClientProvider>
   </StrictMode>,

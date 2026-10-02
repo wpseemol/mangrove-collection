@@ -8,6 +8,7 @@ export function FormField({
   label,
   error,
   hint,
+  description,
   className,
   children,
 }: {
@@ -15,6 +16,7 @@ export function FormField({
   label: string
   error?: string
   hint?: ReactNode
+  description?: ReactNode
   className?: string
   children: ReactNode
 }) {
@@ -27,11 +29,17 @@ export function FormField({
         {hint}
       </div>
       {children}
-      {error && (
+      {error ? (
         <p id={`${id}-error`} className="text-xs text-destructive">
           {error}
         </p>
+      ) : (
+        description && <p className="text-xs text-muted-foreground">{description}</p>
       )}
     </div>
   )
+}
+
+export function Optional() {
+  return <span className="text-xs text-muted-foreground">Optional</span>
 }
