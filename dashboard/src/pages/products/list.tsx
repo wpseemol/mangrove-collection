@@ -99,11 +99,15 @@ export function ProductsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search])
 
-  const listKey = ['admin', 'products', { tab, category, page, q }] as const
+  const filters = { tab, category, q }
 
   const { data, isPending, isFetching } = useQuery({
-    queryKey: listKey,
-    placeholderData: keepPreviousData,
+    queryKey: ['admin', 'products', { ...filters, page }],
+    placeholderData: (previous, previousQuery) => {
+      const prev = previousQuery?.queryKey[2] as typeof filters | undefined
+      const sameFilters = prev?.tab === tab && prev.category === category && prev.q === q
+      return sameFilters ? keepPreviousData(previous) : undefined
+    },
     queryFn: () =>
       api<Paginated<Product>>('/admin/products', {
         query: {
