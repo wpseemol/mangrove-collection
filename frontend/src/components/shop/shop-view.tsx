@@ -88,7 +88,7 @@ export function ShopView({
         </aside>
 
         <section className="min-w-0">
-          <div className="mb-6 flex flex-wrap items-center gap-3 rounded-xl border bg-white p-2 pl-3">
+          <div className="mb-6 flex flex-wrap items-center gap-3 rounded-xl border bg-card p-2 pl-3">
             <div className="flex items-center gap-1 rounded-lg bg-muted p-0.5">
               <Button
                 size="icon-sm"
@@ -127,7 +127,7 @@ export function ShopView({
             <p className={cn("text-sm text-muted-foreground", isFetching && "opacity-60")}>
               {data ? (
                 <>
-                  <span className="font-semibold text-gray-900">{data.meta.total}</span> product{data.meta.total === 1 ? "" : "s"}
+                  <span className="font-semibold text-foreground">{data.meta.total}</span> product{data.meta.total === 1 ? "" : "s"}
                 </>
               ) : (
                 ""
@@ -156,7 +156,7 @@ export function ShopView({
               <span>
                 Results for <strong>“{q}”</strong>
               </span>
-              <Button variant="ghost" size="icon-xs" className="rounded-full hover:bg-white" aria-label="Clear search" onClick={() => update({ q: null })}>
+              <Button variant="ghost" size="icon-xs" className="rounded-full hover:bg-card" aria-label="Clear search" onClick={() => update({ q: null })}>
                 <X />
               </Button>
             </div>

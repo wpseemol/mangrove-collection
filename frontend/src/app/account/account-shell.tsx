@@ -49,14 +49,14 @@ export function AccountShell({ children }: { children: React.ReactNode }) {
     <Container>
       <PageBreadcrumb items={[{ label: "My account" }]} />
       <div className="grid gap-8 md:grid-cols-[260px_1fr]">
-        <aside className="h-fit overflow-hidden rounded-2xl border bg-white md:sticky md:top-28">
+        <aside className="h-fit overflow-hidden rounded-2xl border bg-card md:sticky md:top-28">
           <div className="flex items-center gap-3 border-b bg-surface/60 p-5">
-            <Avatar className="size-12 ring-2 ring-white">
+            <Avatar className="size-12 ring-2 ring-card">
               <AvatarImage src={user?.avatar ?? "/assets/user-avatar.png"} alt="" />
               <AvatarFallback>{user?.name?.[0] ?? "U"}</AvatarFallback>
             </Avatar>
             <div className="min-w-0">
-              <p className="truncate font-medium text-gray-900">{user?.name}</p>
+              <p className="truncate font-medium text-foreground">{user?.name}</p>
               <p className="truncate text-xs text-muted-foreground">{user?.email}</p>
             </div>
           </div>
@@ -67,7 +67,7 @@ export function AccountShell({ children }: { children: React.ReactNode }) {
                 href={href}
                 className={cn(
                   "flex shrink-0 items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-                  isActive(href) ? "bg-secondary text-primary" : "text-gray-700 hover:bg-muted",
+                  isActive(href) ? "bg-secondary text-primary" : "text-foreground/80 hover:bg-muted",
                 )}
               >
                 <Icon className="size-4" />
@@ -77,7 +77,7 @@ export function AccountShell({ children }: { children: React.ReactNode }) {
             <button
               type="button"
               onClick={logout}
-              className="flex shrink-0 items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-sm font-medium text-gray-700 hover:bg-red-50 hover:text-destructive md:mt-1 md:border-t md:pt-3"
+              className="flex shrink-0 items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-sm font-medium text-foreground/80 hover:bg-destructive/10 hover:text-destructive md:mt-1 md:border-t md:pt-3"
             >
               <LogOut className="size-4" />
               Log out

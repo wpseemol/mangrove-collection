@@ -20,7 +20,7 @@ export function StoryBand() {
       <Container className="grid gap-12 py-20 lg:grid-cols-[1fr_1.2fr] lg:items-center">
         <div>
           <p className="mb-3 text-xs font-semibold tracking-[0.2em] text-gold uppercase">Our promise</p>
-          <h2 className="font-heading text-3xl leading-tight font-semibold tracking-tight text-gray-900 md:text-4xl">
+          <h2 className="font-heading text-3xl leading-tight font-semibold tracking-tight text-foreground md:text-4xl">
             From the heart of the Sundarbans to your kitchen.
           </h2>
           <p className="mt-4 max-w-md text-[15px] leading-relaxed text-muted-foreground">
@@ -40,13 +40,13 @@ export function StoryBand() {
 
         <ol className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
           {STEPS.map(({ icon: Icon, title, text }, index) => (
-            <li key={title} className="flex gap-4 rounded-2xl border bg-white p-5">
+            <li key={title} className="flex gap-4 rounded-2xl border bg-card p-5">
               <span className="relative flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary text-white">
                 <Icon className="size-5" />
                 <span className="absolute -top-2 -right-2 flex size-5 items-center justify-center rounded-full bg-gold text-[10px] font-semibold">{index + 1}</span>
               </span>
               <span>
-                <span className="block font-semibold text-gray-900">{title}</span>
+                <span className="block font-semibold text-foreground">{title}</span>
                 <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">{text}</span>
               </span>
             </li>
@@ -75,9 +75,9 @@ export function AboutStory() {
       {sections.length > 0 && (
         <div className="grid gap-5 md:grid-cols-2">
           {sections.map((section, index) => (
-            <article key={section.id ?? index} className="rounded-2xl border bg-white p-6 md:p-8">
-              {section.title && <h3 className="font-heading mb-3 text-xl font-semibold text-gray-900">{section.title}</h3>}
-              <div className="space-y-2 text-[15px] leading-relaxed text-gray-600">
+            <article key={section.id ?? index} className="rounded-2xl border bg-card p-6 md:p-8">
+              {section.title && <h3 className="font-heading mb-3 text-xl font-semibold text-foreground">{section.title}</h3>}
+              <div className="space-y-2 text-[15px] leading-relaxed text-muted-foreground">
                 {String(section.description ?? "")
                   .split(/\n+/)
                   .filter(Boolean)

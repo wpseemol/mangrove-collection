@@ -7,10 +7,10 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter), var(--font-hind), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-roboto), var(--font-hind), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  --font-heading: var(--font-fraunces), Georgia, serif;
-  --font-bangla: var(--font-bangla-serif), var(--font-inter), serif;
+  --font-heading: var(--font-roboto), var(--font-hind), ui-sans-serif, system-ui, sans-serif;
+  --font-bangla: var(--font-hind), var(--font-roboto), ui-sans-serif, system-ui, sans-serif;
 
   /* Mangrove brand palette */
   --color-brand: var(--brand);
@@ -100,6 +100,47 @@
   --sidebar-ring: #2f855a;
 }
 
+.dark {
+  --brand: #4cc07a;
+  --brand-foreground: #ffffff;
+  --forest: #0f2e22;
+  --gold: #d8ad48;
+  --ink: #050a08;
+  --surface: #0f1914;
+
+  --background: #0a120e;
+  --foreground: #e6ece8;
+  --card: #111c17;
+  --card-foreground: #e6ece8;
+  --popover: #13201a;
+  --popover-foreground: #e6ece8;
+  --primary: #238a52;
+  --primary-foreground: #ffffff;
+  --secondary: #16271f;
+  --secondary-foreground: #9fdcb8;
+  --muted: #15211b;
+  --muted-foreground: #95a59c;
+  --accent: #1a2c23;
+  --accent-foreground: #e6ece8;
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: #22332b;
+  --input: #2c3f35;
+  --ring: #3fae6a;
+  --chart-1: #3fae6a;
+  --chart-2: #8fd0a6;
+  --chart-3: #d8ad48;
+  --chart-4: #238a52;
+  --chart-5: #e6ece8;
+  --sidebar: #0d1712;
+  --sidebar-foreground: #e6ece8;
+  --sidebar-primary: #3fae6a;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1a2c23;
+  --sidebar-accent-foreground: #e6ece8;
+  --sidebar-border: #22332b;
+  --sidebar-ring: #3fae6a;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -113,18 +154,22 @@
   }
   html {
     @apply font-sans;
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
   }
 }
 
 @layer components {
   /* Rich text coming from the dashboard (product descriptions, CMS pages). */
   .prose-content {
-    @apply space-y-4 text-[15px] leading-7 text-gray-700;
+    @apply space-y-4 text-[15px] leading-7 text-foreground/80;
   }
   .prose-content h1,
   .prose-content h2,
   .prose-content h3 {
-    @apply font-heading font-semibold text-gray-900;
+    @apply font-heading font-semibold text-foreground;
   }
   .prose-content h2 {
     @apply pt-2 text-2xl;
@@ -145,6 +190,6 @@
     @apply rounded-xl;
   }
   .prose-content blockquote {
-    @apply border-l-4 border-primary/30 pl-4 text-gray-600 italic;
+    @apply border-l-4 border-primary/30 pl-4 text-muted-foreground italic;
   }
 }

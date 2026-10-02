@@ -18,7 +18,7 @@ export function OrdersContent() {
 
   return (
     <div>
-      <h1 className="font-heading mb-6 text-3xl font-semibold text-gray-900">My orders</h1>
+      <h1 className="font-heading mb-6 text-3xl font-semibold text-foreground">My orders</h1>
       {isLoading ? (
         <Skeleton className="h-64" />
       ) : data?.data.length ? (

@@ -7,7 +7,7 @@ import type { Order } from "@/lib/types";
 
 export function OrdersList({ orders }: { orders: Order[] }) {
   return (
-    <ul className="divide-y overflow-hidden rounded-2xl border bg-white">
+    <ul className="divide-y overflow-hidden rounded-2xl border bg-card">
       {orders.map((order) => (
         <li key={order.id}>
           <Link
@@ -15,7 +15,7 @@ export function OrdersList({ orders }: { orders: Order[] }) {
             className="flex items-center gap-4 p-5 transition-colors hover:bg-surface/60"
           >
             <div className="min-w-0 flex-1">
-              <p className="font-mono text-sm font-medium text-gray-900">{order.order_number}</p>
+              <p className="font-mono text-sm font-medium text-foreground">{order.order_number}</p>
               <p className="text-xs text-muted-foreground">
                 {formatDate(order.created_at)}
                 {order.items ? ` · ${order.items.length} item(s)` : ""}

@@ -55,9 +55,9 @@ export function CartContent() {
           />
         ) : (
           <div className="grid gap-8 lg:grid-cols-[1fr_380px]">
-            <div className="overflow-hidden rounded-2xl border bg-white">
+            <div className="overflow-hidden rounded-2xl border bg-card">
               <div className="flex items-center justify-between border-b bg-surface/60 px-5 py-3.5 text-sm">
-                <span className="font-semibold text-gray-900">Products</span>
+                <span className="font-semibold text-foreground">Products</span>
                 <button type="button" onClick={clear} className="font-medium text-muted-foreground hover:text-destructive">
                   Clear cart
                 </button>
@@ -70,7 +70,7 @@ export function CartContent() {
                     </Link>
                     <div className="flex min-w-0 flex-1 flex-col gap-3 sm:flex-row sm:items-center">
                       <div className="min-w-0 flex-1">
-                        <Link href={`/product?slug=${item.slug}`} className="font-bangla line-clamp-2 text-[15px] text-gray-900 hover:text-primary">
+                        <Link href={`/product?slug=${item.slug}`} className="font-bangla line-clamp-2 text-[15px] text-foreground hover:text-primary">
                           {item.name}
                         </Link>
                         {item.variantTitle && <p className="mt-0.5 text-xs text-muted-foreground">{item.variantTitle}</p>}
@@ -78,12 +78,12 @@ export function CartContent() {
                       </div>
                       <div className="flex items-center gap-4">
                         <QuantityInput size="sm" value={item.quantity} max={item.stock} onChange={(qty) => setQuantity(item.variantId, qty)} />
-                        <span className="w-24 text-right text-sm font-semibold text-gray-900">{formatPrice(item.price * item.quantity)}</span>
+                        <span className="w-24 text-right text-sm font-semibold text-foreground">{formatPrice(item.price * item.quantity)}</span>
                         <button
                           type="button"
                           aria-label={`Remove ${item.name}`}
                           onClick={() => remove(item.variantId)}
-                          className="flex size-8 items-center justify-center rounded-full text-muted-foreground hover:bg-red-50 hover:text-destructive"
+                          className="flex size-8 items-center justify-center rounded-full text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
                         >
                           <Trash2 className="size-4" />
                         </button>
@@ -94,8 +94,8 @@ export function CartContent() {
               </ul>
             </div>
 
-            <aside className="h-fit space-y-5 rounded-2xl border bg-white p-6 lg:sticky lg:top-28">
-              <h2 className="font-heading text-xl font-semibold text-gray-900">Order summary</h2>
+            <aside className="h-fit space-y-5 rounded-2xl border bg-card p-6 lg:sticky lg:top-28">
+              <h2 className="font-heading text-xl font-semibold text-foreground">Order summary</h2>
 
               {threshold ? (
                 <div className="space-y-2 rounded-xl bg-secondary p-4">
@@ -103,7 +103,7 @@ export function CartContent() {
                     <Truck className="size-4" />
                     {remaining > 0 ? `Add ${formatPrice(remaining)} more for free delivery` : "You've unlocked free delivery!"}
                   </p>
-                  <div className="h-1.5 overflow-hidden rounded-full bg-white">
+                  <div className="h-1.5 overflow-hidden rounded-full bg-card">
                     <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${progress}%` }} />
                   </div>
                 </div>
@@ -112,7 +112,7 @@ export function CartContent() {
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Subtotal</span>
-                  <span className="font-medium text-gray-900">{formatPrice(subtotal)}</span>
+                  <span className="font-medium text-foreground">{formatPrice(subtotal)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Delivery</span>
@@ -120,7 +120,7 @@ export function CartContent() {
                 </div>
               </div>
               <Separator />
-              <div className="flex justify-between text-base font-semibold text-gray-900">
+              <div className="flex justify-between text-base font-semibold text-foreground">
                 <span>Estimated total</span>
                 <span>{formatPrice(subtotal)}</span>
               </div>

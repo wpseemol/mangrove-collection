@@ -34,7 +34,7 @@ function SearchForm({ className, onSubmitted }: { className?: string; onSubmitte
         onSubmitted?.();
       }}
     >
-      <div className="flex h-11 w-full items-center overflow-hidden rounded-full border bg-muted/60 pl-4 transition-colors focus-within:border-primary/50 focus-within:bg-white focus-within:ring-3 focus-within:ring-primary/10">
+      <div className="flex h-11 w-full items-center overflow-hidden rounded-full border bg-muted/60 pl-4 transition-colors focus-within:border-primary/50 focus-within:bg-card focus-within:ring-3 focus-within:ring-primary/10">
         <Search className="size-4 shrink-0 text-muted-foreground" />
         <input
           type="search"
@@ -42,7 +42,7 @@ function SearchForm({ className, onSubmitted }: { className?: string; onSubmitte
           onChange={(event) => setTerm(event.target.value)}
           placeholder="Search fish, crab, prawn, honey…"
           aria-label="Search products"
-          className="min-w-0 flex-1 bg-transparent px-3 text-sm text-gray-900 placeholder:text-muted-foreground focus:outline-none"
+          className="min-w-0 flex-1 bg-transparent px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
         />
         <button type="submit" className="mr-1 h-9 rounded-full bg-primary px-5 text-sm font-medium text-white transition-colors hover:bg-primary/90">
           Search
@@ -79,7 +79,7 @@ function HeaderAction({
       </span>
       <span className="hidden leading-tight xl:block">
         <span className="block text-[11px] text-muted-foreground">{caption}</span>
-        <span className="block text-sm font-semibold text-gray-900">{label}</span>
+        <span className="block text-sm font-semibold text-foreground">{label}</span>
       </span>
     </Link>
   );
@@ -150,7 +150,7 @@ export function SiteHeader() {
                       key={link.href}
                       href={link.href}
                       onClick={() => setMenuOpen(false)}
-                      className="rounded-lg px-3 py-3 text-[15px] font-medium text-gray-800 hover:bg-muted hover:text-primary"
+                      className="rounded-lg px-3 py-3 text-[15px] font-medium text-foreground hover:bg-muted hover:text-primary"
                     >
                       {link.label}
                     </Link>

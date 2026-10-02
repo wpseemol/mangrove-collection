@@ -36,9 +36,9 @@ export function ShopFilters({
   const applyPrice = () => onChange({ minPrice: price.min, maxPrice: price.max });
 
   return (
-    <div className="space-y-7 rounded-2xl border bg-white p-5">
+    <div className="space-y-7 rounded-2xl border bg-card p-5">
       <section>
-        <h2 className="mb-4 text-sm font-semibold text-gray-900">Categories</h2>
+        <h2 className="mb-4 text-sm font-semibold text-foreground">Categories</h2>
         <ul className="space-y-2.5">
           {isLoading &&
             Array.from({ length: 3 }).map((_, i) => (
@@ -56,7 +56,7 @@ export function ShopFilters({
                   onCheckedChange={(checked) => toggleCategory(category.slug, checked === true)}
                   className="mt-0.5"
                 />
-                <label htmlFor={id} className="flex flex-1 cursor-pointer justify-between gap-2 text-sm text-gray-700 hover:text-primary">
+                <label htmlFor={id} className="flex flex-1 cursor-pointer justify-between gap-2 text-sm text-foreground/80 hover:text-primary">
                   <span>{category.name}</span>
                   <span className="rounded-full bg-muted px-2 text-xs leading-5 text-muted-foreground">{category.products_count ?? 0}</span>
                 </label>
@@ -72,7 +72,7 @@ export function ShopFilters({
       </section>
 
       <section className="border-t pt-6">
-        <h2 className="mb-4 text-sm font-semibold text-gray-900">Price range (৳)</h2>
+        <h2 className="mb-4 text-sm font-semibold text-foreground">Price range (৳)</h2>
         <form
           className="space-y-2"
           onSubmit={(event) => {

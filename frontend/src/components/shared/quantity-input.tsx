@@ -21,13 +21,13 @@ export function QuantityInput({
   const box = size === "sm" ? "size-8" : "size-12";
 
   return (
-    <div className={cn("inline-flex items-center overflow-hidden rounded-lg border bg-white", className)}>
+    <div className={cn("inline-flex items-center overflow-hidden rounded-lg border bg-card", className)}>
       <button
         type="button"
         aria-label="Decrease quantity"
         disabled={value <= 1}
         onClick={() => onChange(value - 1)}
-        className={cn(box, "flex items-center justify-center text-gray-700 hover:bg-muted disabled:opacity-40")}
+        className={cn(box, "flex items-center justify-center text-foreground/80 hover:bg-muted disabled:opacity-40")}
       >
         <Minus className="size-3.5" />
       </button>
@@ -39,7 +39,7 @@ export function QuantityInput({
         aria-label="Increase quantity"
         disabled={value >= limit}
         onClick={() => onChange(value + 1)}
-        className={cn(box, "flex items-center justify-center text-gray-700 hover:bg-muted disabled:opacity-40")}
+        className={cn(box, "flex items-center justify-center text-foreground/80 hover:bg-muted disabled:opacity-40")}
       >
         <Plus className="size-3.5" />
       </button>

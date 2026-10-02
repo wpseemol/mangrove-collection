@@ -3,19 +3,23 @@ import { ORDER_STATUS_LABEL } from "@/lib/format";
 import type { OrderStatus, PaymentStatus } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
+const AMBER = "bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300";
+const GREEN = "bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-300";
+const RED = "bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-300";
+
 const ORDER_STATUS_STYLE: Record<OrderStatus, string> = {
-  pending: "bg-amber-100 text-amber-800",
-  processing: "bg-blue-100 text-blue-800",
-  shipped: "bg-indigo-100 text-indigo-800",
-  delivered: "bg-green-100 text-green-800",
-  cancelled: "bg-red-100 text-red-700",
+  pending: AMBER,
+  processing: "bg-blue-100 text-blue-800 dark:bg-blue-500/15 dark:text-blue-300",
+  shipped: "bg-indigo-100 text-indigo-800 dark:bg-indigo-500/15 dark:text-indigo-300",
+  delivered: GREEN,
+  cancelled: RED,
 };
 
 const PAYMENT_STATUS_STYLE: Record<PaymentStatus, string> = {
-  pending: "bg-amber-100 text-amber-800",
-  paid: "bg-green-100 text-green-800",
-  failed: "bg-red-100 text-red-700",
-  refunded: "bg-gray-200 text-gray-700",
+  pending: AMBER,
+  paid: GREEN,
+  failed: RED,
+  refunded: "bg-muted text-foreground/80",
 };
 
 export function OrderStatusBadge({ status }: { status: OrderStatus }) {

@@ -29,11 +29,11 @@ export function OrderSuccessContent() {
         <span className="mx-auto mb-5 flex size-20 items-center justify-center rounded-full bg-secondary ring-8 ring-secondary/40">
           <CircleCheck className="size-10 text-primary" />
         </span>
-        <h1 className="font-heading text-3xl font-semibold text-gray-900 md:text-4xl">Thank you for your order!</h1>
+        <h1 className="font-heading text-3xl font-semibold text-foreground md:text-4xl">Thank you for your order!</h1>
         <p className="mt-2 text-muted-foreground">
           {orderNumber ? (
             <>
-              Your order <strong className="font-mono text-gray-900">{orderNumber}</strong> has been placed. We will call you shortly to confirm it.
+              Your order <strong className="font-mono text-foreground">{orderNumber}</strong> has been placed. We will call you shortly to confirm it.
             </>
           ) : (
             "Your order has been placed. We will call you shortly to confirm it."
@@ -42,7 +42,7 @@ export function OrderSuccessContent() {
       </div>
 
       {order && (
-        <div className="rounded-2xl border bg-white p-6">
+        <div className="rounded-2xl border bg-card p-6">
           <OrderDetails order={order} />
         </div>
       )}

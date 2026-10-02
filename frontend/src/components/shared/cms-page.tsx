@@ -38,9 +38,9 @@ export function CmsPageView({ slug, title, children }: { slug: string; title: st
               <div className="mt-10 grid gap-5 sm:grid-cols-2">
                 {sections.map((section, index) => (
                   <div key={section.id ?? index} className="rounded-2xl border bg-surface/60 p-6">
-                    {section.title && <h2 className="font-heading mb-2 text-lg font-semibold text-gray-900">{section.title}</h2>}
+                    {section.title && <h2 className="font-heading mb-2 text-lg font-semibold text-foreground">{section.title}</h2>}
                     {section.description?.split("\n").map((line, i) => (
-                      <p key={i} className="text-sm leading-relaxed text-gray-600">
+                      <p key={i} className="text-sm leading-relaxed text-muted-foreground">
                         {line}
                       </p>
                     ))}

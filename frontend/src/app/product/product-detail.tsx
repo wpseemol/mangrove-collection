@@ -124,7 +124,7 @@ export function ProductDetail() {
                 {product.category.name}
               </Link>
             )}
-            <h1 className="font-bangla mt-3 text-3xl leading-snug text-gray-900 md:text-4xl">{product.name}</h1>
+            <h1 className="font-bangla mt-3 text-3xl leading-snug text-foreground md:text-4xl">{product.name}</h1>
           </div>
 
           <div className="flex flex-wrap items-center gap-3 border-y py-5">
@@ -138,11 +138,11 @@ export function ProductDetail() {
             </Badge>
           </div>
 
-          {product.short_description && <p className="text-[15px] leading-relaxed text-gray-600">{product.short_description}</p>}
+          {product.short_description && <p className="text-[15px] leading-relaxed text-muted-foreground">{product.short_description}</p>}
 
           {variants.length > 1 && (
             <div>
-              <p className="mb-3 text-sm font-semibold text-gray-900 capitalize">{variants[0].type || "Option"}</p>
+              <p className="mb-3 text-sm font-semibold text-foreground capitalize">{variants[0].type || "Option"}</p>
               <div className="flex flex-wrap gap-2">
                 {variants.map((option) => (
                   <button
@@ -155,7 +155,7 @@ export function ProductDetail() {
                     disabled={!option.in_stock}
                     className={cn(
                       "rounded-lg border px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40",
-                      option.id === variant?.id ? "border-primary bg-primary text-white" : "border-input bg-white hover:border-primary hover:text-primary",
+                      option.id === variant?.id ? "border-primary bg-primary text-white" : "border-input bg-card hover:border-primary hover:text-primary",
                     )}
                   >
                     {option.title}
@@ -187,7 +187,7 @@ export function ProductDetail() {
               { icon: Truck, text: "Delivery all over Bangladesh" },
               { icon: ShieldCheck, text: "Easy, secure payment" },
             ].map(({ icon: Icon, text }) => (
-              <li key={text} className="flex items-center gap-2.5 rounded-xl border bg-surface/60 p-3 text-xs font-medium text-gray-700">
+              <li key={text} className="flex items-center gap-2.5 rounded-xl border bg-surface/60 p-3 text-xs font-medium text-foreground/80">
                 <Icon className="size-4 shrink-0 text-primary" /> {text}
               </li>
             ))}
@@ -206,8 +206,8 @@ export function ProductDetail() {
       </div>
 
       {product.description && (
-        <section className="mt-16 rounded-3xl border bg-white p-6 md:p-10">
-          <h2 className="font-heading mb-6 text-2xl font-semibold text-gray-900">Product details</h2>
+        <section className="mt-16 rounded-3xl border bg-card p-6 md:p-10">
+          <h2 className="font-heading mb-6 text-2xl font-semibold text-foreground">Product details</h2>
           <div className="prose-content max-w-3xl" dangerouslySetInnerHTML={{ __html: product.description }} />
         </section>
       )}

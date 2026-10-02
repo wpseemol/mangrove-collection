@@ -14,13 +14,13 @@ export const CATEGORY_GRID = "grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols
 
 export function CategoryTile({ category }: { category: Category }) {
   return (
-    <Link href={`/shop?category=${category.slug}`} className="group flex flex-col overflow-hidden rounded-2xl border bg-white transition-all hover:-translate-y-0.5 hover:border-primary/20 hover:shadow-lg hover:shadow-black/5">
+    <Link href={`/shop?category=${category.slug}`} className="group flex flex-col overflow-hidden rounded-2xl border bg-card transition-all hover:-translate-y-0.5 hover:border-primary/20 hover:shadow-lg hover:shadow-black/5">
       <span className="relative block aspect-[4/3] overflow-hidden bg-muted">
         <RemoteImage src={category.image} alt={category.name} sizes="(max-width: 640px) 50vw, 240px" className="transition-transform duration-500 group-hover:scale-105" />
       </span>
       <span className="flex items-center justify-between gap-2 p-3.5">
         <span className="min-w-0">
-          <span className="block truncate text-sm font-semibold text-gray-900 group-hover:text-primary">{category.name}</span>
+          <span className="block truncate text-sm font-semibold text-foreground group-hover:text-primary">{category.name}</span>
           {category.products_count !== undefined && (
             <span className="block text-xs text-muted-foreground">
               {category.products_count} product{category.products_count === 1 ? "" : "s"}

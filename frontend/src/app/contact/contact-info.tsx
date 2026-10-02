@@ -26,17 +26,17 @@ export function ContactInfo() {
       {items.length > 0 && (
         <div className="grid gap-4 sm:grid-cols-3">
           {items.map(({ icon: Icon, label, value, href }) => (
-            <div key={label} className="rounded-2xl border bg-white p-6 text-center transition-shadow hover:shadow-lg hover:shadow-black/5">
+            <div key={label} className="rounded-2xl border bg-card p-6 text-center transition-shadow hover:shadow-lg hover:shadow-black/5">
               <span className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full bg-secondary text-primary">
                 <Icon className="size-5" />
               </span>
               <p className="text-xs tracking-wide text-muted-foreground uppercase">{label}</p>
               {href ? (
-                <a href={href} className="mt-1 block font-medium break-words text-gray-900 hover:text-primary">
+                <a href={href} className="mt-1 block font-medium break-words text-foreground hover:text-primary">
                   {value}
                 </a>
               ) : (
-                <p className="mt-1 font-medium text-gray-900">{value}</p>
+                <p className="mt-1 font-medium text-foreground">{value}</p>
               )}
             </div>
           ))}

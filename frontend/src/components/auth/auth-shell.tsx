@@ -12,7 +12,7 @@ const POINTS = [
 export function AuthShell({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) {
   return (
     <Container className="py-12 md:py-16">
-      <div className="mx-auto grid max-w-5xl overflow-hidden rounded-3xl border bg-white shadow-xl shadow-black/5 md:grid-cols-[5fr_6fr]">
+      <div className="mx-auto grid max-w-5xl overflow-hidden rounded-3xl border bg-card shadow-xl shadow-black/5 md:grid-cols-[5fr_6fr]">
         <div className="relative hidden flex-col justify-between overflow-hidden bg-gradient-to-br from-primary to-forest p-10 text-white md:flex">
           <div className="pointer-events-none absolute -top-20 -right-20 size-64 rounded-full bg-brand/25 blur-3xl" />
           <div className="pointer-events-none absolute -bottom-24 -left-10 size-64 rounded-full bg-gold/20 blur-3xl" />
@@ -43,7 +43,7 @@ export function AuthShell({ title, subtitle, children }: { title: string; subtit
         </div>
 
         <div className="p-7 sm:p-10 md:p-12">
-          <h1 className="font-heading text-3xl font-semibold tracking-tight text-gray-900">{title}</h1>
+          <h1 className="font-heading text-3xl font-semibold tracking-tight text-foreground">{title}</h1>
           {subtitle && <p className="mt-2 text-[15px] text-muted-foreground">{subtitle}</p>}
           <div className="mt-8">{children}</div>
         </div>

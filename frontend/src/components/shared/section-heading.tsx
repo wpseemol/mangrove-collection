@@ -26,7 +26,7 @@ export function SectionHeading({
     >
       <div className={cn(align === "center" && "max-w-2xl")}>
         {eyebrow && <p className="mb-2 text-xs font-semibold tracking-[0.2em] text-gold uppercase">{eyebrow}</p>}
-        <h2 className="font-heading text-2xl font-semibold tracking-tight text-gray-900 md:text-3xl">{title}</h2>
+        <h2 className="font-heading text-2xl font-semibold tracking-tight text-foreground md:text-3xl">{title}</h2>
         {subtitle && <p className="mt-2 text-[15px] text-muted-foreground">{subtitle}</p>}
       </div>
       {children}

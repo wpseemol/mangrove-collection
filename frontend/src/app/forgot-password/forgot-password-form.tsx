@@ -23,7 +23,7 @@ export function ForgotPasswordForm() {
     return (
       <div className="text-center">
         <MailCheck className="mx-auto mb-3 size-12 text-primary" />
-        <p className="text-sm text-gray-700">{mutation.data.message}</p>
+        <p className="text-sm text-foreground/80">{mutation.data.message}</p>
         <Button asChild variant="link" className="mt-4">
           <Link href="/login">Back to log in</Link>
         </Button>

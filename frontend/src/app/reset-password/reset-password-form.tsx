@@ -48,7 +48,7 @@ export function ResetPasswordForm() {
     return (
       <div className="text-center">
         <CircleCheck className="mx-auto mb-3 size-12 text-primary" />
-        <p className="text-sm text-gray-700">Your password has been reset. You can now log in with your new password.</p>
+        <p className="text-sm text-foreground/80">Your password has been reset. You can now log in with your new password.</p>
         <Button asChild className="mt-5">
           <Link href="/login">Log in</Link>
         </Button>

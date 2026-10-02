@@ -29,7 +29,7 @@ export function MainNav() {
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <nav aria-label="Main" className="hidden border-b bg-white md:block">
+    <nav aria-label="Main" className="hidden border-b bg-card md:block">
       <Container className="flex h-12 items-center gap-8">
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger className="flex h-9 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-medium text-white outline-none hover:bg-primary/90">
@@ -62,7 +62,7 @@ export function MainNav() {
                   href={link.href}
                   className={cn(
                     "relative flex h-full items-center text-sm font-medium transition-colors hover:text-primary",
-                    active ? "text-primary after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:rounded-full after:bg-primary" : "text-gray-700",
+                    active ? "text-primary after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:rounded-full after:bg-primary" : "text-foreground/80",
                   )}
                 >
                   {link.label}

@@ -36,8 +36,8 @@ const NEW_ADDRESS = "new";
 
 function Section({ step, title, children }: { step: number; title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-2xl border bg-white p-6">
-      <h2 className="mb-5 flex items-center gap-3 text-lg font-semibold text-gray-900">
+    <section className="rounded-2xl border bg-card p-6">
+      <h2 className="mb-5 flex items-center gap-3 text-lg font-semibold text-foreground">
         <span className="flex size-8 items-center justify-center rounded-full bg-primary text-sm text-white">{step}</span>
         {title}
       </h2>
@@ -171,7 +171,7 @@ export function CheckoutContent() {
     <PageHeader title="Checkout" description="Just a few details and your order is on its way." breadcrumb={[{ label: "Cart", href: "/cart" }, { label: "Checkout" }]} />
     <Container>
       {!token && (
-        <p className="mb-6 rounded-xl border bg-secondary/60 px-5 py-4 text-sm text-gray-700">
+        <p className="mb-6 rounded-xl border bg-secondary/60 px-5 py-4 text-sm text-foreground/80">
           Already have an account?{" "}
           <Link href="/login?redirect=/checkout" className="font-medium text-primary underline-offset-4 hover:underline">
             Log in
@@ -197,7 +197,7 @@ export function CheckoutContent() {
               <RadioGroup value={addressChoice} onValueChange={setAddressChoice} className="mb-4 gap-2">
                 {addresses.map((saved) => (
                   <OptionCard key={saved.id} value={String(saved.id)} checked={addressChoice === String(saved.id)}>
-                    <p className="text-sm font-medium text-gray-900">
+                    <p className="text-sm font-medium text-foreground">
                       {saved.label ? `${saved.label} · ` : ""}
                       {saved.name} <span className="font-normal text-muted-foreground">({saved.phone})</span>
                     </p>
@@ -205,7 +205,7 @@ export function CheckoutContent() {
                   </OptionCard>
                 ))}
                 <OptionCard value={NEW_ADDRESS} checked={addressChoice === NEW_ADDRESS}>
-                  <p className="text-sm font-medium text-gray-900">Use a new address</p>
+                  <p className="text-sm font-medium text-foreground">Use a new address</p>
                 </OptionCard>
               </RadioGroup>
             )}
@@ -215,7 +215,7 @@ export function CheckoutContent() {
               <>
                 <AddressFields values={address} onChange={setAddress} errorFor={(field) => fieldError(`address.${field}`)} />
                 {token && (
-                  <Label className="mt-4 flex items-center gap-2 font-normal text-gray-700">
+                  <Label className="mt-4 flex items-center gap-2 font-normal text-foreground/80">
                     <Checkbox checked={saveAddress} onCheckedChange={(checked) => setSaveAddress(checked === true)} />
                     Save this address to my account
                   </Label>
@@ -232,7 +232,7 @@ export function CheckoutContent() {
                 {shippingMethods.map((method) => (
                   <OptionCard key={method.id} value={String(method.id)} checked={selectedShipping?.id === method.id}>
                     <div className="flex justify-between gap-3 text-sm">
-                      <span className="font-medium text-gray-900">{method.title}</span>
+                      <span className="font-medium text-foreground">{method.title}</span>
                       <span className="text-primary">{freeShipping ? "Free" : formatPrice(method.price)}</span>
                     </div>
                     {method.description && <p className="text-xs text-muted-foreground">{method.description}</p>}
@@ -249,7 +249,7 @@ export function CheckoutContent() {
             <RadioGroup value={selectedPayment} onValueChange={(value) => setPayment(value as PaymentMethod)} className="gap-2 sm:grid-cols-2">
               {paymentMethods.map((method) => (
                 <OptionCard key={method} value={method} checked={selectedPayment === method}>
-                  <span className="text-sm font-medium text-gray-900">{PAYMENT_METHOD_LABEL[method] ?? method}</span>
+                  <span className="text-sm font-medium text-foreground">{PAYMENT_METHOD_LABEL[method] ?? method}</span>
                 </OptionCard>
               ))}
             </RadioGroup>
@@ -257,7 +257,7 @@ export function CheckoutContent() {
 
             {selectedPayment !== "cod" && (
               <div className="mt-4 space-y-4 rounded-xl border bg-surface/60 p-5">
-                <p className="text-sm text-gray-700">
+                <p className="text-sm text-foreground/80">
                   Send <strong>{formatPrice(total)}</strong> via {PAYMENT_METHOD_LABEL[selectedPayment]} (Send Money)
                   {paymentNumber ? (
                     <>
@@ -284,8 +284,8 @@ export function CheckoutContent() {
           </Section>
         </div>
 
-        <aside className="h-fit space-y-5 rounded-2xl border bg-white p-6 lg:sticky lg:top-28">
-          <h2 className="font-heading text-xl font-semibold text-gray-900">Your order</h2>
+        <aside className="h-fit space-y-5 rounded-2xl border bg-card p-6 lg:sticky lg:top-28">
+          <h2 className="font-heading text-xl font-semibold text-foreground">Your order</h2>
           <ul className="max-h-72 space-y-4 overflow-y-auto pt-2 pr-1">
             {items.map((item) => (
               <li key={item.variantId} className="flex gap-3">
@@ -293,12 +293,12 @@ export function CheckoutContent() {
                   <div className="absolute inset-0 overflow-hidden rounded-lg">
                     <RemoteImage src={item.image} alt={item.name} sizes="56px" />
                   </div>
-                  <span className="absolute -top-2 -right-2 flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-semibold text-white ring-2 ring-white">
+                  <span className="absolute -top-2 -right-2 flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-semibold text-white ring-2 ring-card">
                     {item.quantity}
                   </span>
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="font-bangla line-clamp-2 text-sm text-gray-900">{item.name}</p>
+                  <p className="font-bangla line-clamp-2 text-sm text-foreground">{item.name}</p>
                   {item.variantTitle && <p className="text-xs text-muted-foreground">{item.variantTitle}</p>}
                 </div>
                 <span className="text-sm whitespace-nowrap">{formatPrice(item.price * item.quantity)}</span>
@@ -309,15 +309,15 @@ export function CheckoutContent() {
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-muted-foreground">Subtotal</span>
-              <span className="font-medium text-gray-900">{formatPrice(subtotal)}</span>
+              <span className="font-medium text-foreground">{formatPrice(subtotal)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Delivery</span>
-              <span className="font-medium text-gray-900">{freeShipping ? "Free" : formatPrice(shippingCost)}</span>
+              <span className="font-medium text-foreground">{freeShipping ? "Free" : formatPrice(shippingCost)}</span>
             </div>
           </div>
           <Separator />
-          <div className="flex justify-between text-lg font-semibold text-gray-900">
+          <div className="flex justify-between text-lg font-semibold text-foreground">
             <span>Total</span>
             <span className="text-primary">{formatPrice(total)}</span>
           </div>

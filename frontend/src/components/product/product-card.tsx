@@ -49,7 +49,7 @@ function Badges({ product }: { product: Product }) {
     <div className="absolute top-3 left-3 z-10 flex flex-col items-start gap-1.5">
       {discount && <span className="rounded-full bg-red-600 px-2.5 py-0.5 text-[11px] font-semibold text-white">-{discount}%</span>}
       {product.is_featured && !discount && <span className="rounded-full bg-gold px-2.5 py-0.5 text-[11px] font-semibold text-white">Featured</span>}
-      {outOfStock && <span className="rounded-full bg-gray-900/80 px-2.5 py-0.5 text-[11px] font-semibold text-white">Sold out</span>}
+      {outOfStock && <span className="rounded-full bg-black/75 px-2.5 py-0.5 text-[11px] font-semibold text-white">Sold out</span>}
     </div>
   );
 }
@@ -71,7 +71,7 @@ export function ProductCard({ product, layout = "grid" }: { product: Product; la
 
   if (layout === "list") {
     return (
-      <article className="flex gap-5 rounded-2xl border bg-white p-3 transition-shadow hover:shadow-lg hover:shadow-black/5">
+      <article className="flex gap-5 rounded-2xl border bg-card p-3 transition-shadow hover:shadow-lg hover:shadow-black/5">
         <Link href={href} className="relative aspect-square w-28 shrink-0 overflow-hidden rounded-xl bg-muted sm:w-44">
           <Badges product={product} />
           <RemoteImage src={product.thumbnail} alt={product.name} sizes="176px" />
@@ -79,7 +79,7 @@ export function ProductCard({ product, layout = "grid" }: { product: Product; la
         <div className="flex min-w-0 flex-1 flex-col justify-between gap-3 py-1 pr-1">
           <div>
             {product.category && <p className="text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">{product.category.name}</p>}
-            <Link href={href} className="font-bangla mt-1 block text-lg leading-snug text-gray-900 hover:text-primary">
+            <Link href={href} className="font-bangla mt-1 block text-lg leading-snug text-foreground hover:text-primary">
               {product.name}
             </Link>
             {product.short_description && <p className="mt-1.5 line-clamp-2 text-sm text-muted-foreground">{product.short_description}</p>}
@@ -94,14 +94,14 @@ export function ProductCard({ product, layout = "grid" }: { product: Product; la
   }
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border bg-white transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/20 hover:shadow-xl hover:shadow-black/5">
+    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border bg-card transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/20 hover:shadow-xl hover:shadow-black/5">
       <Link href={href} className="relative block aspect-square overflow-hidden bg-muted">
         <Badges product={product} />
         <RemoteImage src={product.thumbnail} alt={product.name} className="transition-transform duration-500 group-hover:scale-105" />
       </Link>
       <div className="flex flex-1 flex-col p-4">
         {product.category && <p className="text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">{product.category.name}</p>}
-        <Link href={href} className="font-bangla mt-1 line-clamp-2 text-[15px] leading-snug text-gray-900 hover:text-primary">
+        <Link href={href} className="font-bangla mt-1 line-clamp-2 text-[15px] leading-snug text-foreground hover:text-primary">
           {product.name}
         </Link>
         <Price product={product} className="mt-2" />

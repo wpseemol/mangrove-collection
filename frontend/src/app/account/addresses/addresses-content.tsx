@@ -78,7 +78,7 @@ export function AddressesContent() {
   return (
     <div>
       <div className="mb-4 flex items-center justify-between gap-3">
-        <h1 className="font-heading text-3xl font-semibold text-gray-900">Saved addresses</h1>
+        <h1 className="font-heading text-3xl font-semibold text-foreground">Saved addresses</h1>
         <Button size="sm" onClick={() => open({ id: null, label: "", is_default: !addresses?.length, values: EMPTY_ADDRESS })}>
           <Plus className="size-4" /> Add address
         </Button>
@@ -89,12 +89,12 @@ export function AddressesContent() {
       ) : addresses?.length ? (
         <div className="grid gap-4 sm:grid-cols-2">
           {addresses.map((address) => (
-            <div key={address.id} className="flex flex-col rounded-2xl border bg-white p-5 text-sm">
+            <div key={address.id} className="flex flex-col rounded-2xl border bg-card p-5 text-sm">
               <div className="mb-2 flex items-center gap-2">
-                <p className="font-medium text-gray-900">{address.label || address.name}</p>
+                <p className="font-medium text-foreground">{address.label || address.name}</p>
                 {address.is_default && <Badge className="bg-secondary text-primary">Default</Badge>}
               </div>
-              <p className="text-gray-800">{address.name}</p>
+              <p className="text-foreground">{address.name}</p>
               <p className="text-muted-foreground">{address.phone}</p>
               <p className="mt-1 flex-1 text-muted-foreground">
                 {[address.full_address, address.landmark, address.zone, address.city, address.region].filter(Boolean).join(", ")}
@@ -115,7 +115,7 @@ export function AddressesContent() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="ml-auto text-destructive hover:bg-red-50 hover:text-destructive"
+                  className="ml-auto text-destructive hover:bg-destructive/10 hover:text-destructive"
                   onClick={() => remove.mutate(address.id)}
                   disabled={remove.isPending}
                   aria-label="Delete address"
@@ -148,7 +148,7 @@ export function AddressesContent() {
                 <Input id="addr-label" value={editing.label} onChange={(e) => setEditing({ ...editing, label: e.target.value })} placeholder="Home, Office..." />
               </FormField>
               <AddressFields idPrefix="addr" values={editing.values} onChange={(values) => setEditing({ ...editing, values })} errorFor={(field) => error?.field(field)} />
-              <Label className="flex items-center gap-2 font-normal text-gray-700">
+              <Label className="flex items-center gap-2 font-normal text-foreground/80">
                 <Checkbox checked={editing.is_default} onCheckedChange={(checked) => setEditing({ ...editing, is_default: checked === true })} />
                 Use as default address
               </Label>

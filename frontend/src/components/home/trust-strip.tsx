@@ -14,12 +14,12 @@ export function TrustStrip() {
     <Container className="mt-6">
       <ul className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border bg-border lg:grid-cols-4">
         {ITEMS.map(({ icon: Icon, title, text }) => (
-          <li key={title} className="flex items-center gap-3 bg-white p-4 sm:p-5">
+          <li key={title} className="flex items-center gap-3 bg-card p-4 sm:p-5">
             <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-secondary text-primary">
               <Icon className="size-5" strokeWidth={1.8} />
             </span>
             <span className="min-w-0">
-              <span className="block text-sm font-semibold text-gray-900">{title}</span>
+              <span className="block text-sm font-semibold text-foreground">{title}</span>
               <span className="block text-xs text-muted-foreground">{text}</span>
             </span>
           </li>

@@ -52,14 +52,14 @@ export function OrderDetailContent() {
       ) : isError || !order ? (
         <EmptyState icon={PackageX} title="Order not found" description="We couldn't find this order in your account." />
       ) : (
-        <div className="rounded-2xl border bg-white p-6">
+        <div className="rounded-2xl border bg-card p-6">
           <OrderDetails
             order={order}
             actions={
               order.can_cancel && (
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button variant="outline" size="sm" className="border-destructive/40 text-destructive hover:bg-red-50 hover:text-destructive">
+                    <Button variant="outline" size="sm" className="border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive">
                       Cancel order
                     </Button>
                   </DialogTrigger>

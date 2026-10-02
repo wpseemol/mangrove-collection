@@ -32,7 +32,7 @@ export function TrackOrderContent() {
     <>
       <PageHeader title="Track your order" description="Enter your order number and the phone number used at checkout." breadcrumb={[{ label: "Track order" }]} />
       <Container className="max-w-3xl">
-        <div className="rounded-2xl border bg-white p-6 md:p-8">
+        <div className="rounded-2xl border bg-card p-6 md:p-8">
           <form
             className="grid gap-4 sm:grid-cols-[1fr_1fr_auto] sm:items-end"
             onSubmit={(e) => {
@@ -62,7 +62,7 @@ export function TrackOrderContent() {
         </div>
 
         {track.data && (
-          <div className="mt-6 rounded-2xl border bg-white p-6">
+          <div className="mt-6 rounded-2xl border bg-card p-6">
             <OrderDetails order={track.data} />
           </div>
         )}

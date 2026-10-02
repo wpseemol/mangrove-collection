@@ -16,8 +16,8 @@ import { useAuthStore } from "@/stores/auth";
 
 function Card({ title, description, children }: { title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-2xl border bg-white p-6">
-      <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
+    <section className="rounded-2xl border bg-card p-6">
+      <h2 className="text-lg font-semibold text-foreground">{title}</h2>
       {description && <p className="mt-1 text-sm text-muted-foreground">{description}</p>}
       <div className="mt-5">{children}</div>
     </section>
@@ -167,7 +167,7 @@ export function SettingsContent() {
 
   return (
     <div className="space-y-6">
-      <h1 className="font-heading text-3xl font-semibold text-gray-900">Account settings</h1>
+      <h1 className="font-heading text-3xl font-semibold text-foreground">Account settings</h1>
       <ProfileForm key={`profile-${user.id}`} user={user} />
       <PasswordForm user={user} />
     </div>

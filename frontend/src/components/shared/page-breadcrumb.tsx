@@ -57,7 +57,7 @@ export function PageHeader({
         <PageBreadcrumb items={breadcrumb} />
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h1 className="font-heading text-3xl font-semibold tracking-tight text-gray-900 md:text-4xl">{title}</h1>
+            <h1 className="font-heading text-3xl font-semibold tracking-tight text-foreground md:text-4xl">{title}</h1>
             {description && <p className="mt-2 max-w-2xl text-[15px] text-muted-foreground">{description}</p>}
           </div>
           {children}

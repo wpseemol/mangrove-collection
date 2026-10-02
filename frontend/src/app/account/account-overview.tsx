@@ -32,12 +32,12 @@ export function AccountOverview() {
 
       <div className="grid gap-4 sm:grid-cols-2">
         {stats.map(({ label, value, icon: Icon, href }) => (
-          <Link key={label} href={href} className="flex items-center gap-4 rounded-2xl border bg-white p-5 transition-shadow hover:shadow-lg hover:shadow-black/5">
+          <Link key={label} href={href} className="flex items-center gap-4 rounded-2xl border bg-card p-5 transition-shadow hover:shadow-lg hover:shadow-black/5">
             <span className="flex size-12 items-center justify-center rounded-xl bg-secondary text-primary">
               <Icon className="size-5" />
             </span>
             <div>
-              <p className="text-2xl font-semibold text-gray-900">{value}</p>
+              <p className="text-2xl font-semibold text-foreground">{value}</p>
               <p className="text-sm text-muted-foreground">{label}</p>
             </div>
           </Link>
@@ -46,7 +46,7 @@ export function AccountOverview() {
 
       <section>
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-heading text-xl font-semibold text-gray-900">Recent orders</h2>
+          <h2 className="font-heading text-xl font-semibold text-foreground">Recent orders</h2>
           {orders && orders.data.length > 0 && (
             <Link href="/account/orders" className="text-sm text-primary hover:underline">
               View all
