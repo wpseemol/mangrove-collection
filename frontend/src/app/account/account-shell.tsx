@@ -11,7 +11,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useHydrated } from "@/hooks/use-hydrated";
 import { useLogout } from "@/hooks/use-logout";
-import { useMe } from "@/lib/queries";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/stores/auth";
 
@@ -26,15 +25,15 @@ export function AccountShell({ children }: { children: React.ReactNode }) {
   const hydrated = useHydrated();
   const router = useRouter();
   const pathname = usePathname();
-  const { token, user } = useAuthStore();
+  const { user, status } = useAuthStore();
   const logout = useLogout();
-  useMe();
 
+  // `guest` is only set once the API has confirmed there is no valid session cookie.
   useEffect(() => {
-    if (hydrated && !token) router.replace(`/login?redirect=${encodeURIComponent(pathname)}`);
-  }, [hydrated, token, pathname, router]);
+    if (hydrated && status === "guest") router.replace(`/login?redirect=${encodeURIComponent(pathname)}`);
+  }, [hydrated, status, pathname, router]);
 
-  if (!hydrated || !token) {
+  if (!hydrated || !user) {
     return (
       <Container className="grid gap-6 py-8 md:grid-cols-[240px_1fr]">
         <Skeleton className="h-64" />

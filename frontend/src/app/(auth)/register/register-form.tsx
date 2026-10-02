@@ -23,7 +23,7 @@ export function RegisterForm() {
     mutationFn: () =>
       api<AuthResponse>("/auth/register", {
         method: "POST",
-        body: { ...form, phone: form.phone || null, device_name: "storefront" },
+        body: { ...form, phone: form.phone || null, remember: true },
       }),
     onSuccess: signIn,
   });

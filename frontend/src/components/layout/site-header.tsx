@@ -10,7 +10,7 @@ import { Logo } from "@/components/shared/logo";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useHydrated } from "@/hooks/use-hydrated";
-import { dashboardHandoffUrl } from "@/lib/config";
+import { DASHBOARD_URL } from "@/lib/config";
 import { formatPrice } from "@/lib/format";
 import { useSettings } from "@/lib/queries";
 import { isStaff } from "@/lib/types";
@@ -118,12 +118,12 @@ function TopBar() {
 export function SiteHeader() {
   const hydrated = useHydrated();
   const items = useCartStore((s) => s.items);
-  const { user, token } = useAuthStore();
+  const user = useAuthStore((s) => s.user);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const count = hydrated ? cartCount(items) : 0;
   const signedIn = hydrated && Boolean(user);
-  const staffToken = signedIn && token && isStaff(user) ? token : null;
+  const staff = signedIn && isStaff(user);
 
   return (
     <>
@@ -157,8 +157,8 @@ export function SiteHeader() {
                     </Link>
                   ),
                 )}
-                {staffToken && (
-                  <a href={dashboardHandoffUrl(staffToken)} className="mt-2 flex items-center gap-2 rounded-lg bg-secondary px-3 py-3 text-[15px] font-medium text-primary">
+                {staff && (
+                  <a href={DASHBOARD_URL} className="mt-2 flex items-center gap-2 rounded-lg bg-secondary px-3 py-3 text-[15px] font-medium text-primary">
                     <LayoutDashboard className="size-4" /> Open dashboard
                   </a>
                 )}
@@ -171,9 +171,9 @@ export function SiteHeader() {
           <SearchForm className="mx-auto hidden w-full max-w-xl flex-1 md:block" />
 
           <nav className="ml-auto flex items-center gap-1 md:ml-0" aria-label="Shortcuts">
-            {staffToken && (
+            {staff && (
               <Button asChild variant="outline" size="sm" className="mr-2 hidden rounded-full border-primary/30 text-primary lg:inline-flex dark:text-brand">
-                <a href={dashboardHandoffUrl(staffToken)}>
+                <a href={DASHBOARD_URL}>
                   <LayoutDashboard /> Dashboard
                 </a>
               </Button>

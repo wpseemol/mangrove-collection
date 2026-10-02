@@ -15,7 +15,7 @@ const subscribe = () => () => {};
 
 export function OrderSuccessContent() {
   const orderNumber = useSearchParams().get("number");
-  const token = useAuthStore((s) => s.token);
+  const signedIn = useAuthStore((s) => Boolean(s.user));
   const raw = useSyncExternalStore(
     subscribe,
     () => sessionStorage.getItem("mc-last-order"),
@@ -51,7 +51,7 @@ export function OrderSuccessContent() {
         <Button asChild>
           <Link href="/shop">Continue shopping</Link>
         </Button>
-        {token && orderNumber ? (
+        {signedIn && orderNumber ? (
           <Button asChild variant="outline">
             <Link href={`/account/orders/details?number=${encodeURIComponent(orderNumber)}`}>View order</Link>
           </Button>

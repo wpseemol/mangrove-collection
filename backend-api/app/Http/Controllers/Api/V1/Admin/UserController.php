@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Rules\PhoneNumber;
 use App\Rules\SafeText;
 use App\Support\Search;
+use App\Support\UserSessions;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -77,8 +78,8 @@ class UserController extends Controller
 
         $user->update($data);
 
-        if (! $user->is_active) {
-            $user->tokens()->delete();
+        if (! $user->is_active || isset($data['password']) || isset($data['role'])) {
+            UserSessions::revoke($user);
         }
 
         return new UserResource($user->loadCount('orders'));
@@ -88,7 +89,7 @@ class UserController extends Controller
     {
         abort_if($user->is($request->user()), 409, 'You cannot delete your own account.');
 
-        $user->tokens()->delete();
+        UserSessions::revoke($user);
         $user->delete();
 
         return response()->json(null, 204);

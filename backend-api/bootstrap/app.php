@@ -22,6 +22,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->prepend(ForceJsonResponse::class);
         $middleware->append(SecurityHeaders::class);
+        // Requests from SANCTUM_STATEFUL_DOMAINS get the session cookie + CSRF check.
+        $middleware->statefulApi();
         $middleware->throttleApi();
 
         $middleware->alias([

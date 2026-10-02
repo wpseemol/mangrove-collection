@@ -9,6 +9,7 @@ import { GoogleButton } from "@/components/auth/google-button";
 import { PasswordInput } from "@/components/auth/password-input";
 import { FormField } from "@/components/shared/form-field";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { useAuthRedirect } from "@/hooks/use-auth-redirect";
 import { api, ApiError } from "@/lib/api";
@@ -18,9 +19,10 @@ export function LoginForm() {
   const { redirect, signIn } = useAuthRedirect();
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
+  const [remember, setRemember] = useState(true);
 
   const mutation = useMutation({
-    mutationFn: () => api<AuthResponse>("/auth/login", { method: "POST", body: { login, password, device_name: "storefront" } }),
+    mutationFn: () => api<AuthResponse>("/auth/login", { method: "POST", body: { login, password, remember } }),
     onSuccess: signIn,
   });
 
@@ -51,6 +53,10 @@ export function LoginForm() {
         >
           <PasswordInput id="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" required />
         </FormField>
+        <label htmlFor="remember" className="flex cursor-pointer items-center gap-2 text-sm text-muted-foreground">
+          <Checkbox id="remember" checked={remember} onCheckedChange={(v) => setRemember(v === true)} />
+          Keep me signed in on this device
+        </label>
         <Button type="submit" size="lg" className="w-full" disabled={mutation.isPending}>
           {mutation.isPending && <Loader2 className="size-4 animate-spin" />}
           Log in

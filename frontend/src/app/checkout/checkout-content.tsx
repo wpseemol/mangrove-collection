@@ -67,11 +67,12 @@ export function CheckoutContent() {
   const hydrated = useHydrated();
   const items = useCartStore((s) => s.items);
   const clearCart = useCartStore((s) => s.clear);
-  const { token, user } = useAuthStore();
+  const user = useAuthStore((s) => s.user);
+  const signedIn = Boolean(user);
 
   const { data: settings } = useSettings();
   const { data: shippingMethods, isLoading: loadingShipping } = useShippingMethods();
-  const { data: addresses } = useAddresses(hydrated && Boolean(token));
+  const { data: addresses } = useAddresses(hydrated && signedIn);
 
   const [chosenAddress, setAddressChoice] = useState<string | null>(null);
   const [editedAddress, setAddress] = useState<AddressValues | null>(null);
@@ -111,7 +112,7 @@ export function CheckoutContent() {
           transaction_id: selectedPayment === "cod" ? null : transactionId || null,
           payment_sender_number: selectedPayment === "cod" ? null : senderNumber || null,
           customer_note: note || null,
-          ...(usingSaved ? { address_id: Number(addressChoice) } : { address, save_address: Boolean(token) && saveAddress }),
+          ...(usingSaved ? { address_id: Number(addressChoice) } : { address, save_address: signedIn && saveAddress }),
         },
       }).then((r) => r.data);
     },
@@ -170,7 +171,7 @@ export function CheckoutContent() {
     <>
     <PageHeader title="Checkout" description="Just a few details and your order is on its way." breadcrumb={[{ label: "Cart", href: "/cart" }, { label: "Checkout" }]} />
     <Container>
-      {!token && (
+      {!signedIn && (
         <p className="mb-6 rounded-xl border bg-secondary/60 px-5 py-4 text-sm text-foreground/80">
           Already have an account?{" "}
           <Link href="/login?redirect=/checkout" className="font-medium text-primary underline-offset-4 hover:underline">
@@ -214,7 +215,7 @@ export function CheckoutContent() {
             {addressChoice === NEW_ADDRESS && (
               <>
                 <AddressFields values={address} onChange={setAddress} errorFor={(field) => fieldError(`address.${field}`)} />
-                {token && (
+                {signedIn && (
                   <Label className="mt-4 flex items-center gap-2 font-normal text-foreground/80">
                     <Checkbox checked={saveAddress} onCheckedChange={(checked) => setSaveAddress(checked === true)} />
                     Save this address to my account

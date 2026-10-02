@@ -9,6 +9,7 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Sanctum\Sanctum;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,11 +30,17 @@ class AppServiceProvider extends ServiceProvider
 
         $this->configureRateLimiting();
 
+        // Browsers authenticate with the HttpOnly session cookie only; Bearer tokens are ignored.
+        Sanctum::getAccessTokenFromRequestUsing(fn () => null);
+
         ResetPassword::createUrlUsing(function (User $user, string $token) {
             $settings = $this->app->make(SettingsService::class);
-            $base = $user->isStaff() ? $settings->get('dashboard_url') : $settings->get('storefront_url');
+            // The storefront is a static export with trailing-slash URLs; the dashboard is an SPA.
+            $page = $user->isStaff()
+                ? rtrim((string) $settings->get('dashboard_url'), '/').'/reset-password'
+                : rtrim((string) $settings->get('storefront_url'), '/').'/reset-password/';
 
-            return rtrim((string) $base, '/').'/reset-password?'.http_build_query([
+            return $page.'?'.http_build_query([
                 'token' => $token,
                 'email' => $user->email,
             ]);

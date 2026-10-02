@@ -1,7 +1,30 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { api } from '@/lib/api'
-import type { Category, CategoryIcon } from '@/lib/types'
+import type { Category, CategoryIcon, SessionResponse } from '@/lib/types'
+import { useAuthStore } from '@/stores/auth'
+
+export const sessionQueryKey = ['session'] as const
+
+/**
+ * Asks the API who owns the session cookie (200 for guests too) and mirrors the
+ * answer in the auth store. Refetched on focus, so signing out on the storefront
+ * (which shares the cookie) also signs the dashboard out.
+ */
+export function useSession() {
+  return useQuery({
+    queryKey: sessionQueryKey,
+    queryFn: async () => {
+      const session = await api<SessionResponse>('/auth/session')
+      const store = useAuthStore.getState()
+      if (session.user) store.setUser(session.user)
+      else store.clear()
+      return session
+    },
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: true,
+  })
+}
 
 export const categoriesQueryKey = ['admin', 'categories'] as const
 

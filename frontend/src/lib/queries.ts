@@ -12,8 +12,8 @@ import type {
   Paginated,
   Product,
   PublicSettings,
+  SessionResponse,
   ShippingMethod,
-  User,
 } from "@/lib/types";
 import { useAuthStore } from "@/stores/auth";
 
@@ -97,17 +97,25 @@ export function useShippingMethods() {
   });
 }
 
-export function useMe() {
-  const token = useAuthStore((s) => s.token);
+export const sessionQueryKey = ["session"] as const;
 
+/**
+ * Asks the API who owns the session cookie (200 for guests too) and syncs the
+ * auth store. Refetched on focus so a logout in another tab or in the
+ * dashboard (which shares the cookie) is picked up.
+ */
+export function useSession() {
   return useQuery({
-    queryKey: ["me", token],
+    queryKey: sessionQueryKey,
     queryFn: async () => {
-      const user = await api<{ data: User }>("/auth/me").then((r) => r.data);
-      useAuthStore.getState().setUser(user);
-      return user;
+      const session = await api<SessionResponse>("/auth/session");
+      const store = useAuthStore.getState();
+      if (session.user) store.setUser(session.user);
+      else store.clear();
+      return session;
     },
-    enabled: Boolean(token),
+    staleTime: FIVE_MINUTES,
+    refetchOnWindowFocus: true,
   });
 }
 

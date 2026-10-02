@@ -7,6 +7,7 @@ use App\Http\Resources\UserResource;
 use App\Rules\PhoneNumber;
 use App\Rules\SafeText;
 use App\Rules\SafeUrl;
+use App\Support\UserSessions;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -52,9 +53,8 @@ class ProfileController extends Controller
 
         $user->forceFill(['password' => $request->string('password')])->save();
 
-        $user->tokens()
-            ->when($user->currentAccessToken()?->getKey(), fn ($q, $id) => $q->whereKeyNot($id))
-            ->delete();
+        // Sign out every other browser; this one stays signed in.
+        UserSessions::revoke($user, $request->hasSession() ? $request->session()->getId() : null);
 
         return response()->json(['message' => 'Password updated.']);
     }

@@ -22,6 +22,11 @@ class SecurityHeaders
             'Permissions-Policy' => 'camera=(), microphone=(), geolocation=()',
         ]);
 
+        // Personal data must never land in a shared or browser cache.
+        if ($request->is('v1/auth/*', 'v1/account/*', 'v1/admin/*', 'v1/checkout', 'sanctum/*')) {
+            $response->headers->set('Cache-Control', 'no-store, private');
+        }
+
         if ($request->isSecure()) {
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
         }

@@ -2,8 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\UserSessions;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class EnsureUserIsActive
@@ -13,7 +15,12 @@ class EnsureUserIsActive
         $user = $request->user();
 
         if ($user && ! $user->is_active) {
-            $user->currentAccessToken()?->delete();
+            UserSessions::revoke($user);
+            Auth::guard('web')->logout();
+
+            if ($request->hasSession()) {
+                $request->session()->invalidate();
+            }
 
             abort(Response::HTTP_FORBIDDEN, 'Your account has been deactivated.');
         }

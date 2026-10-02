@@ -35,6 +35,8 @@ Route::prefix('v1')->name('v1.')->group(function () {
             Route::post('google', [GoogleAuthController::class, 'login'])->name('google');
         });
 
+        Route::get('session', [AuthController::class, 'session'])->name('session');
+
         Route::middleware(['auth:sanctum', 'active'])->group(function () {
             Route::get('me', [AuthController::class, 'me'])->name('me');
             Route::post('logout', [AuthController::class, 'logout'])->name('logout');

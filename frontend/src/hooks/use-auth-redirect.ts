@@ -3,7 +3,8 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 
-import { dashboardHandoffUrl } from "@/lib/config";
+import { DASHBOARD_URL } from "@/lib/config";
+import { sessionQueryKey } from "@/lib/queries";
 import { type AuthResponse, isStaff } from "@/lib/types";
 import { useAuthStore } from "@/stores/auth";
 
@@ -16,18 +17,20 @@ export function useAuthRedirect() {
   const router = useRouter();
   const params = useSearchParams();
   const queryClient = useQueryClient();
-  const setAuth = useAuthStore((s) => s.setAuth);
+  const setUser = useAuthStore((s) => s.setUser);
   const redirect = safeRedirect(params.get("redirect"));
 
   return {
     redirect,
-    signIn(response: AuthResponse) {
-      setAuth(response.token, response.user);
+    signIn({ user }: AuthResponse) {
+      setUser(user);
+      queryClient.setQueryData(sessionQueryKey, { authenticated: true, user });
       queryClient.removeQueries({ queryKey: ["my-orders"] });
       queryClient.removeQueries({ queryKey: ["addresses"] });
 
-      if (isStaff(response.user)) {
-        window.location.assign(dashboardHandoffUrl(response.token));
+      // The dashboard shares this session cookie, so staff land there already signed in.
+      if (isStaff(user)) {
+        window.location.assign(DASHBOARD_URL);
         return;
       }
 

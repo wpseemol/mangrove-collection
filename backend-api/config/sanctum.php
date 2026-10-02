@@ -17,8 +17,12 @@ return [
     |
     */
 
-    // Bearer-token only: no cookie-based SPA sessions.
-    'stateful' => [],
+    // Host[:port] of the storefront and dashboard. Only browser requests whose
+    // Origin/Referer matches get a session cookie and CSRF protection.
+    'stateful' => array_values(array_filter(array_map('trim', explode(',', (string) env(
+        'SANCTUM_STATEFUL_DOMAINS',
+        'localhost:3000,localhost:5173,127.0.0.1:3000,127.0.0.1:5173',
+    ))))),
 
     /*
     |--------------------------------------------------------------------------
@@ -32,7 +36,7 @@ return [
     |
     */
 
-    'guard' => [],
+    'guard' => ['web'],
 
     /*
     |--------------------------------------------------------------------------

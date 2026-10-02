@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Container } from "@/components/shared/container";
 import { Logo } from "@/components/shared/logo";
 import { useHydrated } from "@/hooks/use-hydrated";
-import { DASHBOARD_LOGIN_URL, dashboardHandoffUrl } from "@/lib/config";
+import { DASHBOARD_LOGIN_URL, DASHBOARD_URL } from "@/lib/config";
 import { PAYMENT_METHOD_LABEL } from "@/lib/format";
 import { useSettings } from "@/lib/queries";
 import { isStaff } from "@/lib/types";
@@ -47,8 +47,8 @@ const COLUMNS = [
 export function SiteFooter() {
   const { data: settings } = useSettings();
   const hydrated = useHydrated();
-  const { user, token } = useAuthStore();
-  const staffToken = hydrated && token && isStaff(user) ? token : null;
+  const user = useAuthStore((s) => s.user);
+  const staff = hydrated && isStaff(user);
   const social = settings?.social_links ?? {};
   const siteName = settings?.site_name ?? "Mangrove Collection";
   const payments = settings?.payment_methods?.length ? settings.payment_methods : ["cod"];
@@ -132,13 +132,13 @@ export function SiteFooter() {
               © {new Date().getFullYear()} {siteName}. All rights reserved.
             </span>
             <a
-              href={staffToken ? dashboardHandoffUrl(staffToken) : DASHBOARD_LOGIN_URL}
+              href={staff ? DASHBOARD_URL : DASHBOARD_LOGIN_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-white/55 transition-colors hover:text-white"
             >
               <LayoutDashboard className="size-3.5" />
-              {staffToken ? "Open dashboard" : "Admin login"}
+              {staff ? "Open dashboard" : "Admin login"}
             </a>
           </p>
           <div className="flex flex-wrap items-center justify-center gap-2">

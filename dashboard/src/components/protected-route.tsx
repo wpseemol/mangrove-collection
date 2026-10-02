@@ -1,40 +1,41 @@
-import { useQuery } from '@tanstack/react-query'
-import { Loader2 } from 'lucide-react'
-import { useEffect } from 'react'
+import { Loader2, RefreshCw, ServerCrash } from 'lucide-react'
 import { Navigate, Outlet, useLocation } from 'react-router'
 
-import { api } from '@/lib/api'
-import { isStaff, type User } from '@/lib/types'
+import { Button } from '@/components/ui/button'
+import { useSession } from '@/lib/queries'
+import { isStaff } from '@/lib/types'
 import { useAuthStore } from '@/stores/auth'
 
-/** Re-validates the stored token with `/auth/me` and keeps customers out of the dashboard. */
+/** Checks the session cookie with `/auth/session` and keeps customers out of the dashboard. */
 export function ProtectedRoute() {
   const location = useLocation()
-  const { token, setUser, clear } = useAuthStore()
+  const { isPending, isError, refetch, isRefetching } = useSession()
+  const user = useAuthStore((state) => state.user)
 
-  const { data: user, isPending, isError } = useQuery({
-    queryKey: ['me', token],
-    queryFn: () => api<{ data: User }>('/auth/me').then((r) => r.data),
-    enabled: Boolean(token),
-    staleTime: 5 * 60 * 1000,
-  })
-
-  useEffect(() => {
-    if (!user) return
-    if (isStaff(user)) setUser(user)
-    else clear()
-  }, [user, setUser, clear])
-
-  if (!token || isError) {
-    return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />
-  }
-
-  if (isPending || !isStaff(user)) {
+  if (isPending) {
     return (
       <div className="flex min-h-svh items-center justify-center">
         <Loader2 className="size-8 animate-spin text-primary" />
       </div>
     )
+  }
+
+  if (isError && !user) {
+    return (
+      <div className="flex min-h-svh flex-col items-center justify-center gap-3 p-6 text-center">
+        <ServerCrash className="size-8 text-muted-foreground" />
+        <p className="font-medium">Can't reach the Mangrove Collection API.</p>
+        <p className="max-w-sm text-sm text-muted-foreground">Check your connection, or that the API server is running, then try again.</p>
+        <Button variant="outline" onClick={() => refetch()} disabled={isRefetching}>
+          <RefreshCw className={isRefetching ? 'animate-spin' : undefined} /> Try again
+        </Button>
+      </div>
+    )
+  }
+
+  // Signed out, session expired, or a customer account: the login page explains which.
+  if (!isStaff(user)) {
+    return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />
   }
 
   return <Outlet />

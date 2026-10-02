@@ -5,11 +5,16 @@
 
     RewriteEngine On
 
-    # Handle Authorization Header
-    RewriteCond %{HTTP:Authorization} .
-    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+    # Always HTTPS: the session cookie is Secure-only in production.
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+    RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)(:\d+)?$
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-    # Handle X-XSRF-Token Header
+    # Never serve dotfiles (except ACME challenges for SSL certificates).
+    RewriteRule (^|/)\.(?!well-known/) - [F,L]
+
+    # Handle X-XSRF-Token Header (CSRF protection for the cookie session)
     RewriteCond %{HTTP:x-xsrf-token} .
     RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
 
@@ -22,4 +27,10 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
+</IfModule>
+
+ServerSignature Off
+
+<IfModule mod_headers.c>
+    Header always unset X-Powered-By
 </IfModule>

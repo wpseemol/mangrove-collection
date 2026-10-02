@@ -33,9 +33,9 @@ class GoogleAuthTest extends TestCase
         $this->configureGoogle();
         $this->mockGoogleUser('g-1', 'new@gmail.com');
 
-        $this->postJson('/v1/auth/google', ['access_token' => 'valid-token'])
+        $this->fromStorefront()->postJson('/v1/auth/google', ['access_token' => 'valid-token'])
             ->assertOk()
-            ->assertJsonStructure(['token', 'user'])
+            ->assertJsonMissingPath('token')
             ->assertJsonPath('user.email', 'new@gmail.com')
             ->assertJsonPath('user.google_linked', true);
 
@@ -48,7 +48,7 @@ class GoogleAuthTest extends TestCase
         $existing = User::factory()->create(['email' => 'old@gmail.com']);
         $this->mockGoogleUser('g-2', 'old@gmail.com');
 
-        $this->postJson('/v1/auth/google', ['access_token' => 'valid-token'])
+        $this->fromStorefront()->postJson('/v1/auth/google', ['access_token' => 'valid-token'])
             ->assertOk()
             ->assertJsonPath('user.id', $existing->id);
 

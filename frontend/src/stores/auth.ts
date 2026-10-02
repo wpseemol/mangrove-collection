@@ -3,10 +3,16 @@ import { persist } from "zustand/middleware";
 
 import type { User } from "@/lib/types";
 
+/**
+ * `unknown` until `/auth/session` has answered. The real session is the HttpOnly
+ * cookie set by the API; `user` is only a cached profile so the header can
+ * render instantly, and it is reconciled with the server on every page load.
+ */
+export type AuthStatus = "unknown" | "authenticated" | "guest";
+
 type AuthState = {
-  token: string | null;
   user: User | null;
-  setAuth: (token: string, user: User) => void;
+  status: AuthStatus;
   setUser: (user: User) => void;
   clear: () => void;
 };
@@ -14,12 +20,17 @@ type AuthState = {
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
-      token: null,
       user: null,
-      setAuth: (token, user) => set({ token, user }),
-      setUser: (user) => set({ user }),
-      clear: () => set({ token: null, user: null }),
+      status: "unknown",
+      setUser: (user) => set({ user, status: "authenticated" }),
+      clear: () => set({ user: null, status: "guest" }),
     }),
-    { name: "mc-auth" },
+    {
+      name: "mc-auth",
+      version: 2,
+      // Older versions stored a Bearer token here; drop everything but the profile.
+      migrate: (persisted) => ({ user: (persisted as { user?: User | null } | undefined)?.user ?? null }),
+      partialize: (state) => ({ user: state.user }),
+    },
   ),
 );

@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 class CheckoutController extends Controller
 {
     /**
-     * Guests and signed-in customers can both check out; a Bearer token,
+     * Guests and signed-in customers can both check out; a session cookie,
      * when present, links the order to the account.
      */
     public function store(CheckoutRequest $request, OrderService $orders): JsonResponse

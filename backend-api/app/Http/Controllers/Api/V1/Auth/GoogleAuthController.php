@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\Api\V1\Auth;
 
-use App\Http\Controllers\Concerns\IssuesApiTokens;
+use App\Http\Controllers\Concerns\StartsAuthSession;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Rules\SafeText;
 use App\Services\SettingsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -17,7 +16,7 @@ use Throwable;
 
 class GoogleAuthController extends Controller
 {
-    use IssuesApiTokens;
+    use StartsAuthSession;
 
     public function __construct(protected SettingsService $settings) {}
 
@@ -37,17 +36,18 @@ class GoogleAuthController extends Controller
 
     /**
      * Accepts either an `access_token` (Google Identity Services token client)
-     * or an authorization `code` (redirect flow) and returns a Sanctum token.
+     * or an authorization `code` (redirect flow) and starts a session.
      */
     public function login(Request $request): JsonResponse
     {
         $request->validate([
             'access_token' => ['required_without:code', 'nullable', 'string', 'max:4096', 'regex:/^[A-Za-z0-9._\-~+\/=]+$/'],
             'code' => ['required_without:access_token', 'nullable', 'string', 'max:2048', 'regex:/^[A-Za-z0-9._\-~+\/=]+$/'],
-            'device_name' => ['nullable', 'string', 'max:100', new SafeText],
+            'remember' => ['sometimes', 'boolean'],
         ]);
 
         $this->ensureConfigured(requireRedirect: $request->filled('code'));
+        $this->ensureBrowserSession($request);
 
         try {
             $googleUser = $request->filled('access_token')
@@ -65,7 +65,7 @@ class GoogleAuthController extends Controller
             throw ValidationException::withMessages(['google' => 'Your account has been deactivated.']);
         }
 
-        return $this->issueToken($user, $request->input('device_name', 'google'));
+        return $this->startSession($request, $user, $request->boolean('remember'));
     }
 
     protected function resolveUser(SocialiteUser $googleUser): User

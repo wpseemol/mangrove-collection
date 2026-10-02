@@ -32,7 +32,7 @@ final class SettingRegistry
                 'contact_phone' => ['type' => 'string', 'public' => true, 'default' => null],
                 'contact_address' => ['type' => 'text', 'public' => true, 'default' => null],
                 'social_links' => ['type' => 'json', 'public' => true, 'default' => []],
-                'storefront_url' => ['type' => 'url', 'public' => true, 'default' => 'http://mangrove-collection.com'],
+                'storefront_url' => ['type' => 'url', 'public' => true, 'default' => 'https://mangrove-collection.com'],
                 'dashboard_url' => ['type' => 'url', 'public' => false, 'default' => 'https://dashboard.mangrove-collection.com'],
             ],
 

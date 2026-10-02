@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Loader2, LogIn } from 'lucide-react'
 import { useState } from 'react'
 import { Link, Navigate, useLocation, useNavigate } from 'react-router'
@@ -10,28 +10,40 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { api, ApiError } from '@/lib/api'
-import type { AuthResponse } from '@/lib/types'
+import { sessionQueryKey, useSession } from '@/lib/queries'
+import { isStaff, type AuthResponse } from '@/lib/types'
 import { useAuthStore } from '@/stores/auth'
 
 export function LoginPage() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { token, setAuth } = useAuthStore()
+  const queryClient = useQueryClient()
+  const { isPending: checkingSession } = useSession()
+  const { user, setUser } = useAuthStore()
   const [login, setLogin] = useState('')
   const [password, setPassword] = useState('')
 
   const from = (location.state as { from?: string } | null)?.from ?? '/'
 
   const mutation = useMutation({
-    mutationFn: () =>
-      api<AuthResponse>('/auth/dashboard/login', { method: 'POST', body: { login, password, device_name: 'dashboard' } }),
+    mutationFn: () => api<AuthResponse>('/auth/dashboard/login', { method: 'POST', body: { login, password } }),
     onSuccess: (response) => {
-      setAuth(response.token, response.user)
+      setUser(response.user)
+      queryClient.setQueryData(sessionQueryKey, { authenticated: true, user: response.user })
       navigate(from, { replace: true })
     },
   })
 
-  if (token) return <Navigate to={from} replace />
+  // Staff already signed in (here or on the storefront, which shares the session cookie).
+  if (isStaff(user)) return <Navigate to={from} replace />
+
+  if (checkingSession) {
+    return (
+      <div className="flex min-h-svh items-center justify-center">
+        <Loader2 className="size-8 animate-spin text-primary" />
+      </div>
+    )
+  }
 
   const error = mutation.error instanceof ApiError ? mutation.error : null
   const loginError = error?.field('login')
@@ -39,6 +51,13 @@ export function LoginPage() {
 
   return (
     <AuthLayout title="Sign in to dashboard" subtitle="Use your staff email or phone number to continue.">
+      {user && !generalError && (
+        <Alert className="mb-4">
+          <AlertDescription>
+            You're signed in as {user.email}, which isn't a staff account. Sign in with an admin or manager account to continue.
+          </AlertDescription>
+        </Alert>
+      )}
       {generalError && (
         <Alert variant="destructive" className="mb-4">
           <AlertDescription>{generalError}</AlertDescription>

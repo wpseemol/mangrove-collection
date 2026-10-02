@@ -125,11 +125,14 @@ export type User = {
 
 export const isStaff = (user: User | null | undefined): boolean => user?.role === "admin" || user?.role === "manager";
 
+/** Sign-in responses: the session itself lives in an HttpOnly cookie, never in JavaScript. */
 export type AuthResponse = {
-  token: string;
-  token_type: "Bearer";
-  expires_at: string | null;
   user: User;
+};
+
+export type SessionResponse = {
+  authenticated: boolean;
+  user: User | null;
 };
 
 export type Address = {

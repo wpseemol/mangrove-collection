@@ -80,7 +80,7 @@ export function GoogleButton({ label = "Continue with Google" }: { label?: strin
             return;
           }
           try {
-            signIn(await api<AuthResponse>("/auth/google", { method: "POST", body: { access_token: response.access_token } }));
+            signIn(await api<AuthResponse>("/auth/google", { method: "POST", body: { access_token: response.access_token, remember: true } }));
           } catch (e) {
             toast.error(errorMessage(e));
           } finally {

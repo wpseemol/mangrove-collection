@@ -24,6 +24,31 @@ type RequestOptions = Omit<RequestInit, "body"> & {
   body?: unknown;
 };
 
+/** Laravel's CSRF cookie. Readable by JS (unlike the session cookie) so it can be echoed in a header. */
+const XSRF_COOKIE = "XSRF-TOKEN";
+const CSRF_URL = `${new URL(API_URL).origin}/sanctum/csrf-cookie`;
+const SAFE_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
+
+function readCookie(name: string): string | null {
+  const match = document.cookie.split("; ").find((part) => part.startsWith(`${name}=`));
+  return match ? decodeURIComponent(match.slice(name.length + 1)) : null;
+}
+
+let csrfRequest: Promise<void> | null = null;
+
+/** Makes sure the XSRF-TOKEN cookie exists before a state-changing request. */
+function ensureCsrfCookie(force = false): Promise<void> {
+  if (!force && readCookie(XSRF_COOKIE)) return Promise.resolve();
+
+  csrfRequest ??= fetch(CSRF_URL, { credentials: "include", headers: { Accept: "application/json" } })
+    .then(() => undefined)
+    .finally(() => {
+      csrfRequest = null;
+    });
+
+  return csrfRequest;
+}
+
 export async function api<T>(path: string, { query, body, headers, ...init }: RequestOptions = {}): Promise<T> {
   const url = new URL(`${API_URL}${path}`);
 
@@ -38,19 +63,35 @@ export async function api<T>(path: string, { query, body, headers, ...init }: Re
     throw new ApiError("Please remove HTML, script or code from the highlighted fields.", 422, unsafe);
   }
 
-  const token = useAuthStore.getState().token;
   const isFormData = body instanceof FormData;
+  const mutating = !SAFE_METHODS.has((init.method ?? "GET").toUpperCase());
 
-  const response = await fetch(url, {
-    ...init,
-    headers: {
-      Accept: "application/json",
-      ...(body !== undefined && !isFormData ? { "Content-Type": "application/json" } : {}),
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...headers,
-    },
-    body: body === undefined ? undefined : isFormData ? body : JSON.stringify(body),
-  });
+  const send = async () => {
+    if (mutating) await ensureCsrfCookie();
+    const xsrf = mutating ? readCookie(XSRF_COOKIE) : null;
+
+    return fetch(url, {
+      ...init,
+      // Sends the HttpOnly session cookie; CORS on the API only allows our own origins.
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "X-Requested-With": "XMLHttpRequest",
+        ...(body !== undefined && !isFormData ? { "Content-Type": "application/json" } : {}),
+        ...(xsrf ? { "X-XSRF-TOKEN": xsrf } : {}),
+        ...headers,
+      },
+      body: body === undefined ? undefined : isFormData ? body : JSON.stringify(body),
+    });
+  };
+
+  let response = await send();
+
+  // 419 = CSRF token expired (e.g. the session timed out): refresh it and retry once.
+  if (response.status === 419 && mutating) {
+    await ensureCsrfCookie(true);
+    response = await send();
+  }
 
   if (response.status === 204) {
     return undefined as T;
@@ -59,7 +100,7 @@ export async function api<T>(path: string, { query, body, headers, ...init }: Re
   const payload = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    if (response.status === 401 && token) {
+    if (response.status === 401) {
       useAuthStore.getState().clear();
     }
 
