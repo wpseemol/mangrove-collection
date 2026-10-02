@@ -2,49 +2,82 @@
 
 namespace App\Settings;
 
+use App\Rules\PhoneNumber;
 use App\Rules\SafeText;
 use App\Rules\SafeUrl;
+use App\Rules\WhatsAppNumber;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 /**
  * The single source of truth for every runtime-configurable setting.
  * Keys not declared here are rejected on update.
  *
- * type:      string | text | boolean | integer | float | json | email | url
+ * type:      string | text | boolean | integer | float | json | email | url | phone
  * public:    exposed via the unauthenticated /v1/settings endpoint
  * encrypted: stored encrypted at rest and masked in admin responses
  * raw:       intentionally holds markup/scripts (admin-only), so SafeText is skipped
+ * rules:     extra validation rules for the value, on top of the type's rules
+ * each:      validation rules for every item of a json value
  */
 final class SettingRegistry
 {
+    public const SOCIAL_NETWORKS = ['facebook', 'instagram', 'youtube', 'linkedin', 'twitter'];
+
+    public const PAYMENT_METHODS = ['cod', 'bkash', 'nagad', 'rocket'];
+
     /**
-     * @return array<string, array<string, array{type: string, public?: bool, encrypted?: bool, raw?: bool, default?: mixed, options?: list<string>}>>
+     * @return array<string, array<string, array{type: string, public?: bool, encrypted?: bool, raw?: bool, default?: mixed, options?: list<string>, rules?: list<string|ValidationRule>, each?: list<string|ValidationRule>}>>
      */
     public static function groups(): array
     {
         return [
             'general' => [
-                'site_name' => ['type' => 'string', 'public' => true, 'default' => 'Mangrove Collection'],
-                'site_tagline' => ['type' => 'string', 'public' => true, 'default' => null],
+                'site_name' => ['type' => 'string', 'public' => true, 'default' => 'Mangrove Collection', 'rules' => ['max:100']],
+                'site_tagline' => ['type' => 'string', 'public' => true, 'default' => null, 'rules' => ['max:160']],
                 'site_logo' => ['type' => 'url', 'public' => true, 'default' => null],
                 'site_favicon' => ['type' => 'url', 'public' => true, 'default' => null],
                 'contact_email' => ['type' => 'email', 'public' => true, 'default' => null],
-                'contact_phone' => ['type' => 'string', 'public' => true, 'default' => null],
-                'contact_address' => ['type' => 'text', 'public' => true, 'default' => null],
-                'social_links' => ['type' => 'json', 'public' => true, 'default' => []],
+                'contact_phone' => ['type' => 'phone', 'public' => true, 'default' => null],
+                'contact_address' => ['type' => 'text', 'public' => true, 'default' => null, 'rules' => ['max:500']],
+                'social_links' => [
+                    'type' => 'json',
+                    'public' => true,
+                    'default' => [],
+                    'rules' => ['array:'.implode(',', self::SOCIAL_NETWORKS)],
+                    'each' => ['nullable', 'string', 'max:2048', new SafeUrl],
+                ],
                 'storefront_url' => ['type' => 'url', 'public' => true, 'default' => 'https://mangrove-collection.com'],
                 'dashboard_url' => ['type' => 'url', 'public' => false, 'default' => 'https://dashboard.mangrove-collection.com'],
             ],
 
+            // Floating chat button shown on every storefront page, plus the contact page and footer links.
+            'whatsapp' => [
+                'whatsapp_number' => ['type' => 'phone', 'public' => true, 'default' => null, 'rules' => [new WhatsAppNumber]],
+                'whatsapp_message' => [
+                    'type' => 'text',
+                    'public' => true,
+                    'default' => 'Hello Mangrove Collection! I would like to know more about your products.',
+                    'rules' => ['max:500'],
+                ],
+                'whatsapp_button_enabled' => ['type' => 'boolean', 'public' => true, 'default' => true],
+                'whatsapp_button_position' => ['type' => 'string', 'public' => true, 'default' => 'right', 'options' => ['right', 'left']],
+            ],
+
             'commerce' => [
-                'currency' => ['type' => 'string', 'public' => true, 'default' => 'BDT'],
-                'currency_symbol' => ['type' => 'string', 'public' => true, 'default' => '৳'],
-                'payment_methods' => ['type' => 'json', 'public' => true, 'default' => ['cod']],
-                'bkash_number' => ['type' => 'string', 'public' => true, 'default' => null],
-                'nagad_number' => ['type' => 'string', 'public' => true, 'default' => null],
-                'rocket_number' => ['type' => 'string', 'public' => true, 'default' => null],
-                'free_shipping_threshold' => ['type' => 'float', 'public' => true, 'default' => null],
-                'low_stock_threshold' => ['type' => 'integer', 'public' => false, 'default' => 5],
+                'currency' => ['type' => 'string', 'public' => true, 'default' => 'BDT', 'rules' => ['max:10']],
+                'currency_symbol' => ['type' => 'string', 'public' => true, 'default' => '৳', 'rules' => ['max:5']],
+                'payment_methods' => [
+                    'type' => 'json',
+                    'public' => true,
+                    'default' => ['cod'],
+                    'rules' => ['list', 'min:1'],
+                    'each' => ['string', 'distinct', 'in:'.implode(',', self::PAYMENT_METHODS)],
+                ],
+                'bkash_number' => ['type' => 'phone', 'public' => true, 'default' => null],
+                'nagad_number' => ['type' => 'phone', 'public' => true, 'default' => null],
+                'rocket_number' => ['type' => 'phone', 'public' => true, 'default' => null],
+                'free_shipping_threshold' => ['type' => 'float', 'public' => true, 'default' => null, 'rules' => ['min:0', 'max:10000000']],
+                'low_stock_threshold' => ['type' => 'integer', 'public' => false, 'default' => 5, 'rules' => ['min:0', 'max:100000']],
                 'order_notification_email' => ['type' => 'email', 'public' => false, 'default' => null],
             ],
 
@@ -58,7 +91,7 @@ final class SettingRegistry
             'mail' => [
                 'mail_mailer' => ['type' => 'string', 'default' => 'log', 'options' => ['smtp', 'log']],
                 'mail_host' => ['type' => 'string', 'default' => null],
-                'mail_port' => ['type' => 'integer', 'default' => 587],
+                'mail_port' => ['type' => 'integer', 'default' => 587, 'rules' => ['between:1,65535']],
                 'mail_username' => ['type' => 'string', 'default' => null],
                 'mail_password' => ['type' => 'string', 'encrypted' => true, 'default' => null],
                 'mail_encryption' => ['type' => 'string', 'default' => 'tls', 'options' => ['tls', 'ssl', 'none']],
@@ -83,9 +116,9 @@ final class SettingRegistry
             ],
 
             'seo' => [
-                'meta_title' => ['type' => 'string', 'public' => true, 'default' => 'Mangrove Collection'],
-                'meta_description' => ['type' => 'text', 'public' => true, 'default' => null],
-                'meta_keywords' => ['type' => 'text', 'public' => true, 'default' => null],
+                'meta_title' => ['type' => 'string', 'public' => true, 'default' => 'Mangrove Collection', 'rules' => ['max:255']],
+                'meta_description' => ['type' => 'text', 'public' => true, 'default' => null, 'rules' => ['max:500']],
+                'meta_keywords' => ['type' => 'text', 'public' => true, 'default' => null, 'rules' => ['max:500']],
                 'og_image' => ['type' => 'url', 'public' => true, 'default' => null],
                 'google_site_verification' => ['type' => 'string', 'public' => true, 'default' => null],
                 'google_analytics_id' => ['type' => 'string', 'public' => true, 'default' => null],
@@ -98,7 +131,7 @@ final class SettingRegistry
     }
 
     /**
-     * @return array<string, array{group: string, type: string, public: bool, encrypted: bool, raw: bool, default: mixed, options: list<string>|null}>
+     * @return array<string, array{group: string, type: string, public: bool, encrypted: bool, raw: bool, default: mixed, options: list<string>|null, rules: list<string|ValidationRule>, each: list<string|ValidationRule>|null}>
      */
     public static function all(): array
     {
@@ -114,6 +147,8 @@ final class SettingRegistry
                     'raw' => $definition['raw'] ?? false,
                     'default' => $definition['default'] ?? null,
                     'options' => $definition['options'] ?? null,
+                    'rules' => $definition['rules'] ?? [],
+                    'each' => $definition['each'] ?? null,
                 ];
             }
         }
@@ -127,7 +162,7 @@ final class SettingRegistry
     }
 
     /**
-     * @return array{group: string, type: string, public: bool, encrypted: bool, raw: bool, default: mixed, options: list<string>|null}|null
+     * @return array{group: string, type: string, public: bool, encrypted: bool, raw: bool, default: mixed, options: list<string>|null, rules: list<string|ValidationRule>, each: list<string|ValidationRule>|null}|null
      */
     public static function get(string $key): ?array
     {
@@ -148,6 +183,7 @@ final class SettingRegistry
             'json' => ['array', 'max:50'],
             'email' => ['email', 'max:255'],
             'url' => ['url:http,https', 'max:2048', new SafeUrl],
+            'phone' => ['string', 'max:32', new PhoneNumber],
             'text' => ['string', 'max:65000'],
             default => ['string', 'max:2048'],
         };
@@ -161,6 +197,16 @@ final class SettingRegistry
             $rules[] = 'in:'.implode(',', $definition['options']);
         }
 
-        return ['nullable', ...$rules];
+        return ['nullable', ...$rules, ...$definition['rules']];
+    }
+
+    /**
+     * Rules for every item of a json setting (`settings.{key}.*`), or null when unconstrained.
+     *
+     * @return list<string|ValidationRule>|null
+     */
+    public static function itemRulesFor(string $key): ?array
+    {
+        return self::get($key)['each'] ?? null;
     }
 }

@@ -12,7 +12,7 @@ import { useSettings } from "@/lib/queries";
 import { isStaff } from "@/lib/types";
 import { useAuthStore } from "@/stores/auth";
 
-import { FacebookIcon, InstagramIcon, LinkedInIcon, TwitterIcon, WhatsAppIcon, whatsappHref } from "./social-icons";
+import { FacebookIcon, InstagramIcon, LinkedInIcon, TwitterIcon, WhatsAppIcon, whatsappHref, YouTubeIcon } from "./social-icons";
 
 const COLUMNS = [
   {
@@ -57,8 +57,9 @@ export function SiteFooter() {
     social.facebook && { href: social.facebook, label: "Facebook", icon: FacebookIcon },
     social.instagram && { href: social.instagram, label: "Instagram", icon: InstagramIcon },
     social.twitter && { href: social.twitter, label: "Twitter", icon: TwitterIcon },
+    social.youtube && { href: social.youtube, label: "YouTube", icon: YouTubeIcon },
     social.linkedin && { href: social.linkedin, label: "LinkedIn", icon: LinkedInIcon },
-    social.whatsapp && { href: whatsappHref(social.whatsapp), label: "WhatsApp", icon: WhatsAppIcon },
+    settings?.whatsapp_number && { href: whatsappHref(settings.whatsapp_number, settings.whatsapp_message), label: "WhatsApp", icon: WhatsAppIcon },
   ].filter(Boolean) as { href: string; label: string; icon: typeof FacebookIcon }[];
 
   const contacts = [

@@ -24,6 +24,22 @@ export type SessionResponse = {
 
 export const isStaff = (user: User | null | undefined): boolean => user?.role === 'admin' || user?.role === 'manager'
 
+/** Site configuration, users and integrations are admin-only (managers run the catalog and orders). */
+export const isAdmin = (user: User | null | undefined): boolean => user?.role === 'admin'
+
+export type SettingValue = string | number | boolean | string[] | Record<string, string> | null
+
+/** One row of `GET /admin/settings`. Secrets come back masked as `********`. */
+export type SettingMeta = {
+  value: SettingValue
+  type: 'string' | 'text' | 'boolean' | 'integer' | 'float' | 'json' | 'email' | 'url' | 'phone'
+  public: boolean
+  secret: boolean
+  options: string[] | null
+}
+
+export type AdminSettings = Record<string, Record<string, SettingMeta>>
+
 export type Paginated<T> = {
   data: T[]
   meta: {

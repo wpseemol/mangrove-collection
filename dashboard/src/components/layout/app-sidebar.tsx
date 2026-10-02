@@ -1,4 +1,4 @@
-import { ChevronsUpDown, ExternalLink, FolderTree, LayoutDashboard, LogOut, Package, PackagePlus } from 'lucide-react'
+import { ChevronsUpDown, ExternalLink, FolderTree, LayoutDashboard, LogOut, Package, PackagePlus, Settings } from 'lucide-react'
 import { Link, useLocation } from 'react-router'
 
 import { useLogout } from '@/components/layout/use-logout'
@@ -26,6 +26,7 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar'
 import { STOREFRONT_URL } from '@/lib/config'
+import { isAdmin } from '@/lib/types'
 import { useAuthStore } from '@/stores/auth'
 
 const NAV = [
@@ -41,11 +42,18 @@ const NAV = [
       { title: 'Categories', to: '/categories', icon: FolderTree, exact: false },
     ],
   },
+  {
+    label: 'Store',
+    adminOnly: true,
+    items: [{ title: 'Settings', to: '/settings', icon: Settings, exact: false }],
+  },
 ]
 
 export function AppSidebar() {
   const { pathname } = useLocation()
   const { isMobile, setOpenMobile } = useSidebar()
+  const admin = isAdmin(useAuthStore((state) => state.user))
+  const nav = NAV.filter((group) => !group.adminOnly || admin)
 
   const isActive = (to: string, exact: boolean) =>
     exact ? pathname === to || (to === '/products' && /^\/products\/\d+/.test(pathname)) : pathname.startsWith(to)
@@ -75,7 +83,7 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
-        {NAV.map((group) => (
+        {nav.map((group) => (
           <SidebarGroup key={group.label}>
             <SidebarGroupLabel className="text-sidebar-foreground/50">{group.label}</SidebarGroupLabel>
             <SidebarGroupContent>

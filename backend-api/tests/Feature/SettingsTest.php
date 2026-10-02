@@ -88,6 +88,87 @@ class SettingsTest extends TestCase
             ->assertJsonValidationErrors(['settings.not_a_setting', 'settings.mail_port', 'settings.sms_driver']);
     }
 
+    public function test_whatsapp_button_settings_are_public_and_editable(): void
+    {
+        $this->getJson('/v1/settings')
+            ->assertOk()
+            ->assertJsonPath('data.whatsapp_number', null)
+            ->assertJsonPath('data.whatsapp_button_enabled', true)
+            ->assertJsonPath('data.whatsapp_button_position', 'right');
+
+        Sanctum::actingAs(User::factory()->admin()->create());
+
+        $this->putJson('/v1/admin/settings', ['settings' => [
+            'whatsapp_number' => '+880 1712-345678',
+            'whatsapp_message' => 'Hi! I want to order honey.',
+            'whatsapp_button_enabled' => false,
+            'whatsapp_button_position' => 'left',
+        ]])
+            ->assertOk()
+            ->assertJsonPath('data.whatsapp.whatsapp_number.value', '+880 1712-345678');
+
+        $this->getJson('/v1/settings')
+            ->assertJsonPath('data.whatsapp_number', '+880 1712-345678')
+            ->assertJsonPath('data.whatsapp_message', 'Hi! I want to order honey.')
+            ->assertJsonPath('data.whatsapp_button_enabled', false)
+            ->assertJsonPath('data.whatsapp_button_position', 'left');
+    }
+
+    public function test_whatsapp_number_must_be_international(): void
+    {
+        Sanctum::actingAs(User::factory()->admin()->create());
+
+        foreach (['01712345678', 'call me', '+0 1712', '+88017123456789012'] as $number) {
+            $this->putJson('/v1/admin/settings', ['settings' => ['whatsapp_number' => $number]])
+                ->assertUnprocessable()
+                ->assertJsonValidationErrors('settings.whatsapp_number');
+        }
+
+        $this->putJson('/v1/admin/settings', ['settings' => [
+            'whatsapp_message' => '<script>alert(1)</script>',
+            'whatsapp_button_position' => 'center',
+        ]])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['settings.whatsapp_message', 'settings.whatsapp_button_position']);
+    }
+
+    public function test_social_links_and_payment_methods_are_strictly_validated(): void
+    {
+        Sanctum::actingAs(User::factory()->admin()->create());
+
+        $this->putJson('/v1/admin/settings', ['settings' => [
+            'social_links' => ['facebook' => 'javascript:alert(1)', 'myspace' => 'https://myspace.com/x'],
+            'payment_methods' => ['cod', 'paypal'],
+            'contact_phone' => 'not a phone',
+        ]])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['settings.social_links', 'settings.social_links.facebook', 'settings.payment_methods.1', 'settings.contact_phone']);
+
+        $this->putJson('/v1/admin/settings', ['settings' => [
+            'social_links' => ['facebook' => 'https://facebook.com/mangrove', 'youtube' => 'https://youtube.com/@mangrove'],
+            'payment_methods' => ['cod', 'bkash'],
+            'contact_phone' => '+880 1712-345678',
+        ]])->assertOk();
+
+        $this->getJson('/v1/settings')
+            ->assertJsonPath('data.social_links.facebook', 'https://facebook.com/mangrove')
+            ->assertJsonPath('data.payment_methods', ['cod', 'bkash']);
+    }
+
+    public function test_only_admins_can_read_or_change_settings(): void
+    {
+        Sanctum::actingAs(User::factory()->manager()->create());
+
+        $this->getJson('/v1/admin/settings')->assertForbidden();
+        $this->putJson('/v1/admin/settings', ['settings' => ['site_name' => 'Hacked']])->assertForbidden();
+
+        Sanctum::actingAs(User::factory()->create());
+
+        $this->getJson('/v1/admin/settings')->assertForbidden();
+
+        $this->assertSame('Mangrove Collection', app(SettingsService::class)->get('site_name'));
+    }
+
     public function test_sms_gateway_test_uses_database_credentials(): void
     {
         Http::fake(['sms.example.com/*' => Http::response(['ok' => true])]);

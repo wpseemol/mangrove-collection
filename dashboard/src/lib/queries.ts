@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { api } from '@/lib/api'
-import type { Category, CategoryIcon, SessionResponse } from '@/lib/types'
+import type { AdminSettings, Category, CategoryIcon, SessionResponse } from '@/lib/types'
 import { useAuthStore } from '@/stores/auth'
 
 export const sessionQueryKey = ['session'] as const
@@ -32,6 +32,15 @@ export function useCategories() {
   return useQuery({
     queryKey: categoriesQueryKey,
     queryFn: () => api<{ data: Category[] }>('/admin/categories').then((r) => r.data),
+  })
+}
+
+export const settingsQueryKey = ['admin', 'settings'] as const
+
+export function useAdminSettings() {
+  return useQuery({
+    queryKey: settingsQueryKey,
+    queryFn: () => api<{ data: AdminSettings }>('/admin/settings').then((r) => r.data),
   })
 }
 

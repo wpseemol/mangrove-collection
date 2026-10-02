@@ -1,15 +1,66 @@
 "use client";
 
 import Script from "next/script";
+import { useEffect } from "react";
 
 import { useSettings } from "@/lib/queries";
 
+const MANAGED = "data-site-settings";
+
+/** Inserts admin-provided markup; scripts are re-created because `innerHTML` never runs them. */
+function injectMarkup(html: string, target: HTMLElement) {
+  const template = document.createElement("template");
+  template.innerHTML = html;
+
+  for (const node of Array.from(template.content.childNodes)) {
+    let element: Node = node;
+    if (node instanceof HTMLScriptElement) {
+      const script = document.createElement("script");
+      for (const { name, value } of Array.from(node.attributes)) script.setAttribute(name, value);
+      script.text = node.text;
+      element = script;
+    }
+    if (element instanceof Element) element.setAttribute(MANAGED, "");
+    target.appendChild(element);
+  }
+}
+
 /**
- * Tracking tags are configured in the dashboard (`settings` table), so they
- * are injected at runtime instead of being baked into the static build.
+ * Tracking tags, verification meta, favicon and custom scripts are configured in
+ * the dashboard (`settings` table), so they are applied at runtime instead of
+ * being baked into the static build.
  */
 export function SiteScripts() {
   const { data: settings } = useSettings();
+
+  const favicon = settings?.site_favicon;
+  const verification = settings?.google_site_verification;
+  const headScript = settings?.custom_head_script;
+  const bodyScript = settings?.custom_body_script;
+
+  useEffect(() => {
+    if (!favicon) return;
+    const link = document.createElement("link");
+    link.rel = "icon";
+    link.href = favicon;
+    document.head.querySelectorAll("link[rel~='icon']").forEach((icon) => icon.remove());
+    document.head.appendChild(link);
+  }, [favicon]);
+
+  useEffect(() => {
+    if (!verification || document.head.querySelector("meta[name='google-site-verification']")) return;
+    const meta = document.createElement("meta");
+    meta.name = "google-site-verification";
+    meta.content = verification;
+    document.head.appendChild(meta);
+  }, [verification]);
+
+  useEffect(() => {
+    // Runs once per page load: custom scripts usually aren't safe to execute twice.
+    if (document.querySelector(`[${MANAGED}]`)) return;
+    if (headScript) injectMarkup(headScript, document.head);
+    if (bodyScript) injectMarkup(bodyScript, document.body);
+  }, [headScript, bodyScript]);
 
   if (!settings) {
     return null;

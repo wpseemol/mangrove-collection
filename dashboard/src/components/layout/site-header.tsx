@@ -22,6 +22,7 @@ function crumbsFor(pathname: string): Crumb[] {
   if (pathname === '/products/new') return [{ label: 'Products', to: '/products' }, { label: 'Add product' }]
   if (/^\/products\/\d+\/edit$/.test(pathname)) return [{ label: 'Products', to: '/products' }, { label: 'Edit product' }]
   if (pathname === '/categories') return [{ label: 'Categories' }]
+  if (pathname === '/settings') return [{ label: 'Settings' }]
   return [{ label: 'Dashboard', to: '/' }]
 }
 

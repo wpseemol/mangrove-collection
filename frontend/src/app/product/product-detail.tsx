@@ -75,7 +75,7 @@ export function ProductDetail() {
 
   const variants = product.variants ?? [];
   const variant = variants.find((v) => v.id === variantId) ?? defaultVariant(product);
-  const gallery = [product.thumbnail, ...(product.images ?? []).map((image) => image.url)].filter(Boolean) as string[];
+  const gallery = [...new Set([product.thumbnail, ...(product.images ?? []).map((image) => image.url)])].filter(Boolean) as string[];
   const activeImage = gallery[imageIndex] ?? product.thumbnail;
   const inStock = variant?.in_stock ?? false;
 

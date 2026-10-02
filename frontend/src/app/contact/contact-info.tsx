@@ -19,7 +19,7 @@ export function ContactInfo() {
     settings.contact_address && { icon: MapPin, label: "Address", value: settings.contact_address },
   ].filter(Boolean) as { icon: typeof Phone; label: string; value: string; href?: string }[];
 
-  const whatsapp = settings.social_links?.whatsapp;
+  const whatsapp = settings.whatsapp_number ? whatsappHref(settings.whatsapp_number, settings.whatsapp_message) : null;
 
   return (
     <div className="mt-10 space-y-6">
@@ -50,7 +50,7 @@ export function ContactInfo() {
             <p className="mt-1 text-sm text-white/80">Message us on WhatsApp and we&apos;ll reply as soon as possible.</p>
           </div>
           <Button asChild size="lg" className="bg-[#25d366] text-white hover:bg-[#25d366]/90">
-            <a href={whatsappHref(whatsapp)} target="_blank" rel="noopener noreferrer">
+            <a href={whatsapp} target="_blank" rel="noopener noreferrer">
               <WhatsAppIcon className="size-4" /> Chat on WhatsApp
             </a>
           </Button>

@@ -88,11 +88,16 @@ export type PublicSettings = {
   site_name: string;
   site_tagline: string | null;
   site_logo: string | null;
+  site_favicon: string | null;
   contact_email: string | null;
   contact_phone: string | null;
   contact_address: string | null;
-  social_links: Partial<Record<"facebook" | "whatsapp" | "linkedin" | "instagram" | "twitter" | "youtube", string>> | null;
+  social_links: Partial<Record<"facebook" | "instagram" | "youtube" | "linkedin" | "twitter", string>> | null;
   storefront_url: string;
+  whatsapp_number: string | null;
+  whatsapp_message: string | null;
+  whatsapp_button_enabled: boolean;
+  whatsapp_button_position: "right" | "left";
   currency: string;
   currency_symbol: string;
   payment_methods: PaymentMethod[];
@@ -104,6 +109,7 @@ export type PublicSettings = {
   google_client_id: string | null;
   meta_title: string | null;
   meta_description: string | null;
+  google_site_verification: string | null;
   google_analytics_id: string | null;
   google_tag_manager_id: string | null;
   facebook_pixel_id: string | null;

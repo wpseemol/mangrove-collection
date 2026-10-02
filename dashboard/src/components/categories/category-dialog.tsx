@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Loader2, Shapes } from 'lucide-react'
+import { Link2, Loader2, RefreshCw, Shapes, X } from 'lucide-react'
 import { useEffect, useState, type FormEvent } from 'react'
 import { toast } from 'sonner'
 
@@ -21,11 +21,24 @@ import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { ApiError, api, errorMessage } from '@/lib/api'
 import { CATEGORY_IMAGE_SIZE } from '@/lib/category-image'
+import { slugify } from '@/lib/format'
 import { categoriesQueryKey, useCategoryIcons } from '@/lib/queries'
 import type { Category } from '@/lib/types'
+import { cn } from '@/lib/utils'
 import { isUnsafeText, UNSAFE_TEXT_MESSAGE } from '@/lib/validation'
 
 const LIMITS = { name: 100, slug: 120, description: 1000, sortOrder: 9999 } as const
+
+/** Keeps typed slugs URL-safe as you go (lowercase, spaces become dashes); a trailing dash is kept so typing can continue. */
+const normalizeSlug = (value: string) =>
+  value
+    .toLowerCase()
+    .replace(/[\s_]+/g, '-')
+    .replace(/[^a-z0-9-]/g, '')
+    .replace(/-{2,}/g, '-')
+    .replace(/^-/, '')
+
+const tidySlug = (value: string) => normalizeSlug(value).replace(/-+$/, '')
 
 type Draft = {
   name: string
@@ -50,7 +63,7 @@ const toDraft = (category?: Category | null): Draft => ({
 function validate(draft: Draft): Errors {
   const errors: Errors = {}
   const name = draft.name.trim()
-  const slug = draft.slug.trim()
+  const slug = tidySlug(draft.slug)
   const description = draft.description.trim()
 
   if (!name) errors.name = 'Enter a category name.'
@@ -115,6 +128,8 @@ function CategoryForm({
   const [draft, setDraft] = useState<Draft>(() => toDraft(category))
   const [image, setImage] = useState<{ file: File | null; url: string | null }>({ file: null, url: category?.image ?? null })
   const [pickerOpen, setPickerOpen] = useState(false)
+  // New categories follow the name until the slug is edited; existing ones never change on their own, so live links keep working.
+  const [slugLinked, setSlugLinked] = useState(!category)
   const [errors, setErrors] = useState<Errors>({})
   const [apiError, setApiError] = useState<ApiError | null>(null)
 
@@ -134,6 +149,17 @@ function CategoryForm({
   }
   const fieldError = (key: keyof Errors) => errors[key] ?? apiError?.field(key)
 
+  const setName = (name: string) => {
+    setDraft((d) => ({ ...d, name, slug: slugLinked ? slugify(name) : d.slug }))
+    clearError('name')
+    if (slugLinked) clearError('slug')
+  }
+  const setSlug = (slug: string, linked = false) => {
+    setSlugLinked(linked)
+    set('slug', slug)
+  }
+  const generatedSlug = slugify(draft.name)
+
   const selectedIcon = icons?.find((icon) => icon.name === draft.icon)
   const selectedNodes = selectedIcon?.nodes ?? (draft.icon && draft.icon === category?.icon ? category.icon_nodes : null)
 
@@ -141,7 +167,7 @@ function CategoryForm({
     mutationFn: () => {
       const form = new FormData()
       form.append('name', draft.name.trim())
-      form.append('slug', draft.slug.trim())
+      form.append('slug', tidySlug(draft.slug))
       form.append('description', draft.description.trim())
       form.append('icon', draft.icon)
       form.append('is_active', draft.is_active ? '1' : '0')
@@ -194,7 +220,7 @@ function CategoryForm({
             <Input
               id="category-name"
               value={draft.name}
-              onChange={(e) => set('name', e.target.value)}
+              onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Honey"
               maxLength={LIMITS.name}
               aria-invalid={Boolean(fieldError('name'))}
@@ -205,18 +231,55 @@ function CategoryForm({
           <FormField
             id="category-slug"
             label="URL slug"
-            hint={<Optional />}
+            hint={
+              slugLinked && draft.slug ? (
+                <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                  <Link2 className="size-3" /> From name
+                </span>
+              ) : (
+                <Optional />
+              )
+            }
             error={fieldError('slug')}
-            description="Leave empty to generate it from the name."
+            description={
+              draft.slug
+                ? `Used in the category link: /shop?category=${draft.slug}`
+                : 'Leave empty and one is made from the name when you save.'
+            }
           >
-            <Input
-              id="category-slug"
-              value={draft.slug}
-              onChange={(e) => set('slug', e.target.value)}
-              placeholder="honey"
-              maxLength={LIMITS.slug}
-              aria-invalid={Boolean(fieldError('slug'))}
-            />
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <Input
+                  id="category-slug"
+                  value={draft.slug}
+                  onChange={(e) => setSlug(normalizeSlug(e.target.value))}
+                  onBlur={() => draft.slug !== tidySlug(draft.slug) && set('slug', tidySlug(draft.slug))}
+                  placeholder={generatedSlug || 'honey'}
+                  maxLength={LIMITS.slug}
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck={false}
+                  aria-invalid={Boolean(fieldError('slug'))}
+                  className={cn(draft.slug && 'pr-8')}
+                />
+                {draft.slug && (
+                  <button
+                    type="button"
+                    onClick={() => setSlug('')}
+                    className="absolute inset-y-0 right-0 flex w-8 items-center justify-center text-muted-foreground hover:text-foreground"
+                    aria-label="Remove slug"
+                    title="Remove slug"
+                  >
+                    <X className="size-4" />
+                  </button>
+                )}
+              </div>
+              {!slugLinked && generatedSlug && draft.slug !== generatedSlug && (
+                <Button type="button" variant="outline" onClick={() => setSlug(generatedSlug, true)} title="Generate from name">
+                  <RefreshCw /> <span className="hidden sm:inline">From name</span>
+                </Button>
+              )}
+            </div>
           </FormField>
           <FormField
             id="category-sort"

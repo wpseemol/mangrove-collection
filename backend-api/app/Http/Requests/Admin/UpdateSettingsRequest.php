@@ -25,6 +25,10 @@ class UpdateSettingsRequest extends FormRequest
         foreach (array_keys((array) $this->input('settings')) as $key) {
             if (is_string($key) && SettingRegistry::has($key)) {
                 $rules["settings.{$key}"] = SettingRegistry::rulesFor($key);
+
+                if ($itemRules = SettingRegistry::itemRulesFor($key)) {
+                    $rules["settings.{$key}.*"] = $itemRules;
+                }
             }
         }
 

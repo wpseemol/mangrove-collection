@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router'
 
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
 import { ProtectedRoute } from '@/components/protected-route'
+import { RequireAdmin } from '@/components/require-admin'
 import { CategoriesPage } from '@/pages/categories'
 import { ForgotPasswordPage } from '@/pages/forgot-password'
 import { LoginPage } from '@/pages/login'
@@ -9,6 +10,7 @@ import { OverviewPage } from '@/pages/overview'
 import { ProductsPage } from '@/pages/products/list'
 import { ProductCreatePage, ProductEditPage } from '@/pages/products/product-form'
 import { ResetPasswordPage } from '@/pages/reset-password'
+import { SettingsPage } from '@/pages/settings'
 
 export default function App() {
   return (
@@ -23,6 +25,9 @@ export default function App() {
           <Route path="products/new" element={<ProductCreatePage />} />
           <Route path="products/:id/edit" element={<ProductEditPage />} />
           <Route path="categories" element={<CategoriesPage />} />
+          <Route element={<RequireAdmin />}>
+            <Route path="settings" element={<SettingsPage />} />
+          </Route>
         </Route>
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
