@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1\Auth;
 use App\Http\Controllers\Concerns\IssuesApiTokens;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Rules\SafeText;
 use App\Services\SettingsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -41,9 +42,9 @@ class GoogleAuthController extends Controller
     public function login(Request $request): JsonResponse
     {
         $request->validate([
-            'access_token' => ['required_without:code', 'nullable', 'string'],
-            'code' => ['required_without:access_token', 'nullable', 'string'],
-            'device_name' => ['nullable', 'string', 'max:100'],
+            'access_token' => ['required_without:code', 'nullable', 'string', 'max:4096', 'regex:/^[A-Za-z0-9._\-~+\/=]+$/'],
+            'code' => ['required_without:access_token', 'nullable', 'string', 'max:2048', 'regex:/^[A-Za-z0-9._\-~+\/=]+$/'],
+            'device_name' => ['nullable', 'string', 'max:100', new SafeText],
         ]);
 
         $this->ensureConfigured(requireRedirect: $request->filled('code'));

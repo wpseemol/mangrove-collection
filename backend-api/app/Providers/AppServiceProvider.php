@@ -58,5 +58,13 @@ class AppServiceProvider extends ServiceProvider
             ->by($request->user()?->id ?: $request->ip()));
 
         RateLimiter::for('tracking', fn (Request $request) => Limit::perMinute(20)->by($request->ip()));
+
+        RateLimiter::for('uploads', fn (Request $request) => Limit::perMinute(20)
+            ->by($request->user()?->id ?: $request->ip()));
+
+        // Reads stay on the global `api` limit; creates, updates and deletes get a tighter one.
+        RateLimiter::for('writes', fn (Request $request) => $request->isMethodSafe()
+            ? Limit::none()
+            : Limit::perMinute(60)->by($request->user()?->id ?: $request->ip()));
     }
 }

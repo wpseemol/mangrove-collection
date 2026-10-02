@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use App\Rules\SafeText;
+use App\Support\Search;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -19,6 +21,7 @@ class ProductController extends Controller
     public function index(Request $request): AnonymousResourceCollection
     {
         $request->validate([
+            'q' => ['nullable', 'string', 'max:100', new SafeText],
             'status' => ['nullable', Rule::enum(ProductStatus::class)],
             'category_id' => ['nullable', 'integer'],
             'trashed' => ['nullable', 'boolean'],
@@ -29,7 +32,7 @@ class ProductController extends Controller
             ->with(['category', 'variants'])
             ->when($request->boolean('trashed'), fn (Builder $q) => $q->onlyTrashed())
             ->when($request->query('q'), fn (Builder $q, $term) => $q->where(fn (Builder $q) => $q
-                ->where('name', 'like', "%{$term}%")
+                ->where('name', 'like', Search::like($term))
                 ->orWhereHas('variants', fn (Builder $q) => $q->where('sku', $term))))
             ->when($request->query('status'), fn (Builder $q, $status) => $q->where('status', $status))
             ->when($request->query('category_id'), fn (Builder $q, $id) => $q->where('category_id', $id))

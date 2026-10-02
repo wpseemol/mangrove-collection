@@ -5,6 +5,7 @@ import { Link } from 'react-router'
 import { toast } from 'sonner'
 
 import { CategoryDialog } from '@/components/categories/category-dialog'
+import { IconGlyph } from '@/components/categories/icon-glyph'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { PageHeader } from '@/components/layout/page-header'
 import { Badge } from '@/components/ui/badge'
@@ -94,6 +95,10 @@ export function CategoriesPage() {
                     <div className="flex items-center gap-3">
                       {category.image ? (
                         <img src={category.image} alt="" className="size-10 shrink-0 rounded-md border object-cover" />
+                      ) : category.icon_nodes ? (
+                        <span className="flex size-10 shrink-0 items-center justify-center rounded-md border bg-secondary text-primary">
+                          <IconGlyph nodes={category.icon_nodes} className="size-5" />
+                        </span>
                       ) : (
                         <span className="flex size-10 shrink-0 items-center justify-center rounded-md border bg-muted text-muted-foreground">
                           <ImageOff className="size-4" />

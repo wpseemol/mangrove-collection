@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\V1\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PageResource;
 use App\Models\Page;
+use App\Rules\SafeHtml;
+use App\Rules\SafeText;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -28,15 +30,15 @@ class PageController extends Controller
     public function upsert(Request $request, string $slug): JsonResponse
     {
         $request->merge(['slug' => $slug])->validate([
-            'slug' => ['required', 'string', 'max:100', 'alpha_dash'],
+            'slug' => ['required', 'string', 'max:100', 'alpha_dash:ascii'],
         ]);
 
         $data = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'content' => ['nullable', 'string'],
-            'sections' => ['nullable', 'array'],
-            'meta_title' => ['nullable', 'string', 'max:255'],
-            'meta_description' => ['nullable', 'string', 'max:500'],
+            'title' => ['required', 'string', 'max:255', new SafeText],
+            'content' => ['nullable', 'string', 'max:100000', new SafeHtml],
+            'sections' => ['nullable', 'array', 'max:50', new SafeText],
+            'meta_title' => ['nullable', 'string', 'max:255', new SafeText],
+            'meta_description' => ['nullable', 'string', 'max:500', new SafeText],
             'is_published' => ['sometimes', 'boolean'],
         ]);
 

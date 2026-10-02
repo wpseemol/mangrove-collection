@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UpdateSettingsRequest;
 use App\Notifications\TestMail;
+use App\Rules\PhoneNumber;
 use App\Services\SettingsService;
 use App\Services\SmsService;
 use Illuminate\Http\JsonResponse;
@@ -33,7 +34,7 @@ class SettingController extends Controller
 
     public function testMail(Request $request): JsonResponse
     {
-        $request->validate(['to' => ['required', 'email']]);
+        $request->validate(['to' => ['required', 'email', 'max:255']]);
 
         try {
             Notification::route('mail', $request->string('to'))->notifyNow(new TestMail);
@@ -46,7 +47,7 @@ class SettingController extends Controller
 
     public function testSms(Request $request, SmsService $sms): JsonResponse
     {
-        $request->validate(['phone' => ['required', 'string', 'max:32']]);
+        $request->validate(['phone' => ['required', 'string', 'max:32', new PhoneNumber]]);
 
         try {
             $sms->send($request->string('phone'), 'Mangrove Collection SMS gateway test.');

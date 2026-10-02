@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Auth;
 
 use App\Models\User;
+use App\Rules\SafeText;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -20,9 +21,9 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'login' => ['required', 'string', 'max:255'],
-            'password' => ['required', 'string'],
-            'device_name' => ['nullable', 'string', 'max:100'],
+            'login' => ['required', 'string', 'max:255', new SafeText],
+            'password' => ['required', 'string', 'max:128'],
+            'device_name' => ['nullable', 'string', 'max:100', new SafeText],
         ];
     }
 

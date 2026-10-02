@@ -17,7 +17,7 @@ class PasswordResetController extends Controller
 {
     public function forgot(Request $request): JsonResponse
     {
-        $request->validate(['email' => ['required', 'email']]);
+        $request->validate(['email' => ['required', 'email', 'max:255']]);
 
         try {
             Password::sendResetLink($request->only('email'));
@@ -34,9 +34,9 @@ class PasswordResetController extends Controller
     public function reset(Request $request): JsonResponse
     {
         $request->validate([
-            'token' => ['required', 'string'],
-            'email' => ['required', 'email'],
-            'password' => ['required', 'confirmed', PasswordRule::min(8)],
+            'token' => ['required', 'string', 'max:255', 'regex:/^[A-Za-z0-9]+$/'],
+            'email' => ['required', 'email', 'max:255'],
+            'password' => ['required', 'string', 'max:128', 'confirmed', PasswordRule::min(8)],
         ]);
 
         $status = Password::reset(

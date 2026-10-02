@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use App\Enums\PaymentMethod;
 use App\Models\Address;
+use App\Rules\PhoneNumber;
+use App\Rules\SafeText;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
@@ -31,21 +33,21 @@ class CheckoutRequest extends FormRequest
             'payment_method' => ['required', Rule::enum(PaymentMethod::class)],
             'transaction_id' => [
                 Rule::requiredIf(fn () => PaymentMethod::tryFrom((string) $this->input('payment_method'))?->requiresTransactionId()),
-                'nullable', 'string', 'max:100',
+                'nullable', 'string', 'max:100', 'regex:/^[A-Za-z0-9\-]+$/',
             ],
-            'payment_sender_number' => ['nullable', 'string', 'max:32'],
-            'customer_note' => ['nullable', 'string', 'max:1000'],
+            'payment_sender_number' => ['nullable', 'string', 'max:32', new PhoneNumber],
+            'customer_note' => ['nullable', 'string', 'max:1000', new SafeText],
 
             'address_id' => ['nullable', 'integer'],
             'address' => [$usingSavedAddress ? 'nullable' : 'required', 'array'],
-            'address.name' => [$usingSavedAddress ? 'nullable' : 'required', 'string', 'max:255'],
+            'address.name' => [$usingSavedAddress ? 'nullable' : 'required', 'string', 'max:255', new SafeText],
             'address.email' => ['nullable', 'email', 'max:255'],
-            'address.phone' => [$usingSavedAddress ? 'nullable' : 'required', 'string', 'max:32'],
-            'address.region' => ['nullable', 'string', 'max:255'],
-            'address.city' => ['nullable', 'string', 'max:255'],
-            'address.zone' => ['nullable', 'string', 'max:255'],
-            'address.landmark' => ['nullable', 'string', 'max:255'],
-            'address.full_address' => [$usingSavedAddress ? 'nullable' : 'required', 'string', 'max:1000'],
+            'address.phone' => [$usingSavedAddress ? 'nullable' : 'required', 'string', 'max:32', new PhoneNumber],
+            'address.region' => ['nullable', 'string', 'max:255', new SafeText],
+            'address.city' => ['nullable', 'string', 'max:255', new SafeText],
+            'address.zone' => ['nullable', 'string', 'max:255', new SafeText],
+            'address.landmark' => ['nullable', 'string', 'max:255', new SafeText],
+            'address.full_address' => [$usingSavedAddress ? 'nullable' : 'required', 'string', 'max:1000', new SafeText],
             'save_address' => ['sometimes', 'boolean'],
         ];
     }

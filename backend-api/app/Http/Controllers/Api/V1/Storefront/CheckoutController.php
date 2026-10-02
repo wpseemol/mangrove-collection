@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CheckoutRequest;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use App\Rules\PhoneNumber;
 use App\Services\OrderService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -42,8 +43,8 @@ class CheckoutController extends Controller
     public function track(Request $request): OrderResource
     {
         $data = $request->validate([
-            'order_number' => ['required', 'string', 'max:32'],
-            'phone' => ['required', 'string', 'max:32'],
+            'order_number' => ['required', 'string', 'max:32', 'regex:/^[A-Za-z0-9\-]+$/'],
+            'phone' => ['required', 'string', 'max:32', new PhoneNumber],
         ]);
 
         $order = Order::query()

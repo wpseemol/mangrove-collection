@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 import { Container } from "@/components/shared/container";
+import { IconGlyph } from "@/components/shared/icon-glyph";
 import { useCategories } from "@/lib/queries";
 import { cn } from "@/lib/utils";
 
@@ -47,7 +48,10 @@ function CategoryMenu() {
           <div className="w-64 rounded-lg bg-popover p-1.5 text-popover-foreground shadow-md ring-1 ring-foreground/10 animate-in fade-in-0 zoom-in-95 slide-in-from-top-2 duration-150">
             {categories?.map((category) => (
               <Link key={category.id} href={`/shop?category=${category.slug}`} onClick={close} className={MENU_ITEM}>
-                {category.name}
+                <span className="flex min-w-0 items-center gap-2">
+                  {category.icon_nodes ? <IconGlyph nodes={category.icon_nodes} className="size-4 text-primary" /> : <span className="size-4 shrink-0" />}
+                  <span className="truncate">{category.name}</span>
+                </span>
                 {category.products_count !== undefined && <span className="text-xs text-muted-foreground">{category.products_count}</span>}
               </Link>
             ))}

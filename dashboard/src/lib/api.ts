@@ -1,4 +1,5 @@
 import { API_URL } from '@/lib/config'
+import { findUnsafeFields } from '@/lib/validation'
 import { useAuthStore } from '@/stores/auth'
 
 export class ApiError extends Error {
@@ -31,6 +32,11 @@ export async function api<T>(path: string, { query, body, headers, ...init }: Re
     if (value !== undefined && value !== null && value !== '') {
       url.searchParams.set(key, String(value))
     }
+  }
+
+  const unsafe = body === undefined ? {} : findUnsafeFields(body)
+  if (Object.keys(unsafe).length) {
+    throw new ApiError('Please remove HTML, script or code from the highlighted fields.', 422, unsafe)
   }
 
   const token = useAuthStore.getState().token

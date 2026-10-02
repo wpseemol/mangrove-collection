@@ -33,11 +33,24 @@ export type Paginated<T> = {
   }
 }
 
+/** One SVG element of a Lucide icon: `[tag, attributes]`. */
+export type IconNode = [string, Record<string, string>]
+
+export type CategoryIcon = {
+  name: string
+  label: string
+  group: string
+  keywords: string[]
+  nodes: IconNode[]
+}
+
 export type Category = {
   id: number
   name: string
   slug: string
   image: string | null
+  icon: string | null
+  icon_nodes: IconNode[] | null
   description: string | null
   is_active: boolean
   sort_order: number

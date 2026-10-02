@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use App\Models\Category;
+use App\Services\CategoryImageService;
+use App\Support\CategoryIcons;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -15,7 +17,9 @@ class CategoryResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
-            'image' => $this->image,
+            'image' => CategoryImageService::url($this->image),
+            'icon' => $this->icon,
+            'icon_nodes' => CategoryIcons::find($this->icon)['nodes'] ?? null,
             'description' => $this->description,
             'is_active' => $this->is_active,
             'sort_order' => $this->sort_order,

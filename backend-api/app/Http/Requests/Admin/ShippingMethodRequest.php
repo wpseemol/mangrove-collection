@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Rules\SafeText;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -20,12 +21,12 @@ class ShippingMethodRequest extends FormRequest
         $required = $this->isMethod('POST') ? 'required' : 'sometimes';
 
         return [
-            'code' => [$required, 'string', 'max:50', 'alpha_dash', Rule::unique('shipping_methods', 'code')->ignore($this->route('shipping_method'))],
-            'title' => [$required, 'string', 'max:255'],
-            'description' => ['nullable', 'string', 'max:255'],
-            'price' => [$required, 'numeric', 'min:0'],
+            'code' => [$required, 'string', 'max:50', 'alpha_dash:ascii', Rule::unique('shipping_methods', 'code')->ignore($this->route('shipping_method'))],
+            'title' => [$required, 'string', 'max:255', new SafeText],
+            'description' => ['nullable', 'string', 'max:255', new SafeText],
+            'price' => [$required, 'numeric', 'min:0', 'max:99999999'],
             'is_active' => ['sometimes', 'boolean'],
-            'sort_order' => ['sometimes', 'integer', 'min:0'],
+            'sort_order' => ['sometimes', 'integer', 'min:0', 'max:9999'],
         ];
     }
 }

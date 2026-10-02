@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\V1\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\MediaResource;
 use App\Models\Media;
+use App\Rules\SafeText;
+use App\Support\Search;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -14,10 +16,15 @@ class MediaController extends Controller
 {
     public function index(Request $request): AnonymousResourceCollection
     {
+        $request->validate([
+            'q' => ['nullable', 'string', 'max:100', new SafeText],
+            'per_page' => ['nullable', 'integer', 'min:1', 'max:100'],
+        ]);
+
         $media = Media::query()
-            ->when($request->query('q'), fn ($q, $term) => $q->where('original_name', 'like', "%{$term}%"))
+            ->when($request->query('q'), fn ($q, $term) => $q->where('original_name', 'like', Search::like($term)))
             ->latest()
-            ->paginate(min((int) $request->query('per_page', 40), 100));
+            ->paginate((int) $request->query('per_page', 40));
 
         return MediaResource::collection($media);
     }

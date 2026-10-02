@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\V1\Auth\AuthController;
 use App\Http\Controllers\Api\V1\Auth\GoogleAuthController;
 use App\Http\Controllers\Api\V1\Auth\PasswordResetController;
 use App\Http\Controllers\Api\V1\Storefront\CategoryController;
+use App\Http\Controllers\Api\V1\Storefront\CategoryIconController;
 use App\Http\Controllers\Api\V1\Storefront\CheckoutController;
 use App\Http\Controllers\Api\V1\Storefront\ContentController;
 use App\Http\Controllers\Api\V1\Storefront\ProductController;
@@ -46,6 +47,7 @@ Route::prefix('v1')->name('v1.')->group(function () {
 
     Route::get('categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::get('categories/{slug}', [CategoryController::class, 'show'])->name('categories.show');
+    Route::get('category-icons', CategoryIconController::class)->name('category-icons');
 
     Route::get('products', [ProductController::class, 'index'])->name('products.index');
     Route::get('products/{slug}', [ProductController::class, 'show'])->name('products.show');
@@ -59,10 +61,10 @@ Route::prefix('v1')->name('v1.')->group(function () {
     Route::get('orders/track', [CheckoutController::class, 'track'])->middleware('throttle:tracking')->name('orders.track');
 
     // ------------------------------------------------------------- Account
-    Route::middleware(['auth:sanctum', 'active'])->prefix('account')->name('account.')->group(function () {
+    Route::middleware(['auth:sanctum', 'active', 'throttle:writes'])->prefix('account')->name('account.')->group(function () {
         Route::patch('profile', [ProfileController::class, 'update'])->name('profile.update');
-        Route::put('password', [ProfileController::class, 'updatePassword'])->name('password.update');
-        Route::post('avatar', [ProfileController::class, 'uploadAvatar'])->name('avatar.upload');
+        Route::put('password', [ProfileController::class, 'updatePassword'])->middleware('throttle:auth')->name('password.update');
+        Route::post('avatar', [ProfileController::class, 'uploadAvatar'])->middleware('throttle:uploads')->name('avatar.upload');
 
         Route::apiResource('addresses', AddressController::class);
 
@@ -72,17 +74,22 @@ Route::prefix('v1')->name('v1.')->group(function () {
     });
 
     // --------------------------------------------------------------- Admin
-    Route::middleware(['auth:sanctum', 'active', 'role:admin,manager'])->prefix('admin')->name('admin.')->group(function () {
+    Route::middleware(['auth:sanctum', 'active', 'role:admin,manager', 'throttle:writes'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('dashboard', Admin\DashboardController::class)->name('dashboard');
 
-        Route::apiResource('categories', Admin\CategoryController::class);
+        Route::apiResource('categories', Admin\CategoryController::class)->except(['store', 'update']);
+        Route::middleware('throttle:uploads')->group(function () {
+            Route::post('categories', [Admin\CategoryController::class, 'store'])->name('categories.store');
+            Route::match(['put', 'patch'], 'categories/{category}', [Admin\CategoryController::class, 'update'])->name('categories.update');
+            Route::post('media', [Admin\MediaController::class, 'store'])->name('media.store');
+        });
 
         Route::post('products/{product}/restore', [Admin\ProductController::class, 'restore'])->name('products.restore');
         Route::apiResource('products', Admin\ProductController::class);
 
         Route::apiResource('orders', Admin\OrderController::class)->except('store');
 
-        Route::apiResource('media', Admin\MediaController::class)->only(['index', 'store', 'destroy']);
+        Route::apiResource('media', Admin\MediaController::class)->only(['index', 'destroy']);
 
         Route::apiResource('banners', Admin\BannerController::class);
 

@@ -2,17 +2,24 @@
 
 namespace App\Http\Controllers\Api\V1\Account;
 
+use App\Enums\OrderStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Validation\Rule;
 
 class OrderController extends Controller
 {
     public function index(Request $request): AnonymousResourceCollection
     {
+        $request->validate([
+            'status' => ['nullable', Rule::enum(OrderStatus::class)],
+            'per_page' => ['nullable', 'integer', 'min:1', 'max:50'],
+        ]);
+
         $orders = $request->user()->orders()
             ->with('items')
             ->when($request->query('status'), fn ($q, $status) => $q->where('status', $status))

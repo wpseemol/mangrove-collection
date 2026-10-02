@@ -2,7 +2,9 @@
 
 namespace App\Settings;
 
-use Illuminate\Contracts\Validation\Rule;
+use App\Rules\SafeText;
+use App\Rules\SafeUrl;
+use Illuminate\Contracts\Validation\ValidationRule;
 
 /**
  * The single source of truth for every runtime-configurable setting.
@@ -11,11 +13,12 @@ use Illuminate\Contracts\Validation\Rule;
  * type:      string | text | boolean | integer | float | json | email | url
  * public:    exposed via the unauthenticated /v1/settings endpoint
  * encrypted: stored encrypted at rest and masked in admin responses
+ * raw:       intentionally holds markup/scripts (admin-only), so SafeText is skipped
  */
 final class SettingRegistry
 {
     /**
-     * @return array<string, array<string, array{type: string, public?: bool, encrypted?: bool, default?: mixed, options?: list<string>}>>
+     * @return array<string, array<string, array{type: string, public?: bool, encrypted?: bool, raw?: bool, default?: mixed, options?: list<string>}>>
      */
     public static function groups(): array
     {
@@ -88,14 +91,14 @@ final class SettingRegistry
                 'google_analytics_id' => ['type' => 'string', 'public' => true, 'default' => null],
                 'google_tag_manager_id' => ['type' => 'string', 'public' => true, 'default' => null],
                 'facebook_pixel_id' => ['type' => 'string', 'public' => true, 'default' => null],
-                'custom_head_script' => ['type' => 'text', 'public' => true, 'default' => null],
-                'custom_body_script' => ['type' => 'text', 'public' => true, 'default' => null],
+                'custom_head_script' => ['type' => 'text', 'public' => true, 'raw' => true, 'default' => null],
+                'custom_body_script' => ['type' => 'text', 'public' => true, 'raw' => true, 'default' => null],
             ],
         ];
     }
 
     /**
-     * @return array<string, array{group: string, type: string, public: bool, encrypted: bool, default: mixed, options: list<string>|null}>
+     * @return array<string, array{group: string, type: string, public: bool, encrypted: bool, raw: bool, default: mixed, options: list<string>|null}>
      */
     public static function all(): array
     {
@@ -108,6 +111,7 @@ final class SettingRegistry
                     'type' => $definition['type'],
                     'public' => $definition['public'] ?? false,
                     'encrypted' => $definition['encrypted'] ?? false,
+                    'raw' => $definition['raw'] ?? false,
                     'default' => $definition['default'] ?? null,
                     'options' => $definition['options'] ?? null,
                 ];
@@ -123,7 +127,7 @@ final class SettingRegistry
     }
 
     /**
-     * @return array{group: string, type: string, public: bool, encrypted: bool, default: mixed, options: list<string>|null}|null
+     * @return array{group: string, type: string, public: bool, encrypted: bool, raw: bool, default: mixed, options: list<string>|null}|null
      */
     public static function get(string $key): ?array
     {
@@ -131,7 +135,7 @@ final class SettingRegistry
     }
 
     /**
-     * @return list<string|Rule>
+     * @return list<string|ValidationRule>
      */
     public static function rulesFor(string $key): array
     {
@@ -141,12 +145,17 @@ final class SettingRegistry
             'boolean' => ['boolean'],
             'integer' => ['integer'],
             'float' => ['numeric'],
-            'json' => ['array'],
+            'json' => ['array', 'max:50'],
             'email' => ['email', 'max:255'],
-            'url' => ['url', 'max:2048'],
+            'url' => ['url:http,https', 'max:2048', new SafeUrl],
             'text' => ['string', 'max:65000'],
             default => ['string', 'max:2048'],
         };
+
+        // Secrets (passwords, API keys) and admin scripts may legitimately contain any character.
+        if (in_array($definition['type'], ['string', 'text', 'json'], true) && ! $definition['encrypted'] && ! $definition['raw']) {
+            $rules[] = new SafeText;
+        }
 
         if ($definition['options']) {
             $rules[] = 'in:'.implode(',', $definition['options']);

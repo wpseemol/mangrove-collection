@@ -6,17 +6,25 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\CategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
+use App\Rules\SafeText;
+use App\Services\CategoryImageService;
+use App\Support\Search;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Throwable;
 
 class CategoryController extends Controller
 {
+    public function __construct(private readonly CategoryImageService $images) {}
+
     public function index(Request $request): AnonymousResourceCollection
     {
+        $request->validate(['q' => ['nullable', 'string', 'max:100', new SafeText]]);
+
         $categories = Category::query()
             ->withCount('products')
-            ->when($request->query('q'), fn ($q, $term) => $q->where('name', 'like', "%{$term}%"))
+            ->when($request->query('q'), fn ($q, $term) => $q->where('name', 'like', Search::like($term)))
             ->orderBy('sort_order')
             ->orderBy('name')
             ->get();
@@ -26,10 +34,18 @@ class CategoryController extends Controller
 
     public function store(CategoryRequest $request): JsonResponse
     {
-        $category = Category::query()->create([
-            ...$request->validated(),
-            'created_by' => $request->user()->id,
-        ]);
+        $data = $request->safe()->except(['image', 'remove_image']);
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $this->images->store($request->file('image'), $data['name']);
+        }
+
+        try {
+            $category = Category::query()->create([...$data, 'created_by' => $request->user()->id]);
+        } catch (Throwable $e) {
+            $this->images->delete($data['image'] ?? null);
+            throw $e;
+        }
 
         return (new CategoryResource($category))->response()->setStatusCode(201);
     }
@@ -41,7 +57,27 @@ class CategoryController extends Controller
 
     public function update(CategoryRequest $request, Category $category): CategoryResource
     {
-        $category->update($request->validated());
+        $data = $request->safe()->except(['image', 'remove_image']);
+        $previousImage = $category->image;
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $this->images->store($request->file('image'), $data['name'] ?? $category->name);
+        } elseif ($request->boolean('remove_image')) {
+            $data['image'] = null;
+        }
+
+        try {
+            $category->update($data);
+        } catch (Throwable $e) {
+            if ($request->hasFile('image')) {
+                $this->images->delete($data['image']);
+            }
+            throw $e;
+        }
+
+        if (array_key_exists('image', $data) && $previousImage !== $category->image) {
+            $this->images->delete($previousImage);
+        }
 
         return new CategoryResource($category->loadCount('products'));
     }
@@ -55,6 +91,7 @@ class CategoryController extends Controller
         }
 
         $category->delete();
+        $this->images->delete($category->image);
 
         return response()->json(null, 204);
     }

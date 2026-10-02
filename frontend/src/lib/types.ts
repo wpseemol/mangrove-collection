@@ -4,11 +4,16 @@ export type Paginated<T> = {
   meta: { current_page: number; last_page: number; per_page: number; total: number; from: number | null; to: number | null };
 };
 
+/** One SVG element of a category icon: `[tag, attributes]`. */
+export type IconNode = [string, Record<string, string>];
+
 export type Category = {
   id: number;
   name: string;
   slug: string;
   image: string | null;
+  icon: string | null;
+  icon_nodes: IconNode[] | null;
   description: string | null;
   products_count?: number;
 };

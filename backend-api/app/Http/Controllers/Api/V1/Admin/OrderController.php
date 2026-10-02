@@ -8,7 +8,9 @@ use App\Enums\PaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use App\Rules\SafeText;
 use App\Services\OrderService;
+use App\Support\Search;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -20,21 +22,22 @@ class OrderController extends Controller
     public function index(Request $request): AnonymousResourceCollection
     {
         $request->validate([
+            'q' => ['nullable', 'string', 'max:100', new SafeText],
             'status' => ['nullable', Rule::enum(OrderStatus::class)],
             'payment_status' => ['nullable', Rule::enum(PaymentStatus::class)],
             'payment_method' => ['nullable', Rule::enum(PaymentMethod::class)],
-            'from' => ['nullable', 'date'],
-            'to' => ['nullable', 'date'],
+            'from' => ['nullable', 'date_format:Y-m-d'],
+            'to' => ['nullable', 'date_format:Y-m-d'],
             'per_page' => ['nullable', 'integer', 'min:1', 'max:100'],
         ]);
 
         $orders = Order::query()
             ->withCount('items')
             ->when($request->query('q'), fn (Builder $q, $term) => $q->where(fn (Builder $q) => $q
-                ->where('order_number', 'like', "%{$term}%")
-                ->orWhere('customer_name', 'like', "%{$term}%")
-                ->orWhere('customer_phone', 'like', "%{$term}%")
-                ->orWhere('customer_email', 'like', "%{$term}%")))
+                ->where('order_number', 'like', Search::like($term))
+                ->orWhere('customer_name', 'like', Search::like($term))
+                ->orWhere('customer_phone', 'like', Search::like($term))
+                ->orWhere('customer_email', 'like', Search::like($term))))
             ->when($request->query('status'), fn (Builder $q, $v) => $q->where('status', $v))
             ->when($request->query('payment_status'), fn (Builder $q, $v) => $q->where('payment_status', $v))
             ->when($request->query('payment_method'), fn (Builder $q, $v) => $q->where('payment_method', $v))
@@ -57,8 +60,8 @@ class OrderController extends Controller
         $data = $request->validate([
             'status' => ['sometimes', Rule::enum(OrderStatus::class)],
             'payment_status' => ['sometimes', Rule::enum(PaymentStatus::class)],
-            'transaction_id' => ['nullable', 'string', 'max:100'],
-            'admin_note' => ['nullable', 'string', 'max:5000'],
+            'transaction_id' => ['nullable', 'string', 'max:100', 'regex:/^[A-Za-z0-9\-]+$/'],
+            'admin_note' => ['nullable', 'string', 'max:5000', new SafeText],
         ]);
 
         if ($order->status === OrderStatus::Cancelled && isset($data['status']) && $data['status'] !== OrderStatus::Cancelled->value) {

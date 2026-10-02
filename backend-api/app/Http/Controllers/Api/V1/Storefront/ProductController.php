@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\V1\Storefront;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use App\Rules\SafeText;
+use App\Support\Search;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -18,9 +20,9 @@ class ProductController extends Controller
     public function index(Request $request): AnonymousResourceCollection
     {
         $request->validate([
-            'q' => ['nullable', 'string', 'max:100'],
-            'category' => ['nullable', 'string', 'max:255'],
-            'tag' => ['nullable', 'string', 'max:50'],
+            'q' => ['nullable', 'string', 'max:100', new SafeText],
+            'category' => ['nullable', 'string', 'max:255', 'regex:/^[A-Za-z0-9_\-]+(,[A-Za-z0-9_\-]+)*$/'],
+            'tag' => ['nullable', 'string', 'max:50', new SafeText],
             'featured' => ['nullable', 'boolean'],
             'min_price' => ['nullable', 'numeric', 'min:0'],
             'max_price' => ['nullable', 'numeric', 'min:0'],
@@ -34,8 +36,8 @@ class ProductController extends Controller
             ->published()
             ->with(['category', 'variants'])
             ->when($request->query('q'), fn (Builder $q, $term) => $q->where(fn (Builder $q) => $q
-                ->where('name', 'like', "%{$term}%")
-                ->orWhere('short_description', 'like', "%{$term}%")))
+                ->where('name', 'like', Search::like($term))
+                ->orWhere('short_description', 'like', Search::like($term))))
             ->when($request->query('category'), fn (Builder $q, $slugs) => $q->whereHas('category', fn (Builder $q) => $q->whereIn('slug', explode(',', $slugs))))
             ->when($request->query('tag'), fn (Builder $q, $tag) => $q->whereJsonContains('tags', $tag))
             ->when($request->boolean('featured'), fn (Builder $q) => $q->where('is_featured', true))

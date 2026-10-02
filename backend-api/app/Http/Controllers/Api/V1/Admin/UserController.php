@@ -6,6 +6,9 @@ use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Rules\PhoneNumber;
+use App\Rules\SafeText;
+use App\Support\Search;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -18,6 +21,7 @@ class UserController extends Controller
     public function index(Request $request): AnonymousResourceCollection
     {
         $request->validate([
+            'q' => ['nullable', 'string', 'max:100', new SafeText],
             'role' => ['nullable', Rule::enum(UserRole::class)],
             'per_page' => ['nullable', 'integer', 'min:1', 'max:100'],
         ]);
@@ -25,9 +29,9 @@ class UserController extends Controller
         $users = User::query()
             ->withCount('orders')
             ->when($request->query('q'), fn (Builder $q, $term) => $q->where(fn (Builder $q) => $q
-                ->where('name', 'like', "%{$term}%")
-                ->orWhere('email', 'like', "%{$term}%")
-                ->orWhere('phone', 'like', "%{$term}%")))
+                ->where('name', 'like', Search::like($term))
+                ->orWhere('email', 'like', Search::like($term))
+                ->orWhere('phone', 'like', Search::like($term))))
             ->when($request->query('role'), fn (Builder $q, $role) => $q->where('role', $role))
             ->latest()
             ->paginate((int) $request->query('per_page', 20))
@@ -39,10 +43,10 @@ class UserController extends Controller
     public function store(Request $request): JsonResponse
     {
         $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', new SafeText],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
-            'phone' => ['nullable', 'string', 'max:32', 'unique:users,phone'],
-            'password' => ['required', Password::min(8)],
+            'phone' => ['nullable', 'string', 'max:32', new PhoneNumber, 'unique:users,phone'],
+            'password' => ['required', 'string', 'max:128', Password::min(8)],
             'role' => ['required', Rule::enum(UserRole::class)],
         ]);
 
@@ -59,12 +63,12 @@ class UserController extends Controller
     public function update(Request $request, User $user): UserResource
     {
         $data = $request->validate([
-            'name' => ['sometimes', 'string', 'max:255'],
+            'name' => ['sometimes', 'string', 'max:255', new SafeText],
             'email' => ['sometimes', 'string', 'lowercase', 'email', 'max:255', Rule::unique('users')->ignore($user)],
-            'phone' => ['nullable', 'string', 'max:32', Rule::unique('users')->ignore($user)],
+            'phone' => ['nullable', 'string', 'max:32', new PhoneNumber, Rule::unique('users')->ignore($user)],
             'role' => ['sometimes', Rule::enum(UserRole::class)],
             'is_active' => ['sometimes', 'boolean'],
-            'password' => ['sometimes', Password::min(8)],
+            'password' => ['sometimes', 'string', 'max:128', Password::min(8)],
         ]);
 
         if ($user->is($request->user()) && (isset($data['role']) || isset($data['is_active']))) {
