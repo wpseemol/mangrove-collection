@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { api } from '@/lib/api'
-import type { AdminSettings, Category, CategoryIcon, PaymentAccount, PaymentQueue, SessionResponse } from '@/lib/types'
+import type { AdminSettings, Category, CategoryIcon, OrderList, PaymentAccount, PaymentQueue, SessionResponse } from '@/lib/types'
 import { useAuthStore } from '@/stores/auth'
 
 export const sessionQueryKey = ['session'] as const
@@ -64,6 +64,20 @@ export function useAwaitingPaymentsCount(enabled = true) {
     enabled,
   })
 }
+
+export const ordersQueryKey = ['admin', 'orders'] as const
+
+/** New orders that nobody has started on yet, polled for the sidebar badge. */
+export function usePendingOrdersCount(enabled = true) {
+  return useQuery({
+    queryKey: [...ordersQueryKey, 'pending-count'],
+    queryFn: () => api<OrderList>('/admin/orders', { query: { status: 'pending', per_page: 1 } }).then((r) => r.counts.pending),
+    refetchInterval: 60_000,
+    enabled,
+  })
+}
+
+export const reviewsQueryKey = ['admin', 'reviews'] as const
 
 export function useCategoryIcons() {
   return useQuery({

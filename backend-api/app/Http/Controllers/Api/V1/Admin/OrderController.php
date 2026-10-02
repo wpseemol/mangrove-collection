@@ -48,7 +48,11 @@ class OrderController extends Controller
             ->paginate((int) $request->query('per_page', 20))
             ->withQueryString();
 
-        return OrderResource::collection($orders);
+        $counts = Order::query()->selectRaw('status, COUNT(*) as total')->groupBy('status')->pluck('total', 'status');
+
+        return OrderResource::collection($orders)->additional([
+            'counts' => collect(OrderStatus::cases())->mapWithKeys(fn (OrderStatus $s) => [$s->value => (int) ($counts[$s->value] ?? 0)]),
+        ]);
     }
 
     public function show(Order $order): OrderResource

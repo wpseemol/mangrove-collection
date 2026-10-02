@@ -3,6 +3,7 @@
 import { ShoppingBag } from "lucide-react";
 import Link from "next/link";
 
+import { Stars } from "@/components/reviews/stars";
 import { RemoteImage } from "@/components/shared/remote-image";
 import { Button } from "@/components/ui/button";
 import { useCartActions } from "@/hooks/use-cart-actions";
@@ -54,6 +55,17 @@ function Badges({ product }: { product: Product }) {
   );
 }
 
+function Rating({ product, className }: { product: Product; className?: string }) {
+  if (!product.rating?.count) return null;
+
+  return (
+    <p className={cn("flex items-center gap-1.5 text-xs text-muted-foreground", className)}>
+      <Stars value={product.rating.average} starClassName="size-3.5" />
+      <span>({product.rating.count})</span>
+    </p>
+  );
+}
+
 function Price({ product, className }: { product: Product; className?: string }) {
   return (
     <p className={cn("flex flex-wrap items-baseline gap-x-2", className)}>
@@ -82,6 +94,7 @@ export function ProductCard({ product, layout = "grid" }: { product: Product; la
             <Link href={href} className="font-bangla mt-1 block text-lg leading-snug text-foreground hover:text-primary">
               {product.name}
             </Link>
+            <Rating product={product} className="mt-1" />
             {product.short_description && <p className="mt-1.5 line-clamp-2 text-sm text-muted-foreground">{product.short_description}</p>}
           </div>
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -106,6 +119,7 @@ export function ProductCard({ product, layout = "grid" }: { product: Product; la
         <Link href={href} className="font-bangla mt-1 line-clamp-2 text-sm leading-snug text-foreground hover:text-primary sm:text-[15px]">
           {product.name}
         </Link>
+        <Rating product={product} className="mt-1.5" />
         <Price product={product} className="mt-2" />
         <CardActions product={product} className="mt-auto pt-3 sm:pt-4" />
       </div>

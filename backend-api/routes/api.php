@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\V1\Storefront\CheckoutController;
 use App\Http\Controllers\Api\V1\Storefront\ContentController;
 use App\Http\Controllers\Api\V1\Storefront\PaymentController;
 use App\Http\Controllers\Api\V1\Storefront\ProductController;
+use App\Http\Controllers\Api\V1\Storefront\ReviewController;
 use App\Http\Controllers\Api\V1\Storefront\SettingController;
 use Illuminate\Support\Facades\Route;
 
@@ -56,6 +57,15 @@ Route::prefix('v1')->name('v1.')->group(function () {
     Route::get('products/{slug}', [ProductController::class, 'show'])->name('products.show');
     Route::get('products/{slug}/related', [ProductController::class, 'related'])->name('products.related');
 
+    // Verified-buyer reviews: a quick phone/email check issues a short-lived review token.
+    Route::get('products/{slug}/reviews', [ReviewController::class, 'index'])->name('products.reviews.index');
+    Route::post('products/{slug}/reviews/verify', [ReviewController::class, 'verify'])->middleware('throttle:review-verify')->name('products.reviews.verify');
+    Route::middleware('throttle:uploads')->group(function () {
+        Route::post('products/{slug}/reviews', [ReviewController::class, 'store'])->name('products.reviews.store');
+        Route::match(['put', 'patch'], 'reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
+    });
+    Route::delete('reviews/{review}', [ReviewController::class, 'destroy'])->middleware('throttle:writes')->name('reviews.destroy');
+
     Route::get('banners', [ContentController::class, 'banners'])->name('banners');
     Route::get('pages/{slug}', [ContentController::class, 'page'])->name('pages.show');
     Route::get('shipping-methods', [ContentController::class, 'shippingMethods'])->name('shipping-methods');
@@ -98,6 +108,8 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::get('payments', [Admin\PaymentController::class, 'index'])->name('payments.index');
         Route::post('payments/{payment}/verify', [Admin\PaymentController::class, 'verify'])->name('payments.verify');
         Route::post('payments/{payment}/reject', [Admin\PaymentController::class, 'reject'])->name('payments.reject');
+
+        Route::apiResource('reviews', Admin\ReviewController::class)->only(['index', 'update', 'destroy']);
 
         Route::apiResource('media', Admin\MediaController::class)->only(['index', 'destroy']);
 

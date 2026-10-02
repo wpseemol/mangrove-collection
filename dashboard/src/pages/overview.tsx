@@ -222,9 +222,14 @@ export function OverviewPage() {
       </div>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Recent orders</CardTitle>
-          <CardDescription>The latest orders placed in the store</CardDescription>
+        <CardHeader className="flex flex-row items-start justify-between gap-3">
+          <div className="space-y-1.5">
+            <CardTitle>Recent orders</CardTitle>
+            <CardDescription>The latest orders placed in the store</CardDescription>
+          </div>
+          <Button variant="outline" size="sm" asChild>
+            <Link to="/orders">View all</Link>
+          </Button>
         </CardHeader>
         <CardContent className="px-0">
           <Table>
@@ -249,7 +254,11 @@ export function OverviewPage() {
               ) : data?.recent_orders.length ? (
                 data.recent_orders.map((order) => (
                   <TableRow key={order.id}>
-                    <TableCell className="pl-6 font-medium">#{order.order_number}</TableCell>
+                    <TableCell className="pl-6 font-medium">
+                      <Link to={`/orders/${order.id}`} className="hover:text-primary">
+                        #{order.order_number}
+                      </Link>
+                    </TableCell>
                     <TableCell>
                       <p>{order.customer.name}</p>
                       <p className="text-xs text-muted-foreground">{order.customer.phone}</p>

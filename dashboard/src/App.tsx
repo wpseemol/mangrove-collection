@@ -6,12 +6,15 @@ import { RequireAdmin } from '@/components/require-admin'
 import { CategoriesPage } from '@/pages/categories'
 import { ForgotPasswordPage } from '@/pages/forgot-password'
 import { LoginPage } from '@/pages/login'
+import { OrderDetailPage } from '@/pages/orders/detail'
+import { OrdersPage } from '@/pages/orders/list'
 import { OverviewPage } from '@/pages/overview'
 import { PaymentAccountsPage } from '@/pages/payment-accounts'
 import { PaymentsPage } from '@/pages/payments'
 import { ProductsPage } from '@/pages/products/list'
 import { ProductCreatePage, ProductEditPage } from '@/pages/products/product-form'
 import { ResetPasswordPage } from '@/pages/reset-password'
+import { ReviewsPage } from '@/pages/reviews'
 import { SettingsPage } from '@/pages/settings'
 
 export default function App() {
@@ -27,7 +30,10 @@ export default function App() {
           <Route path="products/new" element={<ProductCreatePage />} />
           <Route path="products/:id/edit" element={<ProductEditPage />} />
           <Route path="categories" element={<CategoriesPage />} />
+          <Route path="orders" element={<OrdersPage />} />
+          <Route path="orders/:id" element={<OrderDetailPage />} />
           <Route path="payments" element={<PaymentsPage />} />
+          <Route path="reviews" element={<ReviewsPage />} />
           <Route element={<RequireAdmin />}>
             <Route path="payment-accounts" element={<PaymentAccountsPage />} />
             <Route path="settings" element={<SettingsPage />} />

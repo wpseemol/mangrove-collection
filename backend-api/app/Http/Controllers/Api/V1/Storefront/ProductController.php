@@ -15,7 +15,7 @@ class ProductController extends Controller
 {
     /**
      * Query params: q, category (comma-separated slugs), tag, featured, min_price, max_price,
-     * sort (latest|oldest|price_asc|price_desc|popular|name), per_page.
+     * sort (latest|oldest|price_asc|price_desc|popular|rating|name), per_page.
      */
     public function index(Request $request): AnonymousResourceCollection
     {
@@ -26,7 +26,7 @@ class ProductController extends Controller
             'featured' => ['nullable', 'boolean'],
             'min_price' => ['nullable', 'numeric', 'min:0'],
             'max_price' => ['nullable', 'numeric', 'min:0'],
-            'sort' => ['nullable', 'in:latest,oldest,price_asc,price_desc,popular,name'],
+            'sort' => ['nullable', 'in:latest,oldest,price_asc,price_desc,popular,rating,name'],
             'per_page' => ['nullable', 'integer', 'min:1', 'max:60'],
         ]);
 
@@ -48,6 +48,7 @@ class ProductController extends Controller
                 'price_asc' => $q->orderBy('min_price'),
                 'price_desc' => $q->orderByDesc('min_price'),
                 'popular' => $q->orderByDesc('popularity'),
+                'rating' => $q->orderByDesc('rating_avg')->orderByDesc('rating_count'),
                 'name' => $q->orderBy('name'),
                 default => $q->latest(),
             })

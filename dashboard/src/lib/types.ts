@@ -129,7 +129,7 @@ export type Media = {
   created_at: string
 }
 
-export type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'refunded'
+export type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled'
 
 export type OrderSummary = {
   id: number
@@ -195,6 +195,75 @@ export type Payment = {
 }
 
 export type PaymentQueue = Paginated<Payment> & { counts: Record<PaymentReviewStatus, number> }
+
+export type OrderItem = {
+  id: number
+  product_id: number | null
+  product_variant_id: number | null
+  product_name: string
+  product_slug: string
+  variant_title: string | null
+  image: string | null
+  unit_price: number
+  quantity: number
+  line_total: number
+}
+
+export type Order = {
+  id: number
+  order_number: string
+  status: OrderStatus
+  payment_status: PaymentStatus
+  payment_method: PaymentMethod
+  payment: Payment | null
+  payments?: Payment[]
+  customer: { name: string; email: string | null; phone: string }
+  shipping_address: {
+    name: string
+    phone: string
+    email?: string | null
+    region: string | null
+    city: string | null
+    zone: string | null
+    landmark: string | null
+    full_address: string
+  }
+  shipping_method: string | null
+  currency: string
+  subtotal: number
+  shipping_cost: number
+  discount: number
+  total: number
+  customer_note: string | null
+  admin_note?: string | null
+  user?: Pick<User, 'id' | 'name' | 'email' | 'phone'> | null
+  items?: OrderItem[]
+  items_count?: number
+  cancelled_at: string | null
+  delivered_at: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type OrderList = Paginated<Order> & { counts: Record<OrderStatus, number> }
+
+export type ReviewStatus = 'published' | 'hidden'
+
+export type AdminReview = {
+  id: number
+  rating: number
+  comment: string
+  images: { path: string; url: string }[]
+  reviewer_name: string
+  status: ReviewStatus
+  edited_at: string | null
+  created_at: string
+  reviewer: { name: string; phone: string | null; email: string | null }
+  order: { id: number; order_number: string } | null
+  product: { id: number; name: string; slug: string; thumbnail: string | null } | null
+}
+
+export type ReviewQueue = Paginated<AdminReview> & { counts: Record<ReviewStatus, number> }
 
 export type DashboardStats = {
   totals: {

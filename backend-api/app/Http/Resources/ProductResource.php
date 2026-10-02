@@ -45,6 +45,10 @@ class ProductResource extends JsonResource
             'status' => $this->status,
             'is_featured' => $this->is_featured,
             'popularity' => $this->popularity,
+            'rating' => [
+                'average' => (float) $this->rating_avg,
+                'count' => (int) $this->rating_count,
+            ],
             'meta_title' => $this->meta_title,
             'meta_description' => $this->meta_description,
             'created_at' => $this->created_at,

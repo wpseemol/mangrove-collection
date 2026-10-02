@@ -13,6 +13,8 @@ import type {
   PaymentOption,
   Product,
   PublicSettings,
+  Review,
+  ReviewSummary,
   SessionResponse,
   ShippingMethod,
 } from "@/lib/types";
@@ -27,9 +29,16 @@ export type ProductFilters = {
   featured?: boolean;
   min_price?: number | string;
   max_price?: number | string;
-  sort?: "latest" | "oldest" | "price_asc" | "price_desc" | "popular" | "name";
+  sort?: "latest" | "oldest" | "price_asc" | "price_desc" | "popular" | "rating" | "name";
   page?: number;
   per_page?: number;
+};
+
+export type ReviewFilters = {
+  rating?: number;
+  with_photos?: boolean;
+  sort?: "newest" | "highest" | "lowest";
+  page?: number;
 };
 
 export function useSettings() {
@@ -70,6 +79,18 @@ export function useRelatedProducts(slug: string | null) {
     queryKey: ["product", slug, "related"],
     queryFn: () => api<{ data: Product[] }>(`/products/${slug}/related`).then((r) => r.data),
     enabled: Boolean(slug),
+  });
+}
+
+export function useProductReviews(slug: string | null, filters: ReviewFilters) {
+  return useQuery({
+    queryKey: ["product", slug, "reviews", filters],
+    queryFn: () =>
+      api<Paginated<Review> & { summary: ReviewSummary }>(`/products/${slug}/reviews`, {
+        query: { ...filters, with_photos: filters.with_photos ? 1 : undefined },
+      }),
+    enabled: Boolean(slug),
+    placeholderData: (previous) => previous,
   });
 }
 

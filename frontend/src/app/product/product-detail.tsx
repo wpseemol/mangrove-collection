@@ -6,6 +6,8 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { ProductGrid } from "@/components/product/product-grid";
+import { ProductReviews } from "@/components/reviews/product-reviews";
+import { Stars } from "@/components/reviews/stars";
 import { Container } from "@/components/shared/container";
 import { EmptyState } from "@/components/shared/empty-state";
 import { PageBreadcrumb } from "@/components/shared/page-breadcrumb";
@@ -35,7 +37,9 @@ function DetailSkeleton() {
 }
 
 export function ProductDetail() {
-  const slug = useSearchParams().get("slug");
+  const searchParams = useSearchParams();
+  const slug = searchParams.get("slug");
+  const reviewRequested = searchParams.get("review") === "1";
   const { data: product, isLoading, isError } = useProduct(slug);
   const { data: related } = useRelatedProducts(slug);
   const { addToCart, buyNow } = useCartActions();
@@ -125,6 +129,19 @@ export function ProductDetail() {
               </Link>
             )}
             <h1 className="font-bangla mt-3 text-2xl leading-snug text-foreground sm:text-3xl md:text-4xl">{product.name}</h1>
+            <a href="#reviews" className="mt-2 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary">
+              {product.rating && product.rating.count > 0 ? (
+                <>
+                  <Stars value={product.rating.average} />
+                  <span className="font-medium text-foreground">{product.rating.average.toFixed(1)}</span>
+                  <span>
+                    ({product.rating.count} review{product.rating.count === 1 ? "" : "s"})
+                  </span>
+                </>
+              ) : (
+                <span>No reviews yet — be the first</span>
+              )}
+            </a>
           </div>
 
           <div className="flex flex-wrap items-center gap-3 border-y py-4 md:py-5">
@@ -211,6 +228,8 @@ export function ProductDetail() {
           <div className="prose-content max-w-3xl" dangerouslySetInnerHTML={{ __html: product.description }} />
         </section>
       )}
+
+      <ProductReviews key={product.slug} product={product} autoOpen={reviewRequested} />
 
       {related && related.length > 0 && (
         <section className="mt-14 md:mt-20">

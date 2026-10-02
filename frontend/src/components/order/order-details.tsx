@@ -1,16 +1,26 @@
-import { Check } from "lucide-react";
+import { Check, Star } from "lucide-react";
 import Link from "next/link";
 
 import { OrderPaymentSummary, PaymentResubmitPanel } from "@/components/payment/order-payment-panel";
 import { RemoteImage } from "@/components/shared/remote-image";
 import { Separator } from "@/components/ui/separator";
 import { formatDate, formatPrice, ORDER_STATUS_LABEL } from "@/lib/format";
+import { REVIEW_CONTACT_KEY } from "@/lib/reviews";
 import type { Order, OrderStatus } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 import { OrderStatusBadge, PaymentStatusBadge } from "./order-status-badge";
 
 const STEPS: OrderStatus[] = ["pending", "processing", "shipped", "delivered"];
+
+/** Prefills the product page's buyer check without putting the phone number in the URL. */
+function rememberReviewContact(contact: string | undefined) {
+  try {
+    if (contact) sessionStorage.setItem(REVIEW_CONTACT_KEY, contact);
+  } catch {
+    // Storage unavailable: the customer types it instead.
+  }
+}
 
 export function OrderProgress({ status }: { status: OrderStatus }) {
   if (status === "cancelled") {
@@ -94,6 +104,15 @@ export function OrderDetails({
                 <p className="text-xs text-muted-foreground">
                   {formatPrice(item.unit_price)} × {item.quantity}
                 </p>
+                {order.status === "delivered" && item.product_id && (
+                  <Link
+                    href={`/product?slug=${encodeURIComponent(item.product_slug)}&review=1`}
+                    onClick={() => rememberReviewContact(guestPhone ?? order.customer.phone)}
+                    className="mt-1.5 inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                  >
+                    <Star className="size-3.5" /> Write or edit your review
+                  </Link>
+                )}
               </div>
               <p className="text-sm font-medium whitespace-nowrap">{formatPrice(item.line_total)}</p>
             </li>

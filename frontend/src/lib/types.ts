@@ -50,6 +50,42 @@ export type Product = {
   is_featured: boolean;
   meta_title: string | null;
   meta_description: string | null;
+  rating?: ProductRating;
+};
+
+export type ProductRating = { average: number; count: number };
+
+export type ReviewImage = { path: string; url: string };
+
+export type Review = {
+  id: number;
+  rating: number;
+  comment: string;
+  images: ReviewImage[];
+  reviewer_name: string;
+  verified_purchase: boolean;
+  status: "published" | "hidden";
+  edited_at: string | null;
+  created_at: string;
+};
+
+export type ReviewSummary = {
+  average: number;
+  count: number;
+  breakdown: Record<"1" | "2" | "3" | "4" | "5", number>;
+  with_photos: number;
+};
+
+export type ReviewCheckStatus = "can_review" | "already_reviewed" | "not_delivered" | "no_order";
+
+export type ReviewCheck = {
+  status: ReviewCheckStatus;
+  eligible: boolean;
+  message: string;
+  token: string | null;
+  expires_in: number | null;
+  reviewer_name: string | null;
+  review: Review | null;
 };
 
 export type Banner = {

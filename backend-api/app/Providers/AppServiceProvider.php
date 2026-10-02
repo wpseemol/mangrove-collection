@@ -66,6 +66,17 @@ class AppServiceProvider extends ServiceProvider
 
         RateLimiter::for('tracking', fn (Request $request) => Limit::perMinute(20)->by($request->ip()));
 
+        // Phone/email buyer checks: slows down anyone trying numbers one after another.
+        RateLimiter::for('review-verify', function (Request $request) {
+            $contact = strtolower(trim((string) $request->input('contact')));
+
+            return array_filter([
+                Limit::perMinute(10)->by('review-ip:'.$request->ip()),
+                Limit::perHour(60)->by('review-ip-hour:'.$request->ip()),
+                $contact !== '' ? Limit::perMinute(5)->by('review-contact:'.sha1($contact)) : null,
+            ]);
+        });
+
         RateLimiter::for('uploads', fn (Request $request) => Limit::perMinute(20)
             ->by($request->user()?->id ?: $request->ip()));
 

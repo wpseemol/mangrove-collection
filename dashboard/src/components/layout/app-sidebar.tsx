@@ -4,10 +4,12 @@ import {
   FolderTree,
   LayoutDashboard,
   LogOut,
+  MessageSquareText,
   Package,
   PackagePlus,
   ReceiptText,
   Settings,
+  ShoppingCart,
   Wallet,
   type LucideIcon,
 } from 'lucide-react'
@@ -39,7 +41,7 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar'
 import { STOREFRONT_URL } from '@/lib/config'
-import { useAwaitingPaymentsCount } from '@/lib/queries'
+import { useAwaitingPaymentsCount, usePendingOrdersCount } from '@/lib/queries'
 import { isAdmin } from '@/lib/types'
 import { useAuthStore } from '@/stores/auth'
 
@@ -49,7 +51,7 @@ type NavItem = {
   icon: LucideIcon
   exact: boolean
   adminOnly?: boolean
-  badge?: 'payments'
+  badge?: 'payments' | 'orders'
 }
 
 const NAV: { label: string; items: NavItem[] }[] = [
@@ -59,7 +61,10 @@ const NAV: { label: string; items: NavItem[] }[] = [
   },
   {
     label: 'Sales',
-    items: [{ title: 'Payments', to: '/payments', icon: ReceiptText, exact: true, badge: 'payments' }],
+    items: [
+      { title: 'Orders', to: '/orders', icon: ShoppingCart, exact: false, badge: 'orders' },
+      { title: 'Payments', to: '/payments', icon: ReceiptText, exact: true, badge: 'payments' },
+    ],
   },
   {
     label: 'Catalog',
@@ -67,6 +72,7 @@ const NAV: { label: string; items: NavItem[] }[] = [
       { title: 'Products', to: '/products', icon: Package, exact: true },
       { title: 'Add product', to: '/products/new', icon: PackagePlus, exact: true },
       { title: 'Categories', to: '/categories', icon: FolderTree, exact: false },
+      { title: 'Reviews', to: '/reviews', icon: MessageSquareText, exact: true },
     ],
   },
   {
@@ -83,7 +89,8 @@ export function AppSidebar() {
   const { isMobile, setOpenMobile } = useSidebar()
   const admin = isAdmin(useAuthStore((state) => state.user))
   const { data: awaitingPayments } = useAwaitingPaymentsCount()
-  const badges = { payments: awaitingPayments ?? 0 }
+  const { data: pendingOrders } = usePendingOrdersCount()
+  const badges = { payments: awaitingPayments ?? 0, orders: pendingOrders ?? 0 }
   const nav = NAV.map((group) => ({ ...group, items: group.items.filter((item) => !item.adminOnly || admin) })).filter(
     (group) => group.items.length > 0,
   )

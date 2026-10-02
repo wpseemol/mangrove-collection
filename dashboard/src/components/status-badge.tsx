@@ -11,7 +11,6 @@ const STYLES: Record<OrderStatus | ProductStatus, string> = {
   shipped: TONES.indigo,
   delivered: TONES.green,
   cancelled: TONES.red,
-  refunded: TONES.neutral,
 }
 
 export function StatusBadge({ status, className }: { status: OrderStatus | ProductStatus; className?: string }) {

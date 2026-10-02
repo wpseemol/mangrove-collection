@@ -18,6 +18,7 @@ import { ShopFilters, type ShopFilterValues } from "./shop-filters";
 const SORT_OPTIONS = [
   { value: "latest", label: "Newest first" },
   { value: "popular", label: "Most popular" },
+  { value: "rating", label: "Top rated" },
   { value: "price_asc", label: "Price: low to high" },
   { value: "price_desc", label: "Price: high to low" },
   { value: "name", label: "Name: A to Z" },
