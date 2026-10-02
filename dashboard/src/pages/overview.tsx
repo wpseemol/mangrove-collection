@@ -14,7 +14,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { api } from '@/lib/api'
 import { formatDate, formatNumber, formatPrice } from '@/lib/format'
+import { TONES } from '@/lib/tones'
 import type { DashboardStats } from '@/lib/types'
+import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/stores/auth'
 
 const RANGES = [7, 30, 90] as const
@@ -188,11 +190,10 @@ export function OverviewPage() {
                       <p className="truncate text-xs text-muted-foreground">{item.variant_title}</p>
                     </Link>
                     <span
-                      className={
-                        item.stock === 0
-                          ? 'shrink-0 rounded-md bg-red-50 px-2 py-0.5 text-xs font-medium text-red-700'
-                          : 'shrink-0 rounded-md bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-800'
-                      }
+                      className={cn(
+                        'shrink-0 rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset',
+                        item.stock === 0 ? TONES.red : TONES.amber,
+                      )}
                     >
                       {item.stock === 0 ? 'Out of stock' : `${item.stock} left`}
                     </span>

@@ -13,7 +13,7 @@ export function AuthShell({ title, subtitle, children }: { title: string; subtit
   return (
     <Container className="py-12 md:py-16">
       <div className="mx-auto grid max-w-5xl overflow-hidden rounded-3xl border bg-card shadow-xl shadow-black/5 md:grid-cols-[5fr_6fr]">
-        <div className="relative hidden flex-col justify-between overflow-hidden bg-gradient-to-br from-primary to-forest p-10 text-white md:flex">
+        <div className="relative hidden flex-col justify-between overflow-hidden bg-gradient-to-br from-[#0d4a36] to-forest p-10 text-white md:flex">
           <div className="pointer-events-none absolute -top-20 -right-20 size-64 rounded-full bg-brand/25 blur-3xl" />
           <div className="pointer-events-none absolute -bottom-24 -left-10 size-64 rounded-full bg-gold/20 blur-3xl" />
 

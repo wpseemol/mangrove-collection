@@ -80,7 +80,7 @@ export function ProductDetail() {
   const inStock = variant?.in_stock ?? false;
 
   return (
-    <Container>
+    <Container className="pb-20 md:pb-0">
       <PageBreadcrumb
         items={[
           { label: "Products", href: "/shop" },
@@ -89,13 +89,13 @@ export function ProductDetail() {
         ]}
       />
 
-      <div className="grid gap-8 py-2 md:grid-cols-2 lg:gap-14">
+      <div className="grid gap-6 py-2 md:grid-cols-2 md:gap-8 lg:gap-14">
         <div className="space-y-3 md:sticky md:top-28 md:self-start">
-          <div className="relative aspect-square overflow-hidden rounded-3xl border bg-muted">
+          <div className="relative aspect-square overflow-hidden rounded-2xl border bg-muted md:rounded-3xl">
             <RemoteImage src={activeImage} alt={product.name} sizes="(max-width: 768px) 100vw, 50vw" priority />
           </div>
           {gallery.length > 1 && (
-            <div className="grid grid-cols-5 gap-3">
+            <div className="grid grid-cols-5 gap-2 md:gap-3">
               {gallery.map((src, index) => (
                 <button
                   key={`${src}-${index}`}
@@ -114,7 +114,7 @@ export function ProductDetail() {
           )}
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-5 md:space-y-6">
           <div>
             {product.category && (
               <Link
@@ -124,11 +124,11 @@ export function ProductDetail() {
                 {product.category.name}
               </Link>
             )}
-            <h1 className="font-bangla mt-3 text-3xl leading-snug text-foreground md:text-4xl">{product.name}</h1>
+            <h1 className="font-bangla mt-3 text-2xl leading-snug text-foreground sm:text-3xl md:text-4xl">{product.name}</h1>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 border-y py-5">
-            <span className="text-3xl font-semibold text-primary">{formatPrice(variant?.price)}</span>
+          <div className="flex flex-wrap items-center gap-3 border-y py-4 md:py-5">
+            <span className="text-2xl font-semibold text-primary sm:text-3xl">{formatPrice(variant?.price)}</span>
             {variant?.compare_price && variant.compare_price > variant.price && (
               <span className="text-lg text-muted-foreground line-through">{formatPrice(variant.compare_price)}</span>
             )}
@@ -213,11 +213,33 @@ export function ProductDetail() {
       )}
 
       {related && related.length > 0 && (
-        <section className="mt-20">
+        <section className="mt-14 md:mt-20">
           <SectionHeading eyebrow="You may also like" title="Related products" align="left" />
           <ProductGrid products={related.slice(0, 5)} />
         </section>
       )}
+
+      <div className="fixed inset-x-0 bottom-[calc(4rem+env(safe-area-inset-bottom))] z-30 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/85 md:hidden">
+        <div className="flex items-center gap-2 px-4 py-2.5">
+          <div className="mr-auto min-w-0 leading-tight">
+            <p className="truncate text-xs text-muted-foreground">{variants.length > 1 ? variant?.title : product.unit ? `per ${product.unit}` : "Price"}</p>
+            <p className="text-lg font-semibold text-primary">{formatPrice(variant?.price)}</p>
+          </div>
+          <Button
+            variant="outline"
+            size="icon"
+            className="size-11 rounded-xl border-primary/30 text-primary"
+            disabled={!inStock}
+            aria-label="Add to cart"
+            onClick={() => addToCart(product, variant, quantity)}
+          >
+            <ShoppingBag className="size-5" />
+          </Button>
+          <Button className="h-11 rounded-xl px-6" disabled={!inStock} onClick={() => buyNow(product, variant, quantity)}>
+            <Zap /> {inStock ? "Buy now" : "Out of stock"}
+          </Button>
+        </div>
+      </div>
     </Container>
   );
 }

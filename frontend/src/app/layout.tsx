@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Hind_Siliguri, Roboto } from "next/font/google";
 
 import { FloatingSocial } from "@/components/layout/floating-social";
 import { MainNav } from "@/components/layout/main-nav";
+import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteScripts } from "@/components/layout/site-scripts";
@@ -37,15 +38,21 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: "#062b20",
+  viewportFit: "cover",
+};
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="bn" className={`${roboto.variable} ${hind.variable} h-full antialiased`} suppressHydrationWarning>
-      <body className="flex min-h-full flex-col bg-background">
+      <body className="flex min-h-full flex-col bg-background pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0">
         <Providers>
           <SiteHeader />
           <MainNav />
-          <main className="flex-1 pb-20">{children}</main>
+          <main className="flex-1 pb-12 md:pb-20">{children}</main>
           <SiteFooter />
+          <MobileBottomNav />
           <FloatingSocial />
           <SiteScripts />
         </Providers>

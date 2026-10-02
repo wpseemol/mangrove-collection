@@ -41,7 +41,7 @@ function BannerCaption({ banner, large }: { banner: Banner; large?: boolean }) {
 /** Shown until slides are uploaded from the dashboard. */
 function BrandHero() {
   return (
-    <div className="relative flex h-full min-h-[360px] flex-col justify-center overflow-hidden bg-gradient-to-br from-primary via-primary to-forest p-8 text-white md:p-12">
+    <div className="relative flex h-full min-h-[320px] flex-col justify-center overflow-hidden bg-gradient-to-br from-[#0d4a36] via-[#0d4a36] to-forest p-6 text-white sm:min-h-[360px] md:p-12">
       <div className="pointer-events-none absolute -top-24 -right-24 size-80 rounded-full bg-brand/25 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-32 left-1/3 size-80 rounded-full bg-gold/20 blur-3xl" />
       <Image
@@ -56,19 +56,19 @@ function BrandHero() {
         <p className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium tracking-wide text-white/90 ring-1 ring-white/15">
           <Sparkles className="size-3.5 text-gold" /> From the heart of the Sundarbans
         </p>
-        <h1 className="font-heading mt-5 text-4xl leading-[1.1] font-semibold tracking-tight md:text-5xl">
+        <h1 className="font-heading mt-5 text-[2rem] leading-[1.1] font-semibold tracking-tight sm:text-4xl md:text-5xl">
           Fresh from the mangrove, <span className="text-gold">delivered to your door.</span>
         </h1>
         <p className="mt-4 max-w-md text-[15px] leading-relaxed text-white/80">
           Fish, crab, prawn and pure honey collected directly from the Sundarbans — carefully packed and delivered all over Bangladesh.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
-          <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90">
+          <Button asChild size="lg" className="bg-white text-[#0d4a36] hover:bg-white/90">
             <Link href="/shop">
               Shop now <ArrowRight />
             </Link>
           </Button>
-          <Button asChild size="lg" variant="outline" className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white">
+          <Button asChild size="lg" variant="outline" className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white dark:border-white/30 dark:bg-transparent dark:hover:bg-white/10">
             <Link href="/categories">Browse categories</Link>
           </Button>
         </div>
@@ -78,8 +78,20 @@ function BrandHero() {
 }
 
 const PROMOS = [
-  { href: "/shop?sort=latest", eyebrow: "Just landed", title: "New arrivals", icon: Sparkles, className: "from-[#f3ead3] to-[#e9dcb5] text-[#5b4410]" },
-  { href: "/offers", eyebrow: "Limited time", title: "Today's offers", icon: Tag, className: "from-secondary to-[#d3e8dc] text-primary" },
+  {
+    href: "/shop?sort=latest",
+    eyebrow: "Just landed",
+    title: "New arrivals",
+    icon: Sparkles,
+    className: "from-[#f3ead3] to-[#e9dcb5] text-[#5b4410] dark:from-[#2b2414] dark:to-[#3a301a] dark:text-[#ecd38f]",
+  },
+  {
+    href: "/offers",
+    eyebrow: "Limited time",
+    title: "Today's offers",
+    icon: Tag,
+    className: "from-[#eaf3ee] to-[#d3e8dc] text-[#0d4a36] dark:from-[#123326] dark:to-[#0c241b] dark:text-[#9fdcb8]",
+  },
 ];
 
 function PromoCard({ index }: { index: number }) {
@@ -87,11 +99,14 @@ function PromoCard({ index }: { index: number }) {
   const Icon = promo.icon;
 
   return (
-    <Link href={promo.href} className={cn("group relative flex h-full min-h-40 flex-col justify-between overflow-hidden bg-gradient-to-br p-6", promo.className)}>
-      <Icon className="absolute -right-4 -bottom-4 size-32 opacity-10 transition-transform duration-500 group-hover:scale-110" />
-      <p className="text-xs font-semibold tracking-[0.18em] uppercase opacity-70">{promo.eyebrow}</p>
+    <Link
+      href={promo.href}
+      className={cn("group relative flex h-full min-h-36 flex-col justify-between overflow-hidden bg-gradient-to-br p-4 sm:min-h-40 sm:p-6", promo.className)}
+    >
+      <Icon className="absolute -right-4 -bottom-4 size-24 opacity-10 transition-transform duration-500 group-hover:scale-110 sm:size-32" />
+      <p className="text-[10px] font-semibold tracking-[0.18em] uppercase opacity-70 sm:text-xs">{promo.eyebrow}</p>
       <div>
-        <p className="font-heading text-2xl font-semibold">{promo.title}</p>
+        <p className="font-heading text-lg font-semibold sm:text-2xl">{promo.title}</p>
         <p className="mt-2 inline-flex items-center gap-1 text-sm font-medium">
           Shop now <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
         </p>
@@ -120,9 +135,9 @@ export function Hero() {
   const side = [banners?.find((b) => b.type === "right_top"), banners?.find((b) => b.type === "right_bottom")];
 
   return (
-    <Container className="pt-6">
-      <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
-        <div className="relative overflow-hidden rounded-3xl bg-muted lg:min-h-[420px]">
+    <Container className="pt-4 sm:pt-6">
+      <div className="grid gap-3 sm:gap-4 lg:grid-cols-[2fr_1fr]">
+        <div className="relative overflow-hidden rounded-2xl bg-muted sm:rounded-3xl lg:min-h-[420px]">
           {isLoading ? (
             <Skeleton className="aspect-[16/9] h-full w-full rounded-none lg:aspect-auto" />
           ) : slides.length === 0 ? (
@@ -159,9 +174,9 @@ export function Hero() {
           )}
         </div>
 
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-1 lg:grid-rows-2">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-1 lg:grid-rows-2">
           {side.map((banner, index) => (
-            <div key={banner?.id ?? index} className="relative overflow-hidden rounded-3xl bg-muted">
+            <div key={banner?.id ?? index} className="relative overflow-hidden rounded-2xl bg-muted sm:rounded-3xl">
               {isLoading ? (
                 <Skeleton className="aspect-[16/10] h-full w-full rounded-none lg:aspect-auto" />
               ) : banner ? (

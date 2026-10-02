@@ -46,7 +46,7 @@ function Badges({ product }: { product: Product }) {
   if (!discount && !outOfStock && !product.is_featured) return null;
 
   return (
-    <div className="absolute top-3 left-3 z-10 flex flex-col items-start gap-1.5">
+    <div className="absolute top-2 left-2 z-10 flex flex-col items-start gap-1.5 sm:top-3 sm:left-3">
       {discount && <span className="rounded-full bg-red-600 px-2.5 py-0.5 text-[11px] font-semibold text-white">-{discount}%</span>}
       {product.is_featured && !discount && <span className="rounded-full bg-gold px-2.5 py-0.5 text-[11px] font-semibold text-white">Featured</span>}
       {outOfStock && <span className="rounded-full bg-black/75 px-2.5 py-0.5 text-[11px] font-semibold text-white">Sold out</span>}
@@ -94,18 +94,20 @@ export function ProductCard({ product, layout = "grid" }: { product: Product; la
   }
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border bg-card transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/20 hover:shadow-xl hover:shadow-black/5">
+    <article className="group flex h-full flex-col overflow-hidden rounded-xl border bg-card sm:rounded-2xl transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/20 hover:shadow-xl hover:shadow-black/5">
       <Link href={href} className="relative block aspect-square overflow-hidden bg-muted">
         <Badges product={product} />
         <RemoteImage src={product.thumbnail} alt={product.name} className="transition-transform duration-500 group-hover:scale-105" />
       </Link>
-      <div className="flex flex-1 flex-col p-4">
-        {product.category && <p className="text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">{product.category.name}</p>}
-        <Link href={href} className="font-bangla mt-1 line-clamp-2 text-[15px] leading-snug text-foreground hover:text-primary">
+      <div className="flex flex-1 flex-col p-3 sm:p-4">
+        {product.category && (
+          <p className="truncate text-[10px] font-semibold tracking-wider text-muted-foreground uppercase sm:text-[11px]">{product.category.name}</p>
+        )}
+        <Link href={href} className="font-bangla mt-1 line-clamp-2 text-sm leading-snug text-foreground hover:text-primary sm:text-[15px]">
           {product.name}
         </Link>
         <Price product={product} className="mt-2" />
-        <CardActions product={product} className="mt-auto pt-4" />
+        <CardActions product={product} className="mt-auto pt-3 sm:pt-4" />
       </div>
     </article>
   );

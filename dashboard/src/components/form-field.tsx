@@ -23,7 +23,7 @@ export function FormField({
   return (
     <div className={cn('space-y-1.5', className)}>
       <div className="flex items-center justify-between gap-2">
-        <Label htmlFor={id} className="text-sm text-gray-800">
+        <Label htmlFor={id} className="text-sm text-foreground">
           {label}
         </Label>
         {hint}

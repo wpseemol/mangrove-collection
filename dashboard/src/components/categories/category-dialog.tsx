@@ -122,7 +122,7 @@ function CategoryForm({
 
       <div className="grid gap-4 sm:grid-cols-[7rem_1fr]">
         <div className="space-y-1.5">
-          <p className="text-sm font-medium text-gray-800">Image</p>
+          <p className="text-sm font-medium text-foreground">Image</p>
           <SingleImageUpload value={draft.image} onChange={(url) => set('image', url)} />
         </div>
         <div className="grid content-start gap-4">

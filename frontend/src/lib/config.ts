@@ -4,6 +4,8 @@ export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://mangrove-col
 
 export const DASHBOARD_URL = (process.env.NEXT_PUBLIC_DASHBOARD_URL ?? "https://dashboard.mangrove-collection.com").replace(/\/$/, "");
 
+export const DASHBOARD_LOGIN_URL = `${DASHBOARD_URL}/login`;
+
 /** Staff are signed into the dashboard with their storefront token, passed as a URL fragment. */
 export const dashboardHandoffUrl = (token: string) => `${DASHBOARD_URL}/auth/handoff#token=${encodeURIComponent(token)}`;
 

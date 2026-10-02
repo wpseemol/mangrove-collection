@@ -44,7 +44,7 @@ export function ContactInfo() {
       )}
 
       {whatsapp && (
-        <div className="flex flex-col items-center gap-4 rounded-2xl bg-gradient-to-br from-primary to-forest p-8 text-center text-white sm:flex-row sm:justify-between sm:text-left">
+        <div className="flex flex-col items-center gap-4 rounded-2xl bg-gradient-to-br from-[#0d4a36] to-forest p-8 text-center text-white sm:flex-row sm:justify-between sm:text-left">
           <div>
             <p className="font-heading text-xl font-semibold">Need help with an order?</p>
             <p className="mt-1 text-sm text-white/80">Message us on WhatsApp and we&apos;ll reply as soon as possible.</p>

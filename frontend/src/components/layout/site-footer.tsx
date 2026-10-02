@@ -1,12 +1,16 @@
 "use client";
 
-import { Mail, MapPin, Phone } from "lucide-react";
+import { LayoutDashboard, Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
 
 import { Container } from "@/components/shared/container";
 import { Logo } from "@/components/shared/logo";
+import { useHydrated } from "@/hooks/use-hydrated";
+import { DASHBOARD_LOGIN_URL, dashboardHandoffUrl } from "@/lib/config";
 import { PAYMENT_METHOD_LABEL } from "@/lib/format";
 import { useSettings } from "@/lib/queries";
+import { isStaff } from "@/lib/types";
+import { useAuthStore } from "@/stores/auth";
 
 import { FacebookIcon, InstagramIcon, LinkedInIcon, TwitterIcon, WhatsAppIcon, whatsappHref } from "./social-icons";
 
@@ -42,6 +46,9 @@ const COLUMNS = [
 
 export function SiteFooter() {
   const { data: settings } = useSettings();
+  const hydrated = useHydrated();
+  const { user, token } = useAuthStore();
+  const staffToken = hydrated && token && isStaff(user) ? token : null;
   const social = settings?.social_links ?? {};
   const siteName = settings?.site_name ?? "Mangrove Collection";
   const payments = settings?.payment_methods?.length ? settings.payment_methods : ["cod"];
@@ -120,8 +127,17 @@ export function SiteFooter() {
 
       <div className="border-t border-white/10">
         <Container className="flex flex-col items-center justify-between gap-4 py-6 text-xs text-white/55 sm:flex-row">
-          <p>
-            © {new Date().getFullYear()} {siteName}. All rights reserved.
+          <p className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+            <span>
+              © {new Date().getFullYear()} {siteName}. All rights reserved.
+            </span>
+            <a
+              href={staffToken ? dashboardHandoffUrl(staffToken) : DASHBOARD_LOGIN_URL}
+              className="inline-flex items-center gap-1 text-white/55 transition-colors hover:text-white"
+            >
+              <LayoutDashboard className="size-3.5" />
+              {staffToken ? "Open dashboard" : "Staff login"}
+            </a>
           </p>
           <div className="flex flex-wrap items-center justify-center gap-2">
             <span className="mr-1">We accept</span>

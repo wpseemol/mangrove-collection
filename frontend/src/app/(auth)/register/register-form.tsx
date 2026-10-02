@@ -31,7 +31,7 @@ export function RegisterForm() {
   const error = mutation.error instanceof ApiError ? mutation.error : null;
   const hasFieldErrors = error && Object.keys(error.errors).length > 0;
   const bind = (field: keyof typeof form) => ({
-    id: field,
+    id: `register-${field}`,
     value: form[field],
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => setForm({ ...form, [field]: e.target.value }),
     "aria-invalid": Boolean(error?.field(field)) || undefined,
@@ -51,22 +51,22 @@ export function RegisterForm() {
           mutation.mutate();
         }}
       >
-        <FormField id="name" label="Full name" required error={error?.field("name")}>
+        <FormField id="register-name" label="Full name" required error={error?.field("name")}>
           <Input {...bind("name")} autoComplete="name" required />
         </FormField>
         <div className="grid gap-4 sm:grid-cols-2">
-          <FormField id="email" label="Email" required error={error?.field("email")}>
+          <FormField id="register-email" label="Email" required error={error?.field("email")}>
             <Input {...bind("email")} type="email" autoComplete="email" required />
           </FormField>
-          <FormField id="phone" label="Phone" error={error?.field("phone")}>
+          <FormField id="register-phone" label="Phone" error={error?.field("phone")}>
             <Input {...bind("phone")} type="tel" autoComplete="tel" placeholder="01XXXXXXXXX" />
           </FormField>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
-          <FormField id="password" label="Password" required error={error?.field("password")}>
+          <FormField id="register-password" label="Password" required error={error?.field("password")}>
             <PasswordInput {...bind("password")} autoComplete="new-password" minLength={8} required />
           </FormField>
-          <FormField id="password_confirmation" label="Confirm password" required>
+          <FormField id="register-password_confirmation" label="Confirm password" required>
             <PasswordInput {...bind("password_confirmation")} autoComplete="new-password" required />
           </FormField>
         </div>
@@ -80,7 +80,7 @@ export function RegisterForm() {
 
       <p className="mt-6 text-center text-sm text-muted-foreground">
         Already have an account?{" "}
-        <Link href={`/login?redirect=${encodeURIComponent(redirect)}`} className="font-medium text-primary hover:underline">
+        <Link href={`/login?redirect=${encodeURIComponent(redirect)}`} scroll={false} className="font-medium text-primary hover:underline">
           Log in
         </Link>
       </p>

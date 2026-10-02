@@ -23,7 +23,7 @@ export function AccountOverview() {
 
   return (
     <div className="space-y-6">
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary to-forest p-8 text-white">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0d4a36] to-forest p-8 text-white">
         <div className="pointer-events-none absolute -top-16 -right-16 size-56 rounded-full bg-brand/25 blur-3xl" />
         <p className="relative text-xs font-semibold tracking-[0.2em] text-gold uppercase">My account</p>
         <h1 className="font-heading relative mt-2 text-3xl font-semibold">Hello, {user?.name?.split(" ")[0] ?? "there"}!</h1>

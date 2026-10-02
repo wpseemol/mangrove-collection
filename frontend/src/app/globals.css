@@ -114,7 +114,7 @@
   --card-foreground: #e6ece8;
   --popover: #13201a;
   --popover-foreground: #e6ece8;
-  --primary: #238a52;
+  --primary: #2e9d5f;
   --primary-foreground: #ffffff;
   --secondary: #16271f;
   --secondary-foreground: #9fdcb8;
@@ -191,5 +191,18 @@
   }
   .prose-content blockquote {
     @apply border-l-4 border-primary/30 pl-4 text-muted-foreground italic;
+  }
+}
+
+/* Two identical keyframes so switching between them restarts the animation without remounting. */
+@keyframes card-pop-a {
+  50% {
+    scale: 0.92;
+  }
+}
+
+@keyframes card-pop-b {
+  50% {
+    scale: 0.92;
   }
 }

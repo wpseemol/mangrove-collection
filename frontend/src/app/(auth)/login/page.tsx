@@ -1,18 +1,8 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
-
-import { AuthShell } from "@/components/auth/auth-shell";
-
-import { LoginForm } from "./login-form";
 
 export const metadata: Metadata = { title: "Log in" };
 
+/** Both forms live on the flip card in `(auth)/layout.tsx`; the route only picks the visible side. */
 export default function LoginPage() {
-  return (
-    <AuthShell title="Welcome back" subtitle="Log in to track orders and check out faster.">
-      <Suspense>
-        <LoginForm />
-      </Suspense>
-    </AuthShell>
-  );
+  return null;
 }

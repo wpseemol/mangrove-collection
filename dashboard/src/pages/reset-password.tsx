@@ -43,7 +43,7 @@ export function ResetPasswordPage() {
       ) : mutation.isSuccess ? (
         <div className="text-center">
           <CircleCheck className="mx-auto mb-3 size-12 text-brand" />
-          <p className="text-sm text-gray-700">Your password has been reset. You can now sign in.</p>
+          <p className="text-sm text-foreground/80">Your password has been reset. You can now sign in.</p>
           <Button asChild className="mt-5">
             <Link to="/login">Sign in</Link>
           </Button>

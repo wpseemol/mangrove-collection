@@ -61,7 +61,7 @@ export function LoginForm() {
 
       <p className="mt-6 text-center text-sm text-muted-foreground">
         New to Mangrove Collection?{" "}
-        <Link href={`/register?redirect=${encodeURIComponent(redirect)}`} className="font-medium text-primary hover:underline">
+        <Link href={`/register?redirect=${encodeURIComponent(redirect)}`} scroll={false} className="font-medium text-primary hover:underline">
           Create an account
         </Link>
       </p>

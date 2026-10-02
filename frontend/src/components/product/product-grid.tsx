@@ -30,7 +30,7 @@ export function ProductGrid({
 }) {
   if (loading && !products) {
     return (
-      <div className={cn("grid gap-4 md:gap-5", GRID[columns])}>
+      <div className={cn("grid gap-3 sm:gap-4 md:gap-5", GRID[columns])}>
         {Array.from({ length: skeletons }).map((_, index) => (
           <div key={index} className="overflow-hidden rounded-2xl border">
             <Skeleton className="aspect-square rounded-none" />
@@ -61,7 +61,7 @@ export function ProductGrid({
   }
 
   return (
-    <div className={cn("grid gap-4 md:gap-5", GRID[columns])}>
+    <div className={cn("grid gap-3 sm:gap-4 md:gap-5", GRID[columns])}>
       {products.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}

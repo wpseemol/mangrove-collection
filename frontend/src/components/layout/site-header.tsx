@@ -19,6 +19,7 @@ import { useAuthStore } from "@/stores/auth";
 import { cartCount, cartSubtotal, useCartStore } from "@/stores/cart";
 
 import { NAV_LINKS } from "./main-nav";
+import { ThemeToggle } from "./theme-toggle";
 
 function SearchForm({ className, onSubmitted }: { className?: string; onSubmitted?: () => void }) {
   const router = useRouter();
@@ -69,10 +70,10 @@ function HeaderAction({
 }) {
   return (
     <Link href={href} className={cn("group flex items-center gap-2.5 rounded-lg px-2 py-1.5 transition-colors hover:bg-muted", className)}>
-      <span className="relative flex size-10 items-center justify-center rounded-full bg-secondary text-primary transition-colors group-hover:bg-primary group-hover:text-white">
+      <span className="relative flex size-10 items-center justify-center rounded-full bg-secondary text-primary transition-colors group-hover:bg-primary group-hover:text-white dark:text-brand dark:group-hover:text-white">
         <Icon className="size-5" strokeWidth={1.8} />
         {badge ? (
-          <span className="absolute -top-1 -right-1 flex min-w-5 items-center justify-center rounded-full bg-gold px-1 text-[10px] leading-5 font-semibold text-white ring-2 ring-white">
+          <span className="absolute -top-1 -right-1 flex min-w-5 items-center justify-center rounded-full bg-gold px-1 text-[10px] leading-5 font-semibold text-white ring-2 ring-background">
             {badge > 99 ? "99+" : badge}
           </span>
         ) : null}
@@ -91,7 +92,7 @@ function TopBar() {
 
   return (
     <div className="bg-forest text-xs text-white/80">
-      <Container className="flex h-9 items-center justify-between gap-4">
+      <Container className="flex h-8 items-center justify-between gap-4 text-[11px] sm:h-9 sm:text-xs">
         <p className="flex items-center gap-2 truncate">
           <Truck className="size-3.5 shrink-0 text-brand" />
           {threshold ? `Free home delivery on orders over ${formatPrice(threshold)}` : "Home delivery all over Bangladesh"}
@@ -127,8 +128,8 @@ export function SiteHeader() {
   return (
     <>
       <TopBar />
-      <header className="sticky top-0 z-40 border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/85">
-        <Container className="flex h-[72px] items-center gap-3 lg:gap-8">
+      <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/85">
+        <Container className="flex h-16 items-center gap-2 md:h-[72px] md:gap-3 lg:gap-8">
           <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="-ml-2 md:hidden" aria-label="Open menu">
@@ -171,24 +172,26 @@ export function SiteHeader() {
 
           <nav className="ml-auto flex items-center gap-1 md:ml-0" aria-label="Shortcuts">
             {staffToken && (
-              <Button asChild variant="outline" size="sm" className="mr-2 hidden rounded-full border-primary/30 text-primary lg:inline-flex">
+              <Button asChild variant="outline" size="sm" className="mr-2 hidden rounded-full border-primary/30 text-primary lg:inline-flex dark:text-brand">
                 <a href={dashboardHandoffUrl(staffToken)}>
                   <LayoutDashboard /> Dashboard
                 </a>
               </Button>
             )}
+            <ThemeToggle className="md:mr-1" />
             <HeaderAction
               href={signedIn ? "/account" : "/login"}
               icon={UserRound}
               caption={signedIn ? `Hi, ${user?.name.split(" ")[0] ?? "there"}` : "Welcome"}
               label={signedIn ? "My account" : "Sign in"}
+              className="hidden md:flex"
             />
             <HeaderAction
               href={signedIn ? "/account/orders" : "/track-order"}
               icon={Package}
               caption="Track your"
               label="Orders"
-              className="hidden sm:flex"
+              className="hidden lg:flex"
             />
             <HeaderAction
               href="/cart"
@@ -196,6 +199,7 @@ export function SiteHeader() {
               caption={`${count} item${count === 1 ? "" : "s"}`}
               label={hydrated ? formatPrice(cartSubtotal(items)) : "Cart"}
               badge={count}
+              className="hidden md:flex"
             />
           </nav>
         </Container>

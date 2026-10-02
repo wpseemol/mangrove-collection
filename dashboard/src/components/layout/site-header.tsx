@@ -12,6 +12,8 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 
+import { ThemeToggle } from './theme-toggle'
+
 type Crumb = { label: string; to?: string }
 
 function crumbsFor(pathname: string): Crumb[] {
@@ -54,6 +56,9 @@ export function SiteHeader() {
           ))}
         </BreadcrumbList>
       </Breadcrumb>
+      <div className="ml-auto">
+        <ThemeToggle />
+      </div>
     </header>
   )
 }

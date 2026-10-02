@@ -21,7 +21,9 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { api, errorMessage } from '@/lib/api'
 import { categoriesQueryKey, useCategories } from '@/lib/queries'
+import { TONES } from '@/lib/tones'
 import type { Category } from '@/lib/types'
+import { cn } from '@/lib/utils'
 
 export function CategoriesPage() {
   const queryClient = useQueryClient()
@@ -118,15 +120,12 @@ export function CategoriesPage() {
                     </Link>
                   </TableCell>
                   <TableCell>
-                    {category.is_active ? (
-                      <Badge variant="outline" className="border-0 bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/20 ring-inset">
-                        Visible
-                      </Badge>
-                    ) : (
-                      <Badge variant="outline" className="border-0 bg-zinc-100 text-zinc-700 ring-1 ring-zinc-500/20 ring-inset">
-                        Hidden
-                      </Badge>
-                    )}
+                    <Badge
+                      variant="outline"
+                      className={cn('border-0 ring-1 ring-inset', category.is_active ? TONES.green : TONES.neutral)}
+                    >
+                      {category.is_active ? 'Visible' : 'Hidden'}
+                    </Badge>
                   </TableCell>
                   <TableCell className="hidden text-muted-foreground tabular-nums md:table-cell">
                     {category.sort_order}

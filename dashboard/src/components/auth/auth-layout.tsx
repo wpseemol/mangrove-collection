@@ -2,6 +2,7 @@ import { BarChart3, Boxes, ShieldCheck, Store } from 'lucide-react'
 import type { ReactNode } from 'react'
 
 import { BrandLogo } from '@/components/brand-logo'
+import { ThemeToggle } from '@/components/layout/theme-toggle'
 import { STOREFRONT_URL } from '@/lib/config'
 
 const FEATURES = [
@@ -16,19 +17,24 @@ export function AuthLayout({ title, subtitle, children }: { title: string; subti
       <header className="bg-black">
         <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6">
           <BrandLogo />
-          <a
-            href={STOREFRONT_URL}
-            className="flex items-center gap-1.5 text-sm text-white/80 transition-colors hover:text-brand"
-          >
-            <Store className="size-4" />
-            <span className="hidden sm:inline">Visit store</span>
-          </a>
+          <div className="flex items-center gap-2">
+            <a
+              href={STOREFRONT_URL}
+              className="flex items-center gap-1.5 text-sm text-white/80 transition-colors hover:text-brand"
+            >
+              <Store className="size-4" />
+              <span className="hidden sm:inline">Visit store</span>
+            </a>
+            <div className="text-white/80 [&_button]:hover:bg-white/10 [&_button]:hover:text-white">
+              <ThemeToggle />
+            </div>
+          </div>
         </div>
       </header>
 
       <main className="flex flex-1 items-center justify-center px-4 py-10 sm:px-6">
-        <div className="grid w-full max-w-4xl overflow-hidden rounded-md border bg-white shadow-sm md:grid-cols-[5fr_6fr]">
-          <div className="relative hidden flex-col justify-between gap-10 overflow-hidden bg-primary p-8 text-white md:flex">
+        <div className="grid w-full max-w-4xl overflow-hidden rounded-md border bg-card shadow-sm md:grid-cols-[5fr_6fr]">
+          <div className="relative hidden flex-col justify-between gap-10 overflow-hidden bg-[#0d4a36] p-8 text-white md:flex">
             <div className="pointer-events-none absolute -top-16 -right-16 size-56 rounded-full bg-brand/20 blur-2xl" />
             <div className="pointer-events-none absolute -bottom-20 -left-10 size-56 rounded-full bg-black/30 blur-2xl" />
 
@@ -47,7 +53,7 @@ export function AuthLayout({ title, subtitle, children }: { title: string; subti
           </div>
 
           <div className="p-6 sm:p-10">
-            <h1 className="text-2xl font-semibold text-gray-900">{title}</h1>
+            <h1 className="text-2xl font-semibold text-foreground">{title}</h1>
             {subtitle && <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>}
             <div className="mt-6">{children}</div>
           </div>
