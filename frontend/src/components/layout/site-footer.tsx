@@ -133,10 +133,12 @@ export function SiteFooter() {
             </span>
             <a
               href={staffToken ? dashboardHandoffUrl(staffToken) : DASHBOARD_LOGIN_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-white/55 transition-colors hover:text-white"
             >
               <LayoutDashboard className="size-3.5" />
-              {staffToken ? "Open dashboard" : "Staff login"}
+              {staffToken ? "Open dashboard" : "Admin login"}
             </a>
           </p>
           <div className="flex flex-wrap items-center justify-center gap-2">
