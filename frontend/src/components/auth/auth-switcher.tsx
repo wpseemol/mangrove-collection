@@ -4,7 +4,7 @@ import { ArrowRight, Leaf, ShieldCheck, Truck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense } from "react";
 
 import { LoginForm } from "@/app/(auth)/login/login-form";
 import { RegisterForm } from "@/app/(auth)/register/register-form";
@@ -38,7 +38,7 @@ const POINTS = [
   { icon: ShieldCheck, text: "Cash on delivery & mobile banking" },
 ];
 
-const FLIP = "duration-[900ms] ease-[cubic-bezier(0.65,0,0.35,1)] motion-reduce:transition-none";
+const FADE = "animate-in fade-in slide-in-from-bottom-2 duration-300 ease-out motion-reduce:animate-none";
 
 function SwitchLinkWithRedirect({ href, ...props }: React.ComponentProps<typeof Link> & { href: string }) {
   const redirect = useSearchParams().get("redirect");
@@ -59,7 +59,7 @@ function MobileTabs({ mode }: { mode: Mode }) {
       href={`/${target}`}
       aria-current={mode === target ? "page" : undefined}
       className={cn(
-        "relative z-10 rounded-full py-2.5 text-center text-sm font-semibold transition-colors duration-500",
+        "relative z-10 rounded-full py-2.5 text-center text-sm font-semibold transition-colors duration-300",
         mode === target ? "text-white" : "text-muted-foreground",
       )}
     >
@@ -73,8 +73,7 @@ function MobileTabs({ mode }: { mode: Mode }) {
         <span
           aria-hidden
           className={cn(
-            "absolute inset-y-1 left-1 w-[calc(50%-0.25rem)] rounded-full bg-primary shadow-md shadow-primary/30 transition-transform",
-            FLIP,
+            "absolute inset-y-1 left-1 w-[calc(50%-0.25rem)] rounded-full bg-primary shadow-md shadow-primary/30 transition-transform duration-300 ease-out motion-reduce:transition-none",
             mode === "register" && "translate-x-full",
           )}
         />
@@ -90,8 +89,8 @@ function BrandPanel({ mode }: { mode: Mode }) {
 
   return (
     <div className="relative hidden flex-col justify-between overflow-hidden bg-gradient-to-br from-[#0d4a36] to-forest p-10 text-white md:flex">
-      <div className={cn("pointer-events-none absolute -top-20 size-64 rounded-full bg-brand/25 blur-3xl", mode === "login" ? "-right-20" : "-left-20")} />
-      <div className={cn("pointer-events-none absolute -bottom-24 size-64 rounded-full bg-gold/20 blur-3xl", mode === "login" ? "-left-10" : "-right-10")} />
+      <div className="pointer-events-none absolute -top-20 -right-20 size-64 rounded-full bg-brand/25 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-24 -left-10 size-64 rounded-full bg-gold/20 blur-3xl" />
 
       <div className="relative flex items-center gap-3">
         <Image src="/assets/logo.png" alt="" width={48} height={48} className="size-12 rounded-full bg-white object-contain" />
@@ -101,7 +100,7 @@ function BrandPanel({ mode }: { mode: Mode }) {
         </span>
       </div>
 
-      <div className="relative py-10">
+      <div key={mode} className={cn("relative py-10", FADE)}>
         <p className="text-xs font-semibold tracking-[0.2em] text-gold uppercase">From the heart of Sundarban</p>
         <h2 className="font-heading mt-3 text-3xl leading-tight font-semibold">{copy.panelTitle}</h2>
         <p className="mt-3 text-sm leading-relaxed text-white/75">{copy.panelText}</p>
@@ -128,96 +127,20 @@ function BrandPanel({ mode }: { mode: Mode }) {
   );
 }
 
-function Face({
-  mode,
-  active,
-  faceRef,
-  children,
-}: {
-  mode: Mode;
-  active: boolean;
-  faceRef: React.Ref<HTMLDivElement>;
-  children: React.ReactNode;
-}) {
-  const copy = COPY[mode];
-  const form = (
-    <div className="p-6 sm:p-10 md:p-12">
-      <h1 className="font-heading text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">{copy.title}</h1>
-      <p className="mt-2 text-[15px] text-muted-foreground">{copy.subtitle}</p>
-      <div className="mt-6 sm:mt-8">{children}</div>
-    </div>
-  );
-
-  return (
-    <div
-      ref={faceRef}
-      inert={!active}
-      aria-hidden={!active || undefined}
-      className={cn(
-        "grid w-full overflow-hidden rounded-2xl border bg-card shadow-xl shadow-black/10 backface-hidden sm:rounded-3xl md:min-h-[620px]",
-        mode === "login" ? "md:grid-cols-[5fr_6fr]" : "rotate-y-180 md:grid-cols-[6fr_5fr]",
-        active ? "relative" : "absolute inset-x-0 top-0",
-      )}
-    >
-      {mode === "login" ? (
-        <>
-          <BrandPanel mode="login" />
-          {form}
-        </>
-      ) : (
-        <>
-          {form}
-          <BrandPanel mode="register" />
-        </>
-      )}
-    </div>
-  );
-}
-
 export function AuthSwitcher({ children }: { children: React.ReactNode }) {
   const mode: Mode = usePathname().startsWith("/register") ? "register" : "login";
-  const loginRef = useRef<HTMLDivElement>(null);
-  const registerRef = useRef<HTMLDivElement>(null);
-  const [heights, setHeights] = useState<Partial<Record<Mode, number>>>({});
-
-  const [firstMode] = useState(mode);
-  const [hasFlipped, setHasFlipped] = useState(false);
-  if (!hasFlipped && mode !== firstMode) setHasFlipped(true);
-
-  useEffect(() => {
-    const login = loginRef.current;
-    const register = registerRef.current;
-    if (!login || !register) return;
-    const observer = new ResizeObserver(() => setHeights({ login: login.offsetHeight, register: register.offsetHeight }));
-    observer.observe(login);
-    observer.observe(register);
-    return () => observer.disconnect();
-  }, []);
+  const copy = COPY[mode];
 
   return (
     <Container className="py-6 sm:py-12 md:py-16">
       <MobileTabs mode={mode} />
-      <div className="mx-auto max-w-5xl">
-        <div
-          style={{ height: heights[mode], perspective: "1800px" }}
-          className={cn(
-            "relative transition-[height]",
-            FLIP,
-            hasFlipped && (mode === "register" ? "animate-[card-pop-a_900ms_ease-in-out]" : "animate-[card-pop-b_900ms_ease-in-out]"),
-            "motion-reduce:animate-none",
-          )}
-        >
-          <div className={cn("relative transition-transform transform-3d", FLIP, mode === "register" && "rotate-y-180")}>
-            <Face mode="login" active={mode === "login"} faceRef={loginRef}>
-              <Suspense>
-                <LoginForm />
-              </Suspense>
-            </Face>
-            <Face mode="register" active={mode === "register"} faceRef={registerRef}>
-              <Suspense>
-                <RegisterForm />
-              </Suspense>
-            </Face>
+      <div className="mx-auto grid max-w-5xl overflow-hidden rounded-2xl border bg-card shadow-xl shadow-black/10 sm:rounded-3xl md:min-h-[620px] md:grid-cols-[5fr_6fr]">
+        <BrandPanel mode={mode} />
+        <div key={mode} className={cn("p-6 sm:p-10 md:p-12", FADE)}>
+          <h1 className="font-heading text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">{copy.title}</h1>
+          <p className="mt-2 text-[15px] text-muted-foreground">{copy.subtitle}</p>
+          <div className="mt-6 sm:mt-8">
+            <Suspense>{mode === "login" ? <LoginForm /> : <RegisterForm />}</Suspense>
           </div>
         </div>
       </div>

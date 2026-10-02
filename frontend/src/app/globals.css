@@ -193,16 +193,3 @@
     @apply border-l-4 border-primary/30 pl-4 text-muted-foreground italic;
   }
 }
-
-/* Two identical keyframes so switching between them restarts the animation without remounting. */
-@keyframes card-pop-a {
-  50% {
-    scale: 0.92;
-  }
-}
-
-@keyframes card-pop-b {
-  50% {
-    scale: 0.92;
-  }
-}
