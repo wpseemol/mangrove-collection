@@ -5,6 +5,7 @@ import type {
   Banner,
   Category,
   Media,
+  NewsletterSubscriber,
   Order,
   OrderItem,
   Page,
@@ -346,6 +347,17 @@ export function shippingMethodResource(method: ShippingMethod): Json {
     price: num(method.price),
     is_active: method.is_active,
     sort_order: method.sort_order,
+  }
+}
+
+export function newsletterSubscriberResource(subscriber: NewsletterSubscriber): Json {
+  return {
+    id: id(subscriber.id),
+    email: subscriber.email,
+    status: subscriber.status,
+    source: subscriber.source,
+    subscribed_at: iso(subscriber.created_at),
+    unsubscribed_at: iso(subscriber.unsubscribed_at),
   }
 }
 

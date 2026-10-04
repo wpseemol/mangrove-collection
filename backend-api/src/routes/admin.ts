@@ -15,6 +15,7 @@ import {
   bannerResource,
   categoryResource,
   mediaResource,
+  newsletterSubscriberResource,
   orderResource,
   pageResource,
   paymentAccountResource,
@@ -863,11 +864,23 @@ adminRouter.get('/pages/:slug', async (req, res) => {
   res.json({ data: pageResource(page!) })
 })
 
-/** Link and image fields inside page blocks (`image`, `*_url`, at any depth) must be http(s) links or site paths. */
+/** Inline `[label](target)` links in page block text. */
+const INLINE_LINK = /\[[^\]\n]*\]\(([^)\s]*)\)/g
+
+/**
+ * Link and image fields inside page blocks (`image`, `*_url`, at any depth) and inline `[label](target)`
+ * links in their text must be http(s) links or site paths.
+ */
 const sectionUrls: RawCheck = (input) => {
   const errors: FieldErrors = {}
   const visit = (value: unknown, path: (string | number)[]) => {
     if (Array.isArray(value)) return value.forEach((item, index) => visit(item, [...path, index]))
+    if (typeof value === 'string') {
+      if ([...value.matchAll(INLINE_LINK)].some(([, target]) => !isSafeUrl(target, true))) {
+        errors[path.join('.')] = [`The ${attributeName(path)} has a link that is not a valid http(s) link or a path starting with /.`]
+      }
+      return
+    }
     if (value === null || typeof value !== 'object') return
     for (const [key, item] of Object.entries(value)) {
       const itemPath = [...path, key]
@@ -914,6 +927,77 @@ adminRouter.delete('/pages/:slug', async (req, res) => {
   const page = await prisma.page.findUnique({ where: { slug: String(req.params.slug) } })
   if (!page) notFound()
   await prisma.page.delete({ where: { id: page!.id } })
+  res.status(204).end()
+})
+
+/* ----------------------------------------------------------------------------------------------
+ | Newsletter subscribers
+ * -------------------------------------------------------------------------------------------- */
+
+const SUBSCRIBER_STATUSES = ['subscribed', 'unsubscribed'] as const
+
+const subscriberFilters = (query: { q?: string | null; status?: string | null }): Prisma.NewsletterSubscriberWhereInput => ({
+  ...(query.q ? { email: { contains: likeTerm(query.q) } } : {}),
+  ...(query.status ? { status: query.status } : {}),
+})
+
+async function findSubscriber(req: Request) {
+  const subscriber = await prisma.newsletterSubscriber.findUnique({ where: { id: routeId(req.params.subscriber) } })
+  if (!subscriber) notFound()
+  return subscriber!
+}
+
+adminRouter.get('/newsletter-subscribers', async (req, res) => {
+  const query = await validate(z.object({ q: opt(text(100)), status: opt(oneOf(SUBSCRIBER_STATUSES)), per_page: opt(int(1, 100)) }), req.query)
+  const where = subscriberFilters(query)
+
+  const page = await paginate(
+    req,
+    query.per_page ?? 20,
+    { count: () => prisma.newsletterSubscriber.count({ where }), rows: ({ skip, take }) => prisma.newsletterSubscriber.findMany({ where, orderBy: [latest, { id: 'desc' }], skip, take }) },
+    newsletterSubscriberResource,
+  )
+  const counts = await Promise.all(SUBSCRIBER_STATUSES.map(async (status) => [status, await prisma.newsletterSubscriber.count({ where: { status } })] as const))
+
+  res.json({ ...page, counts: Object.fromEntries(counts) })
+})
+
+/** Spreadsheet-safe CSV: cells that start with a formula character are prefixed so Excel shows them as text. */
+const csvCell = (value: string | null) => {
+  const text = value ?? ''
+  const safe = /^[=+\-@\t\r]/.test(text) ? `'${text}` : text
+  return /[",\r\n]/.test(safe) ? `"${safe.replace(/"/g, '""')}"` : safe
+}
+
+adminRouter.get('/newsletter-subscribers/export', async (req, res) => {
+  const query = await validate(z.object({ q: opt(text(100)), status: opt(oneOf(SUBSCRIBER_STATUSES)) }), req.query)
+  const subscribers = await prisma.newsletterSubscriber.findMany({ where: subscriberFilters(query), orderBy: [latest, { id: 'desc' }] })
+
+  const rows = [
+    ['email', 'status', 'source', 'subscribed_at', 'unsubscribed_at'],
+    ...subscribers.map((s) => [s.email, s.status, s.source, s.created_at?.toISOString() ?? null, s.unsubscribed_at?.toISOString() ?? null]),
+  ]
+
+  res
+    .type('text/csv; charset=utf-8')
+    .attachment(`newsletter-subscribers-${new Date().toISOString().slice(0, 10)}.csv`)
+    .send(`\uFEFF${rows.map((row) => row.map(csvCell).join(',')).join('\r\n')}\r\n`)
+})
+
+put('/newsletter-subscribers/:subscriber', async (req, res) => {
+  const subscriber = await findSubscriber(req)
+  const data = await validate(z.object({ status: oneOf(SUBSCRIBER_STATUSES) }), bodyOf(req))
+
+  const updated = await prisma.newsletterSubscriber.update({
+    where: { id: subscriber.id },
+    data: { status: data.status, unsubscribed_at: data.status === 'unsubscribed' ? (subscriber.unsubscribed_at ?? new Date()) : null },
+  })
+  res.json({ data: newsletterSubscriberResource(updated) })
+})
+
+adminRouter.delete('/newsletter-subscribers/:subscriber', async (req, res) => {
+  const subscriber = await findSubscriber(req)
+  await prisma.newsletterSubscriber.delete({ where: { id: subscriber.id } })
   res.status(204).end()
 })
 

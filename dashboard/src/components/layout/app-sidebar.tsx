@@ -5,6 +5,7 @@ import {
   LayoutDashboard,
   LayoutTemplate,
   LogOut,
+  Mail,
   MessageSquareText,
   Package,
   PackagePlus,
@@ -80,6 +81,7 @@ const NAV: { label: string; items: NavItem[] }[] = [
     label: 'Store',
     items: [
       { title: 'Home page', to: '/home-page', icon: LayoutTemplate, exact: true },
+      { title: 'Subscribers', to: '/subscribers', icon: Mail, exact: true },
       { title: 'Payment accounts', to: '/payment-accounts', icon: Wallet, exact: true, adminOnly: true },
       { title: 'Settings', to: '/settings', icon: Settings, exact: false, adminOnly: true },
     ],

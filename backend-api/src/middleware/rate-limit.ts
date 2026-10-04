@@ -33,6 +33,7 @@ const limiters: Record<string, (req: Request) => Limit[]> = {
   },
   checkout: (req) => [perMinute(10, userOrIp(req))],
   quote: (req) => [perMinute(60, userOrIp(req))],
+  newsletter: (req) => [perMinute(5, `ip:${req.ip}`), perHour(30, `newsletter-ip-hour:${req.ip}`)],
   tracking: (req) => [perMinute(20, `ip:${req.ip}`)],
   // Phone/email buyer checks: slows down anyone trying numbers one after another.
   'review-verify': (req) => {

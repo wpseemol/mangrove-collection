@@ -1,4 +1,4 @@
-import { OurStory, PromiseBand } from "@/components/home/about-story";
+import { InfoCards, OurStory, PromiseBand } from "@/components/home/about-story";
 import { CategorySection } from "@/components/home/category-section";
 import { Hero } from "@/components/home/hero";
 import { ProductSection } from "@/components/home/product-section";
@@ -14,6 +14,7 @@ export default function HomePage() {
       <ProductSection block="latest" filters={{ sort: "latest" }} viewAllHref="/shop?sort=latest" />
       <PromiseBand />
       <OurStory />
+      <InfoCards />
     </>
   );
 }

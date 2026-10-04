@@ -4,6 +4,7 @@ import { Hind_Siliguri, Roboto } from "next/font/google";
 import { FloatingSocial } from "@/components/layout/floating-social";
 import { MainNav } from "@/components/layout/main-nav";
 import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
+import { NewsletterSignup } from "@/components/layout/newsletter-signup";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteScripts } from "@/components/layout/site-scripts";
@@ -51,6 +52,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <SiteHeader />
           <MainNav />
           <main className="flex-1 pb-12 md:pb-20">{children}</main>
+          <NewsletterSignup />
           <SiteFooter />
           <MobileBottomNav />
           <FloatingSocial />

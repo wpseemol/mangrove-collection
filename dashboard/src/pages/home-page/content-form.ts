@@ -6,6 +6,9 @@ export type Errors = Record<string, string>
 
 const LONG_FIELD = /(?:^|\.)(?:description|body|text)$/
 const LINK_FIELD = /(?:^|\.)(?:image|\w+_url)$/
+const INLINE_LINK = /\[[^\]\n]*\]\(([^)\s]*)\)/g
+
+export const INFO_CARD_LIMIT = 24
 
 export const limitFor = (path: string) => (LINK_FIELD.test(path) ? 2048 : LONG_FIELD.test(path) ? 1000 : 255)
 
@@ -37,6 +40,9 @@ export function validateContent(content: HomeContent): Errors {
       else if (LINK_FIELD.test(path)) {
         if (!isSafeLink(text)) errors[path] = LINK_MESSAGE
       } else if (isUnsafeText(text)) errors[path] = UNSAFE_TEXT_MESSAGE
+      else if ([...text.matchAll(INLINE_LINK)].some(([, target]) => !isSafeLink(target))) {
+        errors[path] = `Every [text](link) needs a full http(s) link or a site path starting with /, e.g. [Shop honey](/shop?category=honey).`
+      }
     } else if (Array.isArray(value)) {
       value.forEach((item, index) => visit(item, `${path}.${index}`))
     } else if (value && typeof value === 'object') {
@@ -47,6 +53,9 @@ export function validateContent(content: HomeContent): Errors {
 
   const seconds = content.hero.autoplay_seconds
   if (!Number.isInteger(seconds) || seconds < 0 || seconds > 30) errors['hero.autoplay_seconds'] = 'Enter a whole number of seconds from 0 to 30.'
+
+  const visible = content.info.visible_count
+  if (!Number.isInteger(visible) || visible < 0 || visible > INFO_CARD_LIMIT) errors['info.visible_count'] = `Enter a whole number from 0 to ${INFO_CARD_LIMIT}.`
 
   return errors
 }

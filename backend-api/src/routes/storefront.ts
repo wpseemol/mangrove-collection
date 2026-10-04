@@ -25,7 +25,7 @@ import { MAX_REVIEW_IMAGES, reviews } from '../services/reviews.js'
 import { ReviewerIdentity } from '../services/reviewer-identity.js'
 import { reviewImages } from '../services/images.js'
 import { settings } from '../services/settings.js'
-import { bool, email, int, intBetween, num, oneOf, opt, phone, text, transactionId, validate, z } from '../validation/index.js'
+import { alphaDash, bool, email, int, intBetween, num, oneOf, opt, phone, text, transactionId, validate, z } from '../validation/index.js'
 import { bodyOf, distinct, isFilled, listOf } from './helpers.js'
 
 export const storefrontRouter = Router()
@@ -386,6 +386,28 @@ storefrontRouter.get('/pages/:slug', async (req, res) => {
   const page = await prisma.page.findFirst({ where: { slug: req.params.slug, is_published: true } })
   if (!page) notFound()
   res.json({ data: pageResource(page!) })
+})
+
+/**
+ * Newsletter sign-up. The reply is the same whether the address is new, already subscribed or
+ * coming back after unsubscribing, so the form can't be used to find out who is on the list.
+ */
+storefrontRouter.post('/newsletter', throttle('newsletter'), async (req, res) => {
+  const data = await validate(
+    z.object({
+      email: z.preprocess((value) => (typeof value === 'string' ? value.trim().toLowerCase() : value), email(255)),
+      source: opt(alphaDash(50)),
+    }),
+    bodyOf(req),
+  )
+
+  await prisma.newsletterSubscriber.upsert({
+    where: { email: data.email },
+    create: { email: data.email, source: data.source ?? null, ip_address: req.ip ?? null },
+    update: { status: 'subscribed', unsubscribed_at: null },
+  })
+
+  res.json({ message: "Thanks for subscribing! You'll be the first to hear about fresh arrivals and offers." })
 })
 
 storefrontRouter.get('/shipping-methods', async (_req, res) => {

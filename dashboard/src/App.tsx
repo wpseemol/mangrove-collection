@@ -17,6 +17,7 @@ import { ProductCreatePage, ProductEditPage } from '@/pages/products/product-for
 import { ResetPasswordPage } from '@/pages/reset-password'
 import { ReviewsPage } from '@/pages/reviews'
 import { SettingsPage } from '@/pages/settings'
+import { SubscribersPage } from '@/pages/subscribers'
 
 export default function App() {
   return (
@@ -36,6 +37,7 @@ export default function App() {
           <Route path="payments" element={<PaymentsPage />} />
           <Route path="reviews" element={<ReviewsPage />} />
           <Route path="home-page" element={<HomePageEditorPage />} />
+          <Route path="subscribers" element={<SubscribersPage />} />
           <Route element={<RequireAdmin />}>
             <Route path="payment-accounts" element={<PaymentAccountsPage />} />
             <Route path="settings" element={<SettingsPage />} />

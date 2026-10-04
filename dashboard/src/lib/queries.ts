@@ -89,6 +89,8 @@ export function usePendingOrdersCount(enabled = true) {
 
 export const reviewsQueryKey = ['admin', 'reviews'] as const
 
+export const subscribersQueryKey = ['admin', 'newsletter-subscribers'] as const
+
 export const bannersQueryKey = ['admin', 'banners'] as const
 
 export function useBanners() {

@@ -7,16 +7,19 @@ import {
   Images,
   LayoutGrid,
   Loader2,
+  Mail,
+  Newspaper,
   RefreshCw,
   RotateCcw,
   Save,
   ServerCrash,
   ShieldCheck,
   Type,
+  Users,
   type LucideIcon,
 } from 'lucide-react'
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
-import { useSearchParams } from 'react-router'
+import { Link, useSearchParams } from 'react-router'
 import { toast } from 'sonner'
 
 import { SingleImageUpload } from '@/components/image-upload'
@@ -30,12 +33,12 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ApiError, api, errorMessage } from '@/lib/api'
 import { STOREFRONT_URL } from '@/lib/config'
-import { otherSections, parseHomeContent, toSections, type HomeContent, type IconItem } from '@/lib/home-content'
+import { otherSections, parseHomeContent, toSections, type HomeContent, type IconItem, type InfoCard } from '@/lib/home-content'
 import { homePageQueryKey, useBanners, useHomePage } from '@/lib/queries'
 import type { Banner, CmsPage } from '@/lib/types'
 import { cn } from '@/lib/utils'
 
-import { fromServerErrors, getIn, setIn, validateContent, type Errors } from './content-form'
+import { fromServerErrors, getIn, INFO_CARD_LIMIT, setIn, validateContent, type Errors } from './content-form'
 import { IconSelect, ItemList, TextField, ToggleRow } from './fields'
 import { SideImageSlot, SlidesManager } from './hero-media'
 
@@ -59,6 +62,14 @@ const TABS: TabDef[] = [
   },
   { id: 'promise', title: 'Our promise', description: 'The green band explaining how products reach customers.', icon: HandHeart, blocks: ['promise'] },
   { id: 'story', title: 'Our story', description: 'A short story at the bottom of the home page that links to the About page.', icon: BookOpen, blocks: ['story'] },
+  {
+    id: 'info',
+    title: 'Info cards',
+    description: 'Text cards at the bottom of the home page about sourcing, delivery and quality. Well-written cards with links help search engines understand the store.',
+    icon: Newspaper,
+    blocks: ['info'],
+  },
+  { id: 'newsletter', title: 'Newsletter', description: 'The email sign-up card shown above the footer on every page.', icon: Mail, blocks: ['newsletter'] },
 ]
 
 const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b)
@@ -413,6 +424,101 @@ function ContentEditor({ page, banners, bannersLoading }: { page: CmsPage | null
                   </div>
                 )}
               </ItemList>
+            </Section>
+          </TabsContent>
+
+          <TabsContent value="info" forceMount className="grid gap-4 data-[state=inactive]:hidden">
+            <Section title="Heading">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="sm:col-span-2">
+                  <ToggleRow title="Show on the home page" checked={content.info.enabled} onCheckedChange={(value) => update('info.enabled', value)} />
+                </div>
+                {text('info.eyebrow', 'Small label', { optional: true })}
+                {text('info.title', 'Title', { optional: true })}
+                {text('info.subtitle', 'Subtitle', { multiline: true, rows: 2, optional: true, className: 'sm:col-span-2' })}
+              </div>
+            </Section>
+            <Section title='"Read more" button' description="Show the first few cards and hide the rest behind a button. Hidden cards are still readable by search engines.">
+              <div className="grid gap-4 sm:grid-cols-3">
+                <div className="space-y-1.5">
+                  <Label htmlFor="home-info-visible">Cards shown at first</Label>
+                  <Input
+                    id="home-info-visible"
+                    type="number"
+                    inputMode="numeric"
+                    min={0}
+                    max={INFO_CARD_LIMIT}
+                    step={1}
+                    value={String(content.info.visible_count)}
+                    onChange={(e) => update('info.visible_count', e.target.value === '' ? 0 : Number(e.target.value))}
+                    aria-invalid={Boolean(errors['info.visible_count'])}
+                    className="w-24"
+                  />
+                  {errors['info.visible_count'] ? (
+                    <p className="text-xs text-destructive">{errors['info.visible_count']}</p>
+                  ) : (
+                    <p className="text-xs text-muted-foreground">0 shows every card.</p>
+                  )}
+                </div>
+                {text('info.read_more_label', 'Button text', { placeholder: 'Read more' })}
+                {text('info.read_less_label', 'Button text when open', { placeholder: 'Show less' })}
+              </div>
+            </Section>
+            <Section
+              title="Cards"
+              description={`Up to ${INFO_CARD_LIMIT} cards. Write for customers first: what you sell, where it comes from and how delivery works.`}
+            >
+              <div className="mb-4 rounded-lg border border-dashed bg-muted/30 p-3 text-xs leading-relaxed text-muted-foreground">
+                <p className="mb-1 font-medium text-foreground">Formatting</p>
+                <p>
+                  <code className="rounded bg-muted px-1 py-0.5">**fresh honey**</code> makes text <strong className="text-foreground">bold</strong>.{' '}
+                  <code className="rounded bg-muted px-1 py-0.5">[Shop honey](/shop?category=honey)</code> adds a link — use a site path starting with / or a full
+                  https:// address. Each line becomes its own paragraph.
+                </p>
+              </div>
+              <ItemList<InfoCard>
+                items={content.info.items}
+                onChange={(items) => update('info.items', items)}
+                max={INFO_CARD_LIMIT}
+                noun="Card"
+                blank={{ title: '', body: '' }}
+                sortable
+              >
+                {(_, index) => (
+                  <div className="grid gap-3">
+                    {text(`info.items.${index}.title`, 'Heading')}
+                    {text(`info.items.${index}.body`, 'Text', { multiline: true, rows: 5 })}
+                  </div>
+                )}
+              </ItemList>
+            </Section>
+          </TabsContent>
+
+          <TabsContent value="newsletter" forceMount className="grid gap-4 data-[state=inactive]:hidden">
+            <Section title="Sign-up card">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="sm:col-span-2">
+                  <ToggleRow
+                    title="Show the newsletter card"
+                    description="Appears above the footer on every store page."
+                    checked={content.newsletter.enabled}
+                    onCheckedChange={(value) => update('newsletter.enabled', value)}
+                  />
+                </div>
+                {text('newsletter.title', 'Title', { className: 'sm:col-span-2' })}
+                {text('newsletter.subtitle', 'Subtitle', { multiline: true, rows: 2, optional: true, className: 'sm:col-span-2' })}
+                {text('newsletter.placeholder', 'Email box placeholder', { placeholder: 'Enter your email address' })}
+                {text('newsletter.button_label', 'Button text', { placeholder: 'Subscribe' })}
+                {text('newsletter.success_message', 'Thank-you message', { className: 'sm:col-span-2', description: 'Shown after someone subscribes.' })}
+                {text('newsletter.note', 'Small print', { optional: true, className: 'sm:col-span-2', placeholder: 'No spam, ever. Unsubscribe at any time.' })}
+              </div>
+            </Section>
+            <Section title="Subscribers" description="Everyone who signs up is listed on the Subscribers page, where you can search, unsubscribe or export them as CSV.">
+              <Button type="button" variant="outline" asChild>
+                <Link to="/subscribers">
+                  <Users /> Open subscribers
+                </Link>
+              </Button>
             </Section>
           </TabsContent>
         </div>

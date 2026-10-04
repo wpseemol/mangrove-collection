@@ -291,6 +291,19 @@ export type AdminReview = {
 
 export type ReviewQueue = Paginated<AdminReview> & { counts: Record<ReviewStatus, number> }
 
+export type SubscriberStatus = 'subscribed' | 'unsubscribed'
+
+export type NewsletterSubscriber = {
+  id: number
+  email: string
+  status: SubscriberStatus
+  source: string | null
+  subscribed_at: string | null
+  unsubscribed_at: string | null
+}
+
+export type SubscriberList = Paginated<NewsletterSubscriber> & { counts: Record<SubscriberStatus, number> }
+
 export type DashboardStats = {
   totals: {
     revenue: number

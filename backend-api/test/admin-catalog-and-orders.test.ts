@@ -146,10 +146,21 @@ describe('admin catalog and orders', () => {
     expectStatus(bad, 422)
     expect(Object.keys(bad.body.errors)).toEqual(['sections.0.image', 'sections.0.primary_url', 'sections.0.items.0.link_url'])
 
+    expectErrors(
+      await staff.put('/v1/admin/pages/home', {
+        title: 'Home',
+        sections: [{ type: 'info', items: [{ body: 'Fresh [crab](javascript:alert(1)) daily' }] }],
+      }),
+      'sections.0.items.0.body',
+    )
+
     expectStatus(
       await staff.put('/v1/admin/pages/home', {
         title: 'Home',
-        sections: [{ type: 'hero', image: 'https://cdn.example.com/a.jpg', primary_url: '/shop', secondary_url: '' }],
+        sections: [
+          { type: 'hero', image: 'https://cdn.example.com/a.jpg', primary_url: '/shop', secondary_url: '' },
+          { type: 'info', items: [{ body: 'Shop **fresh** [mud crab](/shop/?category=crab) or [honey](https://example.com/honey).' }] },
+        ],
       }),
       201,
     )

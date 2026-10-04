@@ -1,4 +1,4 @@
-import { Plus, Trash2 } from 'lucide-react'
+import { ArrowDown, ArrowUp, Plus, Trash2 } from 'lucide-react'
 import type { ReactNode } from 'react'
 
 import { FormField, Optional } from '@/components/form-field'
@@ -114,6 +114,7 @@ export function ItemList<T>({
   min = 0,
   noun,
   blank,
+  sortable,
   children,
 }: {
   items: T[]
@@ -122,8 +123,16 @@ export function ItemList<T>({
   min?: number
   noun: string
   blank: T
+  /** Shows move up / down buttons. */
+  sortable?: boolean
   children: (item: T, index: number) => ReactNode
 }) {
+  const move = (from: number, to: number) => {
+    const next = [...items]
+    next.splice(to, 0, ...next.splice(from, 1))
+    onChange(next)
+  }
+
   return (
     <div className="grid gap-3">
       {items.map((item, index) => (
@@ -132,17 +141,36 @@ export function ItemList<T>({
             <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
               {noun} {index + 1}
             </p>
-            {items.length > min && (
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon-sm"
-                onClick={() => onChange(items.filter((_, i) => i !== index))}
-                aria-label={`Remove ${noun.toLowerCase()} ${index + 1}`}
-              >
-                <Trash2 />
-              </Button>
-            )}
+            <div className="flex items-center gap-0.5">
+              {sortable && (
+                <>
+                  <Button type="button" variant="ghost" size="icon-sm" disabled={index === 0} onClick={() => move(index, index - 1)} aria-label={`Move ${noun.toLowerCase()} ${index + 1} up`}>
+                    <ArrowUp />
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon-sm"
+                    disabled={index === items.length - 1}
+                    onClick={() => move(index, index + 1)}
+                    aria-label={`Move ${noun.toLowerCase()} ${index + 1} down`}
+                  >
+                    <ArrowDown />
+                  </Button>
+                </>
+              )}
+              {items.length > min && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={() => onChange(items.filter((_, i) => i !== index))}
+                  aria-label={`Remove ${noun.toLowerCase()} ${index + 1}`}
+                >
+                  <Trash2 />
+                </Button>
+              )}
+            </div>
           </div>
           {children(item, index)}
         </div>
