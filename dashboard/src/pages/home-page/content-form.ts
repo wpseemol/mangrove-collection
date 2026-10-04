@@ -1,4 +1,4 @@
-import { HOME_BLOCKS, type HomeContent } from '@/lib/home-content'
+import { CATEGORY_LIMIT, HOME_BLOCKS, PRODUCT_LIMIT, PRODUCT_ROWS_LIMIT, type HomeContent } from '@/lib/home-content'
 import { isSafeLink, isUnsafeText, LINK_MESSAGE, UNSAFE_TEXT_MESSAGE } from '@/lib/validation'
 
 /** Field errors keyed by dotted path, e.g. `hero.title` or `trust.items.0.text`. */
@@ -56,6 +56,16 @@ export function validateContent(content: HomeContent): Errors {
 
   const visible = content.info.visible_count
   if (!Number.isInteger(visible) || visible < 0 || visible > INFO_CARD_LIMIT) errors['info.visible_count'] = `Enter a whole number from 0 to ${INFO_CARD_LIMIT}.`
+
+  const between = (path: string, value: number, min: number, max: number) => {
+    if (!Number.isInteger(value) || value < min || value > max) errors[path] = `Enter a whole number from ${min} to ${max}.`
+  }
+  between('categories.limit', content.categories.limit, 1, CATEGORY_LIMIT)
+  for (const block of ['popular', 'latest'] as const) {
+    between(`${block}.limit`, content[block].limit, 1, PRODUCT_LIMIT)
+    between(`${block}.rows`, content[block].rows, 1, PRODUCT_ROWS_LIMIT)
+    between(`${block}.autoplay_seconds`, content[block].autoplay_seconds, 0, 30)
+  }
 
   return errors
 }

@@ -50,12 +50,28 @@ export type HeroBlock = {
 export type TrustBlock = { type: "trust"; enabled: boolean; items: IconItem[] };
 
 export type HeadingBlock = {
-  type: "categories" | "popular" | "latest";
   enabled: boolean;
   eyebrow: string;
   title: string;
   subtitle: string;
   link_label: string;
+};
+
+export type CategoriesBlock = HeadingBlock & {
+  type: "categories";
+  /** Categories shown in the grid. */
+  limit: number;
+};
+
+export type ProductRowBlock = HeadingBlock & {
+  type: "popular" | "latest";
+  layout: "slider" | "grid";
+  /** Products loaded for the section. */
+  limit: number;
+  /** Rows stacked inside each slider column (slider only). */
+  rows: number;
+  /** 0 turns auto-slide off (slider only). */
+  autoplay_seconds: number;
 };
 
 export type PromiseBlock = {
@@ -114,9 +130,9 @@ export type NewsletterBlock = {
 export type HomeContent = {
   hero: HeroBlock;
   trust: TrustBlock;
-  categories: HeadingBlock;
-  popular: HeadingBlock;
-  latest: HeadingBlock;
+  categories: CategoriesBlock;
+  popular: ProductRowBlock;
+  latest: ProductRowBlock;
   promise: PromiseBlock;
   story: StoryBlock;
   info: InfoBlock;
@@ -161,6 +177,7 @@ export const DEFAULT_HOME: HomeContent = {
     title: "Explore our collection",
     subtitle: "Hand-picked produce from the Sundarbans, sorted for you.",
     link_label: "All categories",
+    limit: 12,
   },
   popular: {
     type: "popular",
@@ -169,6 +186,10 @@ export const DEFAULT_HOME: HomeContent = {
     title: "Popular right now",
     subtitle: "Our customers' favourites from the Sundarbans.",
     link_label: "View all",
+    layout: "slider",
+    limit: 10,
+    rows: 1,
+    autoplay_seconds: 4,
   },
   latest: {
     type: "latest",
@@ -177,6 +198,10 @@ export const DEFAULT_HOME: HomeContent = {
     title: "New arrivals",
     subtitle: "The latest catch and harvest, just added to the store.",
     link_label: "View all",
+    layout: "slider",
+    limit: 20,
+    rows: 2,
+    autoplay_seconds: 5,
   },
   promise: {
     type: "promise",
@@ -309,6 +334,10 @@ export function useHomeContent() {
 
   return { content, ready: !isLoading };
 }
+
+/** Saved numbers come from free-form JSON, so keep them to whole numbers in range. */
+export const clamp = (value: number, min: number, max: number, fallback: number) =>
+  Number.isFinite(value) ? Math.min(max, Math.max(min, Math.round(value))) : fallback;
 
 export const paragraphs = (text: string) =>
   text

@@ -8,7 +8,7 @@ import { IconGlyph } from "@/components/shared/icon-glyph";
 import { RemoteImage } from "@/components/shared/remote-image";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useHomeContent } from "@/lib/home-content";
+import { clamp, useHomeContent } from "@/lib/home-content";
 import { useCategories } from "@/lib/queries";
 import type { Category } from "@/lib/types";
 
@@ -63,6 +63,7 @@ export function CategorySection() {
   const { data: categories, isLoading } = useCategories();
   const { content, ready } = useHomeContent();
   const section = content.categories;
+  const limit = clamp(section.limit, 1, 24, 12);
 
   if ((ready && !section.enabled) || (!isLoading && !categories?.length)) return null;
 
@@ -83,7 +84,7 @@ export function CategorySection() {
         <CategoryGridSkeleton />
       ) : (
         <div className={CATEGORY_GRID}>
-          {categories?.slice(0, 12).map((category) => (
+          {categories?.slice(0, limit).map((category) => (
             <CategoryTile key={category.id} category={category} />
           ))}
         </div>

@@ -33,13 +33,23 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ApiError, api, errorMessage } from '@/lib/api'
 import { STOREFRONT_URL } from '@/lib/config'
-import { otherSections, parseHomeContent, toSections, type HomeContent, type IconItem, type InfoCard } from '@/lib/home-content'
+import {
+  CATEGORY_LIMIT,
+  otherSections,
+  parseHomeContent,
+  PRODUCT_LIMIT,
+  PRODUCT_ROWS_LIMIT,
+  toSections,
+  type HomeContent,
+  type IconItem,
+  type InfoCard,
+} from '@/lib/home-content'
 import { homePageQueryKey, useBanners, useHomePage } from '@/lib/queries'
 import type { Banner, CmsPage } from '@/lib/types'
 import { cn } from '@/lib/utils'
 
 import { fromServerErrors, getIn, INFO_CARD_LIMIT, setIn, validateContent, type Errors } from './content-form'
-import { IconSelect, ItemList, TextField, ToggleRow } from './fields'
+import { IconSelect, ItemList, NumberField, TextField, ToggleRow } from './fields'
 import { SideImageSlot, SlidesManager } from './hero-media'
 
 type TabDef = { id: string; title: string; description: string; icon: LucideIcon; blocks: (keyof HomeContent)[] }
@@ -56,7 +66,7 @@ const TABS: TabDef[] = [
   {
     id: 'products',
     title: 'Product rows',
-    description: 'Headings for the category grid and the product rows. Products and categories themselves come from the catalog.',
+    description: 'Headings, how many items to show and the layout of the category grid and the product rows. Products and categories themselves come from the catalog.',
     icon: LayoutGrid,
     blocks: ['categories', 'popular', 'latest'],
   },
@@ -184,6 +194,32 @@ function ContentEditor({ page, banners, bannersLoading }: { page: CmsPage | null
     setContent(initial)
     setErrors({})
   }
+
+  const number = (path: string, label: string, min: number, max: number, props: Partial<Parameters<typeof NumberField>[0]> = {}) => (
+    <NumberField
+      path={path}
+      label={label}
+      min={min}
+      max={max}
+      value={Number(getIn(content, path) ?? 0)}
+      error={errors[path]}
+      onChange={(value) => update(path, value)}
+      {...props}
+    />
+  )
+
+  const enabledToggle = (block: 'categories' | 'popular' | 'latest') => (
+    <ToggleRow title="Show on the home page" checked={content[block].enabled} onCheckedChange={(value) => update(`${block}.enabled`, value)} />
+  )
+
+  const headingFields = (block: 'categories' | 'popular' | 'latest') => (
+    <>
+      {text(`${block}.eyebrow`, 'Small label', { optional: true })}
+      {text(`${block}.title`, 'Title')}
+      {text(`${block}.subtitle`, 'Subtitle', { optional: true })}
+      {text(`${block}.link_label`, '"View all" link text', { optional: true, description: 'Leave empty to hide the link.' })}
+    </>
+  )
 
   const iconItems = (path: 'trust.items' | 'promise.steps', noun: string, max: number, min: number) => (
     <ItemList<IconItem>
@@ -347,29 +383,64 @@ function ContentEditor({ page, banners, bannersLoading }: { page: CmsPage | null
           </TabsContent>
 
           <TabsContent value="products" forceMount className="grid gap-4 data-[state=inactive]:hidden">
+            <Section title="Category grid" description="Your visible categories, in the order set on the Categories page.">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="sm:col-span-2">{enabledToggle('categories')}</div>
+                {headingFields('categories')}
+                {number('categories.limit', 'Categories shown', 1, CATEGORY_LIMIT, {
+                  suffix: 'categories',
+                  description: `From 1 to ${CATEGORY_LIMIT}. Six fit on one row on large screens.`,
+                })}
+              </div>
+            </Section>
+
             {(
               [
-                ['categories', 'Category grid', 'Shows up to 12 visible categories.'],
                 ['popular', 'Popular products', 'Your best-selling published products.'],
                 ['latest', 'New arrivals', 'Your newest published products.'],
               ] as const
-            ).map(([block, title, description]) => (
-              <Section key={block} title={title} description={description}>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="sm:col-span-2">
-                    <ToggleRow
-                      title="Show on the home page"
-                      checked={content[block].enabled}
-                      onCheckedChange={(value) => update(`${block}.enabled`, value)}
-                    />
+            ).map(([block, title, description]) => {
+              const row = content[block]
+              return (
+                <Section key={block} title={title} description={description}>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="sm:col-span-2">{enabledToggle(block)}</div>
+                    {headingFields(block)}
+
+                    <div className="space-y-1.5 sm:col-span-2">
+                      <p className="text-sm font-medium text-foreground">Layout</p>
+                      <RadioGroup value={row.layout} onValueChange={(layout) => update(`${block}.layout`, layout)} className="grid gap-3 sm:grid-cols-2">
+                        <ModeOption id={`${block}-layout`} value="slider" current={row.layout} icon={GalleryHorizontal} title="Slider">
+                          Products slide sideways, automatically or with the arrows.
+                        </ModeOption>
+                        <ModeOption id={`${block}-layout`} value="grid" current={row.layout} icon={LayoutGrid} title="Grid">
+                          Every product is shown at once in a grid.
+                        </ModeOption>
+                      </RadioGroup>
+                    </div>
+
+                    <div className="grid gap-4 sm:col-span-2 sm:grid-cols-3">
+                      {number(`${block}.limit`, 'Products shown', 1, PRODUCT_LIMIT, {
+                        suffix: 'products',
+                        description: `From 1 to ${PRODUCT_LIMIT}.`,
+                      })}
+                      {row.layout === 'slider' && (
+                        <>
+                          {number(`${block}.rows`, 'Rows', 1, PRODUCT_ROWS_LIMIT, {
+                            suffix: row.rows === 1 ? 'row' : 'rows',
+                            description: 'Rows of products in the slider.',
+                          })}
+                          {number(`${block}.autoplay_seconds`, 'Auto-slide every', 0, 30, {
+                            suffix: 'seconds',
+                            description: 'Use 0 to only slide with the arrows.',
+                          })}
+                        </>
+                      )}
+                    </div>
                   </div>
-                  {text(`${block}.eyebrow`, 'Small label', { optional: true })}
-                  {text(`${block}.title`, 'Title')}
-                  {text(`${block}.subtitle`, 'Subtitle', { optional: true })}
-                  {text(`${block}.link_label`, '"View all" link text', { optional: true, description: 'Leave empty to hide the link.' })}
-                </div>
-              </Section>
-            ))}
+                </Section>
+              )
+            })}
           </TabsContent>
 
           <TabsContent value="promise" forceMount className="grid gap-4 data-[state=inactive]:hidden">
@@ -558,12 +629,14 @@ function Section({ title, description, children }: { title: string; description?
 }
 
 function ModeOption({
+  id = 'hero-mode',
   value,
   current,
   icon: Icon,
   title,
   children,
 }: {
+  id?: string
   value: string
   current: string
   icon: LucideIcon
@@ -572,13 +645,13 @@ function ModeOption({
 }) {
   return (
     <Label
-      htmlFor={`hero-mode-${value}`}
+      htmlFor={`${id}-${value}`}
       className={cn(
         'flex cursor-pointer items-start gap-3 rounded-lg border p-4 font-normal transition-colors hover:bg-muted/40',
         current === value && 'border-primary bg-secondary/60 ring-1 ring-primary',
       )}
     >
-      <RadioGroupItem id={`hero-mode-${value}`} value={value} className="mt-0.5" />
+      <RadioGroupItem id={`${id}-${value}`} value={value} className="mt-0.5" />
       <span className="grid gap-1">
         <span className="flex items-center gap-2 text-sm font-medium text-foreground">
           <Icon className="size-4 text-primary" /> {title}

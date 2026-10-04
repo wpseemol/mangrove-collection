@@ -64,6 +64,52 @@ export function TextField({
   )
 }
 
+export function NumberField({
+  path,
+  label,
+  value,
+  error,
+  onChange,
+  min,
+  max,
+  suffix,
+  description,
+  className,
+}: {
+  path: string
+  label: string
+  value: number
+  error?: string
+  onChange: (value: number) => void
+  min: number
+  max: number
+  suffix?: string
+  description?: ReactNode
+  className?: string
+}) {
+  const id = `home-${path.replace(/\./g, '-')}`
+
+  return (
+    <FormField id={id} label={label} error={error} description={description} className={className}>
+      <div className="flex items-center gap-2">
+        <Input
+          id={id}
+          type="number"
+          inputMode="numeric"
+          min={min}
+          max={max}
+          step={1}
+          value={String(value)}
+          onChange={(e) => onChange(e.target.value === '' ? 0 : Number(e.target.value))}
+          aria-invalid={Boolean(error)}
+          className="w-24"
+        />
+        {suffix && <span className="text-sm text-muted-foreground">{suffix}</span>}
+      </div>
+    </FormField>
+  )
+}
+
 export function IconSelect({ value, onChange, label = 'Icon' }: { value: string; onChange: (value: string) => void; label?: string }) {
   return (
     <div className="space-y-1.5">
