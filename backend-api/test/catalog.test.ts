@@ -31,6 +31,7 @@ describe('catalog', () => {
     const cap = await prisma.product.findFirstOrThrow({ where: { name: 'Cap' }, include: { category: true } })
     expect((await client().get(`/v1/products?category=shirts,${cap.category.slug}`)).body.data).toHaveLength(3)
     expect((await client().get('/v1/products?q=linen')).body.data).toHaveLength(1)
+    expect((await client().get('/v1/products?q=shirts')).body.data).toHaveLength(2)
     expect((await client().get('/v1/products?max_price=450')).body.data).toHaveLength(2)
   })
 

@@ -22,7 +22,7 @@ export const NAV_LINKS = [
 const MENU_ITEM = "flex items-center justify-between rounded-md px-2 py-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground";
 
 /** Uploaded image first, then the chosen icon (same order as the home category cards). */
-function CategoryThumb({ category }: { category: Category }) {
+export function CategoryThumb({ category }: { category: Category }) {
   return (
     <span className="relative flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-md bg-secondary text-primary">
       {category.image ? (

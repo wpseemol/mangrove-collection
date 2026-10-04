@@ -1,8 +1,7 @@
 "use client";
 
-import { LayoutDashboard, Menu, Package, Phone, Search, ShoppingBag, Truck, UserRound } from "lucide-react";
+import { LayoutDashboard, Menu, Package, Phone, ShoppingBag, Truck, UserRound } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { Container } from "@/components/shared/container";
@@ -19,39 +18,8 @@ import { useAuthStore } from "@/stores/auth";
 import { cartCount, cartSubtotal, useCartStore } from "@/stores/cart";
 
 import { NAV_LINKS } from "./main-nav";
+import { SearchBox } from "./search-box";
 import { ThemeToggle } from "./theme-toggle";
-
-function SearchForm({ className, onSubmitted }: { className?: string; onSubmitted?: () => void }) {
-  const router = useRouter();
-  const [term, setTerm] = useState("");
-
-  return (
-    <form
-      role="search"
-      className={className}
-      onSubmit={(event) => {
-        event.preventDefault();
-        router.push(term.trim() ? `/shop?q=${encodeURIComponent(term.trim())}` : "/shop");
-        onSubmitted?.();
-      }}
-    >
-      <div className="flex h-11 w-full items-center overflow-hidden rounded-full border bg-muted/60 pl-4 transition-colors focus-within:border-primary/50 focus-within:bg-card focus-within:ring-3 focus-within:ring-primary/10">
-        <Search className="size-4 shrink-0 text-muted-foreground" />
-        <input
-          type="search"
-          value={term}
-          onChange={(event) => setTerm(event.target.value)}
-          placeholder="Search fish, crab, prawn, honey…"
-          aria-label="Search products"
-          className="min-w-0 flex-1 bg-transparent px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
-        />
-        <button type="submit" className="mr-1 h-9 rounded-full bg-primary px-5 text-sm font-medium text-white transition-colors hover:bg-primary/90">
-          Search
-        </button>
-      </div>
-    </form>
-  );
-}
 
 function HeaderAction({
   href,
@@ -168,7 +136,7 @@ export function SiteHeader() {
 
           <Logo className="shrink-0" />
 
-          <SearchForm className="mx-auto hidden w-full max-w-xl flex-1 md:block" />
+          <SearchBox className="mx-auto hidden w-full max-w-xl flex-1 md:block" />
 
           <nav className="ml-auto flex items-center gap-1 md:ml-0" aria-label="Shortcuts">
             {staff && (
@@ -205,7 +173,7 @@ export function SiteHeader() {
         </Container>
 
         <Container className="pb-3 md:hidden">
-          <SearchForm />
+          <SearchBox />
         </Container>
       </header>
     </>

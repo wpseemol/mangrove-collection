@@ -93,7 +93,9 @@ storefrontRouter.get('/products', async (req, res) => {
 
   if (query.q) {
     const term = likeTerm(query.q)
-    and.push({ OR: [{ name: { contains: term } }, { short_description: { contains: term } }] })
+    and.push({
+      OR: [{ name: { contains: term } }, { short_description: { contains: term } }, { category: { is_active: true, name: { contains: term } } }],
+    })
   }
   if (query.category) and.push({ category: { is_active: true, slug: { in: query.category.split(',') } } })
   if (query.tag) and.push({ tags: { array_contains: query.tag } })
