@@ -8,9 +8,12 @@ import { sessionQueryKey } from "@/lib/queries";
 import { type AuthResponse, isStaff } from "@/lib/types";
 import { useAuthStore } from "@/stores/auth";
 
-/** Only same-site paths are honoured, so `?redirect=` cannot send users to another origin. */
+/**
+ * Only same-site paths are honoured, so `?redirect=` cannot send users to another origin.
+ * Browsers read `\` as `/` and drop tabs/newlines, so `/\evil.com` and `/<tab>/evil.com` are refused too.
+ */
 export function safeRedirect(value: string | null, fallback = "/account"): string {
-  return value && value.startsWith("/") && !value.startsWith("//") ? value : fallback;
+  return value && /^\/(?![/\\])/.test(value) && !/[\\\x00-\x1F\x7F]/.test(value) ? value : fallback;
 }
 
 export function useAuthRedirect() {

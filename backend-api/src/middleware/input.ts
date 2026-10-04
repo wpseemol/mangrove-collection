@@ -1,7 +1,8 @@
-import type { RequestHandler } from 'express'
+import type { Request, RequestHandler } from 'express'
 import multer from 'multer'
 import { rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
+import { isStaff } from '../auth/guards.js'
 import { ValidationError } from '../lib/http.js'
 
 const UNTRIMMED = new Set(['password', 'password_confirmation', 'current_password'])
@@ -57,10 +58,30 @@ const videoUpload = multer({
   limits: { fileSize: MAX_VIDEO_MEGABYTES * 1024 * 1024, files: 1, fields: 20, fieldSize: 64 * 1024 },
 }).any()
 
+/** Anonymous uploads (review photos) get one file of slack over MAX_REVIEW_IMAGES so the route can report "too many photos" itself. */
+const publicUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024, files: 5, fields: 30, fieldSize: 64 * 1024 },
+}).any()
+
+/**
+ * Who may make the server buffer a file. Admin and account routes reject the request anyway, so
+ * their bodies are never read for visitors who aren't allowed in; the route guards then answer 401/403.
+ * Runs after the session middleware so `req.user` is known.
+ */
+function uploaderFor(req: Request): RequestHandler | null {
+  const user = req.user
+  if (req.path.startsWith('/v1/admin/')) return user?.is_active && isStaff(user) ? upload : null
+  if (req.path.startsWith('/v1/account/')) return user?.is_active ? upload : null
+  return publicUpload
+}
+
 export const multipart: RequestHandler = (req, res, next) => {
   if (!req.is('multipart/form-data')) return next()
 
   const video = req.method === 'POST' && req.path === VIDEO_UPLOAD_PATH
+  const uploader = uploaderFor(req)
+  if (!uploader) return next()
   if (video) {
     // The temp file must go even when auth, CSRF or validation rejects the request before the route runs.
     res.on('close', () => {
@@ -68,7 +89,7 @@ export const multipart: RequestHandler = (req, res, next) => {
     })
   }
 
-  ;(video ? videoUpload : upload)(req, res, (error?: unknown) => {
+  ;(video ? videoUpload : uploader)(req, res, (error?: unknown) => {
     if (video && error instanceof multer.MulterError) {
       const message =
         error.code === 'LIMIT_FILE_SIZE'

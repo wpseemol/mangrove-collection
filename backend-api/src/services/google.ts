@@ -16,8 +16,26 @@ async function credentials() {
   return { clientId: clientId ?? '', clientSecret: clientSecret ?? '', redirectUri: redirectUri ?? '' }
 }
 
+/**
+ * An access token minted for any other Google app would also unlock /userinfo, so a site the
+ * user signed in to could replay it here and log in as them. Only tokens issued to our client are accepted.
+ */
+async function assertIssuedToUs(accessToken: string): Promise<void> {
+  const { clientId } = await credentials()
+  const response = await fetch(`https://oauth2.googleapis.com/tokeninfo?${new URLSearchParams({ access_token: accessToken })}`, {
+    headers: { Accept: 'application/json' },
+    signal: AbortSignal.timeout(15_000),
+  })
+  if (!response.ok) throw new Error(`Google tokeninfo responded with HTTP ${response.status}`)
+
+  const data = (await response.json()) as Record<string, unknown>
+  if (!clientId || (data.aud !== clientId && data.azp !== clientId)) throw new Error('Google access token was issued to a different client')
+}
+
 const httpClient: GoogleClient = {
   async userFromToken(accessToken) {
+    await assertIssuedToUs(accessToken)
+
     const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
       headers: { Authorization: `Bearer ${accessToken}`, Accept: 'application/json' },
       signal: AbortSignal.timeout(15_000),
@@ -32,7 +50,7 @@ const httpClient: GoogleClient = {
       name: typeof data.name === 'string' ? data.name : null,
       email: typeof data.email === 'string' ? data.email : null,
       avatar: typeof data.picture === 'string' ? data.picture : null,
-      emailVerified: data.email_verified !== false,
+      emailVerified: data.email_verified === true || data.email_verified === 'true',
     }
   },
 

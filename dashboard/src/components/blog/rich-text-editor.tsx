@@ -38,7 +38,7 @@ import { Separator } from '@/components/ui/separator'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 
-const SAFE_PROTOCOLS = /^(?:https?:|mailto:|tel:|\/(?!\/)|#)/i
+const SAFE_PROTOCOLS = /^(?:https?:|mailto:|tel:|\/(?![/\\])|#)/i
 
 function ToolButton({ icon: Icon, label, active, disabled, onClick }: { icon: LucideIcon; label: string; active?: boolean; disabled?: boolean; onClick: () => void }) {
   return (

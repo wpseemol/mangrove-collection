@@ -1,4 +1,5 @@
 import { Router, type Request } from 'express'
+import sharp from 'sharp'
 import { currentUser, requireActive, requireAuth } from '../auth/guards.js'
 import { revokeUserSessions } from '../auth/session.js'
 import { fail, notFound, routeId, ValidationError } from '../lib/http.js'
@@ -81,8 +82,16 @@ accountRouter.post('/avatar', throttle('uploads'), async (req, res) => {
   })
   if (Object.keys(errors).length > 0) throw new ValidationError(errors)
 
+  // Re-encoding drops EXIF (GPS location) and anything smuggled in after the image data.
+  let binary: Buffer
+  try {
+    binary = await sharp(file.buffer).rotate().toFormat(info!.format as 'jpeg' | 'png' | 'webp').toBuffer()
+  } catch {
+    fail('avatar', 'The avatar field must be an image.')
+  }
+
   const path = `avatars/${random(40)}.${extensionFor(info!)}`
-  await storage.put('public', path, file.buffer)
+  await storage.put('public', path, binary!)
 
   const user = await prisma.user.update({ where: { id: currentUser(req).id }, data: { avatar: storage.url('public', path) } })
   res.json({ data: userResource(user) })

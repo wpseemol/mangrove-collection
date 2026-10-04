@@ -5,6 +5,7 @@ import type { User } from '../generated/prisma/client.js'
 import { HttpError, fail } from '../lib/http.js'
 import { report } from '../lib/log.js'
 import { prisma } from '../lib/prisma.js'
+import { random } from '../lib/str.js'
 import { throttle } from '../middleware/rate-limit.js'
 import { userResource } from '../resources/index.js'
 import { google, type GoogleUser } from '../services/google.js'
@@ -45,6 +46,9 @@ const loginSchema = z.object({
   remember: bool().optional(),
 })
 
+/** Compared against when there is no account, so a quick reply never reveals which emails and phones are registered. */
+let dummyHash: Promise<string> | null = null
+
 /** `login` accepts either an email address or a phone number. */
 async function authenticate(login: string, password: string): Promise<User> {
   const value = login.trim()
@@ -52,7 +56,8 @@ async function authenticate(login: string, password: string): Promise<User> {
     ? await prisma.user.findFirst({ where: { email: value.toLowerCase() } })
     : await prisma.user.findFirst({ where: { phone: value } })
 
-  if (!user || user.password === null || !(await checkPassword(password, user.password))) fail('login', 'These credentials do not match our records.')
+  const valid = await checkPassword(password, user?.password ?? (await (dummyHash ??= hashPassword(random(32)))))
+  if (!user || user.password === null || !valid) fail('login', 'These credentials do not match our records.')
   if (!user!.is_active) fail('login', 'Your account has been deactivated.')
   return user!
 }

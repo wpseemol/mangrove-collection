@@ -40,10 +40,11 @@ export function createApp(): Express {
   app.use(cookieParser())
   app.use(express.json({ limit: '2mb' }))
   app.use(express.urlencoded({ extended: true, limit: '2mb' }))
+  // Uploads are parsed after the session so files are only buffered for callers allowed to send them.
+  app.use(sessionMiddleware)
   app.use(multipart)
   app.use(normalizeRequest)
   app.use(methodOverride)
-  app.use(sessionMiddleware)
 
   app.get('/sanctum/csrf-cookie', (_req, res) => {
     res.status(204).end()

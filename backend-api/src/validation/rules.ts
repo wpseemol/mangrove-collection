@@ -71,7 +71,8 @@ function linkAttributesAreSafe(attributes: string): boolean {
     const value = rawValue.replace(/^["']+|["']+$/g, '')
 
     if (!LINK_ATTRIBUTES.has(key)) return false
-    if (key === 'href' && !/^(?:https?:\/\/|mailto:|tel:|\/(?!\/)|#)/i.test(value)) return false
+    // Browsers treat `\` as `/`, so `/\evil.com` would be an off-site link.
+    if (key === 'href' && (!/^(?:https?:\/\/|mailto:|tel:|\/(?![/\\])|#)/i.test(value) || /[\s\\]/.test(value))) return false
   }
 
   return true
@@ -110,7 +111,7 @@ const BLOG_HTML_TAGS: Record<string, Record<string, AttributeCheck>> = {
     ol: { start: digits, type: (value) => /^[1aAiI]$/.test(value) },
     code: { class: (value) => /^language-[a-z0-9+#-]{1,30}$/i.test(value) },
     a: {
-      href: (value) => /^(?:https?:\/\/|mailto:|tel:|\/(?!\/)|#)/i.test(value) && !/[\s<>"'`\\]/.test(value),
+      href: (value) => /^(?:https?:\/\/|mailto:|tel:|\/(?![/\\])|#)/i.test(value) && !/[\s<>"'`\\]/.test(value),
       title: plain,
       target: (value) => value === '_blank',
       rel: (value) => /^[a-z ]{1,60}$/i.test(value),

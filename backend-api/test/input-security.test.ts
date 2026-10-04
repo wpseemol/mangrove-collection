@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { isSafeHtml, isSafeUrl, isUnsafeText } from '../src/validation/rules.js'
-import { makeCategory, makeManager } from './factories.js'
-import { actingAs, client, expectErrors, expectStatus } from './helpers.js'
+import { makeCategory, makeManager, makeUser } from './factories.js'
+import { actingAs, client, DASHBOARD, diskFiles, expectErrors, expectStatus, fakeImage, storefront } from './helpers.js'
 
 describe('input security', () => {
   it.each([
@@ -48,6 +48,7 @@ describe('input security', () => {
       '<?php echo 1; ?>',
       '<img src=x onerror=alert(1)>',
       '<p>unclosed <script',
+      '<a href="/\\evil.test">x</a>',
     ]) {
       expect(isSafeHtml(html), html).toBe(false)
     }
@@ -105,5 +106,20 @@ describe('input security', () => {
 
     for (let i = 0; i < 20; i++) expectStatus(await browser.post('/v1/admin/categories', { name: '' }), 422)
     expectStatus(await browser.post('/v1/admin/categories', { name: '' }), 429)
+  })
+
+  it('never stores admin uploads from guests or customers', async () => {
+    const photo = await fakeImage('a.jpg', 50, 50)
+
+    expectStatus(await storefront().post('/v1/admin/media', {}, { file: photo }), 401)
+    expectStatus(await (await actingAs(await makeUser(), DASHBOARD)).post('/v1/admin/media', {}, { file: photo }), 403)
+    expect(diskFiles('public')).toEqual([])
+  })
+
+  it('caps how many files an anonymous request can upload', async () => {
+    const photos = await Promise.all([1, 2, 3, 4, 5, 6].map((i) => fakeImage(`p${i}.jpg`, 20, 20)))
+    const res = await storefront().post('/v1/reviews/1', { _method: 'PUT' }, { 'images[]': photos })
+    expectStatus(res, 422)
+    expect(res.body.message).toBe('Too many files were uploaded.')
   })
 })

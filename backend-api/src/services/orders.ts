@@ -376,10 +376,18 @@ export const orders = {
     }
   },
 
-  async updateStatus(order: Order, status: OrderStatus): Promise<Order> {
+  /** `guard` runs on the freshly locked row, so two concurrent requests can never both cancel (and restock) the same order. */
+  async updateStatus(order: Order, status: OrderStatus, guard?: (current: Order) => void): Promise<Order> {
     if (order.status === status) return order
+    let changed = false
 
     const updated = await prisma.$transaction(async (tx) => {
+      await tx.$queryRaw`SELECT id FROM orders WHERE id = ${order.id} FOR UPDATE`
+      const current = await tx.order.findUniqueOrThrow({ where: { id: order.id } })
+      guard?.(current)
+      if (current.status === status) return current
+      changed = true
+
       const data: Prisma.OrderUncheckedUpdateInput = { status }
 
       if (status === 'cancelled') {
@@ -396,12 +404,15 @@ export const orders = {
     })
 
     Object.assign(order, updated)
-    await notifyStatusChanged(order)
+    if (changed) await notifyStatusChanged(order)
     return order
   },
 
   async cancel(order: Order): Promise<Order> {
-    if (order.status !== 'pending') fail('order', 'This order can no longer be cancelled.')
-    return this.updateStatus(order, 'cancelled')
+    const cancellable = (current: Order) => {
+      if (current.status !== 'pending') fail('order', 'This order can no longer be cancelled.')
+    }
+    cancellable(order)
+    return this.updateStatus(order, 'cancelled', cancellable)
   },
 }

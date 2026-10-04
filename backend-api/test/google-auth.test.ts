@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { prisma } from '../src/lib/prisma.js'
 import { google } from '../src/services/google.js'
 import { settings } from '../src/services/settings.js'
@@ -46,6 +46,22 @@ describe('google auth', () => {
     expect(res.body).not.toHaveProperty('token')
     expect(res.body.user).toMatchObject({ email: 'new@gmail.com', google_linked: true })
     expect(await prisma.user.count({ where: { email: 'new@gmail.com', google_id: 'g-1' } })).toBe(1)
+  })
+
+  it('rejects access tokens that were issued to a different google app', async () => {
+    await configureGoogle()
+    const requested: string[] = []
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => {
+      requested.push(String(input))
+      return Response.json({ aud: 'someone-elses-client', azp: 'someone-elses-client', sub: 'g-9', email: 'victim@gmail.com', email_verified: true })
+    })
+
+    const res = await storefront().post('/v1/auth/google', { access_token: 'stolen-token' })
+
+    expectStatus(res, 422)
+    expect(res.body.errors).toHaveProperty('google')
+    expect(requested.some((url) => url.includes('/userinfo'))).toBe(false)
+    expect(await prisma.user.count({ where: { email: 'victim@gmail.com' } })).toBe(0)
   })
 
   it('links an existing account by email', async () => {
