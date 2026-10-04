@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 
-import { CmsPageView } from "@/components/shared/cms-page";
+import { ContactView } from "@/components/contact/contact-view";
 import { pageMetadata } from "@/lib/seo";
-
-import { ContactInfo } from "./contact-info";
 
 export const metadata: Metadata = pageMetadata({
   title: "Contact Us",
@@ -13,9 +11,5 @@ export const metadata: Metadata = pageMetadata({
 });
 
 export default function ContactPage() {
-  return (
-    <CmsPageView slug="contact" title="Contact us">
-      <ContactInfo />
-    </CmsPageView>
-  );
+  return <ContactView />;
 }

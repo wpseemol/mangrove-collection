@@ -25,6 +25,15 @@ export function Section({ title, description, children }: { title: string; descr
   )
 }
 
+export function FormattingHint() {
+  return (
+    <>
+      Each line becomes its own paragraph. <code className="rounded bg-muted px-1">**word**</code> makes text bold and{' '}
+      <code className="rounded bg-muted px-1">[Shop honey](/shop?category=honey)</code> adds a link.
+    </>
+  )
+}
+
 export function TextField({
   path,
   label,

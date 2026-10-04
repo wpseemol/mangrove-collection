@@ -5,6 +5,7 @@ import { ProtectedRoute } from '@/components/protected-route'
 import { RequireAdmin } from '@/components/require-admin'
 import { AboutPageEditorPage } from '@/pages/about-page'
 import { CategoriesPage } from '@/pages/categories'
+import { ContactPageEditorPage } from '@/pages/contact-page'
 import { ForgotPasswordPage } from '@/pages/forgot-password'
 import { HomePageEditorPage } from '@/pages/home-page'
 import { LoginPage } from '@/pages/login'
@@ -39,6 +40,7 @@ export default function App() {
           <Route path="reviews" element={<ReviewsPage />} />
           <Route path="home-page" element={<HomePageEditorPage />} />
           <Route path="about-page" element={<AboutPageEditorPage />} />
+          <Route path="contact-page" element={<ContactPageEditorPage />} />
           <Route path="subscribers" element={<SubscribersPage />} />
           <Route element={<RequireAdmin />}>
             <Route path="payment-accounts" element={<PaymentAccountsPage />} />

@@ -1,8 +1,14 @@
 import { CATEGORY_LIMIT, HOME_BLOCKS, PRODUCT_LIMIT, PRODUCT_ROWS_LIMIT, type HomeContent } from '@/lib/home-content'
+import type { CmsPage } from '@/lib/types'
 import { isSafeLink, isUnsafeText, LINK_MESSAGE, UNSAFE_TEXT_MESSAGE } from '@/lib/validation'
 
 /** Field errors keyed by dotted path, e.g. `hero.title` or `trust.items.0.text`. */
 export type Errors = Record<string, string>
+
+/** Page-level SEO fields, edited alongside the blocks under the `seo` key. */
+export type Seo = { meta_title: string; meta_description: string }
+
+export const seoFromPage = (page: CmsPage | null | undefined): Seo => ({ meta_title: page?.meta_title ?? '', meta_description: page?.meta_description ?? '' })
 
 const LONG_FIELD = /(?:^|\.)(?:description|body|text)$/
 const LINK_FIELD = /(?:^|\.)(?:image|\w+_url)$/

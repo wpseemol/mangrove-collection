@@ -10,23 +10,13 @@ import { RichText } from "@/components/home/rich-text";
 import { Container } from "@/components/shared/container";
 import { PageBreadcrumb } from "@/components/shared/page-breadcrumb";
 import { RemoteImage } from "@/components/shared/remote-image";
+import { PageSectionHeading } from "@/components/shared/page-section-heading";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAboutContent, type AboutContent } from "@/lib/about-content";
 import { cn } from "@/lib/utils";
 
 const filled = <T extends object>(items: T[]) => items.filter((item) => Object.values(item).some((value) => typeof value === "string" && value.trim()));
-
-function SectionHeading({ eyebrow, title, subtitle, className }: { eyebrow?: string; title?: string; subtitle?: string; className?: string }) {
-  if (!eyebrow && !title && !subtitle) return null;
-  return (
-    <header className={cn("mx-auto mb-12 max-w-2xl text-center", className)}>
-      {eyebrow && <p className="mb-3 text-xs font-semibold tracking-[0.2em] text-gold uppercase">{eyebrow}</p>}
-      {title && <h2 className="font-heading text-3xl leading-tight font-semibold tracking-tight text-balance text-foreground md:text-4xl">{title}</h2>}
-      {subtitle && <p className="mt-4 text-[15px] leading-relaxed text-pretty text-muted-foreground">{subtitle}</p>}
-    </header>
-  );
-}
 
 function LinkButtons({
   primary,
@@ -190,7 +180,7 @@ function Values({ values }: { values: AboutContent["values"] }) {
   return (
     <section className="mt-24 bg-surface py-20 md:mt-32">
       <Container>
-        <SectionHeading eyebrow={values.eyebrow} title={values.title} subtitle={values.subtitle} />
+        <PageSectionHeading eyebrow={values.eyebrow} title={values.title} subtitle={values.subtitle} />
         <div className={cn("grid gap-5 sm:grid-cols-2", items.length >= 4 ? "lg:grid-cols-4" : items.length === 3 && "lg:grid-cols-3")}>
           {items.map((item, index) => (
             <article
@@ -217,7 +207,7 @@ function Process({ process }: { process: AboutContent["process"] }) {
 
   return (
     <Container className="mt-24 md:mt-28">
-      <SectionHeading eyebrow={process.eyebrow} title={process.title} subtitle={process.subtitle} />
+      <PageSectionHeading eyebrow={process.eyebrow} title={process.title} subtitle={process.subtitle} />
       <ol className={cn("relative grid gap-10 sm:grid-cols-2 lg:gap-6", steps.length >= 4 ? "lg:grid-cols-4" : steps.length === 3 && "lg:grid-cols-3")}>
         <span aria-hidden className="absolute top-8 right-[12%] left-[12%] hidden border-t-2 border-dashed border-primary/25 lg:block" />
         {steps.map((step, index) => (
@@ -243,7 +233,7 @@ function Milestones({ milestones }: { milestones: AboutContent["milestones"] }) 
 
   return (
     <Container className="mt-24 md:mt-32">
-      <SectionHeading eyebrow={milestones.eyebrow} title={milestones.title} subtitle={milestones.subtitle} />
+      <PageSectionHeading eyebrow={milestones.eyebrow} title={milestones.title} subtitle={milestones.subtitle} />
       <ol className="relative mx-auto max-w-4xl">
         <span aria-hidden className="absolute top-2 bottom-2 left-[1.15rem] w-px bg-linear-to-b from-primary/50 via-primary/25 to-transparent md:left-1/2" />
         {items.map((item, index) => (
@@ -280,7 +270,7 @@ function Team({ team }: { team: AboutContent["team"] }) {
 
   return (
     <Container className="mt-24 md:mt-32">
-      <SectionHeading eyebrow={team.eyebrow} title={team.title} subtitle={team.subtitle} />
+      <PageSectionHeading eyebrow={team.eyebrow} title={team.title} subtitle={team.subtitle} />
       <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
         {members.map((member, index) => (
           <article key={index} className="group overflow-hidden rounded-2xl border bg-card transition-shadow hover:shadow-xl hover:shadow-forest/10">
@@ -309,7 +299,7 @@ function Gallery({ gallery }: { gallery: AboutContent["gallery"] }) {
 
   return (
     <Container className="mt-24 md:mt-32">
-      <SectionHeading eyebrow={gallery.eyebrow} title={gallery.title} subtitle={gallery.subtitle} />
+      <PageSectionHeading eyebrow={gallery.eyebrow} title={gallery.title} subtitle={gallery.subtitle} />
       <div className="grid auto-rows-[10rem] grid-cols-2 gap-3 sm:auto-rows-[13rem] sm:gap-4 md:grid-cols-4">
         {images.map((item, index) => (
           <figure

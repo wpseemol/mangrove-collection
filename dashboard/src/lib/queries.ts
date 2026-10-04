@@ -54,6 +54,14 @@ export function useAdminSettings() {
   })
 }
 
+/** The settings the storefront sees (no secrets), readable by managers too. */
+export function usePublicSettings() {
+  return useQuery({
+    queryKey: ['public-settings'],
+    queryFn: () => api<{ data: Record<string, unknown> }>('/settings').then((r) => r.data),
+  })
+}
+
 export const paymentAccountsQueryKey = ['admin', 'payment-accounts'] as const
 
 export function usePaymentAccounts() {
@@ -101,10 +109,10 @@ export function useBanners() {
 }
 
 export const homePageQueryKey = ['admin', 'pages', 'home'] as const
-export const aboutPageQueryKey = ['admin', 'pages', 'about'] as const
+export const pageQueryKey = (slug: string) => ['admin', 'pages', slug] as const
 
 /** A CMS page by slug, or null when it hasn't been created yet. */
-function useCmsPage(queryKey: readonly ['admin', 'pages', string]) {
+export function useCmsPage(queryKey: readonly ['admin', 'pages', string]) {
   return useQuery({
     queryKey,
     queryFn: () =>
@@ -118,7 +126,6 @@ function useCmsPage(queryKey: readonly ['admin', 'pages', string]) {
 }
 
 export const useHomePage = () => useCmsPage(homePageQueryKey)
-export const useAboutPage = () => useCmsPage(aboutPageQueryKey)
 
 export function useCategoryIcons() {
   return useQuery({

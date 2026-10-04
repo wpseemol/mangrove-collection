@@ -1,6 +1,7 @@
 import {
   BookOpenText,
   ChevronsUpDown,
+  Contact,
   ExternalLink,
   FolderTree,
   LayoutDashboard,
@@ -83,6 +84,7 @@ const NAV: { label: string; items: NavItem[] }[] = [
     items: [
       { title: 'Home page', to: '/home-page', icon: LayoutTemplate, exact: true },
       { title: 'About page', to: '/about-page', icon: BookOpenText, exact: true },
+      { title: 'Contact page', to: '/contact-page', icon: Contact, exact: true },
       { title: 'Subscribers', to: '/subscribers', icon: Mail, exact: true },
       { title: 'Payment accounts', to: '/payment-accounts', icon: Wallet, exact: true, adminOnly: true },
       { title: 'Settings', to: '/settings', icon: Settings, exact: false, adminOnly: true },
