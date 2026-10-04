@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
 
 import { AuthShell } from "@/components/auth/auth-shell";
+import { pageMetadata } from "@/lib/seo";
 
 import { ForgotPasswordForm } from "./forgot-password-form";
 
-export const metadata: Metadata = { title: "Forgot password" };
+export const metadata: Metadata = pageMetadata({
+  title: "Forgot password",
+  description: "Reset the password for your Mangrove Collection account.",
+  path: "/forgot-password/",
+  noindex: true,
+});
 
 export default function ForgotPasswordPage() {
   return (

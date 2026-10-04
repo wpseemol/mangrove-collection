@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
+import { pageMetadata } from "@/lib/seo";
+
 import { ProductDetail } from "./product-detail";
 
-export const metadata: Metadata = { title: "Product" };
+/** The URL depends on `?slug=`, so the canonical link and product details are set in the browser by `ProductSeo`. */
+export const metadata: Metadata = pageMetadata({
+  title: "Product",
+  description: "Fresh, natural produce from the Sundarbans, delivered to your door anywhere in Bangladesh.",
+});
 
 /**
  * Product pages are `/product?slug=...` rather than `/product/[slug]`: a static

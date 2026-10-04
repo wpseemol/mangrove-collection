@@ -3,11 +3,12 @@
 import { Leaf, PackageX, ShieldCheck, ShoppingBag, Truck, Zap } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { ProductGrid } from "@/components/product/product-grid";
 import { ProductReviews } from "@/components/reviews/product-reviews";
 import { Stars } from "@/components/reviews/stars";
+import { ProductSeo } from "@/components/seo/product-seo";
 import { Container } from "@/components/shared/container";
 import { EmptyState } from "@/components/shared/empty-state";
 import { PageBreadcrumb } from "@/components/shared/page-breadcrumb";
@@ -48,10 +49,6 @@ export function ProductDetail() {
   const [imageIndex, setImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
-  useEffect(() => {
-    if (product) document.title = `${product.meta_title || product.name} | Mangrove Collection`;
-  }, [product]);
-
   if (!slug || isError) {
     return (
       <Container className="py-16">
@@ -85,6 +82,7 @@ export function ProductDetail() {
 
   return (
     <Container className="pb-20 md:pb-0">
+      <ProductSeo product={product} images={gallery} />
       <PageBreadcrumb
         items={[
           { label: "Products", href: "/shop" },

@@ -4,11 +4,14 @@ import { Suspense } from "react";
 import { ProductGrid } from "@/components/product/product-grid";
 import { Container } from "@/components/shared/container";
 import { ShopView } from "@/components/shop/shop-view";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Latest Offers",
-  description: "Featured products and special offers from Mangrove Collection.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Latest Offers & Deals",
+  description:
+    "Today's offers on fresh Sundarbans fish, crab, prawn and pure honey. Save on featured products with home delivery all over Bangladesh.",
+  path: "/offers/",
+});
 
 export default function OffersPage() {
   return (
