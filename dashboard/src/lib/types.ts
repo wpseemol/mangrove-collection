@@ -129,6 +129,32 @@ export type Media = {
   created_at: string
 }
 
+export type BannerType = 'slide' | 'right_top' | 'right_bottom'
+
+export type Banner = {
+  id: number
+  type: BannerType
+  title: string | null
+  subtitle: string | null
+  image: string
+  link_url: string | null
+  link_enabled: boolean
+  is_active: boolean
+  sort_order: number
+}
+
+export type CmsPage = {
+  id: number
+  slug: string
+  title: string
+  content: string | null
+  sections: unknown[]
+  meta_title: string | null
+  meta_description: string | null
+  is_published: boolean
+  updated_at: string | null
+}
+
 export type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled'
 
 export type OrderSummary = {

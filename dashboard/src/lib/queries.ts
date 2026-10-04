@@ -1,7 +1,17 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { api } from '@/lib/api'
-import type { AdminSettings, Category, CategoryIcon, OrderList, PaymentAccount, PaymentQueue, SessionResponse } from '@/lib/types'
+import { ApiError, api } from '@/lib/api'
+import type {
+  AdminSettings,
+  Banner,
+  Category,
+  CategoryIcon,
+  CmsPage,
+  OrderList,
+  PaymentAccount,
+  PaymentQueue,
+  SessionResponse,
+} from '@/lib/types'
 import { useAuthStore } from '@/stores/auth'
 
 export const sessionQueryKey = ['session'] as const
@@ -78,6 +88,31 @@ export function usePendingOrdersCount(enabled = true) {
 }
 
 export const reviewsQueryKey = ['admin', 'reviews'] as const
+
+export const bannersQueryKey = ['admin', 'banners'] as const
+
+export function useBanners() {
+  return useQuery({
+    queryKey: bannersQueryKey,
+    queryFn: () => api<{ data: Banner[] }>('/admin/banners').then((r) => r.data),
+  })
+}
+
+export const homePageQueryKey = ['admin', 'pages', 'home'] as const
+
+/** The `home` page, or null when it hasn't been created yet. */
+export function useHomePage() {
+  return useQuery({
+    queryKey: homePageQueryKey,
+    queryFn: () =>
+      api<{ data: CmsPage }>('/admin/pages/home')
+        .then((r) => r.data)
+        .catch((error) => {
+          if (error instanceof ApiError && error.status === 404) return null
+          throw error
+        }),
+  })
+}
 
 export function useCategoryIcons() {
   return useQuery({

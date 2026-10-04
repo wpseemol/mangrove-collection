@@ -2,9 +2,10 @@
   "name": "mangrove-collection",
   "private": true,
   "scripts": {
-    "dev": "pnpm --parallel --filter frontend --filter dashboard dev",
+    "dev": "pnpm --parallel --filter mangrove-collection-api --filter frontend --filter dashboard dev",
     "dev:frontend": "pnpm --filter frontend dev",
     "dev:dashboard": "pnpm --filter dashboard dev",
+    "dev:api": "pnpm --filter mangrove-collection-api dev",
     "api": "pnpm --filter mangrove-collection-api dev",
     "build": "pnpm --filter frontend --filter dashboard build",
     "lint": "pnpm --filter frontend --filter dashboard lint"

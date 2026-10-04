@@ -137,4 +137,21 @@ describe('admin catalog and orders', () => {
     expect(res.body.data.title).toBe('About Mangrove')
     expect(res.body.data.sections[0].id).toBe('intro')
   })
+
+  it('checks links and images inside page sections', async () => {
+    const bad = await staff.put('/v1/admin/pages/home', {
+      title: 'Home',
+      sections: [{ type: 'hero', image: 'ftp://example.com/a.jpg', primary_url: '//evil.example', items: [{ link_url: 'not a url' }] }],
+    })
+    expectStatus(bad, 422)
+    expect(Object.keys(bad.body.errors)).toEqual(['sections.0.image', 'sections.0.primary_url', 'sections.0.items.0.link_url'])
+
+    expectStatus(
+      await staff.put('/v1/admin/pages/home', {
+        title: 'Home',
+        sections: [{ type: 'hero', image: 'https://cdn.example.com/a.jpg', primary_url: '/shop', secondary_url: '' }],
+      }),
+      201,
+    )
+  })
 })

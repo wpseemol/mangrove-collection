@@ -32,6 +32,21 @@ export const UNSAFE_HTML_MESSAGE = 'Only basic formatting is allowed (p, strong,
 export const isUnsafeText = (value: string) => UNSAFE_TEXT.some((pattern) => pattern.test(value))
 export const isUnsafeHtml = (value: string) => UNSAFE_HTML.some((pattern) => pattern.test(value))
 
+export const LINK_MESSAGE = 'Enter a full http(s) link or a site path starting with /, e.g. /shop.'
+
+/** Mirrors the API's `isSafeUrl(url, true)`: an absolute http(s) URL or a site path such as `/shop`. */
+export function isSafeLink(url: string): boolean {
+  // eslint-disable-next-line no-control-regex
+  if (/[\s<>"'`\\\x00-\x1F\x7F]/.test(url)) return false
+  if (/^\/(?![/\\])/.test(url)) return true
+  try {
+    const parsed = new URL(url)
+    return /^https?:\/\/[^/?#]+/i.test(url) && (parsed.protocol === 'http:' || parsed.protocol === 'https:')
+  } catch {
+    return false
+  }
+}
+
 /** Fields that may legitimately contain anything (passwords are hashed, scripts are admin-only). */
 const RAW_FIELD = /password|^custom_(?:head|body)_script$|^settings\.(?:custom_(?:head|body)_script|\w+_(?:password|secret|key))$/
 

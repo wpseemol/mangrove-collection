@@ -90,17 +90,22 @@ export function SingleImageUpload({
   value,
   onChange,
   className,
+  aspect = 'aspect-square',
+  label = 'Upload image',
 }: {
   value: string
   onChange: (url: string) => void
   className?: string
+  /** Tailwind aspect-ratio class for the preview and drop zone. */
+  aspect?: string
+  label?: string
 }) {
   const { uploading, upload } = useUploader((urls) => onChange(urls[0] ?? ''))
 
   if (value) {
     return (
       <div className={cn('group relative overflow-hidden rounded-lg border bg-muted', className)}>
-        <img src={value} alt="" className="aspect-square w-full object-cover" />
+        <img src={value} alt="" className={cn('w-full object-cover', aspect)} />
         <button
           type="button"
           onClick={() => onChange('')}
@@ -117,8 +122,8 @@ export function SingleImageUpload({
     <DropZone
       uploading={uploading}
       onFiles={(files) => upload(files.slice(0, 1))}
-      label="Upload image"
-      className={cn('aspect-square w-full', className)}
+      label={label}
+      className={cn('w-full', aspect, className)}
     />
   )
 }

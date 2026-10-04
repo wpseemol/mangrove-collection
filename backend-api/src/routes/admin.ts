@@ -35,6 +35,7 @@ import { settingRegistry, settingSchema, settings } from '../services/settings.j
 import { sms } from '../services/sms.js'
 import {
   alphaDash,
+  attributeName,
   bool,
   email,
   html,
@@ -50,7 +51,9 @@ import {
   url,
   validate,
   z,
+  type RawCheck,
 } from '../validation/index.js'
+import { isSafeUrl } from '../validation/rules.js'
 import { bodyOf, distinct, listOf } from './helpers.js'
 
 export const adminRouter = Router()
@@ -860,6 +863,25 @@ adminRouter.get('/pages/:slug', async (req, res) => {
   res.json({ data: pageResource(page!) })
 })
 
+/** Link and image fields inside page blocks (`image`, `*_url`, at any depth) must be http(s) links or site paths. */
+const sectionUrls: RawCheck = (input) => {
+  const errors: FieldErrors = {}
+  const visit = (value: unknown, path: (string | number)[]) => {
+    if (Array.isArray(value)) return value.forEach((item, index) => visit(item, [...path, index]))
+    if (value === null || typeof value !== 'object') return
+    for (const [key, item] of Object.entries(value)) {
+      const itemPath = [...path, key]
+      if ((key === 'image' || key.endsWith('_url')) && typeof item === 'string' && item !== '' && !isSafeUrl(item, true)) {
+        errors[itemPath.join('.')] = [`The ${attributeName(itemPath)} must be a valid http(s) link or a path starting with /.`]
+      } else {
+        visit(item, itemPath)
+      }
+    }
+  }
+  visit(input.sections, ['sections'])
+  return errors
+}
+
 /** Create-or-update by slug (e.g. home, about, contact). `sections` is a free-form JSON array for page blocks. */
 adminRouter.put('/pages/:slug', async (req, res) => {
   const pageSlug = String(req.params.slug)
@@ -875,6 +897,7 @@ adminRouter.put('/pages/:slug', async (req, res) => {
       is_published: bool().optional(),
     }),
     bodyOf(req),
+    sectionUrls,
   )
 
   const { sections, ...fields } = data
