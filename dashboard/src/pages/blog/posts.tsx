@@ -51,6 +51,15 @@ const SORTS = [
   { value: 'title', label: 'Title A–Z' },
   { value: 'views', label: 'Most viewed' },
 ] as const
+const PER_PAGE_OPTIONS = [12, 24, 48] as const
+const DEFAULT_PER_PAGE = 12
+
+/** Page numbers with `null` gaps, e.g. 1 … 4 5 6 … 12. */
+function pageNumbers(current: number, last: number): (number | null)[] {
+  const pages = new Set([1, last, current - 1, current, current + 1].filter((n) => n >= 1 && n <= last))
+  const sorted = [...pages].sort((a, b) => a - b)
+  return sorted.flatMap((n, i) => (i > 0 && n - sorted[i - 1] > 1 ? [null, n] : [n]))
+}
 
 function StatusBadge({ post }: { post: BlogPost }) {
   const scheduled = post.status === 'published' && post.published_at && new Date(post.published_at) > new Date()
@@ -149,17 +158,24 @@ export function BlogPostsPage() {
   const sort = SORTS.find((s) => s.value === params.get('sort'))?.value ?? 'latest'
   const categoryId = params.get('category_id') ?? 'all'
   const page = Math.max(1, Number(params.get('page')) || 1)
+  const perPage = PER_PAGE_OPTIONS.find((n) => String(n) === params.get('per_page')) ?? DEFAULT_PER_PAGE
   const q = params.get('q') ?? ''
   const [search, setSearch] = useState(q)
 
   const updateParams = (changes: Record<string, string | null>) => {
     const next = new URLSearchParams(params)
     for (const [key, value] of Object.entries(changes)) {
-      if (value === null || value === '' || value === 'all' || (key === 'sort' && value === 'latest')) next.delete(key)
+      if (value === null || value === '' || value === 'all' || (key === 'sort' && value === 'latest') || (key === 'page' && value === '1') || (key === 'per_page' && value === String(DEFAULT_PER_PAGE)))
+        next.delete(key)
       else next.set(key, value)
     }
     if (!('page' in changes)) next.delete('page')
     setParams(next, { replace: true })
+  }
+
+  const goToPage = (next: number) => {
+    updateParams({ page: String(next) })
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   useEffect(() => {
@@ -170,11 +186,11 @@ export function BlogPostsPage() {
   }, [search])
 
   const { data, isPending, isFetching } = useQuery({
-    queryKey: [...blogPostsQueryKey, { tab, q, page, sort, categoryId }],
+    queryKey: [...blogPostsQueryKey, { tab, q, page, perPage, sort, categoryId }],
     placeholderData: keepPreviousData,
     queryFn: () =>
       api<BlogPostList>('/admin/blog/posts', {
-        query: { page, per_page: 18, q, sort, status: tab === 'all' ? undefined : tab, category_id: categoryId === 'all' ? undefined : categoryId },
+        query: { page, per_page: perPage, q, sort, status: tab === 'all' ? undefined : tab, category_id: categoryId === 'all' ? undefined : categoryId },
       }),
   })
 
@@ -183,6 +199,7 @@ export function BlogPostsPage() {
     onSuccess: () => {
       toast.success('Post deleted.')
       setDeleting(null)
+      if (posts.length === 1 && page > 1) updateParams({ page: String(page - 1) })
       queryClient.invalidateQueries({ queryKey: blogPostsQueryKey })
       queryClient.invalidateQueries({ queryKey: blogCategoriesQueryKey })
     },
@@ -293,6 +310,13 @@ export function BlogPostsPage() {
                 <Skeleton key={i} className="h-64 w-full" />
               ))}
             </div>
+          ) : !posts.length && meta && meta.total > 0 ? (
+            <div className="flex flex-col items-center gap-3 py-16 text-center">
+              <p className="font-medium">This page is empty</p>
+              <Button size="sm" variant="outline" onClick={() => goToPage(meta.last_page)}>
+                Go to the last page
+              </Button>
+            </div>
           ) : !posts.length ? (
             <div className="flex flex-col items-center gap-3 py-16 text-center">
               <span className="flex size-12 items-center justify-center rounded-full bg-secondary text-primary">
@@ -374,20 +398,58 @@ export function BlogPostsPage() {
           )}
         </div>
 
-        {meta && meta.total > meta.per_page && (
-          <div className="flex items-center justify-between gap-3 border-t px-4 py-3 text-sm text-muted-foreground">
-            <p>
-              Showing <span className="font-medium text-foreground">{meta.from}</span>–<span className="font-medium text-foreground">{meta.to}</span> of{' '}
-              <span className="font-medium text-foreground">{meta.total}</span>
-            </p>
-            <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => updateParams({ page: String(page - 1) })}>
-                <ChevronLeft /> Previous
-              </Button>
-              <Button variant="outline" size="sm" disabled={page >= meta.last_page} onClick={() => updateParams({ page: String(page + 1) })}>
-                Next <ChevronRight />
-              </Button>
+        {meta && meta.total > 0 && (
+          <div className="flex flex-col gap-3 border-t px-4 py-3 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <p>
+                Showing <span className="font-medium text-foreground">{meta.from}</span>–<span className="font-medium text-foreground">{meta.to}</span> of{' '}
+                <span className="font-medium text-foreground">{meta.total}</span> posts
+              </p>
+              <label className="flex items-center gap-2">
+                Per page
+                <Select value={String(perPage)} onValueChange={(value) => updateParams({ per_page: value })}>
+                  <SelectTrigger size="sm" className="w-18" aria-label="Posts per page">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PER_PAGE_OPTIONS.map((n) => (
+                      <SelectItem key={n} value={String(n)}>
+                        {n}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </label>
             </div>
+            {meta.last_page > 1 && (
+              <nav className="flex items-center gap-1" aria-label="Pagination">
+                <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => goToPage(page - 1)} aria-label="Previous page">
+                  <ChevronLeft /> <span className="hidden sm:inline">Previous</span>
+                </Button>
+                {pageNumbers(page, meta.last_page).map((n, i) =>
+                  n === null ? (
+                    <span key={`gap-${i}`} className="px-1" aria-hidden>
+                      …
+                    </span>
+                  ) : (
+                    <Button
+                      key={n}
+                      variant={n === page ? 'default' : 'ghost'}
+                      size="sm"
+                      className="min-w-8 tabular-nums"
+                      onClick={() => goToPage(n)}
+                      aria-current={n === page ? 'page' : undefined}
+                      aria-label={`Page ${n}`}
+                    >
+                      {n}
+                    </Button>
+                  ),
+                )}
+                <Button variant="outline" size="sm" disabled={page >= meta.last_page} onClick={() => goToPage(page + 1)} aria-label="Next page">
+                  <span className="hidden sm:inline">Next</span> <ChevronRight />
+                </Button>
+              </nav>
+            )}
           </div>
         )}
       </Card>
