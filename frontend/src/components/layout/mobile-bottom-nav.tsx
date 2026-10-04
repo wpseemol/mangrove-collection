@@ -1,10 +1,12 @@
 "use client";
 
-import { Home, LayoutGrid, ShoppingBag, Store, UserRound } from "lucide-react";
+import { Home, LayoutDashboard, LayoutGrid, ShoppingBag, Store, UserRound } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { useHydrated } from "@/hooks/use-hydrated";
+import { DASHBOARD_URL } from "@/lib/config";
+import { isStaff } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/stores/auth";
 import { cartCount, useCartStore } from "@/stores/cart";
@@ -17,18 +19,21 @@ export function MobileBottomNav() {
 
   const count = hydrated ? cartCount(items) : 0;
   const signedIn = hydrated && Boolean(user);
+  const staff = signedIn && isStaff(user);
 
   const tabs = [
     { href: "/", label: "Home", icon: Home, active: pathname === "/" },
     { href: "/categories", label: "Categories", icon: LayoutGrid, active: pathname.startsWith("/categories") },
     { href: "/shop", label: "Shop", icon: Store, active: pathname.startsWith("/shop") || pathname.startsWith("/product") },
     { href: "/cart", label: "Cart", icon: ShoppingBag, active: pathname.startsWith("/cart") || pathname.startsWith("/checkout"), badge: count },
-    {
-      href: signedIn ? "/account" : "/login",
-      label: signedIn ? "Account" : "Sign in",
-      icon: UserRound,
-      active: ["/account", "/login", "/register"].some((p) => pathname.startsWith(p)),
-    },
+    staff
+      ? { href: DASHBOARD_URL, label: "Dashboard", icon: LayoutDashboard, active: false }
+      : {
+          href: signedIn ? "/account" : "/login",
+          label: signedIn ? "Account" : "Sign in",
+          icon: UserRound,
+          active: ["/account", "/login", "/register"].some((p) => pathname.startsWith(p)),
+        },
   ];
 
   return (

@@ -97,7 +97,8 @@ export function SiteHeader() {
     <>
       <TopBar />
       <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/85">
-        <Container className="flex h-16 items-center gap-2 md:h-[72px] md:gap-3 lg:gap-8">
+        {/* `relative` anchors the full-width search results panel. */}
+        <Container className="relative flex h-16 items-center gap-2 md:h-[72px] md:gap-3 lg:gap-8">
           <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="-ml-2 md:hidden" aria-label="Open menu">
@@ -139,28 +140,33 @@ export function SiteHeader() {
           <SearchBox className="mx-auto hidden w-full max-w-xl flex-1 md:block" />
 
           <nav className="ml-auto flex items-center gap-1 md:ml-0" aria-label="Shortcuts">
-            {staff && (
-              <Button asChild variant="outline" size="sm" className="mr-2 hidden rounded-full border-primary/30 text-primary lg:inline-flex dark:text-brand">
-                <a href={DASHBOARD_URL}>
-                  <LayoutDashboard /> Dashboard
-                </a>
-              </Button>
-            )}
             <ThemeToggle className="md:mr-1" />
-            <HeaderAction
-              href={signedIn ? "/account" : "/login"}
-              icon={UserRound}
-              caption={signedIn ? `Hi, ${user?.name.split(" ")[0] ?? "there"}` : "Welcome"}
-              label={signedIn ? "My account" : "Sign in"}
-              className="hidden md:flex"
-            />
-            <HeaderAction
-              href={signedIn ? "/account/orders" : "/track-order"}
-              icon={Package}
-              caption="Track your"
-              label="Orders"
-              className="hidden lg:flex"
-            />
+            {staff ? (
+              <HeaderAction
+                href={DASHBOARD_URL}
+                icon={LayoutDashboard}
+                caption={`Hi, ${user?.name.split(" ")[0] ?? "there"}`}
+                label="Dashboard"
+                className="hidden md:flex"
+              />
+            ) : (
+              <>
+                <HeaderAction
+                  href={signedIn ? "/account" : "/login"}
+                  icon={UserRound}
+                  caption={signedIn ? `Hi, ${user?.name.split(" ")[0] ?? "there"}` : "Welcome"}
+                  label={signedIn ? "My account" : "Sign in"}
+                  className="hidden md:flex"
+                />
+                <HeaderAction
+                  href={signedIn ? "/account/orders" : "/track-order"}
+                  icon={Package}
+                  caption="Track your"
+                  label="Orders"
+                  className="hidden lg:flex"
+                />
+              </>
+            )}
             <HeaderAction
               href="/cart"
               icon={ShoppingBag}
@@ -172,7 +178,7 @@ export function SiteHeader() {
           </nav>
         </Container>
 
-        <Container className="pb-3 md:hidden">
+        <Container className="relative pb-3 md:hidden">
           <SearchBox />
         </Container>
       </header>

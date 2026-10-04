@@ -11,6 +11,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useHydrated } from "@/hooks/use-hydrated";
 import { useLogout } from "@/hooks/use-logout";
+import { DASHBOARD_URL } from "@/lib/config";
+import { isStaff } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/stores/auth";
 
@@ -33,7 +35,12 @@ export function AccountShell({ children }: { children: React.ReactNode }) {
     if (hydrated && status === "guest") router.replace(`/login?redirect=${encodeURIComponent(pathname)}`);
   }, [hydrated, status, pathname, router]);
 
-  if (!hydrated || !user) {
+  const staff = isStaff(user);
+  useEffect(() => {
+    if (staff) window.location.replace(DASHBOARD_URL);
+  }, [staff]);
+
+  if (!hydrated || !user || staff) {
     return (
       <Container className="grid gap-6 py-8 md:grid-cols-[240px_1fr]">
         <Skeleton className="h-64" />

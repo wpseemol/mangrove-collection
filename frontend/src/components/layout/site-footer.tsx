@@ -44,6 +44,12 @@ const COLUMNS = [
   },
 ];
 
+/** Admins and managers have no customer account; the dashboard replaces it. */
+const STAFF_ACCOUNT_LINKS = [
+  { href: DASHBOARD_URL, label: "Dashboard" },
+  { href: "/cart", label: "Cart" },
+];
+
 export function SiteFooter() {
   const { data: settings } = useSettings();
   const hydrated = useHydrated();
@@ -115,7 +121,7 @@ export function SiteFooter() {
           <div key={column.title}>
             <h3 className="mb-4 text-sm font-semibold text-white">{column.title}</h3>
             <ul className="space-y-3">
-              {column.links.map((link) => (
+              {(staff && column.title === "Account" ? STAFF_ACCOUNT_LINKS : column.links).map((link) => (
                 <li key={link.href}>
                   <Link href={link.href} className="text-sm text-white/65 transition-colors hover:text-white">
                     {link.label}
