@@ -25,7 +25,6 @@ import { toast } from 'sonner'
 import { SingleImageUpload } from '@/components/image-upload'
 import { PageHeader } from '@/components/layout/page-header'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
@@ -49,7 +48,7 @@ import type { Banner, CmsPage } from '@/lib/types'
 import { cn } from '@/lib/utils'
 
 import { fromServerErrors, getIn, INFO_CARD_LIMIT, setIn, validateContent, type Errors } from './content-form'
-import { IconSelect, ItemList, NumberField, TextField, ToggleRow } from './fields'
+import { IconSelect, ItemList, NumberField, Section, TextField, ToggleRow } from './fields'
 import { SideImageSlot, SlidesManager } from './hero-media'
 
 type TabDef = { id: string; title: string; description: string; icon: LucideIcon; blocks: (keyof HomeContent)[] }
@@ -613,18 +612,6 @@ function ContentEditor({ page, banners, bannersLoading }: { page: CmsPage | null
         </div>
       </div>
     </form>
-  )
-}
-
-function Section({ title, description, children }: { title: string; description?: string; children: ReactNode }) {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        {description && <CardDescription>{description}</CardDescription>}
-      </CardHeader>
-      <CardContent>{children}</CardContent>
-    </Card>
   )
 }
 

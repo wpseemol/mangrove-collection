@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { CmsPageView } from "@/components/shared/cms-page";
+import { AboutView } from "@/components/about/about-view";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
@@ -11,5 +11,5 @@ export const metadata: Metadata = pageMetadata({
 });
 
 export default function AboutPage() {
-  return <CmsPageView slug="about" title="About us" />;
+  return <AboutView />;
 }

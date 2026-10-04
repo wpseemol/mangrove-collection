@@ -308,9 +308,9 @@ export const DEFAULT_HOME: HomeContent = {
 
 export const HOME_BLOCKS = Object.keys(DEFAULT_HOME) as (keyof HomeContent)[]
 
-const isRecord = (value: unknown): value is Record<string, unknown> => value !== null && typeof value === 'object' && !Array.isArray(value)
+export const isRecord = (value: unknown): value is Record<string, unknown> => value !== null && typeof value === 'object' && !Array.isArray(value)
 
-function merge<T extends object>(defaults: T, stored: unknown): T {
+export function merge<T extends object>(defaults: T, stored: unknown): T {
   if (!isRecord(stored)) return defaults
 
   const result = { ...defaults }
@@ -342,14 +342,15 @@ export function parseHomeContent(sections: unknown[] | undefined): HomeContent {
 export const otherSections = (sections: unknown[] | undefined) =>
   (sections ?? []).filter((section) => !(isRecord(section) && HOME_BLOCKS.includes(section.type as keyof HomeContent)))
 
+/** Trims surrounding whitespace from every string, at any depth. */
+export const tidy = (value: unknown): unknown => {
+  if (typeof value === 'string') return value.trim()
+  if (Array.isArray(value)) return value.map(tidy)
+  if (isRecord(value)) return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, tidy(item)]))
+  return value
+}
+
 /** Blocks in page order, with surrounding whitespace trimmed from every string. */
 export function toSections(content: HomeContent): unknown[] {
-  const tidy = (value: unknown): unknown => {
-    if (typeof value === 'string') return value.trim()
-    if (Array.isArray(value)) return value.map(tidy)
-    if (isRecord(value)) return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, tidy(item)]))
-    return value
-  }
-
   return HOME_BLOCKS.map((key) => tidy(content[key]))
 }

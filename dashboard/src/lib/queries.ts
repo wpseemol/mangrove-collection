@@ -101,13 +101,14 @@ export function useBanners() {
 }
 
 export const homePageQueryKey = ['admin', 'pages', 'home'] as const
+export const aboutPageQueryKey = ['admin', 'pages', 'about'] as const
 
-/** The `home` page, or null when it hasn't been created yet. */
-export function useHomePage() {
+/** A CMS page by slug, or null when it hasn't been created yet. */
+function useCmsPage(queryKey: readonly ['admin', 'pages', string]) {
   return useQuery({
-    queryKey: homePageQueryKey,
+    queryKey,
     queryFn: () =>
-      api<{ data: CmsPage }>('/admin/pages/home')
+      api<{ data: CmsPage }>(`/admin/pages/${queryKey[2]}`)
         .then((r) => r.data)
         .catch((error) => {
           if (error instanceof ApiError && error.status === 404) return null
@@ -115,6 +116,9 @@ export function useHomePage() {
         }),
   })
 }
+
+export const useHomePage = () => useCmsPage(homePageQueryKey)
+export const useAboutPage = () => useCmsPage(aboutPageQueryKey)
 
 export function useCategoryIcons() {
   return useQuery({

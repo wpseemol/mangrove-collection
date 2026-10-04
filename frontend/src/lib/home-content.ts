@@ -300,7 +300,7 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
   value !== null && typeof value === "object" && !Array.isArray(value);
 
 /** Takes each default key from `stored` when it has the same type; array items are merged against the first default item. */
-function merge<T extends object>(defaults: T, stored: unknown): T {
+export function merge<T extends object>(defaults: T, stored: unknown): T {
   if (!isRecord(stored)) return defaults;
 
   const result = { ...defaults };

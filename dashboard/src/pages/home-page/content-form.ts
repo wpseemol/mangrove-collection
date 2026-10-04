@@ -10,7 +10,8 @@ const INLINE_LINK = /\[[^\]\n]*\]\(([^)\s]*)\)/g
 
 export const INFO_CARD_LIMIT = 24
 
-export const limitFor = (path: string) => (LINK_FIELD.test(path) ? 2048 : LONG_FIELD.test(path) ? 1000 : 255)
+export const limitFor = (path: string) =>
+  LINK_FIELD.test(path) ? 2048 : path.endsWith('meta_description') ? 500 : LONG_FIELD.test(path) ? 1000 : 255
 
 const splitPath = (path: string) => path.split('.').map((part) => (/^\d+$/.test(part) ? Number(part) : part))
 
@@ -29,7 +30,8 @@ export function setIn<T>(source: T, path: string, value: unknown): T {
   return write(source, splitPath(path)) as T
 }
 
-export function validateContent(content: HomeContent): Errors {
+/** Length, safe-text and link checks for every string field, at any depth. */
+export function validateStrings(content: object): Errors {
   const errors: Errors = {}
 
   const visit = (value: unknown, path: string) => {
@@ -50,6 +52,11 @@ export function validateContent(content: HomeContent): Errors {
     }
   }
   visit(content, '')
+  return errors
+}
+
+export function validateContent(content: HomeContent): Errors {
+  const errors = validateStrings(content)
 
   const seconds = content.hero.autoplay_seconds
   if (!Number.isInteger(seconds) || seconds < 0 || seconds > 30) errors['hero.autoplay_seconds'] = 'Enter a whole number of seconds from 0 to 30.'
@@ -70,13 +77,17 @@ export function validateContent(content: HomeContent): Errors {
   return errors
 }
 
-/** `sections.0.title` (the API's key, by block position) -> `hero.title`. */
-export function fromServerErrors(errors: Record<string, string[]>): Errors {
+/** `sections.0.title` (the API's key, by block position) -> `hero.title`. Other keys go through `rename`. */
+export function fromServerErrors(
+  errors: Record<string, string[]>,
+  blocks: readonly string[] = HOME_BLOCKS,
+  rename: (key: string) => string = (key) => key,
+): Errors {
   return Object.fromEntries(
     Object.entries(errors).map(([key, messages]) => {
       const match = /^sections\.(\d+)(?:\.(.*))?$/.exec(key)
-      const block = match ? HOME_BLOCKS[Number(match[1])] : undefined
-      return [block ? [block, match![2]].filter(Boolean).join('.') : key, messages[0]]
+      const block = match ? blocks[Number(match[1])] : undefined
+      return [block ? [block, match![2]].filter(Boolean).join('.') : rename(key), messages[0]]
     }),
   )
 }

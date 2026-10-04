@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 
 import { FormField, Optional } from '@/components/form-field'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
@@ -11,6 +12,18 @@ import { HOME_ICONS } from '@/lib/home-content'
 import { cn } from '@/lib/utils'
 
 import { limitFor } from './content-form'
+
+export function Section({ title, description, children }: { title: string; description?: string; children: ReactNode }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+        {description && <CardDescription>{description}</CardDescription>}
+      </CardHeader>
+      <CardContent>{children}</CardContent>
+    </Card>
+  )
+}
 
 export function TextField({
   path,
