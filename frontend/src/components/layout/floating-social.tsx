@@ -5,9 +5,9 @@ import { usePathname } from "next/navigation";
 import { useSettings } from "@/lib/queries";
 import { cn } from "@/lib/utils";
 
-import { FacebookIcon, LinkedInIcon, MessengerIcon, messengerHref, WhatsAppIcon, whatsappHref } from "./social-icons";
+import { MessengerIcon, messengerHref, WhatsAppIcon, whatsappHref } from "./social-icons";
 
-/** Floating chat/social buttons on every page; content and placement come from the dashboard's chat button settings. */
+/** Floating chat buttons (Messenger, WhatsApp) on every page; social page links live in the footer. */
 export function FloatingSocial() {
   const { data: settings } = useSettings();
   const pathname = usePathname();
@@ -16,17 +16,11 @@ export function FloatingSocial() {
     return null;
   }
 
-  const links = settings.social_links ?? {};
   const left = settings.whatsapp_button_position === "left";
   const whatsapp = settings.whatsapp_button_enabled && settings.whatsapp_number ? whatsappHref(settings.whatsapp_number, settings.whatsapp_message) : null;
   const messenger = settings.messenger_button_enabled && settings.messenger_page ? messengerHref(settings.messenger_page) : null;
 
-  const socials = [
-    links.linkedin && { href: links.linkedin, label: "LinkedIn", icon: LinkedInIcon, className: "bg-[#0a66c2]" },
-    links.facebook && { href: links.facebook, label: "Facebook", icon: FacebookIcon, className: "bg-[#1877f2]" },
-  ].filter(Boolean) as { href: string; label: string; icon: typeof FacebookIcon; className: string }[];
-
-  if (!whatsapp && !messenger && socials.length === 0) {
+  if (!whatsapp && !messenger) {
     return null;
   }
 
@@ -39,23 +33,6 @@ export function FloatingSocial() {
         pathname.startsWith("/product") ? "bottom-[calc(9.5rem+env(safe-area-inset-bottom))]" : "bottom-[calc(5rem+env(safe-area-inset-bottom))]",
       )}
     >
-      {socials.map(({ href, label, icon: Icon, className }) => (
-        <a
-          key={label}
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={label}
-          title={label}
-          className={cn(
-            "hidden size-11 items-center justify-center rounded-full text-white shadow-lg shadow-black/15 transition-transform hover:scale-105 md:flex",
-            className,
-          )}
-        >
-          <Icon className="size-5" />
-        </a>
-      ))}
-
       {messenger && (
         <a
           href={messenger}
