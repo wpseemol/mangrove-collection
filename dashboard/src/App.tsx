@@ -5,6 +5,7 @@ import { ProtectedRoute } from '@/components/protected-route'
 import { RequireAdmin } from '@/components/require-admin'
 import { CategoriesPage } from '@/pages/categories'
 import { ForgotPasswordPage } from '@/pages/forgot-password'
+import { HomePageEditorPage } from '@/pages/home-page'
 import { LoginPage } from '@/pages/login'
 import { OrderDetailPage } from '@/pages/orders/detail'
 import { OrdersPage } from '@/pages/orders/list'
@@ -34,6 +35,7 @@ export default function App() {
           <Route path="orders/:id" element={<OrderDetailPage />} />
           <Route path="payments" element={<PaymentsPage />} />
           <Route path="reviews" element={<ReviewsPage />} />
+          <Route path="home-page" element={<HomePageEditorPage />} />
           <Route element={<RequireAdmin />}>
             <Route path="payment-accounts" element={<PaymentAccountsPage />} />
             <Route path="settings" element={<SettingsPage />} />

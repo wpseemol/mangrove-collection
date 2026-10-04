@@ -215,9 +215,16 @@ function merge<T extends object>(defaults: T, stored: unknown): T {
 
 export function parseHomeContent(sections: unknown[] | undefined): HomeContent {
   const find = (type: string) => sections?.find((section) => isRecord(section) && section.type === type)
+  const content = Object.fromEntries(HOME_BLOCKS.map((key) => [key, merge(DEFAULT_HOME[key], find(key))])) as HomeContent
 
-  return Object.fromEntries(HOME_BLOCKS.map((key) => [key, merge(DEFAULT_HOME[key], find(key))])) as HomeContent
+  // The hero always has exactly two side cards (top and bottom).
+  const promos = DEFAULT_HOME.hero.promos.map((fallback, index) => content.hero.promos[index] ?? fallback)
+  return { ...content, hero: { ...content.hero, promos } }
 }
+
+/** Saved sections that aren't home blocks (e.g. older free-form cards), kept untouched on save. */
+export const otherSections = (sections: unknown[] | undefined) =>
+  (sections ?? []).filter((section) => !(isRecord(section) && HOME_BLOCKS.includes(section.type as keyof HomeContent)))
 
 /** Blocks in page order, with surrounding whitespace trimmed from every string. */
 export function toSections(content: HomeContent): unknown[] {

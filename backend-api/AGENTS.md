@@ -10,7 +10,7 @@ pnpm exec prisma generate   # .npmrc has ignore-scripts=true, so the client is n
 pnpm db:migrate             # prisma migrate deploy
 pnpm db:seed                # idempotent: settings defaults, shipping methods, pages, first admin
 pnpm db:seed:catalog        # optional starter catalog with photos
-pnpm dev                    # tsx watch on PORT (8080)
+pnpm dev                    # node --watch (src only) + tsx on PORT (8080); root `pnpm dev` also starts frontend + dashboard
 pnpm test                   # Vitest + Supertest against DB_TEST_DATABASE
 pnpm typecheck
 pnpm build && pnpm start
