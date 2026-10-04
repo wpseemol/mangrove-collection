@@ -3,7 +3,8 @@ import type { Metadata } from "next";
 import { InfoCards, OurStory, PromiseBand } from "@/components/home/about-story";
 import { CategorySection } from "@/components/home/category-section";
 import { Hero } from "@/components/home/hero";
-import { ProductSection } from "@/components/home/product-section";
+import { NewArrivals } from "@/components/home/new-arrivals";
+import { PopularProducts } from "@/components/home/popular-products";
 import { TrustStrip } from "@/components/home/trust-strip";
 import { pageMetadata, SITE_DESCRIPTION, SITE_TITLE } from "@/lib/seo";
 
@@ -20,8 +21,8 @@ export default function HomePage() {
       <Hero />
       <TrustStrip />
       <CategorySection />
-      <ProductSection block="popular" filters={{ sort: "popular" }} viewAllHref="/shop?sort=popular" />
-      <ProductSection block="latest" filters={{ sort: "latest" }} viewAllHref="/shop?sort=latest" />
+      <PopularProducts />
+      <NewArrivals />
       <PromiseBand />
       <OurStory />
       <InfoCards />
