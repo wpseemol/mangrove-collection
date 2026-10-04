@@ -15,6 +15,9 @@ import { clamp, DEFAULT_HOME, useHomeContent } from "@/lib/home-content";
 import { type ProductFilters, useProducts } from "@/lib/queries";
 import type { Product } from "@/lib/types";
 
+/** Slides visible at once on the widest breakpoint (`xl:basis-1/5`). */
+const WIDEST_COLUMNS = 5;
+
 function ProductSlider({ products, rows, delaySeconds }: { products: Product[]; rows: number; delaySeconds: number }) {
   const [plugins] = useState(() =>
     delaySeconds > 0 && typeof window !== "undefined" && !window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -22,15 +25,18 @@ function ProductSlider({ products, rows, delaySeconds }: { products: Product[]; 
       : [],
   );
 
+  // Drop rows rather than leave the widest screen half empty when there are few products.
+  const perColumn = Math.max(1, Math.min(rows, Math.floor(products.length / WIDEST_COLUMNS)));
   const columns: Product[][] = [];
-  for (let i = 0; i < products.length; i += rows) columns.push(products.slice(i, i + rows));
+  for (let i = 0; i < products.length; i += perColumn) columns.push(products.slice(i, i + perColumn));
 
   return (
-    <Carousel opts={{ align: "start", loop: columns.length > 1 }} plugins={plugins}>
+    <Carousel opts={{ align: "start", loop: columns.length > WIDEST_COLUMNS }} plugins={plugins}>
       <CarouselContent className="-ml-3 sm:-ml-4 md:-ml-5">
         {columns.map((column) => (
           <CarouselItem key={column[0].id} className="basis-1/2 pl-3 sm:basis-1/3 sm:pl-4 md:pl-5 lg:basis-1/4 xl:basis-1/5">
-            <div className="grid gap-3 sm:gap-4 md:gap-5">
+            {/* Equal rows inside columns that all stretch to the tallest, so every card is the same height. */}
+            <div className="grid h-full gap-3 sm:gap-4 md:gap-5" style={{ gridTemplateRows: `repeat(${perColumn}, minmax(0, 1fr))` }}>
               {column.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}

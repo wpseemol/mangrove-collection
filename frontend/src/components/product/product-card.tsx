@@ -116,7 +116,11 @@ export function ProductCard({ product, layout = "grid" }: { product: Product; la
         {product.category && (
           <p className="truncate text-[10px] font-semibold tracking-wider text-muted-foreground uppercase sm:text-[11px]">{product.category.name}</p>
         )}
-        <Link href={href} className="font-bangla mt-1 line-clamp-2 text-sm leading-snug text-foreground hover:text-primary sm:text-[15px]">
+        <Link
+          href={href}
+          title={product.name}
+          className="font-bangla mt-1 line-clamp-2 min-h-[2lh] text-sm leading-snug text-foreground hover:text-primary sm:text-[15px]"
+        >
           {product.name}
         </Link>
         <Rating product={product} className="mt-1.5" />
