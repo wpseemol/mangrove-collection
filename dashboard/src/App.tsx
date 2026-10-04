@@ -4,6 +4,9 @@ import { DashboardLayout } from '@/components/layout/dashboard-layout'
 import { ProtectedRoute } from '@/components/protected-route'
 import { RequireAdmin } from '@/components/require-admin'
 import { AboutPageEditorPage } from '@/pages/about-page'
+import { BlogCategoriesPage } from '@/pages/blog/categories'
+import { BlogPostEditorPage } from '@/pages/blog/post-editor'
+import { BlogPostsPage } from '@/pages/blog/posts'
 import { CategoriesPage } from '@/pages/categories'
 import { ContactPageEditorPage } from '@/pages/contact-page'
 import { ForgotPasswordPage } from '@/pages/forgot-password'
@@ -20,6 +23,7 @@ import { ResetPasswordPage } from '@/pages/reset-password'
 import { ReviewsPage } from '@/pages/reviews'
 import { SettingsPage } from '@/pages/settings'
 import { SubscribersPage } from '@/pages/subscribers'
+import { UsersPage } from '@/pages/users'
 
 export default function App() {
   return (
@@ -41,8 +45,13 @@ export default function App() {
           <Route path="home-page" element={<HomePageEditorPage />} />
           <Route path="about-page" element={<AboutPageEditorPage />} />
           <Route path="contact-page" element={<ContactPageEditorPage />} />
+          <Route path="blog" element={<BlogPostsPage />} />
+          <Route path="blog/new" element={<BlogPostEditorPage />} />
+          <Route path="blog/:id/edit" element={<BlogPostEditorPage />} />
+          <Route path="blog/categories" element={<BlogCategoriesPage />} />
           <Route path="subscribers" element={<SubscribersPage />} />
           <Route element={<RequireAdmin />}>
+            <Route path="users" element={<UsersPage />} />
             <Route path="payment-accounts" element={<PaymentAccountsPage />} />
             <Route path="settings" element={<SettingsPage />} />
           </Route>

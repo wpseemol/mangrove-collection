@@ -1,5 +1,8 @@
 import type { RequestHandler } from 'express'
 import multer from 'multer'
+import { rm } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { ValidationError } from '../lib/http.js'
 
 const UNTRIMMED = new Set(['password', 'password_confirmation', 'current_password'])
 
@@ -45,10 +48,36 @@ declare global {
   }
 }
 
+export const VIDEO_UPLOAD_PATH = '/v1/admin/media/videos'
+export const MAX_VIDEO_MEGABYTES = 100
+
+/** Videos are too big to buffer, so this one route streams a single file to the temp folder (`file.path`). */
+const videoUpload = multer({
+  storage: multer.diskStorage({ destination: tmpdir() }),
+  limits: { fileSize: MAX_VIDEO_MEGABYTES * 1024 * 1024, files: 1, fields: 20, fieldSize: 64 * 1024 },
+}).any()
+
 export const multipart: RequestHandler = (req, res, next) => {
   if (!req.is('multipart/form-data')) return next()
 
-  upload(req, res, (error?: unknown) => {
+  const video = req.method === 'POST' && req.path === VIDEO_UPLOAD_PATH
+  if (video) {
+    // The temp file must go even when auth, CSRF or validation rejects the request before the route runs.
+    res.on('close', () => {
+      for (const file of (req.files as UploadedFile[] | undefined) ?? []) if (file.path) void rm(file.path, { force: true }).catch(() => undefined)
+    })
+  }
+
+  ;(video ? videoUpload : upload)(req, res, (error?: unknown) => {
+    if (video && error instanceof multer.MulterError) {
+      const message =
+        error.code === 'LIMIT_FILE_SIZE'
+          ? `The video must not be larger than ${MAX_VIDEO_MEGABYTES} MB.`
+          : error.code === 'LIMIT_FILE_COUNT'
+            ? 'Upload one video at a time.'
+            : 'The upload could not be processed.'
+      return next(new ValidationError({ file: [message] }))
+    }
     if (error) return next(error)
 
     const grouped: Record<string, UploadedFile[]> = {}

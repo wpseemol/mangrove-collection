@@ -9,11 +9,15 @@ import {
   LogOut,
   Mail,
   MessageSquareText,
+  Newspaper,
   Package,
   PackagePlus,
+  PenLine,
   ReceiptText,
   Settings,
   ShoppingCart,
+  Tags,
+  Users,
   Wallet,
   type LucideIcon,
 } from 'lucide-react'
@@ -80,12 +84,31 @@ const NAV: { label: string; items: NavItem[] }[] = [
     ],
   },
   {
-    label: 'Store',
+    label: 'Website',
     items: [
       { title: 'Home page', to: '/home-page', icon: LayoutTemplate, exact: true },
       { title: 'About page', to: '/about-page', icon: BookOpenText, exact: true },
       { title: 'Contact page', to: '/contact-page', icon: Contact, exact: true },
+    ],
+  },
+  {
+    label: 'Blog',
+    items: [
+      { title: 'Posts', to: '/blog', icon: Newspaper, exact: true },
+      { title: 'Write a post', to: '/blog/new', icon: PenLine, exact: true },
+      { title: 'Blog categories', to: '/blog/categories', icon: Tags, exact: true },
+    ],
+  },
+  {
+    label: 'People',
+    items: [
+      { title: 'Users', to: '/users', icon: Users, exact: true, adminOnly: true },
       { title: 'Subscribers', to: '/subscribers', icon: Mail, exact: true },
+    ],
+  },
+  {
+    label: 'Administration',
+    items: [
       { title: 'Payment accounts', to: '/payment-accounts', icon: Wallet, exact: true, adminOnly: true },
       { title: 'Settings', to: '/settings', icon: Settings, exact: false, adminOnly: true },
     ],
@@ -104,7 +127,9 @@ export function AppSidebar() {
   )
 
   const isActive = (to: string, exact: boolean) =>
-    exact ? pathname === to || (to === '/products' && /^\/products\/\d+/.test(pathname)) : pathname.startsWith(to)
+    exact
+      ? pathname === to || (to === '/products' && /^\/products\/\d+/.test(pathname)) || (to === '/blog' && /^\/blog\/\d+/.test(pathname))
+      : pathname.startsWith(to)
 
   return (
     <Sidebar collapsible="icon">

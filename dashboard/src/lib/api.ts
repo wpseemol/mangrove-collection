@@ -23,6 +23,8 @@ type Query = Record<string, string | number | boolean | null | undefined>
 type RequestOptions = Omit<RequestInit, 'body'> & {
   query?: Query
   body?: unknown
+  /** Body fields that hold blog-post HTML (images, videos and alignment allowed) instead of basic formatting. */
+  blogHtmlFields?: string[]
 }
 
 /** Laravel's CSRF cookie. Readable by JS (unlike the session cookie) so it can be echoed in a header. */
@@ -50,7 +52,7 @@ function ensureCsrfCookie(force = false): Promise<void> {
   return csrfRequest
 }
 
-export async function api<T>(path: string, { query, body, headers, ...init }: RequestOptions = {}): Promise<T> {
+export async function api<T>(path: string, { query, body, headers, blogHtmlFields, ...init }: RequestOptions = {}): Promise<T> {
   const url = new URL(`${API_URL}${path}`)
 
   for (const [key, value] of Object.entries(query ?? {})) {
@@ -59,7 +61,7 @@ export async function api<T>(path: string, { query, body, headers, ...init }: Re
     }
   }
 
-  const unsafe = body === undefined ? {} : findUnsafeFields(body)
+  const unsafe = body === undefined ? {} : findUnsafeFields(body, undefined, new Set(blogHtmlFields))
   if (Object.keys(unsafe).length) {
     throw new ApiError('Please remove HTML, script or code from the highlighted fields.', 422, unsafe)
   }

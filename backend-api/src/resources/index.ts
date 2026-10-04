@@ -3,6 +3,9 @@ import { isStaff } from '../auth/guards.js'
 import type {
   Address,
   Banner,
+  BlogCategory,
+  BlogPost,
+  BlogPostMedia,
   Category,
   Media,
   NewsletterSubscriber,
@@ -20,6 +23,7 @@ import type {
 } from '../generated/prisma/client.js'
 import { storage, type Disk } from '../lib/storage.js'
 import { id, iso, num, numOrNull } from '../lib/serialize.js'
+import { embedUrl, videoThumbnail } from '../services/blog.js'
 import { categoryIcons } from '../services/category-icons.js'
 import { categoryImages, reviewImages } from '../services/images.js'
 
@@ -359,6 +363,75 @@ export function newsletterSubscriberResource(subscriber: NewsletterSubscriber): 
     subscribed_at: iso(subscriber.created_at),
     unsubscribed_at: iso(subscriber.unsubscribed_at),
   }
+}
+
+export function blogCategoryResource(category: BlogCategory & { _count?: { posts?: number } }): Json {
+  const out: Json = {
+    id: id(category.id),
+    name: category.name,
+    slug: category.slug,
+    icon: category.icon,
+    icon_nodes: categoryIcons.find(category.icon)?.nodes ?? null,
+    description: category.description,
+    is_active: category.is_active,
+    sort_order: category.sort_order,
+  }
+  when(out, 'posts_count', category._count?.posts)
+  out.created_at = iso(category.created_at)
+  out.updated_at = iso(category.updated_at)
+  return out
+}
+
+export function blogMediaResource(media: BlogPostMedia): Json {
+  return {
+    id: id(media.id),
+    type: media.type,
+    provider: media.provider,
+    url: media.url,
+    embed_url: media.type === 'video' ? embedUrl(media.provider, media.url) : null,
+    thumbnail: media.type === 'video' ? videoThumbnail(media.provider, media.url) : media.url,
+    caption: media.caption,
+  }
+}
+
+export type BlogPostWith = BlogPost & {
+  category?: BlogCategory | null
+  author?: Pick<User, 'id' | 'name' | 'avatar'> | null
+  media?: BlogPostMedia[]
+}
+
+const readingMinutes = (html: string | null) => Math.max(1, Math.round((html ?? '').replace(/<[^>]*>/g, ' ').split(/\s+/).filter(Boolean).length / 200))
+
+/** `full` adds the body, gallery and SEO fields; lists only need the card data. */
+export function blogPostResource(post: BlogPostWith, full = false): Json {
+  const out: Json = {
+    id: id(post.id),
+    title: post.title,
+    slug: post.slug,
+    excerpt: post.excerpt,
+    cover_image: post.cover_image,
+    status: post.status,
+    is_featured: post.is_featured,
+    published_at: iso(post.published_at),
+    reading_minutes: readingMinutes(post.content),
+    views: post.views,
+    tags: post.tags ?? [],
+  }
+  when(out, 'category', post.category === undefined ? undefined : post.category ? blogCategoryResource(post.category) : null)
+  when(out, 'author', post.author === undefined ? undefined : post.author ? { id: id(post.author.id), name: post.author.name, avatar: post.author.avatar } : null)
+  if (post.media) {
+    out.images_count = post.media.filter((item) => item.type === 'image').length
+    out.videos_count = post.media.filter((item) => item.type === 'video').length
+  }
+  if (full) {
+    out.content = post.content
+    out.meta_title = post.meta_title
+    out.meta_description = post.meta_description
+    when(out, 'media', post.media?.map(blogMediaResource))
+  }
+  out.created_at = iso(post.created_at)
+  out.updated_at = iso(post.updated_at)
+  return out
 }
 
 export function mediaResource(media: Media): Json {

@@ -77,6 +77,88 @@ function linkAttributesAreSafe(attributes: string): boolean {
   return true
 }
 
+type AttributeCheck = (value: string) => boolean
+
+const ALIGN: Record<string, AttributeCheck> = { style: (value) => /^text-align:\s*(?:left|center|right|justify);?$/i.test(value.trim()) }
+const plain: AttributeCheck = (value) => !isUnsafeText(value)
+const digits: AttributeCheck = (value) => /^\d{1,5}$/.test(value)
+
+/**
+ * Blog posts (Tiptap output). Every tag and attribute is allow-listed and checked; there is no `style`
+ * beyond text alignment, no event handler and no iframe. Videos are stored as
+ * `<figure data-video="youtube|vimeo|upload" data-src="…">` and turned into players when rendered.
+ */
+const BLOG_HTML_TAGS: Record<string, Record<string, AttributeCheck>> = {
+    p: ALIGN,
+    h2: ALIGN,
+    h3: ALIGN,
+    h4: ALIGN,
+    br: {},
+    hr: {},
+    strong: {},
+    b: {},
+    em: {},
+    i: {},
+    u: {},
+    s: {},
+    mark: {},
+    ul: {},
+    li: {},
+    blockquote: {},
+    pre: {},
+    figcaption: {},
+    ol: { start: digits, type: (value) => /^[1aAiI]$/.test(value) },
+    code: { class: (value) => /^language-[a-z0-9+#-]{1,30}$/i.test(value) },
+    a: {
+      href: (value) => /^(?:https?:\/\/|mailto:|tel:|\/(?!\/)|#)/i.test(value) && !/[\s<>"'`\\]/.test(value),
+      title: plain,
+      target: (value) => value === '_blank',
+      rel: (value) => /^[a-z ]{1,60}$/i.test(value),
+    },
+    img: { src: (value) => isSafeUrl(value), alt: plain, title: plain, width: digits, height: digits },
+    figure: { 'data-video': (value) => ['youtube', 'vimeo', 'upload'].includes(value), 'data-src': (value) => isSafeUrl(value) },
+}
+
+export const SAFE_BLOG_HTML_MESSAGE = 'The :attribute contains formatting, links, images or embeds that are not allowed. Remove pasted code or scripts and try again.'
+
+export function isSafeBlogHtml(html: string, isVideo: (provider: string, src: string) => boolean): boolean {
+  if (/<[?%!]|[?%]>|[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/.test(html)) return false
+  if (/\b(?:javascript|vbscript)\s*:|\bdata\s*:\s*[a-z]+\/[\w.+-]+[;,]/i.test(html)) return false
+
+  const tags = [...html.matchAll(/<\s*(\/?)\s*([a-z][a-z0-9]*)\b([^<>]*)>/gi)]
+  const openings = html.match(/<\s*\/?\s*[a-z]/gi)?.length ?? 0
+  if (openings !== tags.length) return false
+
+  for (const [, closing, rawName, rawAttributes] of tags) {
+    const name = rawName.toLowerCase()
+    const rules = Object.hasOwn(BLOG_HTML_TAGS, name) ? BLOG_HTML_TAGS[name] : null
+    if (!rules) return false
+
+    const attributes = rawAttributes.replace(/\/+$/, '').trim()
+    if (closing !== '') {
+      if (attributes !== '') return false
+      continue
+    }
+
+    const pairs = [...attributes.matchAll(/([a-z-]+)\s*=\s*("[^"]*"|'[^']*')/gi)]
+    if (pairs.map((pair) => pair[0]).join('').replace(/\s+/g, '') !== attributes.replace(/\s+/g, '')) return false
+
+    const values: Record<string, string> = {}
+    for (const [, rawKey, rawValue] of pairs) {
+      const key = rawKey.toLowerCase()
+      const value = rawValue.slice(1, -1).replace(/&amp;/g, '&')
+      const check = Object.hasOwn(rules, key) ? rules[key] : null
+      if (!check || key in values || !check(value)) return false
+      values[key] = value
+    }
+
+    if (name === 'figure' && !isVideo(values['data-video'] ?? '', values['data-src'] ?? '')) return false
+    if (name === 'img' && !values.src) return false
+  }
+
+  return true
+}
+
 /** An absolute http(s) URL, or (when allowed) a site path such as `/shop`. */
 export function isSafeUrl(url: string, allowRelative = false): boolean {
   if (/[\s<>"'`\\\x00-\x1F\x7F]/.test(url)) return false

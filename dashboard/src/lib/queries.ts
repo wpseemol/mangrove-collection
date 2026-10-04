@@ -4,6 +4,7 @@ import { ApiError, api } from '@/lib/api'
 import type {
   AdminSettings,
   Banner,
+  BlogCategory,
   Category,
   CategoryIcon,
   CmsPage,
@@ -98,6 +99,18 @@ export function usePendingOrdersCount(enabled = true) {
 export const reviewsQueryKey = ['admin', 'reviews'] as const
 
 export const subscribersQueryKey = ['admin', 'newsletter-subscribers'] as const
+
+export const usersQueryKey = ['admin', 'users'] as const
+
+export const blogCategoriesQueryKey = ['admin', 'blog', 'categories'] as const
+export const blogPostsQueryKey = ['admin', 'blog', 'posts'] as const
+
+export function useBlogCategories() {
+  return useQuery({
+    queryKey: blogCategoriesQueryKey,
+    queryFn: () => api<{ data: BlogCategory[] }>('/admin/blog/categories').then((r) => r.data),
+  })
+}
 
 export const bannersQueryKey = ['admin', 'banners'] as const
 

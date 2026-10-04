@@ -18,6 +18,50 @@ export type Category = {
   products_count?: number;
 };
 
+export type BlogCategory = {
+  id: number;
+  name: string;
+  slug: string;
+  icon: string | null;
+  icon_nodes: IconNode[] | null;
+  description: string | null;
+  posts_count?: number;
+};
+
+export type VideoProvider = "youtube" | "vimeo" | "upload";
+
+export type BlogMedia = {
+  id: number;
+  type: "image" | "video";
+  provider: VideoProvider;
+  url: string;
+  embed_url: string | null;
+  thumbnail: string | null;
+  caption: string | null;
+};
+
+export type BlogPost = {
+  id: number;
+  title: string;
+  slug: string;
+  excerpt: string | null;
+  cover_image: string | null;
+  is_featured: boolean;
+  published_at: string | null;
+  reading_minutes: number;
+  views: number;
+  tags: string[];
+  category: BlogCategory | null;
+  author: { id: number; name: string; avatar: string | null } | null;
+  images_count?: number;
+  videos_count?: number;
+  updated_at: string | null;
+  content?: string | null;
+  meta_title?: string | null;
+  meta_description?: string | null;
+  media?: BlogMedia[];
+};
+
 export type ProductVariant = {
   id: number;
   title: string;

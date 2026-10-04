@@ -146,6 +146,65 @@ html.dark {
   color-scheme: dark;
 }
 
+/* Blog post body inside the Tiptap editor. Mirrors the storefront's `.blog-content` styles. */
+@layer components {
+  .blog-content {
+    @apply text-[15px] leading-7 text-foreground outline-none;
+  }
+  .blog-content > * + * {
+    @apply mt-4;
+  }
+  .blog-content h2 {
+    @apply mt-8 text-2xl font-semibold tracking-tight;
+  }
+  .blog-content h3 {
+    @apply mt-6 text-xl font-semibold;
+  }
+  .blog-content h4 {
+    @apply mt-5 text-lg font-semibold;
+  }
+  .blog-content a {
+    @apply font-medium text-primary underline underline-offset-2;
+  }
+  .blog-content ul {
+    @apply list-disc pl-6;
+  }
+  .blog-content ol {
+    @apply list-decimal pl-6;
+  }
+  .blog-content li > p {
+    @apply my-1;
+  }
+  .blog-content blockquote {
+    @apply border-l-4 border-primary/40 bg-muted/40 py-1 pl-4 text-muted-foreground italic;
+  }
+  .blog-content code {
+    @apply rounded bg-muted px-1.5 py-0.5 font-mono text-[0.85em];
+  }
+  .blog-content pre {
+    @apply overflow-x-auto rounded-lg bg-zinc-900 p-4 text-sm text-zinc-100;
+  }
+  .blog-content pre code {
+    @apply bg-transparent p-0 text-inherit;
+  }
+  .blog-content hr {
+    @apply my-8 border-border;
+  }
+  .blog-content img {
+    @apply mx-auto max-h-[32rem] rounded-lg;
+  }
+  .blog-content img.ProseMirror-selectednode {
+    @apply ring-2 ring-primary ring-offset-2;
+  }
+  .blog-content mark {
+    @apply rounded bg-amber-200 px-0.5 dark:bg-amber-500/40;
+  }
+  .blog-content p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    @apply pointer-events-none float-left h-0 text-muted-foreground;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

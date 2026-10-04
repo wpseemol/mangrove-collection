@@ -304,6 +304,80 @@ export type NewsletterSubscriber = {
 
 export type SubscriberList = Paginated<NewsletterSubscriber> & { counts: Record<SubscriberStatus, number> }
 
+export type BlogCategory = {
+  id: number
+  name: string
+  slug: string
+  icon: string | null
+  icon_nodes: IconNode[] | null
+  description: string | null
+  is_active: boolean
+  sort_order: number
+  posts_count?: number
+  created_at: string
+  updated_at: string
+}
+
+export type BlogMediaType = 'image' | 'video'
+export type VideoProvider = 'upload' | 'youtube' | 'vimeo'
+
+export type BlogMedia = {
+  id: number
+  type: BlogMediaType
+  provider: VideoProvider
+  url: string
+  embed_url: string | null
+  thumbnail: string | null
+  caption: string | null
+}
+
+export type BlogStatus = 'draft' | 'published'
+
+export type BlogPost = {
+  id: number
+  title: string
+  slug: string
+  excerpt: string | null
+  cover_image: string | null
+  status: BlogStatus
+  is_featured: boolean
+  published_at: string | null
+  reading_minutes: number
+  views: number
+  tags: string[]
+  category?: BlogCategory | null
+  author?: { id: number; name: string; avatar: string | null } | null
+  images_count?: number
+  videos_count?: number
+  content?: string | null
+  meta_title?: string | null
+  meta_description?: string | null
+  media?: BlogMedia[]
+  created_at: string
+  updated_at: string
+}
+
+export type BlogPostList = Paginated<BlogPost> & { counts: Record<BlogStatus, number> }
+
+/** A row of `GET /admin/users`. */
+export type AdminUser = User & {
+  is_active: boolean
+  email_verified_at: string | null
+  last_login_at: string | null
+  orders_count?: number
+}
+
+export type UserList = Paginated<AdminUser> & { counts: Record<UserRole | 'inactive', number> }
+
+export type UserInput = {
+  name: string
+  email: string
+  phone: string | null
+  role?: UserRole
+  is_active?: boolean
+  password?: string
+}
+
 export type DashboardStats = {
   totals: {
     revenue: number

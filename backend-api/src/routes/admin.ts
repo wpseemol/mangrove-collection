@@ -6,7 +6,7 @@ import { HttpError, ValidationError, conflict, fail, notFound, routeId, type Fie
 import { report } from '../lib/log.js'
 import { paginate } from '../lib/paginate.js'
 import { prisma, type Tx } from '../lib/prisma.js'
-import { uniqueSlug } from '../lib/slugs.js'
+import { slugFor } from '../lib/slugs.js'
 import { storage, type Disk } from '../lib/storage.js'
 import { likeTerm, limit, random, slug } from '../lib/str.js'
 import { throttle } from '../middleware/rate-limit.js'
@@ -55,11 +55,13 @@ import {
   type RawCheck,
 } from '../validation/index.js'
 import { isSafeUrl } from '../validation/rules.js'
+import { blogAdminRouter } from './admin-blog.js'
 import { bodyOf, distinct, listOf } from './helpers.js'
 
 export const adminRouter = Router()
 
 adminRouter.use(requireAuth, requireActive, requireRole('admin', 'manager'), throttle('writes'))
+adminRouter.use(blogAdminRouter)
 
 const PRODUCT_STATUSES = ['draft', 'published'] as const
 const BANNER_TYPES = ['slide', 'right_top', 'right_bottom'] as const
@@ -82,14 +84,6 @@ const asciiDash = (max: number) =>
 const put = (path: string, ...handlers: RequestHandler[]) => {
   adminRouter.put(path, ...handlers)
   adminRouter.patch(path, ...handlers)
-}
-
-/** Laravel's HasUniqueSlug saving hook: a blank slug falls back to the name; a changed slug is made unique. */
-async function slugFor(model: 'product' | 'category', existing: { id: bigint; slug: string; name: string } | null, data: { slug?: string | null; name?: string }) {
-  let next = data.slug === undefined ? existing?.slug : data.slug
-  if (!next) next = data.name ?? existing?.name ?? ''
-  if (existing && next === existing.slug) return undefined
-  return uniqueSlug(model, next, existing?.id)
 }
 
 /* ----------------------------------------------------------------------------------------------
@@ -1092,21 +1086,28 @@ const uniqueUser = (field: 'email' | 'phone', ignoreId: bigint | null) => async 
 const password = () => z.string().max(128).min(8, 'The :attribute field must be at least 8 characters.')
 
 adminOnly.get('/users', async (req, res) => {
-  const query = await validate(z.object({ q: opt(text(100)), role: opt(oneOf(USER_ROLES)), per_page: opt(int(1, 100)) }), req.query)
+  const query = await validate(
+    z.object({ q: opt(text(100)), role: opt(oneOf(USER_ROLES)), status: opt(oneOf(['active', 'inactive'] as const)), per_page: opt(int(1, 100)) }),
+    req.query,
+  )
   const term = query.q ? likeTerm(query.q) : null
   const where: Prisma.UserWhereInput = {
     ...(term ? { OR: [{ name: { contains: term } }, { email: { contains: term } }, { phone: { contains: term } }] } : {}),
     ...(query.role ? { role: query.role } : {}),
+    ...(query.status ? { is_active: query.status === 'active' } : {}),
   }
 
-  res.json(
-    await paginate(
-      req,
-      query.per_page ?? 20,
-      { count: () => prisma.user.count({ where }), rows: ({ skip, take }) => prisma.user.findMany({ where, include: userCount, orderBy: latest, skip, take }) },
-      userResource,
-    ),
+  const page = await paginate(
+    req,
+    query.per_page ?? 20,
+    { count: () => prisma.user.count({ where }), rows: ({ skip, take }) => prisma.user.findMany({ where, include: userCount, orderBy: latest, skip, take }) },
+    userResource,
   )
+
+  const byRole = new Map((await prisma.user.groupBy({ by: ['role'], _count: { _all: true } })).map((row) => [row.role, row._count._all]))
+  const inactive = await prisma.user.count({ where: { is_active: false } })
+
+  res.json({ ...page, counts: { ...Object.fromEntries(USER_ROLES.map((role) => [role, byRole.get(role) ?? 0])), inactive } })
 })
 
 adminOnly.post('/users', async (req, res) => {
