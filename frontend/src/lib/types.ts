@@ -173,6 +173,7 @@ export type PublicSettings = {
   currency_symbol: string;
   cod_enabled: boolean;
   free_shipping_threshold: number | null;
+  password_login_enabled: boolean;
   google_login_enabled: boolean;
   google_client_id: string | null;
   meta_title: string | null;

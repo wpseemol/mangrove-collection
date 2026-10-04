@@ -1,5 +1,5 @@
 import { Eye, EyeOff } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { FormField, Optional } from '@/components/form-field'
 import { SingleImageUpload } from '@/components/image-upload'
@@ -10,9 +10,11 @@ import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
 
 import type { DraftValue, Errors } from './draft'
+import { RevealSecretDialog } from './reveal-secret-dialog'
 import { SOCIAL_NETWORKS, type FieldDef } from './sections'
 
 const SECRET_MASK = '********'
+const REVEAL_SECONDS = 60
 
 const INPUT_TYPES: Partial<Record<FieldDef['kind'], { type: string; inputMode?: 'tel' | 'email' | 'url' | 'decimal' | 'numeric' }>> = {
   url: { type: 'url', inputMode: 'url' },
@@ -188,7 +190,25 @@ function SecretField({
   onChange: (value: string) => void
 }) {
   const [visible, setVisible] = useState(false)
+  const [asking, setAsking] = useState(false)
+  // The decrypted saved value; shown in place of the mask but never put in the draft, so it is not re-sent.
+  const [revealed, setRevealed] = useState<string | null>(null)
   const stored = value === SECRET_MASK
+  const showingSaved = stored && revealed !== null
+
+  useEffect(() => {
+    if (!showingSaved) return
+    const timer = window.setTimeout(() => setRevealed(null), REVEAL_SECONDS * 1000)
+    return () => window.clearTimeout(timer)
+  }, [showingSaved])
+
+  const toggle = () => {
+    if (!stored) setVisible((v) => !v)
+    else if (showingSaved) setRevealed(null)
+    else setAsking(true)
+  }
+
+  const shown = showingSaved || (visible && !stored)
 
   return (
     <FormField
@@ -197,31 +217,44 @@ function SecretField({
       hint={<Optional />}
       error={error}
       className={className}
-      description={stored ? 'Saved and encrypted. Type a new value to replace it, or clear the field to remove it.' : 'Stored encrypted. Never shown again after saving.'}
+      description={
+        showingSaved
+          ? `Showing the saved value. It hides again in ${REVEAL_SECONDS} seconds.`
+          : stored
+            ? 'Saved and encrypted. Use the eye to view it, type a new value to replace it, or clear the field to remove it.'
+            : 'Stored encrypted. Viewing it later needs your password.'
+      }
     >
       <div className="relative">
         <Input
           id={id}
-          type={visible && !stored ? 'text' : 'password'}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
+          type={shown ? 'text' : 'password'}
+          value={showingSaved ? revealed : value}
+          onChange={(e) => {
+            setRevealed(null)
+            onChange(e.target.value)
+          }}
           onFocus={(e) => stored && e.target.select()}
           autoComplete="new-password"
           spellCheck={false}
           aria-invalid={Boolean(error)}
-          className="pr-10"
+          className={cn('pr-10', showingSaved && 'font-mono text-xs')}
         />
-        {!stored && value && (
+        {(stored || value) && (
           <button
             type="button"
-            onClick={() => setVisible((v) => !v)}
+            onClick={toggle}
             className="absolute inset-y-0 right-0 flex w-10 items-center justify-center text-muted-foreground hover:text-foreground"
-            aria-label={visible ? 'Hide value' : 'Show value'}
+            aria-label={shown ? 'Hide value' : stored ? 'Show saved value' : 'Show value'}
+            title={shown ? 'Hide' : stored ? 'Show saved value (needs your password)' : 'Show'}
           >
-            {visible ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+            {shown ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
           </button>
         )}
       </div>
+      {stored && (
+        <RevealSecretDialog settingKey={field.key} label={field.label} open={asking} onOpenChange={setAsking} onRevealed={(v) => setRevealed(v ?? '')} />
+      )}
     </FormField>
   )
 }

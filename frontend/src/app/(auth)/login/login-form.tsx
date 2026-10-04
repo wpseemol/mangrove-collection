@@ -7,16 +7,19 @@ import { useState } from "react";
 
 import { GoogleButton } from "@/components/auth/google-button";
 import { PasswordInput } from "@/components/auth/password-input";
+import { SignInUnavailable } from "@/components/auth/sign-in-unavailable";
 import { FormField } from "@/components/shared/form-field";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { useAuthRedirect } from "@/hooks/use-auth-redirect";
+import { useLoginMethods } from "@/hooks/use-login-methods";
 import { api, ApiError } from "@/lib/api";
 import type { AuthResponse } from "@/lib/types";
 
 export function LoginForm() {
   const { redirect, signIn } = useAuthRedirect();
+  const methods = useLoginMethods();
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(true);
@@ -28,6 +31,17 @@ export function LoginForm() {
 
   const error = mutation.error instanceof ApiError ? mutation.error : null;
   const loginError = error?.field("login") ?? (error && !error.field("password") ? error.message : undefined);
+
+  if (methods.none) return <SignInUnavailable />;
+
+  if (!methods.password) {
+    return (
+      <>
+        <GoogleButton divider={false} />
+        <p className="mt-6 text-center text-sm text-muted-foreground">New here? Continuing with Google creates your account automatically.</p>
+      </>
+    );
+  }
 
   return (
     <>

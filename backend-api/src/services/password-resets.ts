@@ -32,9 +32,9 @@ export const passwordResets = {
     return `${page}?${new URLSearchParams({ token, email: user.email }).toString()}`
   },
 
-  async sendResetLink(email: string): Promise<void> {
+  async sendResetLink(email: string, { staffOnly = false } = {}): Promise<void> {
     const user = await prisma.user.findUnique({ where: { email } })
-    if (!user) return
+    if (!user || (staffOnly && !isStaff(user))) return
 
     const existing = await prisma.passwordResetToken.findUnique({ where: { email: user.email } })
     if (existing?.created_at && Date.now() - existing.created_at.getTime() < THROTTLE_SECONDS * 1000) return

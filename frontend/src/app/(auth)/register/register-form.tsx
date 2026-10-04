@@ -7,16 +7,19 @@ import { useState } from "react";
 
 import { GoogleButton } from "@/components/auth/google-button";
 import { PasswordInput } from "@/components/auth/password-input";
+import { SignInUnavailable } from "@/components/auth/sign-in-unavailable";
 import { FormField } from "@/components/shared/form-field";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuthRedirect } from "@/hooks/use-auth-redirect";
+import { useLoginMethods } from "@/hooks/use-login-methods";
 import { api, ApiError } from "@/lib/api";
 import type { AuthResponse } from "@/lib/types";
 
 export function RegisterForm() {
   const { redirect, signIn } = useAuthRedirect();
+  const methods = useLoginMethods();
   const [form, setForm] = useState({ name: "", email: "", phone: "", password: "", password_confirmation: "" });
 
   const mutation = useMutation({
@@ -36,6 +39,22 @@ export function RegisterForm() {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => setForm({ ...form, [field]: e.target.value }),
     "aria-invalid": Boolean(error?.field(field)) || undefined,
   });
+
+  if (methods.none) return <SignInUnavailable />;
+
+  if (!methods.password) {
+    return (
+      <>
+        <GoogleButton label="Sign up with Google" divider={false} />
+        <p className="mt-6 text-center text-sm text-muted-foreground">
+          Already have an account?{" "}
+          <Link href={`/login?redirect=${encodeURIComponent(redirect)}`} scroll={false} className="font-medium text-primary hover:underline">
+            Log in
+          </Link>
+        </p>
+      </>
+    );
+  }
 
   return (
     <>

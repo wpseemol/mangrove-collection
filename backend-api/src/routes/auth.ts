@@ -9,6 +9,7 @@ import { throttle } from '../middleware/rate-limit.js'
 import { userResource } from '../resources/index.js'
 import { google, type GoogleUser } from '../services/google.js'
 import { checkPassword, hashPassword, passwordResets } from '../services/password-resets.js'
+import { settings } from '../services/settings.js'
 import { EMAIL_PATTERN } from '../validation/rules.js'
 import { bool, confirmed, email, lowercaseEmail, opt, phone, text, validate, z } from '../validation/index.js'
 
@@ -31,6 +32,10 @@ async function endSession(req: Request): Promise<void> {
   await req.session?.logout(req)
   req.user = null
 }
+
+/** Turns off email/password sign-in for customers only; staff always keep it so the dashboard stays reachable. */
+const passwordLoginEnabled = async () => Boolean(await settings.get('password_login_enabled'))
+const PASSWORD_LOGIN_OFF = 'Email and password sign-in is turned off. Please use another sign-in option.'
 
 const passwordRule = z.string().min(8, 'The :attribute field must be at least 8 characters.').max(128)
 
@@ -56,6 +61,8 @@ const authLimited = Router()
 authLimited.use(['/register', '/login', '/dashboard/login', '/forgot-password', '/reset-password', '/google'], throttle('auth'))
 
 authLimited.post('/register', async (req, res) => {
+  if (!(await passwordLoginEnabled())) throw new HttpError(403, PASSWORD_LOGIN_OFF)
+
   const data = await validate(
     z.object({
       name: text(255),
@@ -80,7 +87,11 @@ authLimited.post('/register', async (req, res) => {
 authLimited.post('/login', async (req, res) => {
   const data = await validate(loginSchema, req.body)
   ensureBrowserSession(req)
-  await startSession(req, res, await authenticate(data.login, data.password), data.remember ?? false)
+
+  const user = await authenticate(data.login, data.password)
+  if (!isStaff(user) && !(await passwordLoginEnabled())) fail('login', PASSWORD_LOGIN_OFF)
+
+  await startSession(req, res, user, data.remember ?? false)
 })
 
 /** Same as login, but only staff may sign in, and never with a remember-me cookie. */
@@ -98,7 +109,7 @@ authLimited.post('/forgot-password', async (req, res) => {
   const data = await validate(z.object({ email: email(255) }), req.body)
 
   try {
-    await passwordResets.sendResetLink(data.email)
+    await passwordResets.sendResetLink(data.email, { staffOnly: !(await passwordLoginEnabled()) })
   } catch (error) {
     report(error)
   }
@@ -122,6 +133,8 @@ authLimited.post('/reset-password', async (req, res) => {
   if (typeof result === 'string') fail('email', result)
 
   const user = result as User
+  if (!isStaff(user) && !(await passwordLoginEnabled())) fail('email', PASSWORD_LOGIN_OFF)
+
   await prisma.user.update({ where: { id: user.id }, data: { password: await hashPassword(data.password) } })
   await revokeUserSessions(user.id)
   await passwordResets.deleteToken(user.email)

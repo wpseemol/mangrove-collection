@@ -65,6 +65,10 @@ const GROUPS: Record<string, Record<string, Definition>> = {
     low_stock_threshold: { type: 'integer', public: false, default: 5, min: 0, max: 100_000 },
     order_notification_email: { type: 'email', public: false },
   },
+  // Customer sign-in methods. Staff can always use email and password, so the dashboard never locks itself out.
+  login: {
+    password_login_enabled: { type: 'boolean', public: true, default: true },
+  },
   google: {
     google_login_enabled: { type: 'boolean', public: true, default: false },
     google_client_id: { type: 'string', public: true },
@@ -135,6 +139,7 @@ const REGISTRY: Record<string, SettingDefinition> = Object.fromEntries(
 export const settingRegistry = {
   all: () => REGISTRY,
   has: (key: string) => Object.hasOwn(REGISTRY, key),
+  secretKeys: () => Object.keys(REGISTRY).filter((key) => REGISTRY[key].encrypted),
   get: (key: string): SettingDefinition | null => REGISTRY[key] ?? null,
 }
 
@@ -260,6 +265,12 @@ export const settings = {
     }
 
     return cast(value, d.type) as T
+  },
+
+  /** Decrypted value of a secret for an admin who re-entered their password; null when nothing is saved. */
+  async reveal(key: string): Promise<string | null> {
+    const value = await this.get<unknown>(key)
+    return filledValue(value) ? String(value) : null
   },
 
   async filled(key: string): Promise<boolean> {

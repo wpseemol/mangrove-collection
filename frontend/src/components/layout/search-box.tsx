@@ -216,7 +216,7 @@ export function SearchBox({ className, onSubmitted }: { className?: string; onSu
 
   const pending = !idle && (typed !== query || (results.isFetching && !results.data));
   const stale = !idle && (typed !== query || results.isFetching);
-  const total = stale ? undefined : results.data?.meta.total;
+  const total = idle || stale ? undefined : results.data?.meta.total;
   const resultsHref = `/shop?q=${encodeURIComponent(typed)}`;
   const footerHref = idle ? "/shop" : resultsHref;
   const noResults = searching && !pending && !matchedCategories.length && !products.length;

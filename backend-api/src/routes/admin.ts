@@ -2,7 +2,7 @@ import { Router, type Request, type RequestHandler } from 'express'
 import { currentUser, requireActive, requireAuth, requireRole } from '../auth/guards.js'
 import { revokeUserSessions } from '../auth/session.js'
 import { Prisma, type Category, type Product } from '../generated/prisma/client.js'
-import { HttpError, ValidationError, conflict, notFound, routeId, type FieldErrors } from '../lib/http.js'
+import { HttpError, ValidationError, conflict, fail, notFound, routeId, type FieldErrors } from '../lib/http.js'
 import { report } from '../lib/log.js'
 import { paginate } from '../lib/paginate.js'
 import { prisma, type Tx } from '../lib/prisma.js'
@@ -29,7 +29,7 @@ import { categoryIcons } from '../services/category-icons.js'
 import { categoryImages, checkImage, extensionFor, mimeFor } from '../services/images.js'
 import { sendMail } from '../services/mail.js'
 import { ORDER_STATUSES, PAYMENT_STATUSES, orders, type OrderStatus } from '../services/orders.js'
-import { hashPassword } from '../services/password-resets.js'
+import { checkPassword, hashPassword } from '../services/password-resets.js'
 import { PAYMENT_METHODS, payments } from '../services/payments.js'
 import { REVIEW_STATUSES, reviews } from '../services/reviews.js'
 import { settingRegistry, settingSchema, settings } from '../services/settings.js'
@@ -1270,6 +1270,23 @@ adminOnly.put('/settings', async (req, res) => {
 
   await settings.update(data.settings as Record<string, unknown>)
   res.json({ message: 'Settings saved.', data: await settings.forAdmin() })
+})
+
+/** Body: { "key": "google_client_secret", "password": "<the admin's own password>" } */
+adminOnly.post('/settings/reveal', throttle('reveal-secret'), async (req, res) => {
+  const data = await validate(
+    z.object({
+      key: oneOf(settingRegistry.secretKeys() as [string, ...string[]]),
+      password: z.string().min(1, 'The :attribute field is required.').max(128),
+    }),
+    bodyOf(req),
+  )
+
+  const admin = currentUser(req)
+  if (!admin.password) fail('password', 'Set a password on your account first to view saved secrets.')
+  if (!(await checkPassword(data.password, admin.password!))) fail('password', 'The password is incorrect.')
+
+  res.json({ data: { key: data.key, value: await settings.reveal(data.key) } })
 })
 
 adminOnly.post('/settings/test-mail', async (req, res) => {

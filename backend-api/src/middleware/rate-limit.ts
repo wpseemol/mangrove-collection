@@ -45,6 +45,8 @@ const limiters: Record<string, (req: Request) => Limit[]> = {
     ]
   },
   uploads: (req) => [perMinute(20, userOrIp(req))],
+  // Revealing a stored secret needs the admin's password, so guessing it is kept slow.
+  'reveal-secret': (req) => [perMinute(5, userOrIp(req)), perHour(30, `reveal-hour:${userOrIp(req)}`)],
   // Reads stay on the global `api` limit; creates, updates and deletes get a tighter one.
   writes: (req) => (isSafeMethod(req) ? [] : [perMinute(60, userOrIp(req))]),
 }

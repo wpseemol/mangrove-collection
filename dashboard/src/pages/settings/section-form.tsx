@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils'
 import { changedPayload, toDraft, validateDraft, validateField, type Draft, type DraftValue, type Errors } from './draft'
 import type { SectionDef } from './sections'
 import { SettingField } from './setting-field'
+import { SignInStatus } from './sign-in-status'
 import { TestDelivery } from './test-delivery'
 import { WhatsAppPreview } from './whatsapp-preview'
 
@@ -104,6 +105,7 @@ export function SectionForm({
         {section.extra === 'whatsapp-preview' && <WhatsAppPreview draft={draft} valid={whatsappValid} />}
         {section.extra === 'test-mail' && <TestDelivery channel="mail" />}
         {section.extra === 'test-sms' && <TestDelivery channel="sms" />}
+        {section.extra === 'sign-in-status' && <SignInStatus draft={draft} />}
       </div>
 
       <div

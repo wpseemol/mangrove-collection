@@ -8,16 +8,29 @@ import { useState } from "react";
 import { FormField } from "@/components/shared/form-field";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useLoginMethods } from "@/hooks/use-login-methods";
 import { api, ApiError } from "@/lib/api";
 
 export function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
+  const methods = useLoginMethods();
 
   const mutation = useMutation({
     mutationFn: () => api<{ message: string }>("/auth/forgot-password", { method: "POST", body: { email } }),
   });
 
   const error = mutation.error instanceof ApiError ? mutation.error : null;
+
+  if (!methods.password) {
+    return (
+      <div className="text-center">
+        <p className="text-sm text-foreground/80">Password sign-in is turned off for customers{methods.google ? ", so there is no password to reset. Sign in with Google instead." : "."}</p>
+        <Button asChild variant="link" className="mt-4">
+          <Link href="/login">Back to log in</Link>
+        </Button>
+      </div>
+    );
+  }
 
   if (mutation.isSuccess) {
     return (

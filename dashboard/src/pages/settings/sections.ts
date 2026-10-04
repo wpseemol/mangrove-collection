@@ -43,7 +43,7 @@ export type SectionDef = {
   description: string
   icon: LucideIcon
   cards: CardDef[]
-  extra?: 'whatsapp-preview' | 'test-mail' | 'test-sms'
+  extra?: 'whatsapp-preview' | 'test-mail' | 'test-sms' | 'sign-in-status'
 }
 
 export const SOCIAL_NETWORKS = [
@@ -238,19 +238,34 @@ export const SECTIONS: SectionDef[] = [
     ],
   },
   {
-    id: 'google',
-    title: 'Google sign-in',
-    description: 'Let customers sign in with their Google account.',
+    id: 'sign-in',
+    title: 'Sign-in methods',
+    description: 'Choose how customers sign in and register on the storefront. Staff always sign in to the dashboard with email and password.',
     icon: KeyRound,
+    extra: 'sign-in-status',
     cards: [
       {
-        title: 'OAuth client',
-        description: 'Create a "Web application" OAuth client in Google Cloud Console and add the storefront URL as an authorised JavaScript origin.',
+        title: 'Email & password',
+        description: 'The sign-in and registration forms on the storefront, plus "Forgot password".',
+        fields: [
+          {
+            key: 'password_login_enabled',
+            label: 'Allow email & password sign-in',
+            kind: 'switch',
+            wide: true,
+            description: 'When off, customers can only use the providers below. Staff accounts are not affected.',
+          },
+        ],
+      },
+      {
+        title: 'Google',
+        description:
+          'Create a "Web application" OAuth client in Google Cloud Console and add the storefront URL as an authorised JavaScript origin. The button appears once it is enabled and a client ID is saved.',
         fields: [
           { key: 'google_login_enabled', label: 'Enable "Continue with Google"', kind: 'switch', wide: true },
           { key: 'google_client_id', label: 'Client ID', kind: 'text', max: 255, wide: true, placeholder: '1234-abc.apps.googleusercontent.com' },
           { key: 'google_client_secret', label: 'Client secret', kind: 'secret', wide: true },
-          { key: 'google_redirect_uri', label: 'Redirect URI', kind: 'url', wide: true },
+          { key: 'google_redirect_uri', label: 'Redirect URI', kind: 'url', wide: true, placeholder: 'https://mangrove-collection.com/login/' },
         ],
       },
     ],
