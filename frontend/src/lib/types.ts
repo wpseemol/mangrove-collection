@@ -55,12 +55,24 @@ export type BlogPost = {
   author: { id: number; name: string; avatar: string | null } | null;
   images_count?: number;
   videos_count?: number;
+  likes_count?: number;
+  comments_count?: number;
   updated_at: string | null;
   content?: string | null;
   meta_title?: string | null;
   meta_description?: string | null;
   media?: BlogMedia[];
 };
+
+export type BlogComment = {
+  id: number;
+  body: string;
+  author: { id: number; name: string; avatar: string | null } | null;
+  is_mine: boolean;
+  created_at: string;
+};
+
+export type BlogEngagement = { likes_count: number; comments_count: number; liked: boolean };
 
 export type ProductVariant = {
   id: number;
@@ -213,6 +225,8 @@ export type PublicSettings = {
   whatsapp_message: string | null;
   whatsapp_button_enabled: boolean;
   whatsapp_button_position: "right" | "left";
+  messenger_page: string | null;
+  messenger_button_enabled: boolean;
   currency: string;
   currency_symbol: string;
   cod_enabled: boolean;

@@ -1,8 +1,7 @@
 import { STOREFRONT_URL } from '@/lib/config'
 import type { BlogMediaType, BlogStatus, VideoProvider } from '@/lib/types'
 
-/** The storefront is a static export, so posts live at `/blog/post/?slug=` rather than `/blog/<slug>`. */
-export const storefrontPostUrl = (slug: string) => `${STOREFRONT_URL}/blog/post/?slug=${encodeURIComponent(slug)}`
+export const storefrontPostUrl = (slug: string) => `${STOREFRONT_URL}/blog/${encodeURIComponent(slug)}/`
 
 export type MediaDraft = { key: string; type: BlogMediaType; provider: VideoProvider; url: string; caption: string }
 

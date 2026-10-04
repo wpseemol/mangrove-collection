@@ -1,7 +1,7 @@
 import type { Order, OrderItem, Prisma, Product, ProductVariant, ShippingMethod, User } from '../generated/prisma/client.js'
 import { failMany, fail } from '../lib/http.js'
 import { report } from '../lib/log.js'
-import { prisma } from '../lib/prisma.js'
+import { prisma, type Tx } from '../lib/prisma.js'
 import { num, round } from '../lib/serialize.js'
 import { formatNumber, randomUpper } from '../lib/str.js'
 import { hasStockFor, isWallet, type OrderWith } from '../resources/index.js'
@@ -38,6 +38,21 @@ export type PlaceOrderData = {
   customer_note?: string | null
 }
 
+/** Orders taken by staff (phone, Facebook, walk-in): catalog prices, optional discount and delivery charge override. */
+export type StaffOrderData = {
+  items: CartItem[]
+  shipping_method_id: number
+  address: AddressInput
+  payment_method: PaymentMethod
+  payment_status: (typeof PAYMENT_STATUSES)[number]
+  status: OrderStatus
+  shipping_cost?: number | null
+  discount?: number | null
+  customer_note?: string | null
+  admin_note?: string | null
+  user_id?: bigint | null
+}
+
 type VariantWithProduct = ProductVariant & { product: Product }
 
 function quantities(items: CartItem[]): Map<number, number> {
@@ -59,6 +74,83 @@ export async function shippingCostFor(method: ShippingMethod, subtotal: number, 
   return round(num(method.price) + extraShipping, 2)
 }
 
+type PricedLine = { variant: VariantWithProduct; quantity: number; lineTotal: number }
+
+/** Locks the variants, rejects unavailable or under-stocked lines, and prices the rest at catalog prices. */
+async function priceLines(tx: Tx, items: CartItem[]) {
+  const wanted = quantities(items)
+  const ids = [...wanted.keys()].map(BigInt)
+
+  if (ids.length) await tx.$queryRawUnsafe(`SELECT id FROM product_variants WHERE id IN (${ids.map(() => '?').join(',')}) FOR UPDATE`, ...ids)
+
+  const variants = new Map<number, VariantWithProduct>(
+    (await tx.productVariant.findMany({ where: { id: { in: ids } }, include: { product: true } })).map((variant) => [Number(variant.id), variant]),
+  )
+
+  const errors: Record<string, string[]> = {}
+  const lines: PricedLine[] = []
+  let subtotal = 0
+  let extraShipping = 0
+
+  for (const [variantId, quantity] of wanted) {
+    const variant = variants.get(variantId)
+    const product = variant?.product
+
+    if (!variant || !product || product.deleted_at !== null || product.status !== 'published') {
+      errors[`items.${variantId}`] = ['One of the products in your cart is no longer available.']
+      continue
+    }
+    if (!hasStockFor(variant, quantity)) {
+      errors[`items.${variantId}`] = [`Only ${variant.stock} unit(s) of ${product.name} (${variant.title}) are in stock.`]
+      continue
+    }
+
+    const lineTotal = round(num(variant.price) * quantity, 2)
+    subtotal += lineTotal
+    extraShipping += extraShippingFor(product, quantity)
+    lines.push({ variant, quantity, lineTotal })
+  }
+
+  if (Object.keys(errors).length > 0) failMany(errors)
+
+  return { lines, subtotal: round(subtotal, 2), extraShipping }
+}
+
+async function createOrder(tx: Tx, lines: PricedLine[], data: Prisma.OrderUncheckedCreateInput): Promise<Order> {
+  const created = await tx.order.create({ data })
+
+  for (const { variant, quantity, lineTotal } of lines) {
+    await tx.orderItem.create({
+      data: {
+        order_id: created.id,
+        product_id: variant.product.id,
+        product_variant_id: variant.id,
+        product_name: variant.product.name,
+        product_slug: variant.product.slug,
+        variant_title: variant.title,
+        image: variant.product.thumbnail,
+        unit_price: variant.price,
+        quantity,
+        line_total: lineTotal,
+      },
+    })
+
+    if (variant.stock !== null) await tx.productVariant.update({ where: { id: variant.id }, data: { stock: { decrement: quantity } } })
+    await tx.product.update({ where: { id: variant.product.id }, data: { popularity: { increment: quantity } } })
+  }
+
+  return created
+}
+
+async function restoreStock(tx: Tx, orderId: bigint): Promise<void> {
+  const items = await tx.orderItem.findMany({ where: { order_id: orderId }, include: { variant: true } })
+  for (const item of items) {
+    if (item.variant && item.variant.stock !== null) {
+      await tx.productVariant.update({ where: { id: item.variant.id }, data: { stock: { increment: item.quantity } } })
+    }
+  }
+}
+
 async function generateOrderNumber(): Promise<string> {
   const now = new Date()
   const date = `${String(now.getUTCFullYear()).slice(2)}${String(now.getUTCMonth() + 1).padStart(2, '0')}${String(now.getUTCDate()).padStart(2, '0')}`
@@ -78,7 +170,7 @@ async function safely(callback: () => Promise<void>): Promise<void> {
   }
 }
 
-async function notifyPlaced(order: Order & { items: OrderItem[] }): Promise<void> {
+async function notifyPlaced(order: Order & { items: OrderItem[] }, notifyStaff = true): Promise<void> {
   const money = (value: unknown) => `${order.currency} ${formatNumber(num(value as number))}`
 
   await safely(async () => {
@@ -100,7 +192,7 @@ async function notifyPlaced(order: Order & { items: OrderItem[] }): Promise<void
   })
 
   await safely(async () => {
-    const email = await settings.get<string | null>('order_notification_email')
+    const email = notifyStaff ? await settings.get<string | null>('order_notification_email') : null
     if (!email) return
     const dashboard = String((await settings.get<string>('dashboard_url')) ?? '').replace(/\/+$/, '')
 
@@ -158,84 +250,28 @@ export const orders = {
     const currency = String((await settings.get('currency', 'BDT')) ?? 'BDT')
 
     const order = await prisma.$transaction(async (tx) => {
-      const wanted = quantities(data.items)
-      const ids = [...wanted.keys()].map(BigInt)
-
-      if (ids.length) await tx.$queryRawUnsafe(`SELECT id FROM product_variants WHERE id IN (${ids.map(() => '?').join(',')}) FOR UPDATE`, ...ids)
-
-      const variants = new Map<number, VariantWithProduct>(
-        (await tx.productVariant.findMany({ where: { id: { in: ids } }, include: { product: true } })).map((variant) => [Number(variant.id), variant]),
-      )
-
-      const errors: Record<string, string[]> = {}
-      const lines: { variant: VariantWithProduct; quantity: number; lineTotal: number }[] = []
-      let subtotal = 0
-      let extraShipping = 0
-
-      for (const [variantId, quantity] of wanted) {
-        const variant = variants.get(variantId)
-        const product = variant?.product
-
-        if (!variant || !product || product.deleted_at !== null || product.status !== 'published') {
-          errors[`items.${variantId}`] = ['One of the products in your cart is no longer available.']
-          continue
-        }
-        if (!hasStockFor(variant, quantity)) {
-          errors[`items.${variantId}`] = [`Only ${variant.stock} unit(s) of ${product.name} (${variant.title}) are in stock.`]
-          continue
-        }
-
-        const lineTotal = round(num(variant.price) * quantity, 2)
-        subtotal += lineTotal
-        extraShipping += extraShippingFor(product, quantity)
-        lines.push({ variant, quantity, lineTotal })
-      }
-
-      if (Object.keys(errors).length > 0) failMany(errors)
-
+      const { lines, subtotal, extraShipping } = await priceLines(tx, data.items)
       const shippingCost = await shippingCostFor(method, subtotal, extraShipping)
 
-      const created = await tx.order.create({
-        data: {
-          order_number: await generateOrderNumber(),
-          user_id: user?.id ?? null,
-          customer_name: data.address.name,
-          customer_email: data.address.email ?? user?.email ?? null,
-          customer_phone: data.address.phone,
-          shipping_address: data.address,
-          shipping_method_id: method.id,
-          shipping_method_title: method.title,
-          currency,
-          subtotal,
-          shipping_cost: shippingCost,
-          discount: 0,
-          total: round(subtotal + shippingCost, 2),
-          payment_method: data.payment_method,
-          payment_status: 'pending',
-          status: 'pending',
-          customer_note: data.customer_note ?? null,
-        },
+      const created = await createOrder(tx, lines, {
+        order_number: await generateOrderNumber(),
+        user_id: user?.id ?? null,
+        customer_name: data.address.name,
+        customer_email: data.address.email ?? user?.email ?? null,
+        customer_phone: data.address.phone,
+        shipping_address: data.address,
+        shipping_method_id: method.id,
+        shipping_method_title: method.title,
+        currency,
+        subtotal,
+        shipping_cost: shippingCost,
+        discount: 0,
+        total: round(subtotal + shippingCost, 2),
+        payment_method: data.payment_method,
+        payment_status: 'pending',
+        status: 'pending',
+        customer_note: data.customer_note ?? null,
       })
-
-      for (const { variant, quantity, lineTotal } of lines) {
-        await tx.orderItem.create({
-          data: {
-            order_id: created.id,
-            product_id: variant.product.id,
-            product_variant_id: variant.id,
-            product_name: variant.product.name,
-            product_slug: variant.product.slug,
-            variant_title: variant.title,
-            image: variant.product.thumbnail,
-            unit_price: variant.price,
-            quantity,
-            line_total: lineTotal,
-          },
-        })
-
-        if (variant.stock !== null) await tx.productVariant.update({ where: { id: variant.id }, data: { stock: { decrement: quantity } } })
-        await tx.product.update({ where: { id: variant.product.id }, data: { popularity: { increment: quantity } } })
-      }
 
       if (account) await payments.submit(tx, created, account, String(data.transaction_id), String(data.payment_sender_number))
 
@@ -246,6 +282,55 @@ export const orders = {
     await notifyPlaced(loaded)
 
     return withLatestPayment(loaded)
+  },
+
+  /** Staff skip the storefront's payment-method availability check: the customer already agreed how to pay. */
+  async placeByStaff(data: StaffOrderData): Promise<Order> {
+    const method = await prisma.shippingMethod.findUnique({ where: { id: data.shipping_method_id } })
+    if (!method) fail('shipping_method_id', 'The selected shipping method is invalid.')
+    const currency = String((await settings.get('currency', 'BDT')) ?? 'BDT')
+    const customer = data.user_id ? await prisma.user.findUnique({ where: { id: data.user_id } }) : null
+
+    const order = await prisma.$transaction(async (tx) => {
+      const { lines, subtotal, extraShipping } = await priceLines(tx, data.items)
+      const shippingCost = data.shipping_cost ?? (await shippingCostFor(method!, subtotal, extraShipping))
+      const discount = round(Math.min(data.discount ?? 0, subtotal + shippingCost), 2)
+      const now = new Date()
+
+      return createOrder(tx, lines, {
+        order_number: await generateOrderNumber(),
+        user_id: customer?.id ?? null,
+        customer_name: data.address.name,
+        customer_email: data.address.email ?? customer?.email ?? null,
+        customer_phone: data.address.phone,
+        shipping_address: data.address,
+        shipping_method_id: method!.id,
+        shipping_method_title: method!.title,
+        currency,
+        subtotal,
+        shipping_cost: shippingCost,
+        discount,
+        total: round(subtotal + shippingCost - discount, 2),
+        payment_method: data.payment_method,
+        payment_status: data.payment_status,
+        status: data.status,
+        customer_note: data.customer_note ?? null,
+        admin_note: data.admin_note ?? null,
+        delivered_at: data.status === 'delivered' ? now : null,
+      })
+    })
+
+    const loaded = await prisma.order.findUniqueOrThrow({ where: { id: order.id }, include: orderInclude })
+    await notifyPlaced(loaded, false)
+    return loaded
+  },
+
+  /** Deleting an unwanted order puts its stock back without texting the customer about a cancellation. */
+  async remove(order: Order): Promise<void> {
+    await prisma.$transaction(async (tx) => {
+      if (order.status !== 'cancelled') await restoreStock(tx, order.id)
+      await tx.order.delete({ where: { id: order.id } })
+    })
   },
 
   /**
@@ -298,12 +383,7 @@ export const orders = {
       const data: Prisma.OrderUncheckedUpdateInput = { status }
 
       if (status === 'cancelled') {
-        const items = await tx.orderItem.findMany({ where: { order_id: order.id }, include: { variant: true } })
-        for (const item of items) {
-          if (item.variant && item.variant.stock !== null) {
-            await tx.productVariant.update({ where: { id: item.variant.id }, data: { stock: { increment: item.quantity } } })
-          }
-        }
+        await restoreStock(tx, order.id)
         data.cancelled_at = new Date()
       }
 

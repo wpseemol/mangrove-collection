@@ -4,11 +4,12 @@ Three apps, one registrable domain:
 
 | App | Built with | Output | Served at |
 | --- | --- | --- | --- |
-| Storefront (`frontend/`) | Next.js static export | `frontend/out/` | `https://mangrove-collection.com` |
+| Storefront (`frontend/`) | Next.js server (`next start`) | `frontend/.next/` (Node.js app) | `https://mangrove-collection.com` |
 | Dashboard (`dashboard/`) | Vite + React | `dashboard/dist/` | `https://dashboard.mangrove-collection.com` |
 | API (`backend-api/`) | Express + TypeScript + Prisma (MySQL) | `backend-api/dist/` (Node.js app) | `https://api.mangrove-collection.com` |
 
-The two frontends are plain HTML/CSS/JS. Only the API runs server-side code (Node.js 22+).
+The dashboard is plain HTML/CSS/JS. The API and the storefront run as Node.js 22+ apps: the storefront renders
+blog pages on the server so search engines get the full article, title, description and structured data.
 
 > **Same domain is required.** Sign-in uses an HttpOnly session cookie scoped to
 > `.mangrove-collection.com`. If you host the frontends on a different domain
@@ -58,7 +59,7 @@ The two frontends are plain HTML/CSS/JS. Only the API runs server-side code (Nod
 
 1. **Subdomains** (cPanel > Domains): create `api.mangrove-collection.com` and
    `dashboard.mangrove-collection.com`.
-   - Main domain document root: `public_html` (storefront).
+   - The main domain is served by the storefront Node.js app (section 4.1).
    - `dashboard.` document root: `dashboard_html` (any folder outside `public_html`).
    - `api.` is served by the Node.js app (step 3); its document root must
      **not** be the app folder.
@@ -74,7 +75,7 @@ Directory layout in your home folder:
 ```text
 /home/USER/
 ├── mangrove-api/          # backend-api/ (Node.js application root, NOT web-accessible)
-├── public_html/           # <- contents of frontend/out/
+├── mangrove-storefront/   # frontend/ (Node.js application root, NOT web-accessible)
 └── dashboard_html/        # <- contents of dashboard/dist/
 ```
 
@@ -207,8 +208,8 @@ After the first sign-in, open **Settings** and confirm `storefront_url` and
 
 ## 4. Building the frontends
 
-Build on your computer (or CI), then upload the output folders. The frontends
-need no Node.js on the server.
+Build on your computer (or CI), then upload the output. The dashboard needs no
+Node.js on the server; the storefront runs as a Node.js app.
 
 > **Env file gotcha:** both Next.js and Vite load `.env.local` **during
 > production builds too**, and it takes priority over `.env.production`. If you
@@ -236,28 +237,37 @@ Build both from the repo root:
 
 ```bash
 pnpm install
-pnpm build      # -> frontend/out/ and dashboard/dist/
+pnpm build      # -> frontend/.next/ and dashboard/dist/
 ```
 
-### 4.1 Storefront upload
+### 4.1 Storefront (Node.js app)
 
-Upload the **contents** of `frontend/out/` (including the hidden
-`.htaccess`) into `public_html/`. Enable "Show Hidden Files" in File Manager
-to check that `.htaccess` is there.
+Upload to `~/mangrove-storefront/`: `.next/` (without `.next/cache` and `.next/dev`),
+`public/`, `package.json`, `next.config.ts` and `.env.production.local`. Then create
+the app in cPanel > Setup Node.js App:
 
-`frontend/public/.htaccess` (copied into `out/`):
+- Node.js version: **22** or newer, Application mode: **Production**
+- Application root: `mangrove-storefront`
+- Application URL: `mangrove-collection.com`
+- Application startup file: `node_modules/next/dist/bin/next` with the argument
+  `start` (or a one-line `server.js` containing `require("next/dist/bin/next")`
+  if your cPanel has no arguments field)
 
-- Redirects HTTP to HTTPS and `www.` to the apex domain.
-- Uses `DirectorySlash`, so `/shop` becomes `/shop/` and serves `shop/index.html`
-  (the export uses `trailingSlash: true`). Unknown paths get `404.html`.
-- Sends `nosniff`, `X-Frame-Options: SAMEORIGIN`, `Referrer-Policy`,
-  `Permissions-Policy`, COOP (`same-origin-allow-popups`, so Google sign-in
-  works) and HSTS.
-- Sets a CSP of `frame-ancestors`, `base-uri`, `object-src 'none'`,
-  `form-action` and `upgrade-insecure-requests`. Script sources are
-  deliberately not restricted because admins can inject analytics/pixel scripts
-  from the dashboard.
-- Marks HTML as `no-cache` and `/_next/static/*` as immutable for one year.
+In the app's virtual environment run `npm install --omit=dev`, then click
+**Restart**. Turn on **Force HTTPS Redirect** for the domain and redirect `www.`
+to the apex in cPanel > Domains (the old `.htaccess` did this).
+
+`next.config.ts` sends `nosniff`, `X-Frame-Options: SAMEORIGIN`,
+`Referrer-Policy`, `Permissions-Policy`, COOP (`same-origin-allow-popups`, so
+Google sign-in works), HSTS and a CSP of `frame-ancestors`, `base-uri`,
+`object-src 'none'`, `form-action` and `upgrade-insecure-requests`. Script
+sources are deliberately not restricted because admins can inject
+analytics/pixel scripts from the dashboard.
+
+Blog pages and the sitemap are cached on the server for 5 minutes and 1 hour,
+so a newly published post appears within a few minutes without a redeploy. Old
+`/blog/post/?slug=...` and `/blog/?category=...` links redirect permanently to
+`/blog/<slug>/` and `/blog/category/<slug>/`.
 
 ### 4.2 Dashboard upload
 
@@ -276,8 +286,8 @@ Upload the **contents** of `dashboard/dist/` (including `.htaccess`) into
 
 ### 4.3 Redeploys
 
-Upload the new build over the old files. Hashed assets make stale caches
-harmless. For the API, upload the new `dist/`, `src/`, `prisma/` and `package.json`,
+Upload the new build over the old files and restart the storefront app. Hashed
+assets make stale caches harmless. For the API, upload the new `dist/`, `src/`, `prisma/` and `package.json`,
 then:
 
 ```bash

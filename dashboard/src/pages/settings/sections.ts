@@ -7,6 +7,7 @@ export type FieldKind =
   | 'email'
   | 'phone'
   | 'whatsapp'
+  | 'messenger'
   | 'number'
   | 'switch'
   | 'select'
@@ -104,8 +105,8 @@ export const SECTIONS: SectionDef[] = [
   },
   {
     id: 'whatsapp',
-    title: 'WhatsApp',
-    description: 'The floating chat button on every storefront page, plus the WhatsApp links in the footer and contact page.',
+    title: 'Chat buttons',
+    description: 'The floating WhatsApp and Messenger buttons on every storefront page, plus the WhatsApp links in the footer and contact page.',
     icon: MessageCircle,
     extra: 'whatsapp-preview',
     cards: [
@@ -142,6 +143,28 @@ export const SECTIONS: SectionDef[] = [
             max: 500,
             wide: true,
             description: 'Typed into the chat for the customer when they tap the button. They can edit it before sending.',
+          },
+        ],
+      },
+      {
+        title: 'Messenger button',
+        description: 'Opens a Facebook Messenger chat with your Page (m.me link). It sits above the WhatsApp button, on the same side.',
+        fields: [
+          {
+            key: 'messenger_button_enabled',
+            label: 'Show the floating Messenger button',
+            kind: 'switch',
+            description: 'Appears on every page once a Page username or ID is set.',
+            wide: true,
+          },
+          {
+            key: 'messenger_page',
+            label: 'Facebook Page username or ID',
+            kind: 'messenger',
+            max: 50,
+            placeholder: 'mangrovecollection',
+            description: 'The part after facebook.com/ in your Page link, or the numeric Page ID from Page settings.',
+            wide: true,
           },
         ],
       },

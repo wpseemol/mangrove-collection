@@ -4,6 +4,7 @@ import type {
   Address,
   Banner,
   BlogCategory,
+  BlogComment,
   BlogPost,
   BlogPostMedia,
   Category,
@@ -398,6 +399,7 @@ export type BlogPostWith = BlogPost & {
   category?: BlogCategory | null
   author?: Pick<User, 'id' | 'name' | 'avatar'> | null
   media?: BlogPostMedia[]
+  _count?: { likes?: number; comments?: number }
 }
 
 const readingMinutes = (html: string | null) => Math.max(1, Math.round((html ?? '').replace(/<[^>]*>/g, ' ').split(/\s+/).filter(Boolean).length / 200))
@@ -423,6 +425,8 @@ export function blogPostResource(post: BlogPostWith, full = false): Json {
     out.images_count = post.media.filter((item) => item.type === 'image').length
     out.videos_count = post.media.filter((item) => item.type === 'video').length
   }
+  when(out, 'likes_count', post._count?.likes)
+  when(out, 'comments_count', post._count?.comments)
   if (full) {
     out.content = post.content
     out.meta_title = post.meta_title
@@ -431,6 +435,27 @@ export function blogPostResource(post: BlogPostWith, full = false): Json {
   }
   out.created_at = iso(post.created_at)
   out.updated_at = iso(post.updated_at)
+  return out
+}
+
+export type BlogCommentWith = BlogComment & {
+  user?: Pick<User, 'id' | 'name' | 'avatar'> | null
+  post?: Pick<BlogPost, 'id' | 'title' | 'slug'> | null
+}
+
+/** `staff` adds moderation fields (hidden flag, post); the storefront only sees visible comments. */
+export function blogCommentResource(comment: BlogCommentWith, viewerId: bigint | null = null, staff = false): Json {
+  const out: Json = {
+    id: id(comment.id),
+    body: comment.body,
+    author: comment.user ? { id: id(comment.user.id), name: comment.user.name, avatar: comment.user.avatar } : null,
+    is_mine: viewerId !== null && comment.user_id === viewerId,
+  }
+  if (staff) {
+    out.is_hidden = comment.is_hidden
+    when(out, 'post', comment.post === undefined ? undefined : comment.post ? { id: id(comment.post.id), title: comment.post.title, slug: comment.post.slug } : null)
+  }
+  out.created_at = iso(comment.created_at)
   return out
 }
 

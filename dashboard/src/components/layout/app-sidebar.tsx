@@ -9,6 +9,7 @@ import {
   LogOut,
   Mail,
   MessageSquareText,
+  MessagesSquare,
   Newspaper,
   Package,
   PackagePlus,
@@ -96,7 +97,8 @@ const NAV: { label: string; items: NavItem[] }[] = [
     items: [
       { title: 'Posts', to: '/blog', icon: Newspaper, exact: true },
       { title: 'Write a post', to: '/blog/new', icon: PenLine, exact: true },
-      { title: 'Blog categories', to: '/blog/categories', icon: Tags, exact: true },
+      { title: 'Comments', to: '/blog/comments', icon: MessagesSquare, exact: true },
+      { title: 'Blog categories', to: '/blog/categories', icon: Tags, exact: true, adminOnly: true },
     ],
   },
   {

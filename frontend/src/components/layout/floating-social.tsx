@@ -5,9 +5,9 @@ import { usePathname } from "next/navigation";
 import { useSettings } from "@/lib/queries";
 import { cn } from "@/lib/utils";
 
-import { FacebookIcon, LinkedInIcon, WhatsAppIcon, whatsappHref } from "./social-icons";
+import { FacebookIcon, LinkedInIcon, MessengerIcon, messengerHref, WhatsAppIcon, whatsappHref } from "./social-icons";
 
-/** Floating chat/social buttons on every page; content and placement come from the dashboard's WhatsApp settings. */
+/** Floating chat/social buttons on every page; content and placement come from the dashboard's chat button settings. */
 export function FloatingSocial() {
   const { data: settings } = useSettings();
   const pathname = usePathname();
@@ -19,13 +19,14 @@ export function FloatingSocial() {
   const links = settings.social_links ?? {};
   const left = settings.whatsapp_button_position === "left";
   const whatsapp = settings.whatsapp_button_enabled && settings.whatsapp_number ? whatsappHref(settings.whatsapp_number, settings.whatsapp_message) : null;
+  const messenger = settings.messenger_button_enabled && settings.messenger_page ? messengerHref(settings.messenger_page) : null;
 
   const socials = [
     links.linkedin && { href: links.linkedin, label: "LinkedIn", icon: LinkedInIcon, className: "bg-[#0a66c2]" },
     links.facebook && { href: links.facebook, label: "Facebook", icon: FacebookIcon, className: "bg-[#1877f2]" },
   ].filter(Boolean) as { href: string; label: string; icon: typeof FacebookIcon; className: string }[];
 
-  if (!whatsapp && socials.length === 0) {
+  if (!whatsapp && !messenger && socials.length === 0) {
     return null;
   }
 
@@ -54,6 +55,27 @@ export function FloatingSocial() {
           <Icon className="size-5" />
         </a>
       ))}
+
+      {messenger && (
+        <a
+          href={messenger}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Chat with us on Messenger"
+          className="group relative flex size-12 items-center justify-center rounded-full bg-linear-to-br from-[#00b2ff] via-[#7a5cff] to-[#ff5c87] text-white shadow-lg shadow-black/20 transition-transform hover:scale-105 focus-visible:ring-4 focus-visible:ring-[#7a5cff]/40 focus-visible:outline-none md:size-13"
+        >
+          <MessengerIcon className="size-6" />
+          <span
+            aria-hidden="true"
+            className={cn(
+              "pointer-events-none absolute top-1/2 hidden -translate-y-1/2 rounded-full bg-white px-3 py-1.5 text-sm font-medium whitespace-nowrap text-foreground opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 md:block dark:bg-card",
+              left ? "left-full ml-3" : "right-full mr-3",
+            )}
+          >
+            Message us
+          </span>
+        </a>
+      )}
 
       {whatsapp && (
         <a

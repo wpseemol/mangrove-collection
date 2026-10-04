@@ -1,8 +1,23 @@
 import { useQuery } from '@tanstack/react-query'
-import { AlertTriangle, Banknote, Package, PackagePlus, ReceiptText, ShoppingBag, Users } from 'lucide-react'
+import {
+  AlertTriangle,
+  ArrowRight,
+  Banknote,
+  CheckCircle2,
+  Clock,
+  Package,
+  PackagePlus,
+  PenLine,
+  Plus,
+  ReceiptText,
+  ShoppingBag,
+  Truck,
+  Users,
+  type LucideIcon,
+} from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router'
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts'
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts'
 
 import { PageHeader } from '@/components/layout/page-header'
 import { StatusBadge } from '@/components/status-badge'
@@ -10,95 +25,118 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { api } from '@/lib/api'
 import { formatDate, formatNumber, formatPrice } from '@/lib/format'
+import { ORDER_STATUS_LABEL, ORDER_STATUSES } from '@/lib/orders'
 import { TONES } from '@/lib/tones'
-import type { DashboardStats } from '@/lib/types'
+import type { DashboardStats, OrderStatus } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/stores/auth'
 
 const RANGES = [7, 30, 90] as const
+type Metric = 'revenue' | 'orders'
 
 const chartConfig = {
   revenue: { label: 'Revenue', color: 'var(--chart-1)' },
+  orders: { label: 'Orders', color: 'var(--chart-2)' },
 } satisfies ChartConfig
+
+const STATUS_BAR: Record<OrderStatus, string> = {
+  pending: 'bg-amber-400',
+  processing: 'bg-sky-500',
+  shipped: 'bg-indigo-500',
+  delivered: 'bg-emerald-500',
+  cancelled: 'bg-zinc-300 dark:bg-zinc-600',
+}
+
+const greeting = () => {
+  const hour = new Date().getHours()
+  return hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening'
+}
+
+const shortDate = (value: string) => new Date(value).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+
+function AttentionTile({ to, icon: Icon, count, label, hint, tone }: { to: string; icon: LucideIcon; count: number | null; label: string; hint: string; tone: string }) {
+  const idle = count === 0
+  return (
+    <Link
+      to={to}
+      className={cn(
+        'group flex items-center gap-3 rounded-xl border bg-card p-4 transition-all hover:-translate-y-0.5 hover:shadow-md',
+        idle && 'opacity-70 hover:opacity-100',
+      )}
+    >
+      <span className={cn('flex size-11 shrink-0 items-center justify-center rounded-lg ring-1 ring-inset', idle ? TONES.neutral : tone)}>
+        {idle ? <CheckCircle2 className="size-5" /> : <Icon className="size-5" />}
+      </span>
+      <span className="min-w-0 flex-1">
+        {count === null ? <Skeleton className="h-6 w-10" /> : <span className="block text-xl font-semibold tabular-nums leading-tight">{formatNumber(count)}</span>}
+        <span className="block truncate text-sm font-medium">{label}</span>
+        <span className="block truncate text-xs text-muted-foreground">{idle ? 'All caught up' : hint}</span>
+      </span>
+      <ArrowRight className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+    </Link>
+  )
+}
 
 export function OverviewPage() {
   const user = useAuthStore((state) => state.user)
   const [days, setDays] = useState<(typeof RANGES)[number]>(30)
+  const [metric, setMetric] = useState<Metric>('revenue')
 
   const { data, isPending } = useQuery({
     queryKey: ['admin', 'dashboard', days],
     queryFn: () => api<{ data: DashboardStats }>('/admin/dashboard', { query: { days } }).then((r) => r.data),
   })
 
+  const byStatus = data?.orders_by_status ?? {}
+  const statusTotal = ORDER_STATUSES.reduce((sum, status) => sum + (byStatus[status] ?? 0), 0)
+  const today = data?.sales_chart.at(-1)
+  const average = data && data.totals.orders_period ? data.totals.revenue_period / data.totals.orders_period : 0
+
   const stats = [
-    {
-      label: 'Revenue',
-      value: data ? formatPrice(data.totals.revenue) : null,
-      hint: data ? `${formatPrice(data.totals.revenue_period)} in the last ${days} days` : '',
-      icon: Banknote,
-    },
-    {
-      label: 'Orders',
-      value: data ? formatNumber(data.totals.orders) : null,
-      hint: data ? `${formatNumber(data.totals.orders_period)} in the last ${days} days` : '',
-      icon: ShoppingBag,
-    },
-    {
-      label: 'Customers',
-      value: data ? formatNumber(data.totals.customers) : null,
-      hint: 'Registered accounts',
-      icon: Users,
-    },
-    {
-      label: 'Products',
-      value: data ? formatNumber(data.totals.products) : null,
-      hint: 'In the catalog',
-      icon: Package,
-    },
+    { label: `Revenue · ${days} days`, value: data ? formatPrice(data.totals.revenue_period) : null, hint: data ? `${formatPrice(data.totals.revenue)} all time` : '', icon: Banknote },
+    { label: `Orders · ${days} days`, value: data ? formatNumber(data.totals.orders_period) : null, hint: data ? `${formatNumber(data.totals.orders)} all time` : '', icon: ShoppingBag },
+    { label: 'Average order', value: data ? formatPrice(average) : null, hint: `Over the last ${days} days`, icon: ReceiptText },
+    { label: 'Customers', value: data ? formatNumber(data.totals.customers) : null, hint: data ? `${formatNumber(data.totals.products)} products in the catalog` : '', icon: Users },
+  ]
+
+  const quickActions = [
+    { to: '/orders/new', label: 'New order', hint: 'Phone or walk-in sale', icon: Plus },
+    { to: '/products/new', label: 'Add product', hint: 'Fish, honey and more', icon: PackagePlus },
+    { to: '/blog/new', label: 'Write a post', hint: 'Recipes, tips, stories', icon: PenLine },
+    { to: '/orders?status=processing', label: 'Ready to ship', hint: 'Print delivery sheets', icon: Truck },
   ]
 
   return (
     <>
       <PageHeader
-        title={`Welcome back, ${user?.name?.split(' ')[0] ?? 'there'}`}
-        description="Here's how the store is doing."
+        title={`${greeting()}, ${user?.name?.split(' ')[0] ?? 'there'}`}
+        description={
+          today
+            ? `Today so far: ${formatNumber(today.orders)} ${today.orders === 1 ? 'order' : 'orders'} worth ${formatPrice(today.revenue)}.`
+            : "Here's how the store is doing."
+        }
         actions={
-          <>
-            <Tabs value={String(days)} onValueChange={(v) => setDays(Number(v) as (typeof RANGES)[number])}>
-              <TabsList>
-                {RANGES.map((range) => (
-                  <TabsTrigger key={range} value={String(range)}>
-                    {range} days
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-            </Tabs>
-            <Button asChild>
-              <Link to="/products/new">
-                <PackagePlus /> Add product
-              </Link>
-            </Button>
-          </>
+          <Tabs value={String(days)} onValueChange={(v) => setDays(Number(v) as (typeof RANGES)[number])}>
+            <TabsList>
+              {RANGES.map((range) => (
+                <TabsTrigger key={range} value={String(range)}>
+                  {range} days
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
         }
       />
 
-      {data && data.totals.payments_awaiting > 0 && (
-        <Link
-          to="/payments"
-          className="flex items-center gap-3 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-900 transition-colors hover:bg-sky-100 dark:border-sky-500/25 dark:bg-sky-500/10 dark:text-sky-200 dark:hover:bg-sky-500/15"
-        >
-          <ReceiptText className="size-4 shrink-0" />
-          <span className="flex-1">
-            <strong>{formatNumber(data.totals.payments_awaiting)}</strong> mobile{' '}
-            {data.totals.payments_awaiting === 1 ? 'payment is' : 'payments are'} waiting to be verified.
-          </span>
-          <span className="font-medium">Review now →</span>
-        </Link>
-      )}
+      <section aria-label="Needs attention" className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <AttentionTile to="/orders?status=pending" icon={Clock} count={data ? (byStatus.pending ?? 0) : null} label="New orders" hint="Confirm and start packing" tone={TONES.amber} />
+        <AttentionTile to="/orders?status=processing" icon={Package} count={data ? (byStatus.processing ?? 0) : null} label="Being packed" hint="Hand over to delivery" tone={TONES.sky} />
+        <AttentionTile to="/payments" icon={ReceiptText} count={data ? data.totals.payments_awaiting : null} label="Payments to verify" hint="Mobile payments submitted" tone={TONES.indigo} />
+        <AttentionTile to="/products" icon={AlertTriangle} count={data ? data.low_stock.length : null} label="Low stock" hint="Restock soon" tone={TONES.red} />
+      </section>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map((stat) => (
@@ -110,11 +148,7 @@ export function OverviewPage() {
               </span>
             </CardHeader>
             <CardContent>
-              {stat.value === null ? (
-                <Skeleton className="h-8 w-28" />
-              ) : (
-                <p className="text-2xl font-semibold tracking-tight tabular-nums">{stat.value}</p>
-              )}
+              {stat.value === null ? <Skeleton className="h-8 w-28" /> : <p className="text-2xl font-semibold tracking-tight tabular-nums">{stat.value}</p>}
               <p className="mt-1 text-xs text-muted-foreground">{stat.hint || '\u00a0'}</p>
             </CardContent>
           </Card>
@@ -123,14 +157,22 @@ export function OverviewPage() {
 
       <div className="grid gap-4 xl:grid-cols-3">
         <Card className="xl:col-span-2">
-          <CardHeader>
-            <CardTitle>Revenue</CardTitle>
-            <CardDescription>Daily sales over the last {days} days (cancelled orders excluded)</CardDescription>
+          <CardHeader className="flex flex-row flex-wrap items-start justify-between gap-3">
+            <div className="space-y-1.5">
+              <CardTitle>{metric === 'revenue' ? 'Revenue' : 'Orders'}</CardTitle>
+              <CardDescription>Per day over the last {days} days, cancelled orders excluded</CardDescription>
+            </div>
+            <Tabs value={metric} onValueChange={(v) => setMetric(v as Metric)}>
+              <TabsList>
+                <TabsTrigger value="revenue">Revenue</TabsTrigger>
+                <TabsTrigger value="orders">Orders</TabsTrigger>
+              </TabsList>
+            </Tabs>
           </CardHeader>
           <CardContent>
             {isPending ? (
               <Skeleton className="h-64 w-full" />
-            ) : (
+            ) : metric === 'revenue' ? (
               <ChartContainer config={chartConfig} className="aspect-auto h-64 w-full">
                 <AreaChart data={data?.sales_chart ?? []} margin={{ left: 4, right: 12 }}>
                   <defs>
@@ -140,16 +182,7 @@ export function OverviewPage() {
                     </linearGradient>
                   </defs>
                   <CartesianGrid vertical={false} />
-                  <XAxis
-                    dataKey="date"
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={8}
-                    minTickGap={28}
-                    tickFormatter={(value: string) =>
-                      new Date(value).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
-                    }
-                  />
+                  <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} minTickGap={28} tickFormatter={shortDate} />
                   <YAxis tickLine={false} axisLine={false} width={56} tickFormatter={(v: number) => `৳${formatNumber(v)}`} />
                   <ChartTooltip
                     cursor={false}
@@ -168,15 +201,113 @@ export function OverviewPage() {
                       />
                     }
                   />
-                  <Area
-                    dataKey="revenue"
-                    type="monotone"
-                    fill="url(#fillRevenue)"
-                    stroke="var(--color-revenue)"
-                    strokeWidth={2}
-                  />
+                  <Area dataKey="revenue" type="monotone" fill="url(#fillRevenue)" stroke="var(--color-revenue)" strokeWidth={2} />
                 </AreaChart>
               </ChartContainer>
+            ) : (
+              <ChartContainer config={chartConfig} className="aspect-auto h-64 w-full">
+                <BarChart data={data?.sales_chart ?? []} margin={{ left: 4, right: 12 }}>
+                  <CartesianGrid vertical={false} />
+                  <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} minTickGap={28} tickFormatter={shortDate} />
+                  <YAxis tickLine={false} axisLine={false} width={40} allowDecimals={false} />
+                  <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dot" labelFormatter={(value) => formatDate(String(value))} />} />
+                  <Bar dataKey="orders" fill="var(--color-orders)" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ChartContainer>
+            )}
+          </CardContent>
+        </Card>
+
+        <div className="flex flex-col gap-4">
+          <Card className="gap-4">
+            <CardHeader>
+              <CardTitle>Quick actions</CardTitle>
+            </CardHeader>
+            <CardContent className="grid grid-cols-2 gap-2">
+              {quickActions.map((action) => (
+                <Link key={action.to} to={action.to} className="group rounded-lg border p-3 transition-colors hover:border-primary/40 hover:bg-secondary/60">
+                  <action.icon className="size-4 text-primary" />
+                  <span className="mt-2 block text-sm font-medium">{action.label}</span>
+                  <span className="block text-xs text-muted-foreground">{action.hint}</span>
+                </Link>
+              ))}
+            </CardContent>
+          </Card>
+
+          <Card className="flex-1 gap-4">
+            <CardHeader>
+              <CardTitle>Order pipeline</CardTitle>
+              <CardDescription>All orders by status</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {isPending ? (
+                <Skeleton className="h-24 w-full" />
+              ) : (
+                <>
+                  <div className="flex h-2.5 overflow-hidden rounded-full bg-muted">
+                    {statusTotal > 0 &&
+                      ORDER_STATUSES.map((status) =>
+                        byStatus[status] ? <span key={status} className={STATUS_BAR[status]} style={{ width: `${((byStatus[status] ?? 0) / statusTotal) * 100}%` }} /> : null,
+                      )}
+                  </div>
+                  <ul className="space-y-1">
+                    {ORDER_STATUSES.map((status) => (
+                      <li key={status}>
+                        <Link to={`/orders?status=${status}`} className="flex items-center gap-2 rounded-md px-1.5 py-1 text-sm hover:bg-muted">
+                          <span className={cn('size-2.5 rounded-full', STATUS_BAR[status])} />
+                          <span className="flex-1">{ORDER_STATUS_LABEL[status]}</span>
+                          <span className="font-medium tabular-nums">{formatNumber(byStatus[status] ?? 0)}</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      <div className="grid gap-4 xl:grid-cols-3">
+        <Card className="xl:col-span-2">
+          <CardHeader className="flex flex-row items-start justify-between gap-3">
+            <div className="space-y-1.5">
+              <CardTitle>Recent orders</CardTitle>
+              <CardDescription>The latest orders placed in the store</CardDescription>
+            </div>
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/orders">View all</Link>
+            </Button>
+          </CardHeader>
+          <CardContent className="px-0">
+            {isPending ? (
+              <div className="space-y-3 px-6">
+                {Array.from({ length: 4 }, (_, i) => (
+                  <Skeleton key={i} className="h-12 w-full" />
+                ))}
+              </div>
+            ) : data?.recent_orders.length ? (
+              <ul className="divide-y">
+                {data.recent_orders.map((order) => (
+                  <li key={order.id}>
+                    <Link to={`/orders/${order.id}`} className="flex items-center gap-3 px-6 py-3 transition-colors hover:bg-muted/50">
+                      <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-secondary text-sm font-semibold text-primary">
+                        {order.customer.name?.[0]?.toUpperCase() ?? '#'}
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-sm font-medium">{order.customer.name}</span>
+                        <span className="block truncate text-xs text-muted-foreground">
+                          #{order.order_number} · {formatDate(order.created_at)}
+                        </span>
+                      </span>
+                      <StatusBadge status={order.status} />
+                      <span className="w-24 shrink-0 text-right text-sm font-medium tabular-nums">{formatPrice(order.total, order.currency)}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="px-6 py-10 text-center text-sm text-muted-foreground">No orders yet. They'll show up here as soon as customers check out.</p>
             )}
           </CardContent>
         </Card>
@@ -203,12 +334,7 @@ export function OverviewPage() {
                       <p className="truncate text-sm font-medium">{item.product_name}</p>
                       <p className="truncate text-xs text-muted-foreground">{item.variant_title}</p>
                     </Link>
-                    <span
-                      className={cn(
-                        'shrink-0 rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset',
-                        item.stock === 0 ? TONES.red : TONES.amber,
-                      )}
-                    >
+                    <span className={cn('shrink-0 rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset', item.stock === 0 ? TONES.red : TONES.amber)}>
                       {item.stock === 0 ? 'Out of stock' : `${item.stock} left`}
                     </span>
                   </li>
@@ -220,69 +346,6 @@ export function OverviewPage() {
           </CardContent>
         </Card>
       </div>
-
-      <Card>
-        <CardHeader className="flex flex-row items-start justify-between gap-3">
-          <div className="space-y-1.5">
-            <CardTitle>Recent orders</CardTitle>
-            <CardDescription>The latest orders placed in the store</CardDescription>
-          </div>
-          <Button variant="outline" size="sm" asChild>
-            <Link to="/orders">View all</Link>
-          </Button>
-        </CardHeader>
-        <CardContent className="px-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="pl-6">Order</TableHead>
-                <TableHead>Customer</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="pr-6 text-right">Total</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isPending ? (
-                Array.from({ length: 3 }, (_, i) => (
-                  <TableRow key={i}>
-                    <TableCell colSpan={5} className="px-6">
-                      <Skeleton className="h-6 w-full" />
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : data?.recent_orders.length ? (
-                data.recent_orders.map((order) => (
-                  <TableRow key={order.id}>
-                    <TableCell className="pl-6 font-medium">
-                      <Link to={`/orders/${order.id}`} className="hover:text-primary">
-                        #{order.order_number}
-                      </Link>
-                    </TableCell>
-                    <TableCell>
-                      <p>{order.customer.name}</p>
-                      <p className="text-xs text-muted-foreground">{order.customer.phone}</p>
-                    </TableCell>
-                    <TableCell className="text-muted-foreground">{formatDate(order.created_at)}</TableCell>
-                    <TableCell>
-                      <StatusBadge status={order.status} />
-                    </TableCell>
-                    <TableCell className="pr-6 text-right font-medium tabular-nums">
-                      {formatPrice(order.total, order.currency)}
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={5} className="py-10 text-center text-muted-foreground">
-                    No orders yet. They'll show up here as soon as customers check out.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
     </>
   )
 }

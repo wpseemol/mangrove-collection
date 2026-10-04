@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils'
 
 import { changedPayload, toDraft, validateDraft, validateField, type Draft, type DraftValue, type Errors } from './draft'
 import type { SectionDef } from './sections'
+import { MailPresets } from './mail-presets'
 import { SettingField } from './setting-field'
 import { SignInStatus } from './sign-in-status'
 import { TestDelivery } from './test-delivery'
@@ -87,6 +88,7 @@ export function SectionForm({
     <form onSubmit={submit} noValidate className="space-y-4">
       <div className={cn('grid gap-4', section.extra && 'xl:grid-cols-[minmax(0,1fr)_18rem]')}>
         <div className="grid min-w-0 content-start gap-4">
+          {section.id === 'mail' && <MailPresets onApply={(values) => Object.entries(values).forEach(([key, value]) => set(key, value))} />}
           {section.cards.map((card) => (
             <Card key={card.title}>
               <CardHeader>

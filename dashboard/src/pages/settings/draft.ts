@@ -11,6 +11,7 @@ const URL_PATTERN = /^https?:\/\/[^\s<>"'`\\]+$/i
 const EMAIL_PATTERN = /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']+$/
 const PHONE_PATTERN = /^\+?[0-9][0-9\s\-()]{5,19}$/
 const WHATSAPP_PATTERN = /^\+?[1-9]\d{7,14}$/
+const MESSENGER_PATTERN = /^(?:\d{5,20}|[A-Za-z0-9.]{5,50})$/
 
 const isUrl = (value: string) => {
   if (!URL_PATTERN.test(value)) return false
@@ -117,6 +118,9 @@ export function validateField(field: FieldDef, value: DraftValue): Errors {
       if (!WHATSAPP_PATTERN.test(text.replace(/[\s\-().]/g, ''))) {
         fail('Use international format with the country code, e.g. +8801712345678.')
       }
+      break
+    case 'messenger':
+      if (!MESSENGER_PATTERN.test(text)) fail('Enter your Page username (letters, numbers and dots) or numeric Page ID, without facebook.com/.')
       break
     case 'number': {
       const number = Number(text)

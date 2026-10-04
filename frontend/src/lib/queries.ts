@@ -6,8 +6,6 @@ import { api } from "@/lib/api";
 import type {
   Address,
   Banner,
-  BlogCategory,
-  BlogPost,
   Category,
   CmsPage,
   Order,
@@ -93,43 +91,6 @@ export function useProductReviews(slug: string | null, filters: ReviewFilters) {
       }),
     enabled: Boolean(slug),
     placeholderData: (previous) => previous,
-  });
-}
-
-export type BlogFilters = {
-  q?: string;
-  category?: string;
-  tag?: string;
-  featured?: boolean;
-  sort?: "latest" | "popular";
-  page?: number;
-  per_page?: number;
-};
-
-export function useBlogCategories() {
-  return useQuery({
-    queryKey: ["blog-categories"],
-    queryFn: () => api<{ data: BlogCategory[] }>("/blog/categories").then((r) => r.data),
-    staleTime: FIVE_MINUTES,
-  });
-}
-
-export function useBlogPosts(filters: BlogFilters, enabled = true) {
-  return useQuery({
-    queryKey: ["blog-posts", filters],
-    queryFn: () => api<Paginated<BlogPost>>("/blog/posts", { query: filters }),
-    enabled,
-    placeholderData: (previous) => previous,
-  });
-}
-
-export function useBlogPost(slug: string | null) {
-  return useQuery({
-    queryKey: ["blog-post", slug],
-    queryFn: () => api<{ data: BlogPost; related: BlogPost[] }>(`/blog/posts/${encodeURIComponent(slug ?? "")}`),
-    enabled: Boolean(slug),
-    retry: false,
-    staleTime: FIVE_MINUTES,
   });
 }
 

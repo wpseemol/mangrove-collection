@@ -126,6 +126,98 @@ describe('managing the blog', () => {
   })
 })
 
+describe('blog ownership', () => {
+  it('lets managers change only their own posts while admins change any', async () => {
+    const admin = await actingAs(await makeAdmin())
+    const writer = await actingAs(await makeManager())
+    const other = await actingAs(await makeManager())
+
+    const post = (await writer.post('/v1/admin/blog/posts', { title: 'Writer post', status: 'draft' })).body.data
+    await admin.post('/v1/admin/blog/posts', { title: 'Admin post' })
+
+    expect((await writer.get('/v1/admin/blog/posts')).body.data.map((p: { title: string }) => p.title)).toEqual(['Writer post'])
+    expect((await other.get('/v1/admin/blog/posts')).body.data).toEqual([])
+    expect((await admin.get('/v1/admin/blog/posts')).body.data).toHaveLength(2)
+
+    expectStatus(await other.get(`/v1/admin/blog/posts/${post.id}`), 403)
+    expectStatus(await other.patch(`/v1/admin/blog/posts/${post.id}`, { title: 'Hijacked' }), 403)
+    expectStatus(await other.delete(`/v1/admin/blog/posts/${post.id}`), 403)
+    expectStatus(await writer.patch(`/v1/admin/blog/posts/${post.id}`, { title: 'Writer post v2' }), 200)
+    expectStatus(await admin.delete(`/v1/admin/blog/posts/${post.id}`), 204)
+  })
+
+  it('keeps category changes admin-only', async () => {
+    const manager = await actingAs(await makeManager())
+    expectStatus(await manager.post('/v1/admin/blog/categories', { name: 'Nope' }), 403)
+    expectStatus(await manager.get('/v1/admin/blog/categories'), 200)
+  })
+})
+
+describe('blog engagement', () => {
+  async function publishedPost() {
+    const admin = await actingAs(await makeAdmin())
+    await admin.post('/v1/admin/blog/posts', { title: 'Honey facts', status: 'published' })
+    return admin
+  }
+
+  it('lets only signed-in users like and comment, and hides moderated comments', async () => {
+    const admin = await publishedPost()
+    const guest = storefront()
+    const customer = await actingAs(await makeUser())
+
+    expectStatus(await guest.post('/v1/blog/posts/honey-facts/like'), 401)
+    expectStatus(await guest.post('/v1/blog/posts/honey-facts/comments', { body: 'Nice' }), 401)
+
+    const liked = await customer.post('/v1/blog/posts/honey-facts/like')
+    expectStatus(liked, 200)
+    expect(liked.body.data).toEqual({ liked: true, likes_count: 1 })
+    expectStatus(await customer.post('/v1/blog/posts/honey-facts/like'), 200)
+    expect((await customer.get('/v1/blog/posts/honey-facts/engagement')).body.data).toEqual({ likes_count: 1, comments_count: 0, liked: true })
+
+    const comment = await customer.post('/v1/blog/posts/honey-facts/comments', { body: 'Very helpful article!' })
+    expectStatus(comment, 201)
+    expect(comment.body.data).toMatchObject({ body: 'Very helpful article!', is_mine: true })
+    expectErrors(await customer.post('/v1/blog/posts/honey-facts/comments', { body: '<script>x</script>' }), 'body')
+
+    const listed = await guest.get('/v1/blog/posts/honey-facts/comments')
+    expect(listed.body.data).toHaveLength(1)
+    expect(listed.body.data[0]).not.toHaveProperty('is_hidden')
+
+    const moderation = await admin.get('/v1/admin/blog/comments')
+    expect(moderation.body.counts).toEqual({ visible: 1, hidden: 0 })
+    expectStatus(await admin.patch(`/v1/admin/blog/comments/${comment.body.data.id}`, { is_hidden: true }), 200)
+    expect((await guest.get('/v1/blog/posts/honey-facts/comments')).body.data).toHaveLength(0)
+    expect((await guest.get('/v1/blog/posts')).body.data[0]).toMatchObject({ likes_count: 1, comments_count: 0 })
+
+    expectStatus(await admin.delete(`/v1/admin/blog/comments/${comment.body.data.id}`), 204)
+    expect(await prisma.blogComment.count()).toBe(0)
+
+    const unliked = await customer.delete('/v1/blog/posts/honey-facts/like')
+    expect(unliked.body.data).toEqual({ liked: false, likes_count: 0 })
+  })
+
+  it('lets authors delete only their own comments and managers moderate only their own posts', async () => {
+    await publishedPost()
+    const author = await actingAs(await makeUser())
+    const stranger = await actingAs(await makeUser())
+    const manager = await actingAs(await makeManager())
+
+    const comment = (await author.post('/v1/blog/posts/honey-facts/comments', { body: 'My comment' })).body.data
+    expectStatus(await stranger.delete(`/v1/blog/comments/${comment.id}`), 403)
+    expectStatus(await manager.patch(`/v1/admin/blog/comments/${comment.id}`, { is_hidden: true }), 403)
+    expect((await manager.get('/v1/admin/blog/comments')).body.data).toEqual([])
+    expectStatus(await author.delete(`/v1/blog/comments/${comment.id}`), 204)
+  })
+
+  it('records views from the browser but not from cached server renders', async () => {
+    await publishedPost()
+    await storefront().get('/v1/blog/posts/honey-facts?track=0')
+    expect((await prisma.blogPost.findUniqueOrThrow({ where: { slug: 'honey-facts' } })).views).toBe(0)
+    expectStatus(await storefront().post('/v1/blog/posts/honey-facts/view'), 204)
+    expect((await prisma.blogPost.findUniqueOrThrow({ where: { slug: 'honey-facts' } })).views).toBe(1)
+  })
+})
+
 describe('public blog', () => {
   it('shows only published posts whose date has come, and counts views', async () => {
     const admin = await actingAs(await makeAdmin())

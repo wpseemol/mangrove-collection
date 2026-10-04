@@ -59,18 +59,89 @@ export function statusToast(order: Order): string {
 
 export type OrderUpdate = { status?: OrderStatus; payment_status?: PaymentStatus; admin_note?: string | null }
 
+function useRefreshOrders() {
+  const queryClient = useQueryClient()
+  return () => {
+    queryClient.invalidateQueries({ queryKey: [...ordersQueryKey, 'list'] })
+    queryClient.invalidateQueries({ queryKey: [...ordersQueryKey, 'pending-count'] })
+    queryClient.invalidateQueries({ queryKey: paymentsQueryKey })
+    queryClient.invalidateQueries({ queryKey: ['admin', 'dashboard'] })
+  }
+}
+
 export function useUpdateOrder() {
   const queryClient = useQueryClient()
+  const refresh = useRefreshOrders()
 
   return useMutation({
     mutationFn: ({ id, ...body }: OrderUpdate & { id: number }) =>
       api<{ data: Order }>(`/admin/orders/${id}`, { method: 'PATCH', body }).then((r) => r.data),
     onSuccess: (order) => {
       queryClient.setQueryData([...ordersQueryKey, 'detail', order.id], order)
-      queryClient.invalidateQueries({ queryKey: [...ordersQueryKey, 'list'] })
-      queryClient.invalidateQueries({ queryKey: [...ordersQueryKey, 'pending-count'] })
-      queryClient.invalidateQueries({ queryKey: paymentsQueryKey })
-      queryClient.invalidateQueries({ queryKey: ['admin', 'dashboard'] })
+      refresh()
     },
+  })
+}
+
+export function useBulkOrderStatus() {
+  const refresh = useRefreshOrders()
+  return useMutation({
+    mutationFn: (body: { ids: number[]; status: OrderStatus }) =>
+      api<{ data: { updated: number; skipped: number } }>('/admin/orders/bulk-status', { method: 'POST', body }).then((r) => r.data),
+    onSuccess: refresh,
+  })
+}
+
+/** Deleting puts the items back in stock without notifying the customer (for spam and duplicate orders). */
+export function useDeleteOrders() {
+  const queryClient = useQueryClient()
+  const refresh = useRefreshOrders()
+  return useMutation({
+    mutationFn: (ids: number[]) =>
+      ids.length === 1
+        ? api(`/admin/orders/${ids[0]}`, { method: 'DELETE' }).then(() => ({ deleted: 1 }))
+        : api<{ data: { deleted: number } }>('/admin/orders/bulk-delete', { method: 'POST', body: { ids } }).then((r) => r.data),
+    onSuccess: (_result, ids) => {
+      for (const id of ids) queryClient.removeQueries({ queryKey: [...ordersQueryKey, 'detail', id] })
+      refresh()
+    },
+  })
+}
+
+export type PrintKind = 'invoice' | 'delivery'
+
+/** Opens the printable invoices or delivery sheet in a new tab, which prints itself once loaded. */
+export function openPrint(ids: number[], kind: PrintKind) {
+  window.open(`/orders/print?type=${kind}&ids=${ids.join(',')}`, '_blank', 'noopener')
+}
+
+export type StaffOrderInput = {
+  items: { variant_id: number; quantity: number }[]
+  shipping_method_id: number
+  shipping_cost?: number | null
+  discount?: number | null
+  payment_method: PaymentMethod
+  payment_status: PaymentStatus
+  status: Exclude<OrderStatus, 'cancelled'>
+  customer_note?: string | null
+  admin_note?: string | null
+  user_id?: number | null
+  address: {
+    name: string
+    phone: string
+    email?: string | null
+    region?: string | null
+    city?: string | null
+    zone?: string | null
+    landmark?: string | null
+    full_address: string
+  }
+}
+
+export function useCreateOrder() {
+  const refresh = useRefreshOrders()
+  return useMutation({
+    mutationFn: (body: StaffOrderInput) => api<{ data: Order }>('/admin/orders', { method: 'POST', body }).then((r) => r.data),
+    onSuccess: refresh,
   })
 }

@@ -1,4 +1,4 @@
-import { CalendarDays, Clock, Images, PlayCircle, Star } from "lucide-react";
+import { CalendarDays, Clock, Heart, Images, MessageCircle, PlayCircle, Star } from "lucide-react";
 import Link from "next/link";
 
 import { IconGlyph } from "@/components/shared/icon-glyph";
@@ -29,6 +29,16 @@ function PostMeta({ post, className }: { post: BlogPost; className?: string }) {
       <span className="inline-flex items-center gap-1">
         <Clock className="size-3.5" /> {post.reading_minutes} min read
       </span>
+      {!!post.likes_count && (
+        <span className="inline-flex items-center gap-1" title="Likes">
+          <Heart className="size-3.5" /> {post.likes_count}
+        </span>
+      )}
+      {!!post.comments_count && (
+        <span className="inline-flex items-center gap-1" title="Comments">
+          <MessageCircle className="size-3.5" /> {post.comments_count}
+        </span>
+      )}
     </div>
   );
 }

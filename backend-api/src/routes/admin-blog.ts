@@ -1,22 +1,39 @@
 import { Router, type Request, type RequestHandler } from 'express'
-import { currentUser } from '../auth/guards.js'
+import { currentUser, requireRole } from '../auth/guards.js'
 import { Prisma, type BlogCategory, type BlogPost } from '../generated/prisma/client.js'
-import { ValidationError, notFound, routeId, type FieldErrors } from '../lib/http.js'
+import { HttpError, ValidationError, notFound, routeId, type FieldErrors } from '../lib/http.js'
 import { paginate } from '../lib/paginate.js'
 import { prisma, type Tx } from '../lib/prisma.js'
 import { slugFor } from '../lib/slugs.js'
 import { likeTerm, limit } from '../lib/str.js'
 import { MAX_VIDEO_MEGABYTES } from '../middleware/input.js'
 import { throttle } from '../middleware/rate-limit.js'
-import { blogCategoryResource, blogPostResource, mediaResource } from '../resources/index.js'
+import { blogCategoryResource, blogCommentResource, blogPostResource, mediaResource } from '../resources/index.js'
 import { BLOG_STATUSES, MAX_BLOG_MEDIA, detectProvider, discardTemp, isVideoUrl, sniffVideo, storeVideo } from '../services/blog.js'
 import { categoryIcons } from '../services/category-icons.js'
 import { bool, int, oneOf, opt, text, url, validate, z } from '../validation/index.js'
 import { SAFE_BLOG_HTML_MESSAGE, isSafeBlogHtml } from '../validation/rules.js'
 import { bodyOf, listOf } from './helpers.js'
 
-/** Blog management for admins and employees (managers). Mounted inside the admin router, which already checks the role. */
+/**
+ * Blog management for admins and employees (managers). Mounted inside the admin router, which already checks the role.
+ * Admins manage everything; managers write posts but may only change their own, and only moderate comments on them.
+ */
 export const blogAdminRouter = Router()
+
+blogAdminRouter.post('/blog/categories', requireRole('admin'))
+blogAdminRouter.put('/blog/categories/:category', requireRole('admin'))
+blogAdminRouter.patch('/blog/categories/:category', requireRole('admin'))
+blogAdminRouter.delete('/blog/categories/:category', requireRole('admin'))
+
+const isAdmin = (req: Request) => currentUser(req).role === 'admin'
+
+/** Managers only see and act on what they wrote; admins see everything. */
+const ownedBy = (req: Request): Prisma.BlogPostWhereInput => (isAdmin(req) ? {} : { author_id: currentUser(req).id })
+
+function ensureOwner(req: Request, post: Pick<BlogPost, 'author_id'>) {
+  if (!isAdmin(req) && post.author_id !== currentUser(req).id) throw new HttpError(403, 'You can only change blog posts you wrote.')
+}
 
 const put = (path: string, handler: RequestHandler) => {
   blogAdminRouter.put(path, handler)
@@ -117,6 +134,7 @@ const postInclude = {
   category: true,
   author: { select: { id: true, name: true, avatar: true } },
   media: { orderBy: [{ sort_order: 'asc' as const }, { id: 'asc' as const }] },
+  _count: { select: { likes: true, comments: true } },
 }
 
 async function findPost(req: Request): Promise<BlogPost> {
@@ -225,7 +243,9 @@ blogAdminRouter.get('/blog/posts', async (req, res) => {
     req.query,
   )
 
+  const owned = ownedBy(req)
   const where: Prisma.BlogPostWhereInput = {
+    ...owned,
     ...(query.q ? { OR: [{ title: { contains: likeTerm(query.q) } }, { excerpt: { contains: likeTerm(query.q) } }] } : {}),
     ...(query.status ? { status: query.status } : {}),
     ...(query.category_id ? { blog_category_id: query.category_id } : {}),
@@ -244,7 +264,7 @@ blogAdminRouter.get('/blog/posts', async (req, res) => {
     (post) => blogPostResource(post),
   )
 
-  const byStatus = new Map((await prisma.blogPost.groupBy({ by: ['status'], _count: { _all: true } })).map((row) => [row.status, row._count._all]))
+  const byStatus = new Map((await prisma.blogPost.groupBy({ by: ['status'], where: owned, _count: { _all: true } })).map((row) => [row.status, row._count._all]))
   res.json({ ...page, counts: Object.fromEntries(BLOG_STATUSES.map((status) => [status, byStatus.get(status) ?? 0])) })
 })
 
@@ -265,11 +285,13 @@ blogAdminRouter.post('/blog/posts', async (req, res) => {
 
 blogAdminRouter.get('/blog/posts/:post', async (req, res) => {
   const post = await findPost(req)
+  ensureOwner(req, post)
   res.json({ data: blogPostResource(await loadPost(post.id), true) })
 })
 
 put('/blog/posts/:post', async (req, res) => {
   const post = await findPost(req)
+  ensureOwner(req, post)
   const { fields, media } = await validatePost(req, post)
   const slug = await slugFor('blogPost', { id: post.id, slug: post.slug, name: post.title }, { slug: fields.slug, name: fields.title })
   const publishedAt = publishDate(fields, post)
@@ -284,7 +306,62 @@ put('/blog/posts/:post', async (req, res) => {
 
 blogAdminRouter.delete('/blog/posts/:post', async (req, res) => {
   const post = await findPost(req)
+  ensureOwner(req, post)
   await prisma.blogPost.delete({ where: { id: post.id } })
+  res.status(204).end()
+})
+
+/* ----------------------------------------------------------------------------------------------
+ | Comment moderation
+ * -------------------------------------------------------------------------------------------- */
+
+const COMMENT_VISIBILITY = ['visible', 'hidden'] as const
+const commentInclude = { user: { select: { id: true, name: true, avatar: true } }, post: { select: { id: true, title: true, slug: true } } } as const
+
+async function findComment(req: Request) {
+  const comment = await prisma.blogComment.findUnique({ where: { id: routeId(req.params.comment) }, include: { post: { select: { author_id: true } } } })
+  if (!comment) notFound()
+  ensureOwner(req, comment!.post)
+  return comment!
+}
+
+blogAdminRouter.get('/blog/comments', async (req, res) => {
+  const query = await validate(
+    z.object({ q: opt(text(100)), visibility: opt(oneOf(COMMENT_VISIBILITY)), post_id: opt(int()), per_page: opt(int(1, 100)) }),
+    req.query,
+  )
+  const scope: Prisma.BlogCommentWhereInput = isAdmin(req) ? {} : { post: { author_id: currentUser(req).id } }
+  const where: Prisma.BlogCommentWhereInput = {
+    ...scope,
+    ...(query.q ? { OR: [{ body: { contains: likeTerm(query.q) } }, { user: { name: { contains: likeTerm(query.q) } } }] } : {}),
+    ...(query.visibility ? { is_hidden: query.visibility === 'hidden' } : {}),
+    ...(query.post_id ? { blog_post_id: query.post_id } : {}),
+  }
+
+  const page = await paginate(
+    req,
+    query.per_page ?? 20,
+    {
+      count: () => prisma.blogComment.count({ where }),
+      rows: ({ skip, take }) => prisma.blogComment.findMany({ where, include: commentInclude, orderBy: [{ created_at: 'desc' }, { id: 'desc' }], skip, take }),
+    },
+    (comment) => blogCommentResource(comment, null, true),
+  )
+
+  const [visible, hidden] = await Promise.all([prisma.blogComment.count({ where: { ...scope, is_hidden: false } }), prisma.blogComment.count({ where: { ...scope, is_hidden: true } })])
+  res.json({ ...page, counts: { visible, hidden } })
+})
+
+put('/blog/comments/:comment', async (req, res) => {
+  const comment = await findComment(req)
+  const { is_hidden } = await validate(z.object({ is_hidden: bool() }), bodyOf(req))
+  const updated = await prisma.blogComment.update({ where: { id: comment.id }, data: { is_hidden: Boolean(is_hidden) }, include: commentInclude })
+  res.json({ data: blogCommentResource(updated, null, true) })
+})
+
+blogAdminRouter.delete('/blog/comments/:comment', async (req, res) => {
+  const comment = await findComment(req)
+  await prisma.blogComment.delete({ where: { id: comment.id } })
   res.status(204).end()
 })
 

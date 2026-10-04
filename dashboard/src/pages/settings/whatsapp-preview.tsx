@@ -14,6 +14,14 @@ function WhatsAppIcon({ className }: { className?: string }) {
   )
 }
 
+function MessengerIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className={className}>
+      <path d="M12 2C6.36 2 2 6.13 2 11.7c0 2.91 1.19 5.44 3.14 7.17.16.14.26.35.27.57l.05 1.78a.8.8 0 0 0 1.12.71l1.99-.88c.17-.07.36-.09.53-.04.91.25 1.89.39 2.9.39 5.64 0 10-4.13 10-9.7S17.64 2 12 2m6 7.46-2.94 4.66a1.5 1.5 0 0 1-2.17.4l-2.34-1.75a.6.6 0 0 0-.72 0l-3.16 2.4c-.42.32-.97-.18-.69-.63l2.94-4.66a1.5 1.5 0 0 1 2.17-.4l2.34 1.75a.6.6 0 0 0 .72 0l3.16-2.4c.42-.32.97.18.69.63" />
+    </svg>
+  )
+}
+
 function whatsappLink(number: string, message: string): string {
   const text = message.trim()
   return `https://wa.me/${number.replace(/\D/g, '')}${text ? `?text=${encodeURIComponent(text)}` : ''}`
@@ -26,13 +34,15 @@ export function WhatsAppPreview({ draft, valid }: { draft: Draft; valid: boolean
   const enabled = draft.whatsapp_button_enabled as boolean
   const left = draft.whatsapp_button_position === 'left'
   const visible = enabled && Boolean(number)
+  const messengerPage = String(draft.messenger_page ?? '').trim()
+  const messengerVisible = Boolean(draft.messenger_button_enabled) && Boolean(messengerPage)
 
   return (
     <Card className="h-fit xl:sticky xl:top-20">
       <CardHeader>
         <CardTitle>Preview</CardTitle>
         <CardDescription>
-          {visible ? 'How the button looks on the storefront.' : !enabled ? 'The button is turned off.' : 'Add a number to show the button.'}
+          {visible || messengerVisible ? 'How the buttons look on the storefront.' : !enabled ? 'The WhatsApp button is turned off.' : 'Add a number to show the button.'}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -55,7 +65,25 @@ export function WhatsAppPreview({ draft, valid }: { draft: Draft; valid: boolean
           >
             <WhatsAppIcon className="size-6" />
           </span>
+          <span
+            className={cn(
+              'absolute flex size-11 items-center justify-center rounded-full bg-gradient-to-br from-[#00b2ff] to-[#a033ff] text-white shadow-lg transition-all duration-300',
+              left ? 'left-3' : 'right-3',
+              visible ? 'bottom-16' : 'bottom-3',
+              !messengerVisible && 'scale-75 opacity-0',
+            )}
+          >
+            <MessengerIcon className="size-6" />
+          </span>
         </div>
+
+        {messengerVisible && (
+          <Button asChild variant="outline" size="sm" className="w-full">
+            <a href={`https://m.me/${encodeURIComponent(messengerPage)}`} target="_blank" rel="noopener noreferrer">
+              <ExternalLink /> Test the Messenger link
+            </a>
+          </Button>
+        )}
 
         {message.trim() && (
           <div className="rounded-lg bg-[#e7fcd9] p-3 text-sm text-[#111b21] shadow-sm dark:bg-[#005c4b] dark:text-white">

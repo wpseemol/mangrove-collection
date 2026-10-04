@@ -1,9 +1,27 @@
 import { API_URL } from "@/lib/config";
 
-/** Post pages are `/blog/post/?slug=...`: a static export can't emit routes for posts written after the build. */
-export const postHref = (slug: string) => `/blog/post/?slug=${encodeURIComponent(slug)}`;
+export const postHref = (slug: string) => `/blog/${encodeURIComponent(slug)}/`;
 
-export const blogCategoryHref = (slug: string) => `/blog/?category=${encodeURIComponent(slug)}`;
+export const blogCategoryHref = (slug: string) => `/blog/category/${encodeURIComponent(slug)}/`;
+
+export const blogTagHref = (tag: string) => `/blog/?tag=${encodeURIComponent(tag)}`;
+
+/** `<h2>` headings of a post body, given ids so the table of contents can link to them. */
+export function withHeadingIds(html: string): { html: string; headings: { id: string; text: string }[] } {
+  const headings: { id: string; text: string }[] = [];
+  const used = new Set<string>();
+  const out = html.replace(/<h2\b([^>]*)>([\s\S]*?)<\/h2>/gi, (match, attrs: string, inner: string) => {
+    if (/\bid=/i.test(attrs)) return match;
+    const text = plainText(inner);
+    if (!text) return match;
+    let id = text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60) || "section";
+    for (let n = 2; used.has(id); n++) id = `${id.replace(/-\d+$/, "")}-${n}`;
+    used.add(id);
+    headings.push({ id, text });
+    return `<h2${attrs} id="${id}">${inner}</h2>`;
+  });
+  return { html: out, headings };
+}
 
 export const formatPostDate = (value: string | null | undefined) =>
   value ? new Date(value).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }) : "";

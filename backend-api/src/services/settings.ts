@@ -18,7 +18,12 @@ type Definition = {
   /** Allowed keys of a json object. */
   keys?: string[]
   whatsapp?: boolean
+  /** A Facebook Page username or numeric Page ID, used for m.me links. */
+  messenger?: boolean
 }
+
+const MESSENGER_PAGE = /^(?:\d{5,20}|[A-Za-z0-9.]{5,50})$/
+export const MESSENGER_MESSAGE = 'Enter your Facebook Page username (letters, numbers and dots) or numeric Page ID.'
 
 export type SettingDefinition = Required<Pick<Definition, 'type'>> & {
   group: string
@@ -31,6 +36,7 @@ export type SettingDefinition = Required<Pick<Definition, 'type'>> & {
   max?: number
   keys?: string[]
   whatsapp?: boolean
+  messenger?: boolean
 }
 
 export const SOCIAL_NETWORKS = ['facebook', 'instagram', 'youtube', 'linkedin', 'twitter']
@@ -55,6 +61,8 @@ const GROUPS: Record<string, Record<string, Definition>> = {
     whatsapp_message: { type: 'text', public: true, default: 'Hello Mangrove Collection! I would like to know more about your products.', max: 500 },
     whatsapp_button_enabled: { type: 'boolean', public: true, default: true },
     whatsapp_button_position: { type: 'string', public: true, default: 'right', options: ['right', 'left'] },
+    messenger_page: { type: 'string', public: true, messenger: true, max: 50 },
+    messenger_button_enabled: { type: 'boolean', public: true, default: false },
   },
   commerce: {
     currency: { type: 'string', public: true, default: 'BDT', max: 10 },
@@ -194,6 +202,7 @@ export function settingSchema(key: string): z.ZodType {
   }
 
   if (['string', 'text', 'json'].includes(d.type) && !d.encrypted && !d.raw) schema = safeText(schema)
+  if (d.messenger) schema = schema.refine((value) => MESSENGER_PAGE.test(String(value)), MESSENGER_MESSAGE)
   if (d.options) {
     const options = d.options
     schema = schema.refine((value) => options.includes(String(value)), 'The selected :attribute is invalid.')

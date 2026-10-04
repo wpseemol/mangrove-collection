@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
-import { ArrowLeft, Check, ExternalLink, Loader2, Mail, PackageX, Phone, StickyNote, UserRound } from 'lucide-react'
+import { ArrowLeft, Check, ExternalLink, FileText, Loader2, Mail, PackageX, Phone, StickyNote, Trash2, Truck, UserRound } from 'lucide-react'
 import { useState } from 'react'
-import { Link, useParams } from 'react-router'
+import { Link, useNavigate, useParams } from 'react-router'
 import { toast } from 'sonner'
 
 import { PageHeader } from '@/components/layout/page-header'
@@ -36,7 +36,9 @@ import {
   PAYMENT_STATUS_LABEL,
   PAYMENT_STATUS_TONE,
   PAYMENT_STATUSES,
+  openPrint,
   statusToast,
+  useDeleteOrders,
   useUpdateOrder,
 } from '@/lib/orders'
 import { formatWalletNumber } from '@/lib/payments'
@@ -99,11 +101,18 @@ export function OrderDetailPage() {
           title={`Order ${order.order_number}`}
           description={`Placed ${formatDateTime(order.created_at)}`}
           actions={
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <StatusBadge status={order.status} />
               <Badge variant="outline" className={cn('border-0 ring-1 ring-inset', PAYMENT_STATUS_TONE[order.payment_status])}>
                 {PAYMENT_STATUS_LABEL[order.payment_status]}
               </Badge>
+              <Button size="sm" variant="outline" onClick={() => openPrint([order.id], 'invoice')}>
+                <FileText /> Invoice
+              </Button>
+              <Button size="sm" variant="outline" onClick={() => openPrint([order.id], 'delivery')}>
+                <Truck /> Delivery slip
+              </Button>
+              <DeleteOrderButton order={order} />
             </div>
           }
         />
@@ -120,6 +129,50 @@ export function OrderDetailPage() {
           <NoteCard key={`${order.id}-note`} order={order} />
         </div>
       </div>
+    </>
+  )
+}
+
+function DeleteOrderButton({ order }: { order: Order }) {
+  const navigate = useNavigate()
+  const remove = useDeleteOrders()
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <Button size="sm" variant="outline" className="text-destructive hover:text-destructive" onClick={() => setOpen(true)}>
+        <Trash2 /> Delete
+      </Button>
+      <AlertDialog open={open} onOpenChange={setOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete order {order.order_number}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Use this for spam, test or duplicate orders. Items go back into stock, the customer is not notified, and the order is removed permanently.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Keep</AlertDialogCancel>
+            <AlertDialogAction
+              variant="destructive"
+              disabled={remove.isPending}
+              onClick={(e) => {
+                e.preventDefault()
+                remove.mutate([order.id], {
+                  onSuccess: () => {
+                    toast.success(`Order ${order.order_number} deleted.`)
+                    navigate('/orders', { replace: true })
+                  },
+                  onError: (err) => toast.error(errorMessage(err)),
+                })
+              }}
+            >
+              {remove.isPending && <Loader2 className="animate-spin" />}
+              Delete permanently
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   )
 }

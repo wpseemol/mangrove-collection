@@ -15,7 +15,8 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate deploy",
     "db:seed": "tsx --env-file=.env prisma/seed.ts",
-    "db:seed:catalog": "tsx --env-file=.env prisma/seed-catalog.ts"
+    "db:seed:catalog": "tsx --env-file=.env prisma/seed-catalog.ts",
+    "db:seed:blog": "tsx --env-file=.env prisma/seed-blog.ts"
   },
   "dependencies": {
     "@prisma/adapter-mariadb": "^7.10.0",

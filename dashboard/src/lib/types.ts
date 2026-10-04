@@ -273,6 +273,23 @@ export type Order = {
 
 export type OrderList = Paginated<Order> & { counts: Record<OrderStatus, number> }
 
+export type ShippingMethod = {
+  id: number
+  code: string
+  title: string
+  description: string | null
+  price: number
+  is_active: boolean
+  sort_order: number
+}
+
+/** `GET /admin/orders/customer-lookup`: prefill for phone orders. */
+export type CustomerLookup = {
+  user: { id: number; name: string; email: string; phone: string | null } | null
+  address: Order['shipping_address'] | null
+  orders_count: number
+}
+
 export type ReviewStatus = 'published' | 'hidden'
 
 export type AdminReview = {
@@ -349,6 +366,8 @@ export type BlogPost = {
   author?: { id: number; name: string; avatar: string | null } | null
   images_count?: number
   videos_count?: number
+  likes_count?: number
+  comments_count?: number
   content?: string | null
   meta_title?: string | null
   meta_description?: string | null
@@ -358,6 +377,18 @@ export type BlogPost = {
 }
 
 export type BlogPostList = Paginated<BlogPost> & { counts: Record<BlogStatus, number> }
+
+export type BlogComment = {
+  id: number
+  body: string
+  author: { id: number; name: string; avatar: string | null } | null
+  is_mine: boolean
+  is_hidden: boolean
+  post: { id: number; title: string; slug: string } | null
+  created_at: string
+}
+
+export type BlogCommentList = Paginated<BlogComment> & { counts: { visible: number; hidden: number } }
 
 /** A row of `GET /admin/users`. */
 export type AdminUser = User & {

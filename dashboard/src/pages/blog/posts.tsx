@@ -6,9 +6,11 @@ import {
   ExternalLink,
   Eye,
   Film,
+  Heart,
   ImageIcon,
   LayoutGrid,
   List,
+  MessageCircle,
   MoreHorizontal,
   Newspaper,
   Pencil,
@@ -37,8 +39,9 @@ import { BLOG_STATUS_LABELS, readBlogView, saveBlogView, storefrontPostUrl, type
 import { formatDate, formatNumber } from '@/lib/format'
 import { blogCategoriesQueryKey, blogPostsQueryKey, useBlogCategories } from '@/lib/queries'
 import { TONES } from '@/lib/tones'
-import type { BlogPost, BlogPostList, BlogStatus } from '@/lib/types'
+import { isAdmin, type BlogPost, type BlogPostList, type BlogStatus } from '@/lib/types'
 import { cn } from '@/lib/utils'
+import { useAuthStore } from '@/stores/auth'
 
 type Tab = 'all' | BlogStatus
 const TABS: Tab[] = ['all', 'published', 'draft']
@@ -78,6 +81,16 @@ function Meta({ post }: { post: BlogPost }) {
       <span className="inline-flex items-center gap-1">
         <Eye className="size-3" /> {formatNumber(post.views)}
       </span>
+      {post.likes_count ? (
+        <span className="inline-flex items-center gap-1">
+          <Heart className="size-3" /> {formatNumber(post.likes_count)}
+        </span>
+      ) : null}
+      {post.comments_count ? (
+        <Link to={`/blog/comments?post_id=${post.id}`} className="inline-flex items-center gap-1 hover:text-primary">
+          <MessageCircle className="size-3" /> {formatNumber(post.comments_count)}
+        </Link>
+      ) : null}
       {post.images_count ? (
         <span className="inline-flex items-center gap-1">
           <ImageIcon className="size-3" /> {post.images_count}
@@ -130,6 +143,7 @@ export function BlogPostsPage() {
   const { data: categories } = useBlogCategories()
   const [view, setView] = useState<BlogView>(readBlogView)
   const [deleting, setDeleting] = useState<BlogPost | null>(null)
+  const admin = isAdmin(useAuthStore((state) => state.user))
 
   const tab = (TABS.find((t) => t === params.get('status')) ?? 'all') as Tab
   const sort = SORTS.find((s) => s.value === params.get('sort'))?.value ?? 'latest'
@@ -189,12 +203,23 @@ export function BlogPostsPage() {
     <>
       <PageHeader
         title="Blog posts"
-        description="Write stories, recipes and news for your customers. Admins and employees can both publish."
+        description={
+          admin
+            ? 'Write stories, recipes and news for your customers. You can edit or delete any post.'
+            : 'Write stories, recipes and news for your customers. You see and manage the posts you wrote.'
+        }
         actions={
           <div className="flex gap-2">
             <Button variant="outline" asChild>
-              <Link to="/blog/categories">Categories</Link>
+              <Link to="/blog/comments">
+                <MessageCircle /> Comments
+              </Link>
             </Button>
+            {admin && (
+              <Button variant="outline" asChild>
+                <Link to="/blog/categories">Categories</Link>
+              </Button>
+            )}
             <Button asChild>
               <Link to="/blog/new">
                 <PenLine /> Write a post

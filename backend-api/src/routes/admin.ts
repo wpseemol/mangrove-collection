@@ -628,6 +628,128 @@ adminRouter.get('/orders', async (req, res) => {
   res.json({ ...page, counts: Object.fromEntries(ORDER_STATUSES.map((status) => [status, byStatus.get(status) ?? 0])) })
 })
 
+const ORDER_ATTRIBUTES = {
+  'items.*.variant_id': 'product',
+  'items.*.quantity': 'quantity',
+  shipping_method_id: 'delivery method',
+  shipping_cost: 'delivery charge',
+  'address.name': 'name',
+  'address.email': 'email',
+  'address.phone': 'phone number',
+  'address.region': 'division',
+  'address.city': 'district / city',
+  'address.zone': 'area',
+  'address.landmark': 'landmark',
+  'address.full_address': 'full address',
+}
+
+adminRouter.post('/orders', async (req, res) => {
+  const body = bodyOf(req)
+  const data = await validate(
+    z.object({
+      items: z
+        .array(z.object({ variant_id: int(), quantity: int(1, 1000) }))
+        .min(1, 'The :attribute field is required.')
+        .max(100),
+      shipping_method_id: int(),
+      shipping_cost: opt(num(0, 1_000_000)),
+      discount: opt(num(0, 10_000_000)),
+      payment_method: oneOf(PAYMENT_METHODS),
+      payment_status: oneOf(PAYMENT_STATUSES).optional(),
+      status: oneOf(['pending', 'processing', 'shipped', 'delivered'] as const).optional(),
+      customer_note: opt(text(1000)),
+      admin_note: opt(text(5000)),
+      user_id: opt(int()),
+      address: z.object({
+        name: text(255),
+        email: opt(email(255)),
+        phone: phone(32),
+        region: opt(text(255)),
+        city: opt(text(255)),
+        zone: opt(text(255)),
+        landmark: opt(text(255)),
+        full_address: text(1000),
+      }),
+    }),
+    { ...body, items: listOf(body.items) },
+    { attributes: ORDER_ATTRIBUTES },
+    distinct('items', 'variant_id', 'product'),
+  )
+
+  const order = await orders.placeByStaff({
+    ...data,
+    payment_method: data.payment_method as (typeof PAYMENT_METHODS)[number],
+    payment_status: (data.payment_status ?? 'pending') as (typeof PAYMENT_STATUSES)[number],
+    status: (data.status ?? 'pending') as OrderStatus,
+    user_id: data.user_id ? BigInt(data.user_id) : null,
+    address: {
+      name: data.address.name,
+      email: data.address.email ?? null,
+      phone: data.address.phone,
+      region: data.address.region ?? null,
+      city: data.address.city ?? null,
+      zone: data.address.zone ?? null,
+      landmark: data.address.landmark ?? null,
+      full_address: data.address.full_address,
+    },
+  })
+
+  res.status(201).json({ data: orderResource(req, await loadOrderDetail(order.id)) })
+})
+
+/** Prefills a phone order from the customer's account or their most recent order. */
+adminRouter.get('/orders/customer-lookup', async (req, res) => {
+  const { phone: number } = await validate(z.object({ phone: phone(32) }), req.query)
+  const [user, previous] = await Promise.all([
+    prisma.user.findFirst({ where: { phone: number, role: 'customer' } }),
+    prisma.order.findFirst({ where: { customer_phone: number }, orderBy: latest }),
+  ])
+
+  res.json({
+    data: {
+      user: user ? { id: Number(user.id), name: user.name, email: user.email, phone: user.phone } : null,
+      address: previous ? previous.shipping_address : null,
+      orders_count: await prisma.order.count({ where: { customer_phone: number } }),
+    },
+  })
+})
+
+const orderIds = z
+  .array(int())
+  .min(1, 'Select at least one order.')
+  .max(200, 'Select at most 200 orders at a time.')
+
+/** Full orders (items included) for printing invoices and delivery sheets in one go. */
+adminRouter.get('/orders/print', async (req, res) => {
+  const raw = typeof req.query.ids === 'string' ? req.query.ids.split(',').filter(Boolean) : listOf(req.query.ids)
+  const { ids } = await validate(z.object({ ids: orderIds }), { ids: raw })
+  const rows = await prisma.order.findMany({ where: { id: { in: ids.map(BigInt) } }, include: { items: true }, orderBy: { id: 'asc' } })
+  res.json({ data: rows.map((order) => orderResource(req, order)) })
+})
+
+adminRouter.post('/orders/bulk-status', async (req, res) => {
+  const body = bodyOf(req)
+  const { ids, status } = await validate(z.object({ ids: orderIds, status: oneOf(ORDER_STATUSES) }), { ...body, ids: listOf(body.ids) })
+  const rows = await prisma.order.findMany({ where: { id: { in: ids.map(BigInt) } } })
+
+  let updated = 0
+  for (const order of rows) {
+    if (order.status === status || (order.status === 'cancelled' && status !== 'cancelled')) continue
+    await orders.updateStatus(order, status as OrderStatus)
+    updated++
+  }
+
+  res.json({ data: { updated, skipped: rows.length - updated } })
+})
+
+adminRouter.post('/orders/bulk-delete', async (req, res) => {
+  const body = bodyOf(req)
+  const { ids } = await validate(z.object({ ids: orderIds }), { ...body, ids: listOf(body.ids) })
+  const rows = await prisma.order.findMany({ where: { id: { in: ids.map(BigInt) } } })
+  for (const order of rows) await orders.remove(order)
+  res.json({ data: { deleted: rows.length } })
+})
+
 adminRouter.get('/orders/:order', async (req, res) => {
   const order = await findOrder(req)
   res.json({ data: orderResource(req, await loadOrderDetail(order.id)) })
@@ -652,10 +774,7 @@ put('/orders/:order', async (req, res) => {
 })
 
 adminRouter.delete('/orders/:order', async (req, res) => {
-  const order = await findOrder(req)
-  if (order.status !== 'cancelled') await orders.updateStatus(order, 'cancelled')
-
-  await prisma.order.delete({ where: { id: order.id } })
+  await orders.remove(await findOrder(req))
   res.status(204).end()
 })
 
