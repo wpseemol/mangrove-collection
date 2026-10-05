@@ -167,7 +167,7 @@ cd ~/mangrove-api
 npm install                       # includes the Prisma CLI and tsx used below
 npx prisma generate
 npx prisma migrate deploy
-npx tsx --env-file=.env prisma/seed.ts   # idempotent: settings, shipping, pages, first admin
+npx tsx prisma/seed.ts   # idempotent: settings, shipping, pages, first admin
 chmod -R 775 storage public/uploads
 ```
 
@@ -295,7 +295,7 @@ cd ~/mangrove-api
 npm install
 npx prisma generate
 npx prisma migrate deploy
-npx tsx --env-file=.env prisma/seed.ts
+npx tsx prisma/seed.ts
 ```
 
 and click **Restart** on the Node.js app page.

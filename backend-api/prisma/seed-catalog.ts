@@ -8,6 +8,7 @@
  * Removing keeps order history intact: products that appear in orders are soft-deleted (and their slug
  * and SKUs freed), everything else is deleted. Old categories are deleted when empty, otherwise hidden.
  */
+import '../src/load-env.js'
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import sharp from 'sharp'

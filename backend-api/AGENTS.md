@@ -6,7 +6,7 @@ Express 5 + TypeScript API for the storefront (`../frontend`, Next.js on :3000) 
 
 ```sh
 pnpm install
-pnpm exec prisma generate   # .npmrc has ignore-scripts=true, so the client is not generated on install
+pnpm exec prisma generate   # also runs as postinstall
 pnpm db:migrate             # prisma migrate deploy
 pnpm db:seed                # idempotent: settings defaults, shipping methods, pages, first admin
 pnpm db:seed:catalog        # optional starter catalog with photos

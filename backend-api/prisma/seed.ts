@@ -1,6 +1,7 @@
 /**
  * Idempotent: safe to run on every deploy (`pnpm db:seed`).
  */
+import '../src/load-env.js'
 import { prisma } from '../src/lib/prisma.js'
 import { random } from '../src/lib/str.js'
 import { hashPassword } from '../src/services/password-resets.js'

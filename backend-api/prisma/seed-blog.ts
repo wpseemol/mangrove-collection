@@ -3,6 +3,7 @@
  * (`pnpm db:seed:blog`). Each post has its own cover in `prisma/seed-images/blog/<slug>.jpg`.
  * Idempotent: categories are upserted by slug and posts whose slug already exists are skipped.
  */
+import '../src/load-env.js'
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import sharp from 'sharp'
