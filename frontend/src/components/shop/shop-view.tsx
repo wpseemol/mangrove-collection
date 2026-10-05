@@ -1,0 +1,181 @@
+"use client";
+
+import { LayoutGrid, List, SlidersHorizontal, X } from "lucide-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+
+import { ProductGrid } from "@/components/product/product-grid";
+import { Container } from "@/components/shared/container";
+import { PageHeader } from "@/components/shared/page-breadcrumb";
+import { SimplePagination } from "@/components/shared/simple-pagination";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { type ProductFilters, useProducts } from "@/lib/queries";
+import { cn } from "@/lib/utils";
+
+import { ShopFilters, type ShopFilterValues } from "./shop-filters";
+
+const SORT_OPTIONS = [
+  { value: "latest", label: "Newest first" },
+  { value: "popular", label: "Most popular" },
+  { value: "rating", label: "Top rated" },
+  { value: "price_asc", label: "Price: low to high" },
+  { value: "price_desc", label: "Price: high to low" },
+  { value: "name", label: "Name: A to Z" },
+] as const;
+
+export function ShopView({
+  title = "Shop",
+  description = "Fresh fish, crab, prawn and pure honey — straight from the Sundarbans.",
+  baseFilters = {},
+}: {
+  title?: string;
+  description?: string;
+  baseFilters?: ProductFilters;
+}) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const params = useSearchParams();
+
+  const q = params.get("q") ?? "";
+  const categories = params.get("category")?.split(",").filter(Boolean) ?? [];
+  const minPrice = params.get("min_price") ?? "";
+  const maxPrice = params.get("max_price") ?? "";
+  const sort = (params.get("sort") ?? "latest") as ProductFilters["sort"];
+  const page = Number(params.get("page") ?? 1) || 1;
+  const view = params.get("view") === "list" ? "list" : "grid";
+
+  const { data, isLoading, isFetching } = useProducts({
+    ...baseFilters,
+    q: q || undefined,
+    category: categories.join(",") || undefined,
+    min_price: minPrice || undefined,
+    max_price: maxPrice || undefined,
+    sort,
+    page,
+    per_page: 20,
+  });
+
+  const update = (changes: Record<string, string | null>, resetPage = true) => {
+    const next = new URLSearchParams(params.toString());
+    for (const [key, value] of Object.entries(changes)) {
+      if (value) next.set(key, value);
+      else next.delete(key);
+    }
+    if (resetPage) next.delete("page");
+    const query = next.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+  };
+
+  const onFilterChange = (changes: Partial<ShopFilterValues>) =>
+    update({
+      ...(changes.categories !== undefined ? { category: changes.categories.join(",") } : {}),
+      ...(changes.minPrice !== undefined ? { min_price: changes.minPrice } : {}),
+      ...(changes.maxPrice !== undefined ? { max_price: changes.maxPrice } : {}),
+    });
+
+  const filterValues: ShopFilterValues = { categories, minPrice, maxPrice };
+  const filtersKey = `${categories.join(",")}|${minPrice}|${maxPrice}`;
+
+  return (
+    <>
+    <PageHeader title={title} description={description} breadcrumb={[{ label: title }]} />
+    <Container>
+      <div className="grid gap-8 lg:grid-cols-[260px_1fr]">
+        <aside className="hidden lg:block">
+          <div className="sticky top-28">
+            <ShopFilters key={filtersKey} values={filterValues} onChange={onFilterChange} />
+          </div>
+        </aside>
+
+        <section className="min-w-0">
+          <div className="mb-6 flex flex-wrap items-center gap-3 rounded-xl border bg-card p-2 pl-3">
+            <div className="flex items-center gap-1 rounded-lg bg-muted p-0.5">
+              <Button
+                size="icon-sm"
+                variant={view === "grid" ? "default" : "ghost"}
+                aria-label="Grid view"
+                onClick={() => update({ view: null }, false)}
+              >
+                <LayoutGrid />
+              </Button>
+              <Button
+                size="icon-sm"
+                variant={view === "list" ? "default" : "ghost"}
+                aria-label="List view"
+                onClick={() => update({ view: "list" }, false)}
+              >
+                <List />
+              </Button>
+            </div>
+
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="sm" className="lg:hidden">
+                  <SlidersHorizontal /> Filters
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="overflow-y-auto">
+                <SheetHeader>
+                  <SheetTitle>Filters</SheetTitle>
+                </SheetHeader>
+                <div className="px-4 pb-6">
+                  <ShopFilters key={filtersKey} values={filterValues} onChange={onFilterChange} />
+                </div>
+              </SheetContent>
+            </Sheet>
+
+            <p className={cn("text-sm text-muted-foreground", isFetching && "opacity-60")}>
+              {data ? (
+                <>
+                  <span className="font-semibold text-foreground">{data.meta.total}</span> product{data.meta.total === 1 ? "" : "s"}
+                </>
+              ) : (
+                ""
+              )}
+            </p>
+
+            <div className="ml-auto flex items-center gap-2">
+              <span className="hidden text-sm text-muted-foreground sm:inline">Sort by</span>
+              <Select value={sort} onValueChange={(value) => update({ sort: value === "latest" ? null : value })}>
+                <SelectTrigger size="sm" className="w-44 rounded-lg" aria-label="Sort products">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {SORT_OPTIONS.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {q && (
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-secondary py-1 pr-1 pl-4 text-sm text-primary">
+              <span>
+                Results for <strong>“{q}”</strong>
+              </span>
+              <Button variant="ghost" size="icon-xs" className="rounded-full hover:bg-card" aria-label="Clear search" onClick={() => update({ q: null })}>
+                <X />
+              </Button>
+            </div>
+          )}
+
+          <ProductGrid products={data?.data} loading={isLoading} columns={4} layout={view} skeletons={8} />
+
+          <SimplePagination
+            page={data?.meta.current_page ?? page}
+            lastPage={data?.meta.last_page ?? 1}
+            onChange={(target) => {
+              update({ page: String(target) }, false);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          />
+        </section>
+      </div>
+    </Container>
+    </>
+  );
+}

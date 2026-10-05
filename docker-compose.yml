@@ -1,0 +1,32 @@
+services:
+    mysql:
+        image: mysql:8.0
+        container_name: mangrove_collection_db_mysql
+        volumes:
+            - mangrove_collection_db_mysql_data:/var/lib/mysql
+        ports:
+            - "3306:3306"
+        env_file:
+            - .env.dev
+        networks:
+            - mangroveCollectionDbNetwork
+
+    phpmyadmin:
+        image: phpmyadmin
+        container_name: mangrove_collection_db_phpmyadmin
+        ports:
+            - "8183:80"
+        env_file:
+            - .env.dev
+        depends_on:
+            - mysql
+        networks:
+            - mangroveCollectionDbNetwork
+
+networks:
+    mangroveCollectionDbNetwork:
+        driver: bridge
+
+volumes:
+    mangrove_collection_db_mysql_data:
+        name: mangrove_collection_db_mysql_data

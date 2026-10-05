@@ -1,0 +1,80 @@
+import type { Metadata, Viewport } from "next";
+import { Hind_Siliguri, Roboto } from "next/font/google";
+
+import { FloatingSocial } from "@/components/layout/floating-social";
+import { MainNav } from "@/components/layout/main-nav";
+import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
+import { NewsletterSignup } from "@/components/layout/newsletter-signup";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { SiteHeader } from "@/components/layout/site-header";
+import { SiteScripts } from "@/components/layout/site-scripts";
+import { Providers } from "@/components/providers";
+import { SiteJsonLd } from "@/components/seo/site-json-ld";
+import { SITE_URL } from "@/lib/config";
+import { OG_IMAGE, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_NAME, SITE_TITLE } from "@/lib/seo";
+import "./globals.css";
+
+const roboto = Roboto({
+  variable: "--font-roboto",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const hind = Hind_Siliguri({
+  variable: "--font-hind",
+  subsets: ["bengali"],
+  weight: ["400", "500", "600", "700"],
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  applicationName: SITE_NAME,
+  title: {
+    default: SITE_TITLE,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  keywords: SITE_KEYWORDS,
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  category: "shopping",
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    locale: "en_BD",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    images: [OG_IMAGE],
+  },
+  twitter: { card: "summary_large_image", title: SITE_TITLE, description: SITE_DESCRIPTION, images: [OG_IMAGE.url] },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#062b20",
+  viewportFit: "cover",
+};
+
+export default function RootLayout({ children }: LayoutProps<"/">) {
+  return (
+    <html lang="en" className={`${roboto.variable} ${hind.variable} h-full antialiased`} suppressHydrationWarning>
+      <body className="flex min-h-full flex-col bg-background pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0">
+        <SiteJsonLd />
+        <Providers>
+          <SiteHeader />
+          <MainNav />
+          <main className="flex-1 pb-12 md:pb-20">{children}</main>
+          <NewsletterSignup />
+          <SiteFooter />
+          <MobileBottomNav />
+          <FloatingSocial />
+          <SiteScripts />
+        </Providers>
+      </body>
+    </html>
+  );
+}
