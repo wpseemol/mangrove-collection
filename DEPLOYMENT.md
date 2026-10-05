@@ -67,7 +67,7 @@ and structured data.
    `www.`. HTTPS is mandatory: the session cookie is `Secure`. Turn on
    **Force HTTPS Redirect** for all three hosts (cPanel > Domains).
 3. **PHP** (cPanel > MultiPHP Manager): set `api.mangrove-collection.com` to
-   PHP **8.4** or newer. In Select PHP Version / PHP extensions make sure
+   PHP **8.2** or newer. In Select PHP Version / PHP extensions make sure
    `pdo_mysql`, `mbstring`, `openssl`, `fileinfo`, `gd`, `curl`, `tokenizer`,
    `xml` and `ctype` are on. In MultiPHP INI Editor set `upload_max_filesize`
    and `post_max_size` to at least **110M** (blog videos can be 100 MB) and
@@ -166,8 +166,8 @@ php artisan optimize               # caches config, routes and views
 chmod -R 775 storage bootstrap/cache public/uploads
 ```
 
-If cPanel's PHP CLI is older than 8.4, call the right binary explicitly, e.g.
-`/opt/cpanel/ea-php84/root/usr/bin/php artisan migrate --force`.
+If cPanel's PHP CLI is older than 8.2, call the right binary explicitly, e.g.
+`/opt/cpanel/ea-php82/root/usr/bin/php artisan migrate --force`.
 
 If `ADMIN_PASSWORD` is empty, the seeder prints a random password once. Sign in
 and change it, then remove `ADMIN_PASSWORD` from `.env`.
@@ -340,7 +340,7 @@ php artisan optimize
 | Dashboard shows "Can't reach the Mangrove Collection API" | API down, wrong `VITE_API_URL`, or the dashboard CSP's `connect-src` doesn't include the API host. |
 | 500 errors, blank JSON | Check `~/mangrove-api/storage/logs/laravel.log` and cPanel > Errors. Check `storage/`, `bootstrap/cache/` and `public/uploads/` are writable. Never turn on `APP_DEBUG` on the live site. |
 | "No application encryption key has been specified" | `~/mangrove-api/.env` is missing, unreadable, or has an empty `APP_KEY`. |
-| "Your PHP version does not satisfy..." / syntax errors | The `api.` domain (or the CLI `php`) is on PHP older than 8.4. Fix it in MultiPHP Manager. |
+| "Your PHP version does not satisfy..." / syntax errors | The `api.` domain (or the CLI `php`) is on PHP older than 8.2. Fix it in MultiPHP Manager. |
 | Images/videos 404 under `/storage/...` | `php artisan storage:link` was not run (or the symlink was not uploaded). |
 | Video upload fails with 413/422 | Raise `upload_max_filesize` and `post_max_size` (MultiPHP INI Editor). |
 | Changes to `.env` ignored | The config is cached: run `php artisan optimize` (or `php artisan config:clear`). |
