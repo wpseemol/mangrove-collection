@@ -4,20 +4,20 @@ namespace App\Models;
 
 use App\Enums\UserRole;
 use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-#[Fillable(['name', 'email', 'phone', 'avatar', 'password', 'role', 'is_active', 'google_id', 'email_verified_at', 'last_login_at'])]
-#[Hidden(['password', 'remember_token', 'google_id'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
+
+    protected $fillable = ['name', 'email', 'phone', 'avatar', 'password', 'role', 'is_active', 'google_id', 'email_verified_at', 'last_login_at'];
+
+    protected $hidden = ['password', 'remember_token', 'google_id'];
 
     /**
      * @var array<string, mixed>

@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['product_id', 'url', 'alt', 'sort_order'])]
 class ProductImage extends Model
 {
+    protected $fillable = ['product_id', 'url', 'alt', 'sort_order'];
+
     /**
      * @return BelongsTo<Product, $this>
      */

@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['blog_post_id', 'type', 'provider', 'url', 'caption', 'sort_order'])]
 class BlogPostMedia extends Model
 {
+    protected $fillable = ['blog_post_id', 'type', 'provider', 'url', 'caption', 'sort_order'];
+
     protected $table = 'blog_post_media';
 
     protected function casts(): array

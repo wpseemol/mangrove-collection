@@ -4,18 +4,18 @@ namespace App\Models;
 
 use App\Enums\ReviewStatus;
 use App\Services\ReviewImageService;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable([
-    'product_id', 'order_id', 'user_id', 'reviewer_name', 'reviewer_phone', 'reviewer_email',
-    'rating', 'comment', 'images', 'status', 'edited_at',
-])]
 class ProductReview extends Model
 {
+    protected $fillable = [
+        'product_id', 'order_id', 'user_id', 'reviewer_name', 'reviewer_phone', 'reviewer_email',
+        'rating', 'comment', 'images', 'status', 'edited_at',
+    ];
+
     protected function casts(): array
     {
         return [

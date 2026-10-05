@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Enums\ProductStatus;
 use App\Models\Concerns\HasUniqueSlug;
 use Database\Factories\ProductFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,14 +14,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable([
-    'category_id', 'name', 'slug', 'unit', 'size', 'shipping_cost', 'currency', 'short_description', 'description',
-    'thumbnail', 'tags', 'status', 'is_featured', 'popularity', 'meta_title', 'meta_description', 'created_by',
-])]
 class Product extends Model
 {
     /** @use HasFactory<ProductFactory> */
     use HasFactory, HasUniqueSlug, SoftDeletes;
+
+    protected $fillable = [
+        'category_id', 'name', 'slug', 'unit', 'size', 'shipping_cost', 'currency', 'short_description', 'description',
+        'thumbnail', 'tags', 'status', 'is_featured', 'popularity', 'meta_title', 'meta_description', 'created_by',
+    ];
 
     protected function casts(): array
     {
