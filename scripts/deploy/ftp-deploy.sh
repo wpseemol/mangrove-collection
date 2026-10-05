@@ -29,13 +29,25 @@ cleanup() {
 }
 trap cleanup ERR
 
+# ::error:: lines become run annotations, which are readable without signing in to GitHub.
 echo "Uploading $zip ($(du -h "$zip" | cut -f1)) for $target"
-ftp "mkdir -p -f '$FTP_API_DIR/public'; put '$zip' -o '$remote_zip'; put '/tmp/$receiver' -o '$FTP_API_DIR/public/$receiver';"
+if ! out=$(ftp "pwd; mkdir -p -f '$FTP_API_DIR/public'; put '$zip' -o '$remote_zip'; put '/tmp/$receiver' -o '$FTP_API_DIR/public/$receiver';" 2>&1); then
+  echo "$out"
+  echo "::error title=FTP upload failed ($target)::$(echo "$out" | tail -n 3 | tr '\n' ' ')"
+  exit 1
+fi
+echo "$out"
 
 echo "Extracting on the server"
-curl --fail-with-body -sS --max-time 900 \
+status=0
+body=$(curl -sS --max-time 900 -w '\nHTTP %{http_code}' \
   -H "X-Deploy-Token: $token" \
   --data-urlencode "target=$target" \
   --data-urlencode "dir=$dir" \
   --data-urlencode "zip=$remote_zip" \
-  "$API_URL/$receiver"
+  "$API_URL/$receiver" 2>&1) || status=$?
+echo "$body"
+if [ "$status" -ne 0 ] || ! grep -q "^OK: $target deployed" <<<"$body"; then
+  echo "::error title=Server step failed ($target)::$(echo "$body" | tail -n 4 | tr '\n' ' ' | cut -c1-500)"
+  false
+fi
