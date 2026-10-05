@@ -33,6 +33,19 @@ set_time_limit(0);
 ignore_user_abort(true);
 header('Content-Type: text/plain; charset=utf-8');
 
+// Production PHP hides errors; print them so CI shows why a deploy failed.
+ini_set('display_errors', '0');
+set_exception_handler(static function (Throwable $e): void {
+    http_response_code(500);
+    echo 'ERROR: '.$e::class.': '.$e->getMessage().' at '.basename($e->getFile()).':'.$e->getLine()."\n";
+});
+register_shutdown_function(static function (): void {
+    $e = error_get_last();
+    if ($e !== null && in_array($e['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR], true)) {
+        echo "FATAL: {$e['message']} at ".basename($e['file']).":{$e['line']}\n";
+    }
+});
+
 const ALWAYS_KEEP = ['.well-known', 'cgi-bin', '.user.ini', 'php.ini', 'error_log'];
 
 function fail(string $message): never
@@ -103,16 +116,32 @@ function restoreCpanelHandler(string $htaccess, string $block): void
     }
 }
 
-function extract_zip(string $zip, string $dir): void
+// Uses ZipArchive when the zip extension is on, otherwise the phar extension's PharData.
+function open_zip(string $zip): ZipArchive|PharData
 {
-    $archive = new ZipArchive();
-    if ($archive->open($zip) !== true) {
-        fail('cannot open zip');
+    if (class_exists(ZipArchive::class)) {
+        $archive = new ZipArchive();
+        if ($archive->open($zip) !== true) {
+            fail('cannot open zip');
+        }
+
+        return $archive;
     }
-    if (!$archive->extractTo($dir)) {
-        fail('extract failed');
+    if (class_exists(PharData::class)) {
+        return new PharData($zip);
     }
-    $archive->close();
+    fail('neither the zip nor the phar PHP extension is enabled');
+}
+
+function extract_zip(ZipArchive|PharData $archive, string $dir): void
+{
+    if ($archive instanceof ZipArchive) {
+        $archive->extractTo($dir) || fail('extract failed');
+        $archive->close();
+
+        return;
+    }
+    $archive->extractTo($dir, null, true);
 }
 
 $target = (string) ($_POST['target'] ?? '');
@@ -131,15 +160,22 @@ if ($base === null) {
 
 $dir = $base.'/'.relativePath((string) ($_POST['dir'] ?? ''), 'dir');
 $zip = "{$base}/{$zipName}";
+$archive = open_zip($zip);
 
 switch ($target) {
     case 'api':
+        $missing = array_filter(['pdo_mysql', 'mbstring', 'openssl', 'tokenizer', 'xml', 'ctype', 'fileinfo', 'curl'],
+            static fn (string $ext): bool => !extension_loaded($ext));
+        if (version_compare(PHP_VERSION, '8.4.1', '<') || $missing !== []) {
+            fail('PHP '.PHP_VERSION.' on the API domain; need 8.4.1+ with extensions: '.($missing ? implode(', ', $missing) : 'all present').'. Nothing was changed.');
+        }
+
         // Some hosts point the API subdomain at the app folder instead of public/.
         $docRootIsApp = is_dir($dir) && realpath(__DIR__) === realpath($dir);
         $handler = cpanelHandler("{$dir}/public/.htaccess") ?: cpanelHandler("{$dir}/.htaccess");
         clearDir($dir, [...ALWAYS_KEEP, 'storage', 'public', basename($self)]);
         clearDir("{$dir}/public", [...ALWAYS_KEEP, 'uploads', 'storage', basename($self)]);
-        extract_zip($zip, $dir);
+        extract_zip($archive, $dir);
         restoreCpanelHandler("{$dir}/public/.htaccess", $handler);
         if ($docRootIsApp) {
             // Route every request into public/ so .env, vendor/ and the source are never served.
@@ -166,7 +202,11 @@ switch ($target) {
 
         foreach ($commands as [$command, $args]) {
             echo "> php artisan {$command}\n";
-            $code = $kernel->call($command, $args);
+            try {
+                $code = $kernel->call($command, $args);
+            } catch (Throwable $e) {
+                fail("{$command}: ".$e::class.': '.$e->getMessage());
+            }
             echo $kernel->output();
             if ($code !== 0 && $command !== 'storage:link') {
                 fail("{$command} exited with {$code}");
@@ -176,7 +216,7 @@ switch ($target) {
 
     case 'storefront':
         clearDir($dir, [...ALWAYS_KEEP, 'tmp', '.htaccess', 'stderr.log', 'node_modules']);
-        extract_zip($zip, $dir);
+        extract_zip($archive, $dir);
         is_dir("{$dir}/tmp") || mkdir("{$dir}/tmp", 0755, true);
         touch("{$dir}/tmp/restart.txt");
         break;
@@ -184,7 +224,7 @@ switch ($target) {
     case 'dashboard':
         $handler = cpanelHandler("{$dir}/.htaccess");
         clearDir($dir, [...ALWAYS_KEEP]);
-        extract_zip($zip, $dir);
+        extract_zip($archive, $dir);
         restoreCpanelHandler("{$dir}/.htaccess", $handler);
         break;
 
