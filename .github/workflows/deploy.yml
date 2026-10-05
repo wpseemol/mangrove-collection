@@ -78,11 +78,11 @@ jobs:
                   SESSION_SECURE_COOKIE: ${{ secrets.SESSION_SECURE_COOKIE }}
                   ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
                   ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
-        run: |
-          set -o pipefail
-          composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist 2>&1 | tee /tmp/composer.log \
-            || { echo "::error title=composer install failed::$(tail -n 5 /tmp/composer.log | tr '\n' ' ')"; exit 1; }
-          if [ -n "$API_ENV" ]; then
+              run: |
+                  set -o pipefail
+                  composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist 2>&1 | tee /tmp/composer.log \
+                    || { echo "::error title=composer install failed::$(tail -n 5 /tmp/composer.log | tr '\n' ' ')"; exit 1; }
+                  if [ -n "$API_ENV" ]; then
                     printf '%s\n' "$API_ENV" > .env
                   else
                     # Start from the production defaults in .env.example and override with each secret that is set.
