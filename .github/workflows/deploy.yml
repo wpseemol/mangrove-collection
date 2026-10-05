@@ -24,12 +24,27 @@ jobs:
     defaults:
       run:
         working-directory: backend-api
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: testing
+        ports: ['3306:3306']
+        options: --health-cmd="mysqladmin ping -proot" --health-interval=5s --health-timeout=5s --health-retries=20
+    env:
+      DB_CONNECTION: mysql
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_DATABASE: testing
+      DB_USERNAME: root
+      DB_PASSWORD: root
     steps:
       - uses: actions/checkout@v5
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.4'
-          extensions: pdo_sqlite, sqlite3, mbstring, gd, fileinfo, zip
+          extensions: pdo_mysql, mbstring, gd, fileinfo, zip
           coverage: none
       - run: composer install --no-interaction --prefer-dist
       - run: cp .env.example .env && php artisan key:generate
