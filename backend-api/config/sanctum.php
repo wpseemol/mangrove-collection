@@ -21,7 +21,7 @@ return [
     // Origin/Referer matches get a session cookie and CSRF protection.
     'stateful' => array_values(array_filter(array_map('trim', explode(',', (string) env(
         'SANCTUM_STATEFUL_DOMAINS',
-        'localhost:3000,localhost:5173,127.0.0.1:3000,127.0.0.1:5173',
+        env('STATEFUL_DOMAINS', 'localhost:3000,localhost:5173,127.0.0.1:3000,127.0.0.1:5173'),
     ))))),
 
     /*

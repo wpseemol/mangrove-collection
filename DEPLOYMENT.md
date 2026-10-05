@@ -6,10 +6,11 @@ Three apps, one registrable domain:
 | --- | --- | --- | --- |
 | Storefront (`frontend/`) | Next.js server (`next start`) | `frontend/.next/` (Node.js app) | `https://mangrove-collection.com` |
 | Dashboard (`dashboard/`) | Vite + React | `dashboard/dist/` | `https://dashboard.mangrove-collection.com` |
-| API (`backend-api/`) | Express + TypeScript + Prisma (MySQL) | `backend-api/dist/` (Node.js app) | `https://api.mangrove-collection.com` |
+| API (`backend-api/`) | Laravel 13 (PHP 8.3+, MySQL) | `backend-api/` (PHP, document root `public/`) | `https://api.mangrove-collection.com` |
 
-The dashboard is plain HTML/CSS/JS. The API and the storefront run as Node.js 22+ apps: the storefront renders
-blog pages on the server so search engines get the full article, title, description and structured data.
+The dashboard is plain HTML/CSS/JS. The API is a normal PHP site (no Node.js needed). The storefront runs as a
+Node.js 22+ app: it renders blog pages on the server so search engines get the full article, title, description
+and structured data.
 
 > **Same domain is required.** Sign-in uses an HttpOnly session cookie scoped to
 > `.mangrove-collection.com`. If you host the frontends on a different domain
@@ -26,13 +27,12 @@ blog pages on the server so search engines get the full article, title, descript
   returned to or stored by the browser. `Authorization: Bearer` headers are
   ignored.
 - **CSRF.** Before the first POST/PUT/PATCH/DELETE the frontends call
-  `GET https://api.mangrove-collection.com/sanctum/csrf-cookie` (the path is
-  kept from the old Laravel API), which sets a readable `XSRF-TOKEN` cookie.
+  `GET https://api.mangrove-collection.com/sanctum/csrf-cookie`, which sets a readable `XSRF-TOKEN` cookie.
   Every mutating request echoes it back in the `X-XSRF-TOKEN` header. A missing
   or stale token returns **419**. The clients refresh the token and retry once
   automatically.
 - **Origin check.** Only requests whose `Origin`/`Referer` host is listed in
-  `STATEFUL_DOMAINS` get a session at all. Login from anywhere else returns
+  `SANCTUM_STATEFUL_DOMAINS` get a session at all. Login from anywhere else returns
   **403** "Sign-in is only available from the Mangrove Collection website or
   dashboard". CORS (`CORS_ALLOWED_ORIGINS`) independently restricts which
   origins may read credentialed responses.
@@ -61,12 +61,17 @@ blog pages on the server so search engines get the full article, title, descript
    `dashboard.mangrove-collection.com`.
    - The main domain is served by the storefront Node.js app (section 4.1).
    - `dashboard.` document root: `dashboard_html` (any folder outside `public_html`).
-   - `api.` is served by the Node.js app (step 3); its document root must
-     **not** be the app folder.
+   - `api.` document root: **`mangrove-api/public`** (only the `public/` folder,
+     never the app folder itself).
 2. **SSL** (cPanel > SSL/TLS Status): run AutoSSL for all three hosts, plus
    `www.`. HTTPS is mandatory: the session cookie is `Secure`. Turn on
    **Force HTTPS Redirect** for all three hosts (cPanel > Domains).
-3. **Node.js** (cPanel > Setup Node.js App): Node.js **22+** (see section 3.3).
+3. **PHP** (cPanel > MultiPHP Manager): set `api.mangrove-collection.com` to
+   PHP **8.3** or newer. In Select PHP Version / PHP extensions make sure
+   `pdo_mysql`, `mbstring`, `openssl`, `fileinfo`, `gd`, `curl`, `tokenizer`,
+   `xml` and `ctype` are on. In MultiPHP INI Editor set `upload_max_filesize`
+   and `post_max_size` to at least **110M** (blog videos can be 100 MB) and
+   `memory_limit` to 256M.
 4. **MySQL** (MySQL Databases): create a database and user, and grant the user
    ALL PRIVILEGES on that database only.
 
@@ -74,33 +79,33 @@ Directory layout in your home folder:
 
 ```text
 /home/USER/
-├── mangrove-api/          # backend-api/ (Node.js application root, NOT web-accessible)
+├── mangrove-api/          # backend-api/ (Laravel app; only public/ is web-accessible)
+│   └── public/            # <- document root of api.mangrove-collection.com
 ├── mangrove-storefront/   # frontend/ (Node.js application root, NOT web-accessible)
 └── dashboard_html/        # <- contents of dashboard/dist/
 ```
 
-Never put the API folder inside `public_html` or any document root, otherwise
-`.env` and the source could be exposed. The API itself serves only `/v1/*`,
-`/up`, `/uploads/*` and `/storage/*`.
+Never point a document root at `mangrove-api/` itself or put it inside
+`public_html`, otherwise `.env` and the source could be exposed.
 
 ---
 
 ## 3. API (`backend-api/`)
 
-### 3.1 Build and upload
+### 3.1 Prepare and upload
 
-Build on your computer (or CI):
+If your cPanel has a Terminal with `composer`, upload the source and install there (step 3.3).
+Otherwise install the PHP dependencies on your computer first:
 
 ```bash
-pnpm install
-pnpm --filter mangrove-collection-api exec prisma generate
-pnpm --filter mangrove-collection-api build      # -> backend-api/dist/
+cd backend-api
+composer install --no-dev --optimize-autoloader     # -> vendor/
 ```
 
-Upload to `~/mangrove-api/`: `dist/`, `src/` (used by the seed scripts), `prisma/`,
-`data/`, `public/uploads/`, `storage/`, `package.json` and `prisma.config.ts`. Do not
-upload `node_modules/`, `.env` or `test/`. (Use Git Version Control in cPanel, or zip and
-extract it in File Manager.)
+Upload the whole `backend-api/` folder to `~/mangrove-api/` **including `vendor/`**
+(zip it, upload with File Manager and extract, or use Git Version Control + composer). Do not
+upload `.env`, `tests/` or `node_modules/`. When redeploying, keep the server's `.env`,
+`public/uploads/` and `storage/app/public/`.
 
 ### 3.2 Production `.env`
 
@@ -113,15 +118,19 @@ APP_DEBUG=false                       # never true in production
 APP_KEY=base64:...                    # keep the key from the previous deploy
 APP_URL=https://api.mangrove-collection.com
 LOG_LEVEL=warning
-TRUST_PROXY=1                         # behind Apache/Passenger, so client IPs (rate limits) are right
 
+DB_CONNECTION=mysql
 DB_HOST=localhost
 DB_DATABASE=cpaneluser_mangrove
 DB_USERNAME=cpaneluser_mangrove
 DB_PASSWORD=********
 
+SESSION_DRIVER=database
+CACHE_STORE=database
+QUEUE_CONNECTION=sync
+
 # Hosts (no scheme) that receive the session cookie + CSRF protection
-STATEFUL_DOMAINS=mangrove-collection.com,www.mangrove-collection.com,dashboard.mangrove-collection.com
+SANCTUM_STATEFUL_DOMAINS=mangrove-collection.com,www.mangrove-collection.com,dashboard.mangrove-collection.com
 # Exact origins (scheme + host) allowed to make credentialed CORS requests
 CORS_ALLOWED_ORIGINS=https://mangrove-collection.com,https://www.mangrove-collection.com,https://dashboard.mangrove-collection.com
 
@@ -136,69 +145,70 @@ ADMIN_PASSWORD=a-long-unique-password
 ```
 
 `APP_KEY` encrypts the secret settings (SMTP, SMS, Google) and signs cookies.
-When moving from the Laravel API, reuse its `APP_KEY` unchanged. A new key
-makes stored secrets unreadable and signs everyone out. Generate a key only for
-a brand-new install:
-`node -e "console.log('base64:'+require('crypto').randomBytes(32).toString('base64'))"`.
+When moving from the Express API, reuse its `APP_KEY` unchanged (both use the
+same encryption format). A new key makes stored secrets unreadable and signs
+everyone out. Generate a key only for a brand-new install: `php artisan key:generate`.
 
 Lock the file down: `chmod 600 ~/mangrove-api/.env`.
 
 Google OAuth, SMTP, SMS and SEO/pixel settings are **not** in `.env`. They
 live in the `settings` table and are edited from the dashboard.
 
-### 3.3 Create the Node.js app (cPanel > Setup Node.js App)
-
-- Node.js version: **22** or newer
-- Application mode: **Production**
-- Application root: `mangrove-api`
-- Application URL: `api.mangrove-collection.com`
-- Application startup file: `dist/server.js`
-
-The app reads `~/mangrove-api/.env` on startup, so no environment variables need
-to be entered in the form.
-
-### 3.4 Install, migrate and seed (cPanel > Terminal, or SSH)
-
-Enter the app's virtual environment (cPanel shows the `source .../activate`
-command at the top of the app page), then:
+### 3.3 Install, migrate and seed (cPanel > Terminal, or SSH)
 
 ```bash
 cd ~/mangrove-api
-npm install                       # includes the Prisma CLI and tsx used below
-npx prisma generate
-npx prisma migrate deploy
-npx tsx prisma/seed.ts   # idempotent: settings, shipping, pages, first admin
-chmod -R 775 storage public/uploads
+composer install --no-dev --optimize-autoloader   # skip if you uploaded vendor/
+php artisan migrate --force        # creates missing tables, skips existing ones
+php artisan db:seed --force        # idempotent: settings, shipping, pages, first admin
+php artisan storage:link           # public/storage -> storage/app/public
+php artisan optimize               # caches config, routes and views
+chmod -R 775 storage bootstrap/cache public/uploads
 ```
 
-Then click **Restart** on the Node.js app page.
+If cPanel's PHP CLI is older than 8.3, call the right binary explicitly, e.g.
+`/opt/cpanel/ea-php83/root/usr/bin/php artisan migrate --force`.
 
 If `ADMIN_PASSWORD` is empty, the seeder prints a random password once. Sign in
 and change it, then remove `ADMIN_PASSWORD` from `.env`.
 
+Optional demo content (skips anything that already exists):
+
+```bash
+php artisan db:seed --class=CatalogSeeder --force       # 5 categories, 16 products with photos
+php artisan db:seed --class=FreshCatalogSeeder --force  # same, but removes the current catalog first
+php artisan db:seed --class=BlogSeeder --force          # 5 blog categories, 15 articles with covers
+```
+
 Uploaded files live in `public/uploads/` (categories, reviews) and
-`storage/app/public/` (media library, avatars). The API serves them as static
-files only (never executed). Keep both folders when redeploying.
+`storage/app/public/` (media library, avatars, blog videos), served by Apache
+through `public/`. Keep both folders when redeploying.
 
-### 3.5 Upgrading from the Laravel API
+After every change to `.env` run `php artisan optimize` again (the config is cached).
 
-The database is reused as-is: same tables, same password hashes, same images.
+### 3.4 Upgrading from the Express API
+
+The database is reused as-is: same tables, same password hashes, same images,
+and every `/v1` endpoint keeps the same URL, request fields and JSON response.
 
 1. Keep the same `APP_KEY`, database and upload folders (`public/uploads`,
-   `storage/app/public`).
-2. Rename `SANCTUM_STATEFUL_DOMAINS` to `STATEFUL_DOMAINS` (the old name still
-   works).
-3. Run `npx prisma migrate deploy`. On a database created by Laravel, first mark
-   the baseline as applied: `npx prisma migrate resolve --applied 0_init`. The
-   last migration drops Laravel's own `cache`, `jobs`, `migrations` and
-   `personal_access_tokens` tables.
-4. Remove the old PHP document root and cron jobs: the Express API has no
-   scheduler or queue.
+   `storage/app/public`). Copy them from the old Node app folder into `~/mangrove-api/`.
+2. In `.env`, rename `STATEFUL_DOMAINS` to `SANCTUM_STATEFUL_DOMAINS` and add
+   `DB_CONNECTION=mysql`, `SESSION_DRIVER=database`, `CACHE_STORE=database` and
+   `QUEUE_CONNECTION=sync` (see 3.2). `TRUST_PROXY` is no longer used.
+3. Stop and delete the Node.js app in cPanel > Setup Node.js App, then set the
+   `api.` document root to `mangrove-api/public`.
+4. Run the commands in 3.3. `php artisan migrate --force` only adds what
+   Laravel needs (`migrations`, `cache`, `jobs`, `personal_access_tokens`) and
+   leaves the existing tables and data alone. Prisma's `_prisma_migrations`
+   table can stay or be dropped.
+
+Users may have to sign in once after the switch.
 
 The API adds its own security headers (`nosniff`, `X-Frame-Options: DENY`,
 `Referrer-Policy: no-referrer`) and rate-limits all routes.
 
-### 3.6 Dashboard settings
+### 3.5 Dashboard settings
 
 After the first sign-in, open **Settings** and confirm `storefront_url` and
 `dashboard_url`. Password-reset emails link to
@@ -287,18 +297,16 @@ Upload the **contents** of `dashboard/dist/` (including `.htaccess`) into
 ### 4.3 Redeploys
 
 Upload the new build over the old files and restart the storefront app. Hashed
-assets make stale caches harmless. For the API, upload the new `dist/`, `src/`, `prisma/` and `package.json`,
-then:
+assets make stale caches harmless. For the API, upload the new code (keeping the server's `.env`,
+`public/uploads/` and `storage/app/public/`), then:
 
 ```bash
 cd ~/mangrove-api
-npm install
-npx prisma generate
-npx prisma migrate deploy
-npx tsx prisma/seed.ts
+composer install --no-dev --optimize-autoloader   # skip if you uploaded vendor/
+php artisan migrate --force
+php artisan db:seed --force
+php artisan optimize
 ```
-
-and click **Restart** on the Node.js app page.
 
 ---
 
@@ -325,27 +333,31 @@ and click **Restart** on the Node.js app page.
 
 | Symptom | Cause / fix |
 | --- | --- |
-| **403 "Sign-in is only available from the Mangrove Collection website or dashboard"** | The frontend's host is missing from `STATEFUL_DOMAINS` (host only, no `https://`, include the port locally). Restart the Node.js app after editing `.env`. |
+| **403 "Sign-in is only available from the Mangrove Collection website or dashboard"** | The frontend's host is missing from `SANCTUM_STATEFUL_DOMAINS` (host only, no `https://`, include the port locally). Run `php artisan optimize` after editing `.env`. |
 | **419 on every POST** | Usually the `XSRF-TOKEN` cookie can't be set or read: wrong `SESSION_DOMAIN`, the site served over HTTP while `SESSION_SECURE_COOKIE=true`, or the frontend on a different registrable domain from the API. |
-| **CORS error in the console** | The origin isn't in `CORS_ALLOWED_ORIGINS` (exact scheme + host, no trailing slash), or the app wasn't restarted after editing `.env`. |
+| **CORS error in the console** | The origin isn't in `CORS_ALLOWED_ORIGINS` (exact scheme + host, no trailing slash), or `php artisan optimize` wasn't run after editing `.env`. |
 | Signed in, but every request is a 401 | The session cookie isn't being sent. Check `SESSION_DOMAIN` has the leading dot and that the frontend was built with the production API URL (see the `.env.production.local` note in section 4). |
 | Dashboard shows "Can't reach the Mangrove Collection API" | API down, wrong `VITE_API_URL`, or the dashboard CSP's `connect-src` doesn't include the API host. |
-| 500 errors, blank JSON | Check `~/mangrove-api/storage/logs/app.log` and the Node.js app's log (`stderr.log`). Check `storage/` and `public/uploads/` are writable. Never turn on `APP_DEBUG` on the live site. |
-| App won't start and the log mentions `APP_KEY` | `~/mangrove-api/.env` is missing or unreadable by the app user. |
-| Changes to `.env` ignored | Restart the Node.js app (cPanel > Setup Node.js App > Restart). |
+| 500 errors, blank JSON | Check `~/mangrove-api/storage/logs/laravel.log` and cPanel > Errors. Check `storage/`, `bootstrap/cache/` and `public/uploads/` are writable. Never turn on `APP_DEBUG` on the live site. |
+| "No application encryption key has been specified" | `~/mangrove-api/.env` is missing, unreadable, or has an empty `APP_KEY`. |
+| "Your PHP version does not satisfy..." / syntax errors | The `api.` domain (or the CLI `php`) is on PHP older than 8.3. Fix it in MultiPHP Manager. |
+| Images/videos 404 under `/storage/...` | `php artisan storage:link` was not run (or the symlink was not uploaded). |
+| Video upload fails with 413/422 | Raise `upload_max_filesize` and `post_max_size` (MultiPHP INI Editor). |
+| Changes to `.env` ignored | The config is cached: run `php artisan optimize` (or `php artisan config:clear`). |
 
 ### Local development
 
 ```bash
-pnpm api            # Express API on http://localhost:8080 (restarts on file changes)
-pnpm dev            # storefront :3000 + dashboard :5173
-pnpm --filter mangrove-collection-api test   # API test suite (uses mangrove_collection_test)
+cd backend-api && composer install && php artisan migrate && php artisan db:seed && cd ..
+pnpm api            # Laravel API on http://localhost:8080
+pnpm dev            # API :8080 + storefront :3000 + dashboard :5173
+cd backend-api && php artisan test   # API test suite
 ```
 
 Use `localhost` everywhere, not `127.0.0.1`. Cookies are per-host, so mixing
 the two looks like "logged out". Local `.env` values:
-`SESSION_DOMAIN=null`, `SESSION_SECURE_COOKIE=false`, and
-`STATEFUL_DOMAINS=localhost:3000,localhost:5173`.
+`APP_URL=http://localhost:8080`, `SESSION_DOMAIN=null`, `SESSION_SECURE_COOKIE=false`, and
+`SANCTUM_STATEFUL_DOMAINS=localhost:3000,localhost:5173`.
 
 ### Upgrading from token auth
 

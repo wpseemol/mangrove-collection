@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\User;
 use App\Services\SettingsService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\GoogleProvider;
 use Laravel\Socialite\Two\User as SocialiteUser;
@@ -73,6 +74,8 @@ class GoogleAuthTest extends TestCase
             'email' => $email,
             'avatar' => 'https://lh3.googleusercontent.com/a.png',
         ]);
+
+        Http::fake(['oauth2.googleapis.com/tokeninfo*' => Http::response(['aud' => 'client-123', 'azp' => 'client-123'])]);
 
         $provider = Mockery::mock(GoogleProvider::class);
         $provider->shouldReceive('userFromToken')->with('valid-token')->andReturn($user);

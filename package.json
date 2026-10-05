@@ -2,11 +2,11 @@
   "name": "mangrove-collection",
   "private": true,
   "scripts": {
-    "dev": "pnpm --parallel --filter mangrove-collection-api --filter frontend --filter dashboard dev",
+    "dev": "pnpm run \"/^dev:(api|frontend|dashboard)$/\"",
     "dev:frontend": "pnpm --filter frontend dev",
     "dev:dashboard": "pnpm --filter dashboard dev",
-    "dev:api": "pnpm --filter mangrove-collection-api dev",
-    "api": "pnpm --filter mangrove-collection-api dev",
+    "dev:api": "php backend-api/artisan serve --port=8080",
+    "api": "php backend-api/artisan serve --port=8080",
     "build": "pnpm --filter frontend --filter dashboard build",
     "lint": "pnpm --filter frontend --filter dashboard lint"
   },
