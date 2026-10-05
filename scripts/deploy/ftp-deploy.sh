@@ -30,30 +30,49 @@ ftp() {
     bye"
 }
 
+# Folders that may be the API subdomain's document root, relative to the FTP login folder.
+candidates=("$FTP_API_DIR/public" "$FTP_API_DIR" "public_html/$FTP_API_DIR/public" "public_html/$FTP_API_DIR")
+receiver_path=""
+
 cleanup() {
-  ftp "rm -f '$remote_zip'; rm -f '$FTP_API_DIR/public/$receiver';" || true
+  ftp "rm -f '$remote_zip'; ${receiver_path:+rm -f '$receiver_path';}" >/dev/null 2>&1 || true
 }
 trap cleanup ERR
 
 # ::error:: lines become run annotations, which are readable without signing in to GitHub.
 echo "Uploading $zip ($(du -h "$zip" | cut -f1)) for $target"
-if ! out=$(ftp "pwd; mkdir -p -f '$FTP_API_DIR/public'; put '$zip' -o '$remote_zip'; put '/tmp/$receiver' -o '$FTP_API_DIR/public/$receiver';" 2>&1); then
+if ! out=$(ftp "pwd; cls -1 -a; put '$zip' -o '$remote_zip';" 2>&1); then
   echo "$out"
   echo "::error title=FTP upload failed ($target)::$(echo "$out" | tail -n 3 | tr '\n' ' ')"
   exit 1
 fi
 echo "$out"
+listing=$(tr '\n' ' ' <<<"$out" | cut -c1-400)
 
-echo "Extracting on the server"
-status=0
-body=$(curl -sS --max-time 900 -w '\nHTTP %{http_code}' \
-  -H "X-Deploy-Token: $token" \
-  --data-urlencode "target=$target" \
-  --data-urlencode "dir=$dir" \
-  --data-urlencode "zip=$remote_zip" \
-  "$API_URL/$receiver" 2>&1) || status=$?
-echo "$body"
-if [ "$status" -ne 0 ] || ! grep -q "^OK: $target deployed" <<<"$body"; then
-  echo "::error title=Server step failed ($target)::$(echo "$body" | tail -n 4 | tr '\n' ' ' | cut -c1-500)"
-  false
-fi
+for candidate in "${candidates[@]}"; do
+  ftp "cd '$candidate'" >/dev/null 2>&1 || continue
+  receiver_path="$candidate/$receiver"
+  ftp "put '/tmp/$receiver' -o '$receiver_path';" >/dev/null
+  echo "Calling the receiver in $candidate/"
+  status=0
+  body=$(curl -sS --max-time 900 -w '\nHTTP %{http_code}' \
+    -H "X-Deploy-Token: $token" \
+    --data-urlencode "target=$target" \
+    --data-urlencode "dir=$dir" \
+    --data-urlencode "zip=$remote_zip" \
+    "$API_URL/$receiver" 2>&1) || status=$?
+  if [ "$status" -eq 0 ] && grep -q '^HTTP 404$' <<<"$body"; then
+    ftp "rm -f '$receiver_path';" >/dev/null 2>&1 || true
+    receiver_path=""
+    continue
+  fi
+  echo "$body"
+  if [ "$status" -ne 0 ] || ! grep -q "^OK: $target deployed" <<<"$body"; then
+    echo "::error title=Server step failed ($target)::$(echo "$body" | tail -n 4 | tr '\n' ' ' | cut -c1-500)"
+    false
+  fi
+  exit 0
+done
+
+echo "::error title=API document root not found::$API_URL did not serve any of: ${candidates[*]} (relative to the FTP login folder). FTP login folder contains: $listing"
+false

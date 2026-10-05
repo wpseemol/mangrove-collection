@@ -5,8 +5,8 @@
  * random name with a random token, calls it once over HTTPS and it deletes
  * itself (and the uploaded zip) whatever the outcome.
  *
- * Assumes the API, storefront and dashboard folders all sit in the FTP root
- * (the cPanel home folder), i.e. this file lives at <home>/<api dir>/public/.
+ * All paths it receives are relative to the FTP login folder, which it finds by
+ * walking up from its own folder until the uploaded zip is found.
  */
 
 declare(strict_types=1);
@@ -14,7 +14,6 @@ declare(strict_types=1);
 const TOKEN = '__DEPLOY_TOKEN__';
 
 $self = __FILE__;
-$base = dirname(__DIR__, 2);
 $zip = null;
 
 register_shutdown_function(static function () use ($self, &$zip): void {
@@ -117,20 +116,37 @@ function extract_zip(string $zip, string $dir): void
 }
 
 $target = (string) ($_POST['target'] ?? '');
-$dir = $base.'/'.relativePath((string) ($_POST['dir'] ?? ''), 'dir');
-$zip = $base.'/'.relativePath((string) ($_POST['zip'] ?? ''), 'zip');
+$zipName = relativePath((string) ($_POST['zip'] ?? ''), 'zip');
 
-if (!is_file($zip)) {
-    fail('zip not found');
+$base = null;
+for ($d = __DIR__, $i = 0; $i < 6; $d = dirname($d), $i++) {
+    if (is_file("{$d}/{$zipName}")) {
+        $base = $d;
+        break;
+    }
 }
+if ($base === null) {
+    fail('zip not found above '.__DIR__);
+}
+
+$dir = $base.'/'.relativePath((string) ($_POST['dir'] ?? ''), 'dir');
+$zip = "{$base}/{$zipName}";
 
 switch ($target) {
     case 'api':
-        $handler = cpanelHandler("{$dir}/public/.htaccess");
-        clearDir($dir, [...ALWAYS_KEEP, 'storage', 'public']);
+        // Some hosts point the API subdomain at the app folder instead of public/.
+        $docRootIsApp = is_dir($dir) && realpath(__DIR__) === realpath($dir);
+        $handler = cpanelHandler("{$dir}/public/.htaccess") ?: cpanelHandler("{$dir}/.htaccess");
+        clearDir($dir, [...ALWAYS_KEEP, 'storage', 'public', basename($self)]);
         clearDir("{$dir}/public", [...ALWAYS_KEEP, 'uploads', 'storage', basename($self)]);
         extract_zip($zip, $dir);
         restoreCpanelHandler("{$dir}/public/.htaccess", $handler);
+        if ($docRootIsApp) {
+            // Route every request into public/ so .env, vendor/ and the source are never served.
+            file_put_contents("{$dir}/.htaccess", "RewriteEngine On\nRewriteRule ^(.*)$ public/$1 [L]\n");
+            restoreCpanelHandler("{$dir}/.htaccess", $handler);
+            echo "WARNING: the API document root is the app folder; set it to {$dir}/public in cPanel > Domains.\n";
+        }
 
         foreach (['storage/app/public', 'storage/framework/cache/data', 'storage/framework/sessions',
             'storage/framework/views', 'storage/logs', 'bootstrap/cache', 'public/uploads'] as $path) {
