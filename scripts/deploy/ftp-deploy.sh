@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # Usage: ftp-deploy.sh <api|storefront|dashboard> <local zip> <remote dir>
-# Env: FTP_HOST, FTP_USERNAME, LFTP_PASSWORD, FTP_API_DIR, API_URL
+# Env: FTP_HOST, FTP_USERNAME, FTP_PASSWORD, FTP_API_DIR, API_URL
 set -euo pipefail
 
 trim() { local v=$1; v=${v//$'\r'/}; v=${v//$'\n'/}; v=${v#"${v%%[![:space:]]*}"}; printf '%s' "${v%"${v##*[![:space:]]}"}"; }
 FTP_HOST=$(trim "$FTP_HOST"); FTP_HOST=${FTP_HOST#ftp://}; FTP_HOST=${FTP_HOST%/}
 FTP_USERNAME=$(trim "$FTP_USERNAME")
-FTP_PASSWORD=$(trim "$FTP_PASSWORD"); export FTP_PASSWORD
+# lftp --env-password only reads LFTP_PASSWORD.
+export LFTP_PASSWORD=$(trim "${FTP_PASSWORD:-${LFTP_PASSWORD:-}}")
 
 target=$1
 zip=$2
