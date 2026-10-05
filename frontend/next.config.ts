@@ -14,6 +14,8 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   // Runs as a Node server (`next start`) so blog pages are rendered on the server for search engines.
+  // CI sets NEXT_OUTPUT=standalone so the deploy bundle ships its own node_modules (no npm install on cPanel).
+  output: process.env.NEXT_OUTPUT === "standalone" ? "standalone" : undefined,
   trailingSlash: true,
   poweredByHeader: false,
   images: {

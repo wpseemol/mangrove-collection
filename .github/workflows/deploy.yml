@@ -1,0 +1,150 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+env:
+  FTP_HOST: ${{ secrets.FTP_HOST }}
+  FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+  FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+  FTP_API_DIR: ${{ vars.FTP_API_DIR || 'api.mangrove-collection.com' }}
+  FTP_STOREFRONT_DIR: ${{ vars.FTP_STOREFRONT_DIR || 'public_html' }}
+  FTP_DASHBOARD_DIR: ${{ vars.FTP_DASHBOARD_DIR || 'dashboard.mangrove-collection.com' }}
+  API_URL: ${{ vars.API_URL || 'https://api.mangrove-collection.com' }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend-api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo_sqlite, sqlite3, mbstring, gd, fileinfo, zip
+          coverage: none
+      - run: composer install --no-interaction --prefer-dist
+      - run: cp .env.example .env && php artisan key:generate
+      - run: php artisan test
+
+  api:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, gd, fileinfo, zip
+          coverage: none
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+      - name: Build
+        working-directory: backend-api
+        env:
+          API_ENV: ${{ secrets.API_ENV }}
+          APP_ENV: ${{ secrets.APP_ENV }}
+          APP_KEY: ${{ secrets.APP_KEY }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_DATABASE: ${{ secrets.DB_DATABASE }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          SANCTUM_STATEFUL_DOMAINS: ${{ secrets.SANCTUM_STATEFUL_DOMAINS || secrets.STATEFUL_DOMAINS }}
+          CORS_ALLOWED_ORIGINS: ${{ secrets.CORS_ALLOWED_ORIGINS }}
+          SESSION_DOMAIN: ${{ secrets.SESSION_DOMAIN }}
+          SESSION_SECURE_COOKIE: ${{ secrets.SESSION_SECURE_COOKIE }}
+          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+        run: |
+          composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+          if [ -n "$API_ENV" ]; then
+            printf '%s\n' "$API_ENV" > .env
+          else
+            # Start from the production defaults in .env.example and override with each secret that is set.
+            cp .env.example .env
+            for key in APP_ENV APP_KEY DB_HOST DB_PORT DB_DATABASE DB_USERNAME DB_PASSWORD \
+                       SANCTUM_STATEFUL_DOMAINS CORS_ALLOWED_ORIGINS SESSION_DOMAIN SESSION_SECURE_COOKIE \
+                       ADMIN_EMAIL ADMIN_PASSWORD; do
+              value=${!key}
+              [ -n "$value" ] || continue
+              # Single quotes stop dotenv from expanding $ in passwords; fall back to escaped double quotes.
+              if [[ $value == *"'"* ]]; then
+                value=${value//\\/\\\\}; value=${value//\"/\\\"}; value=${value//\$/\\\$}
+                line="$key=\"$value\""
+              else
+                line="$key='$value'"
+              fi
+              grep -v "^$key=" .env > .env.tmp || true
+              mv .env.tmp .env
+              printf '%s\n' "$line" >> .env
+            done
+          fi
+          for key in APP_KEY DB_DATABASE DB_USERNAME DB_PASSWORD; do
+            grep -Eq "^$key=.+" .env || { echo "Missing $key: add it as a GitHub secret"; exit 1; }
+          done
+          zip -qr ../api.zip . \
+            -x 'tests/*' 'node_modules/*' '.git*' '.agents/*' '.claude/*' '.windsurf/*' '.cursor/*' \
+               'storage/app/public/*' 'storage/logs/*' 'storage/framework/*/*' \
+               'public/uploads/*' 'public/storage' 'phpunit.xml' '.env.example'
+      - run: bash scripts/deploy/ftp-deploy.sh api api.zip "$FTP_API_DIR"
+
+  storefront:
+    needs: api
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+      # Hoisted node_modules: the server-side unzip can't restore pnpm's symlinks.
+      - run: pnpm install --frozen-lockfile --config.node-linker=hoisted
+      - name: Build
+        env:
+          NEXT_OUTPUT: standalone
+          NEXT_PUBLIC_API_URL: ${{ env.API_URL }}/v1
+          NEXT_PUBLIC_SITE_URL: ${{ vars.SITE_URL || 'https://mangrove-collection.com' }}
+          NEXT_PUBLIC_DASHBOARD_URL: ${{ vars.DASHBOARD_URL || 'https://dashboard.mangrove-collection.com' }}
+        run: |
+          pnpm --filter frontend build
+          server=$(find frontend/.next/standalone -name server.js -not -path '*/node_modules/*' | head -n1)
+          app_dir=${server#frontend/.next/standalone/}
+          app_dir=$(dirname "$app_dir")
+          mkdir -p bundle/app
+          cp -a frontend/.next/standalone/. bundle/app/
+          cp -a frontend/.next/static "bundle/app/$app_dir/.next/static"
+          cp -a frontend/public "bundle/app/$app_dir/public"
+          echo "require(\"./app/$app_dir/server.js\");" > bundle/server.js
+          (cd bundle && zip -qr ../storefront.zip .)
+      - run: bash scripts/deploy/ftp-deploy.sh storefront storefront.zip "$FTP_STOREFRONT_DIR"
+
+  dashboard:
+    needs: api
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+      - run: pnpm install --frozen-lockfile
+      - name: Build
+        env:
+          VITE_API_URL: ${{ env.API_URL }}/v1
+          VITE_STOREFRONT_URL: ${{ vars.SITE_URL || 'https://mangrove-collection.com' }}
+        run: |
+          pnpm --filter dashboard build
+          (cd dashboard/dist && zip -qr ../../dashboard.zip .)
+      - run: bash scripts/deploy/ftp-deploy.sh dashboard dashboard.zip "$FTP_DASHBOARD_DIR"
