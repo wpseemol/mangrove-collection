@@ -163,7 +163,7 @@ $zip = "{$base}/{$zipName}";
 
 if ($target === 'api') {
     $missing = array_values(array_filter(
-        ['zip', 'pdo_mysql', 'mbstring', 'openssl', 'tokenizer', 'xml', 'dom', 'ctype', 'fileinfo', 'curl', 'gd', 'bcmath', 'intl'],
+        ['zip', 'pdo_mysql', 'mbstring', 'openssl', 'tokenizer', 'xml', 'dom', 'ctype', 'fileinfo', 'curl', 'gd'],
         static fn (string $ext): bool => !extension_loaded($ext)
     ));
     if (version_compare(PHP_VERSION, '8.4.1', '<') || $missing !== []) {
