@@ -160,15 +160,22 @@ if ($base === null) {
 
 $dir = $base.'/'.relativePath((string) ($_POST['dir'] ?? ''), 'dir');
 $zip = "{$base}/{$zipName}";
+
+if ($target === 'api') {
+    $missing = array_values(array_filter(
+        ['zip', 'pdo_mysql', 'mbstring', 'openssl', 'tokenizer', 'xml', 'dom', 'ctype', 'fileinfo', 'curl', 'gd', 'bcmath', 'intl'],
+        static fn (string $ext): bool => !extension_loaded($ext)
+    ));
+    if (version_compare(PHP_VERSION, '8.4.1', '<') || $missing !== []) {
+        fail('PHP '.PHP_VERSION.' on the API domain. Enable these extensions in cPanel > Select PHP Version: '
+            .($missing ? implode(', ', $missing) : '(none missing, but PHP 8.4.1+ is required)').'. Nothing was changed.');
+    }
+}
+
 $archive = open_zip($zip);
 
 switch ($target) {
     case 'api':
-        $missing = array_filter(['pdo_mysql', 'mbstring', 'openssl', 'tokenizer', 'xml', 'ctype', 'fileinfo', 'curl'],
-            static fn (string $ext): bool => !extension_loaded($ext));
-        if (version_compare(PHP_VERSION, '8.4.1', '<') || $missing !== []) {
-            fail('PHP '.PHP_VERSION.' on the API domain; need 8.4.1+ with extensions: '.($missing ? implode(', ', $missing) : 'all present').'. Nothing was changed.');
-        }
 
         // Some hosts point the API subdomain at the app folder instead of public/.
         $docRootIsApp = is_dir($dir) && realpath(__DIR__) === realpath($dir);
