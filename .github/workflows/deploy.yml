@@ -78,9 +78,11 @@ jobs:
                   SESSION_SECURE_COOKIE: ${{ secrets.SESSION_SECURE_COOKIE }}
                   ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
                   ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
-              run: |
-                  composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
-                  if [ -n "$API_ENV" ]; then
+        run: |
+          set -o pipefail
+          composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist 2>&1 | tee /tmp/composer.log \
+            || { echo "::error title=composer install failed::$(tail -n 5 /tmp/composer.log | tr '\n' ' ')"; exit 1; }
+          if [ -n "$API_ENV" ]; then
                     printf '%s\n' "$API_ENV" > .env
                   else
                     # Start from the production defaults in .env.example and override with each secret that is set.
@@ -103,7 +105,7 @@ jobs:
                     done
                   fi
                   for key in APP_KEY DB_DATABASE DB_USERNAME DB_PASSWORD; do
-                    grep -Eq "^$key=.+" .env || { echo "Missing $key: add it as a GitHub secret"; exit 1; }
+                    grep -Eq "^$key=.+" .env || { echo "::error title=Missing secret::$key is empty: add it as a GitHub repository secret"; exit 1; }
                   done
                   zip -qr ../api.zip . \
                     -x 'tests/*' 'node_modules/*' '.git*' '.agents/*' '.claude/*' '.windsurf/*' '.cursor/*' \
