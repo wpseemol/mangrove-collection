@@ -24,6 +24,7 @@ class UserController extends Controller
         $request->validate([
             'q' => ['nullable', 'string', 'max:100', new SafeText],
             'role' => ['nullable', Rule::enum(UserRole::class)],
+            'status' => ['nullable', Rule::in(['active', 'inactive'])],
             'per_page' => ['nullable', 'integer', 'min:1', 'max:100'],
         ]);
 
@@ -34,11 +35,19 @@ class UserController extends Controller
                 ->orWhere('email', 'like', Search::like($term))
                 ->orWhere('phone', 'like', Search::like($term))))
             ->when($request->query('role'), fn (Builder $q, $role) => $q->where('role', $role))
+            ->when($request->query('status'), fn (Builder $q, $status) => $q->where('is_active', $status === 'active'))
             ->latest()
             ->paginate((int) $request->query('per_page', 20))
             ->withQueryString();
 
-        return UserResource::collection($users);
+        $byRole = User::query()->selectRaw('role, COUNT(*) as total')->groupBy('role')->pluck('total', 'role');
+
+        return UserResource::collection($users)->additional([
+            'counts' => [
+                ...collect(UserRole::cases())->mapWithKeys(fn (UserRole $role) => [$role->value => (int) ($byRole[$role->value] ?? 0)])->all(),
+                'inactive' => User::query()->where('is_active', false)->count(),
+            ],
+        ]);
     }
 
     public function store(Request $request): JsonResponse

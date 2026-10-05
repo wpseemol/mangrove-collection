@@ -37,7 +37,8 @@ class ProductController extends Controller
             ->with(['category', 'variants'])
             ->when($request->query('q'), fn (Builder $q, $term) => $q->where(fn (Builder $q) => $q
                 ->where('name', 'like', Search::like($term))
-                ->orWhere('short_description', 'like', Search::like($term))))
+                ->orWhere('short_description', 'like', Search::like($term))
+                ->orWhereHas('category', fn (Builder $q) => $q->where('is_active', true)->where('name', 'like', Search::like($term)))))
             ->when($request->query('category'), fn (Builder $q, $slugs) => $q->whereHas('category', fn (Builder $q) => $q->whereIn('slug', explode(',', $slugs))))
             ->when($request->query('tag'), fn (Builder $q, $tag) => $q->whereJsonContains('tags', $tag))
             ->when($request->boolean('featured'), fn (Builder $q) => $q->where('is_featured', true))

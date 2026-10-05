@@ -64,6 +64,14 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('checkout', fn (Request $request) => Limit::perMinute(10)
             ->by($request->user()?->id ?: $request->ip()));
 
+        RateLimiter::for('quote', fn (Request $request) => Limit::perMinute(60)
+            ->by($request->user()?->id ?: $request->ip()));
+
+        RateLimiter::for('newsletter', fn (Request $request) => [
+            Limit::perMinute(5)->by('newsletter-ip:'.$request->ip()),
+            Limit::perHour(30)->by('newsletter-ip-hour:'.$request->ip()),
+        ]);
+
         RateLimiter::for('tracking', fn (Request $request) => Limit::perMinute(20)->by($request->ip()));
 
         // Phone/email buyer checks: slows down anyone trying numbers one after another.
@@ -79,6 +87,12 @@ class AppServiceProvider extends ServiceProvider
 
         RateLimiter::for('uploads', fn (Request $request) => Limit::perMinute(20)
             ->by($request->user()?->id ?: $request->ip()));
+
+        // Revealing a stored secret needs the admin's password, so guessing it is kept slow.
+        RateLimiter::for('reveal-secret', fn (Request $request) => [
+            Limit::perMinute(5)->by('reveal:'.($request->user()?->id ?: $request->ip())),
+            Limit::perHour(30)->by('reveal-hour:'.($request->user()?->id ?: $request->ip())),
+        ]);
 
         // Reads stay on the global `api` limit; creates, updates and deletes get a tighter one.
         RateLimiter::for('writes', fn (Request $request) => $request->isMethodSafe()

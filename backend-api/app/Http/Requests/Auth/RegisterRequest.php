@@ -2,16 +2,24 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Http\Controllers\Api\V1\Auth\AuthController;
 use App\Rules\PhoneNumber;
 use App\Rules\SafeText;
+use App\Services\SettingsService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class RegisterRequest extends FormRequest
 {
-    public function authorize(): bool
+    public function authorize(SettingsService $settings): bool
     {
-        return true;
+        return (bool) $settings->get('password_login_enabled');
+    }
+
+    protected function failedAuthorization(): never
+    {
+        throw new HttpException(403, AuthController::PASSWORD_LOGIN_OFF);
     }
 
     /**

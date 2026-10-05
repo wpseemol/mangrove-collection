@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('banners', function (Blueprint $table) {
+        Schema::hasTable('banners') || Schema::create('banners', function (Blueprint $table) {
             $table->id();
             $table->string('type', 20)->default('slide')->index();
             $table->string('title')->nullable();
@@ -21,7 +21,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('pages', function (Blueprint $table) {
+        Schema::hasTable('pages') || Schema::create('pages', function (Blueprint $table) {
             $table->id();
             $table->string('slug')->unique();
             $table->string('title');
@@ -33,7 +33,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('media', function (Blueprint $table) {
+        Schema::hasTable('media') || Schema::create('media', function (Blueprint $table) {
             $table->id();
             $table->string('disk', 30);
             $table->string('path');

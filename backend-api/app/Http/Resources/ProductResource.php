@@ -22,6 +22,7 @@ class ProductResource extends JsonResource
             'category' => new CategoryResource($this->whenLoaded('category')),
             'unit' => $this->unit,
             'size' => $this->size,
+            'shipping_cost' => $this->shipping_cost !== null ? (float) $this->shipping_cost : null,
             'currency' => $this->currency,
             'price' => $this->when(
                 $default !== null || $this->min_price !== null,

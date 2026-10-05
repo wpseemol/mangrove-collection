@@ -18,7 +18,7 @@ class ShippingMethodController extends Controller
 
     public function store(ShippingMethodRequest $request): JsonResponse
     {
-        return (new ShippingMethodResource(ShippingMethod::query()->create($request->validated())))
+        return (new ShippingMethodResource(ShippingMethod::query()->create($request->validated())->refresh()))
             ->response()
             ->setStatusCode(201);
     }

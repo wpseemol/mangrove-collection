@@ -56,6 +56,16 @@ class SettingsService
     }
 
     /**
+     * Decrypted value of a secret for an admin who re-entered their password; null when nothing is saved.
+     */
+    public function reveal(string $key): ?string
+    {
+        $value = $this->get($key);
+
+        return filled($value) ? (string) $value : null;
+    }
+
+    /**
      * @return array<string, mixed>
      */
     public function public(): array

@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable([
-    'category_id', 'name', 'slug', 'unit', 'size', 'currency', 'short_description', 'description',
+    'category_id', 'name', 'slug', 'unit', 'size', 'shipping_cost', 'currency', 'short_description', 'description',
     'thumbnail', 'tags', 'status', 'is_featured', 'popularity', 'meta_title', 'meta_description', 'created_by',
 ])]
 class Product extends Model

@@ -79,7 +79,8 @@ class SafeHtml implements ValidationRule
                 return false;
             }
 
-            if ($key === 'href' && preg_match('#^(?:https?://|mailto:|tel:|/(?!/)|\#)#i', $value) !== 1) {
+            // Browsers treat `\` as `/`, so `/\evil.com` would be an off-site link.
+            if ($key === 'href' && (preg_match('#^(?:https?://|mailto:|tel:|/(?![/\\\\])|\#)#i', $value) !== 1 || preg_match('/[\s\\\\]/', $value) === 1)) {
                 return false;
             }
         }

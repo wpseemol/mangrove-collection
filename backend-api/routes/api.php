@@ -7,10 +7,12 @@ use App\Http\Controllers\Api\V1\Admin;
 use App\Http\Controllers\Api\V1\Auth\AuthController;
 use App\Http\Controllers\Api\V1\Auth\GoogleAuthController;
 use App\Http\Controllers\Api\V1\Auth\PasswordResetController;
+use App\Http\Controllers\Api\V1\Storefront\BlogController;
 use App\Http\Controllers\Api\V1\Storefront\CategoryController;
 use App\Http\Controllers\Api\V1\Storefront\CategoryIconController;
 use App\Http\Controllers\Api\V1\Storefront\CheckoutController;
 use App\Http\Controllers\Api\V1\Storefront\ContentController;
+use App\Http\Controllers\Api\V1\Storefront\NewsletterController;
 use App\Http\Controllers\Api\V1\Storefront\PaymentController;
 use App\Http\Controllers\Api\V1\Storefront\ProductController;
 use App\Http\Controllers\Api\V1\Storefront\ReviewController;
@@ -46,6 +48,23 @@ Route::prefix('v1')->name('v1.')->group(function () {
         });
     });
 
+    // ---------------------------------------------------------------- Blog
+    Route::prefix('blog')->name('blog.')->group(function () {
+        Route::get('categories', [BlogController::class, 'categories'])->name('categories');
+        Route::get('posts', [BlogController::class, 'index'])->name('posts.index');
+        Route::get('posts/{slug}', [BlogController::class, 'show'])->name('posts.show');
+        Route::post('posts/{slug}/view', [BlogController::class, 'view'])->middleware('throttle:tracking')->name('posts.view');
+        Route::get('posts/{slug}/engagement', [BlogController::class, 'engagement'])->name('posts.engagement');
+        Route::get('posts/{slug}/comments', [BlogController::class, 'comments'])->name('posts.comments.index');
+
+        Route::middleware(['auth:sanctum', 'active', 'throttle:writes'])->group(function () {
+            Route::post('posts/{slug}/like', [BlogController::class, 'like'])->name('posts.like');
+            Route::delete('posts/{slug}/like', [BlogController::class, 'unlike'])->name('posts.unlike');
+            Route::post('posts/{slug}/comments', [BlogController::class, 'comment'])->name('posts.comments.store');
+            Route::delete('comments/{comment}', [BlogController::class, 'destroyComment'])->name('comments.destroy');
+        });
+    });
+
     // ---------------------------------------------------------- Storefront
     Route::get('settings', [SettingController::class, 'index'])->name('settings');
 
@@ -68,11 +87,13 @@ Route::prefix('v1')->name('v1.')->group(function () {
 
     Route::get('banners', [ContentController::class, 'banners'])->name('banners');
     Route::get('pages/{slug}', [ContentController::class, 'page'])->name('pages.show');
+    Route::post('newsletter', [NewsletterController::class, 'store'])->middleware('throttle:newsletter')->name('newsletter');
     Route::get('shipping-methods', [ContentController::class, 'shippingMethods'])->name('shipping-methods');
 
     Route::get('payment-methods', [PaymentController::class, 'methods'])->name('payment-methods');
 
     Route::post('checkout', [CheckoutController::class, 'store'])->middleware('throttle:checkout')->name('checkout');
+    Route::post('checkout/quote', [CheckoutController::class, 'quote'])->middleware('throttle:quote')->name('checkout.quote');
     Route::get('orders/track', [CheckoutController::class, 'track'])->middleware('throttle:tracking')->name('orders.track');
     Route::post('orders/{orderNumber}/payment', [PaymentController::class, 'store'])->middleware('throttle:checkout')->name('orders.payment');
 
@@ -100,10 +121,32 @@ Route::prefix('v1')->name('v1.')->group(function () {
             Route::post('media', [Admin\MediaController::class, 'store'])->name('media.store');
         });
 
+        Route::post('media/videos', [Admin\MediaController::class, 'storeVideo'])->middleware('throttle:uploads')->name('media.videos.store');
+
+        // Blog: managers write posts and moderate comments on them; categories are admin-managed.
+        Route::prefix('blog')->name('blog.')->group(function () {
+            Route::get('categories', [Admin\BlogCategoryController::class, 'index'])->name('categories.index');
+            Route::middleware('role:admin')->group(function () {
+                Route::post('categories', [Admin\BlogCategoryController::class, 'store'])->name('categories.store');
+                Route::match(['put', 'patch'], 'categories/{category}', [Admin\BlogCategoryController::class, 'update'])->name('categories.update');
+                Route::delete('categories/{category}', [Admin\BlogCategoryController::class, 'destroy'])->name('categories.destroy');
+            });
+
+            Route::apiResource('posts', Admin\BlogPostController::class);
+
+            Route::get('comments', [Admin\BlogCommentController::class, 'index'])->name('comments.index');
+            Route::match(['put', 'patch'], 'comments/{comment}', [Admin\BlogCommentController::class, 'update'])->name('comments.update');
+            Route::delete('comments/{comment}', [Admin\BlogCommentController::class, 'destroy'])->name('comments.destroy');
+        });
+
         Route::post('products/{product}/restore', [Admin\ProductController::class, 'restore'])->name('products.restore');
         Route::apiResource('products', Admin\ProductController::class);
 
-        Route::apiResource('orders', Admin\OrderController::class)->except('store');
+        Route::get('orders/customer-lookup', [Admin\OrderController::class, 'customerLookup'])->name('orders.customer-lookup');
+        Route::get('orders/print', [Admin\OrderController::class, 'print'])->name('orders.print');
+        Route::post('orders/bulk-status', [Admin\OrderController::class, 'bulkStatus'])->name('orders.bulk-status');
+        Route::post('orders/bulk-delete', [Admin\OrderController::class, 'bulkDestroy'])->name('orders.bulk-delete');
+        Route::apiResource('orders', Admin\OrderController::class);
 
         Route::get('payments', [Admin\PaymentController::class, 'index'])->name('payments.index');
         Route::post('payments/{payment}/verify', [Admin\PaymentController::class, 'verify'])->name('payments.verify');
@@ -120,6 +163,11 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::put('pages/{slug}', [Admin\PageController::class, 'upsert'])->name('pages.upsert');
         Route::delete('pages/{slug}', [Admin\PageController::class, 'destroy'])->name('pages.destroy');
 
+        Route::get('newsletter-subscribers/export', [Admin\NewsletterSubscriberController::class, 'export'])->name('newsletter-subscribers.export');
+        Route::apiResource('newsletter-subscribers', Admin\NewsletterSubscriberController::class)
+            ->only(['index', 'update', 'destroy'])
+            ->parameters(['newsletter-subscribers' => 'subscriber']);
+
         Route::apiResource('shipping-methods', Admin\ShippingMethodController::class);
 
         // Admin-only: user management, where payments are sent, and site configuration.
@@ -130,6 +178,7 @@ Route::prefix('v1')->name('v1.')->group(function () {
 
             Route::get('settings', [Admin\SettingController::class, 'index'])->name('settings.index');
             Route::put('settings', [Admin\SettingController::class, 'update'])->name('settings.update');
+            Route::post('settings/reveal', [Admin\SettingController::class, 'reveal'])->middleware('throttle:reveal-secret')->name('settings.reveal');
             Route::post('settings/test-mail', [Admin\SettingController::class, 'testMail'])->name('settings.test-mail');
             Route::post('settings/test-sms', [Admin\SettingController::class, 'testSms'])->name('settings.test-sms');
         });

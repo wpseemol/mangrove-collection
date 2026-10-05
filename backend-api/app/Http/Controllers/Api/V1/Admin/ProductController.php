@@ -57,7 +57,7 @@ class ProductController extends Controller
             return $product;
         });
 
-        return (new ProductResource($product->load(['category', 'variants', 'images'])))
+        return (new ProductResource($product->refresh()->load(['category', 'variants', 'images'])))
             ->response()
             ->setStatusCode(201);
     }

@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Rules\SafeText;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class LoginRequest extends FormRequest
@@ -39,7 +40,10 @@ class LoginRequest extends FormRequest
 
         $user = User::query()->where($column, $column === 'email' ? strtolower($login) : $login)->first();
 
-        if (! $user || $user->password === null || ! Hash::check($this->string('password'), $user->password)) {
+        // Checked against a throwaway hash when there is no account, so a quick reply never reveals which emails and phones are registered.
+        $valid = Hash::check((string) $this->string('password'), $user?->password ?? Hash::make(Str::random(32)));
+
+        if (! $user || $user->password === null || ! $valid) {
             throw ValidationException::withMessages(['login' => __('auth.failed')]);
         }
 

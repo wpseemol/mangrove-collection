@@ -38,6 +38,20 @@ class CheckoutController extends Controller
     }
 
     /**
+     * Current prices and delivery charges for the cart; the order itself is priced the same way.
+     */
+    public function quote(Request $request, OrderService $orders): JsonResponse
+    {
+        $data = $request->validate([
+            'items' => ['required', 'array', 'min:1', 'max:50'],
+            'items.*.variant_id' => ['required', 'integer', 'distinct'],
+            'items.*.quantity' => ['required', 'integer', 'min:1', 'max:100'],
+        ]);
+
+        return response()->json(['data' => $orders->quote($data['items'])]);
+    }
+
+    /**
      * Guest order tracking: requires both the order number and the phone used.
      */
     public function track(Request $request): OrderResource

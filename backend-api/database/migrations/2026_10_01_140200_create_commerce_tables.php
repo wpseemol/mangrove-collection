@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('shipping_methods', function (Blueprint $table) {
+        Schema::hasTable('shipping_methods') || Schema::create('shipping_methods', function (Blueprint $table) {
             $table->id();
             $table->string('code', 50)->unique();
             $table->string('title');
@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('addresses', function (Blueprint $table) {
+        Schema::hasTable('addresses') || Schema::create('addresses', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('label', 50)->nullable();
@@ -35,7 +35,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::hasTable('orders') || Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->string('order_number', 32)->unique();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
@@ -62,7 +62,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('order_items', function (Blueprint $table) {
+        Schema::hasTable('order_items') || Schema::create('order_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained()->cascadeOnDelete();
             $table->foreignId('product_id')->nullable()->constrained()->nullOnDelete();

@@ -18,6 +18,10 @@ return new class extends Migration
 
     public function up(): void
     {
+        if (Schema::hasTable('payments')) {
+            return;
+        }
+
         Schema::create('payment_accounts', function (Blueprint $table) {
             $table->id();
             $table->string('method', 20);

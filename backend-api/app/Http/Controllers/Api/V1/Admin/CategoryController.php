@@ -47,7 +47,7 @@ class CategoryController extends Controller
             throw $e;
         }
 
-        return (new CategoryResource($category))->response()->setStatusCode(201);
+        return (new CategoryResource($category->refresh()->loadCount('products')))->response()->setStatusCode(201);
     }
 
     public function show(Category $category): CategoryResource

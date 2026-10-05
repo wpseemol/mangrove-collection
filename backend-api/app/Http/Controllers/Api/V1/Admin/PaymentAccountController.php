@@ -29,7 +29,7 @@ class PaymentAccountController extends Controller
             'created_by' => $request->user()->id,
         ]);
 
-        return (new PaymentAccountResource($account->loadCount('payments')))->response()->setStatusCode(201);
+        return (new PaymentAccountResource($account->refresh()->loadCount('payments')))->response()->setStatusCode(201);
     }
 
     public function show(PaymentAccount $paymentAccount): PaymentAccountResource

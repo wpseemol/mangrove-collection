@@ -6,14 +6,21 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\MediaResource;
 use App\Models\Media;
 use App\Rules\SafeText;
+use App\Support\BlogVideo;
 use App\Support\Search;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class MediaController extends Controller
 {
+    public const MAX_VIDEO_MEGABYTES = 100;
+
     public function index(Request $request): AnonymousResourceCollection
     {
         $request->validate([
@@ -24,7 +31,8 @@ class MediaController extends Controller
         $media = Media::query()
             ->when($request->query('q'), fn ($q, $term) => $q->where('original_name', 'like', Search::like($term)))
             ->latest()
-            ->paginate((int) $request->query('per_page', 40));
+            ->paginate((int) $request->query('per_page', 40))
+            ->withQueryString();
 
         return MediaResource::collection($media);
     }
@@ -54,6 +62,50 @@ class MediaController extends Controller
         ]));
 
         return MediaResource::collection($media)->response()->setStatusCode(201);
+    }
+
+    /**
+     * Blog videos (MP4 / WebM, one at a time). Images go through `store`.
+     */
+    public function storeVideo(Request $request): JsonResponse
+    {
+        $files = $request->allFiles();
+        $count = count(Arr::flatten($files));
+
+        if ($count > 1) {
+            throw ValidationException::withMessages(['file' => 'Upload one video at a time.']);
+        }
+
+        $file = $request->file('file');
+
+        if (! $file instanceof UploadedFile || ! $file->isValid()) {
+            throw ValidationException::withMessages(['file' => $file instanceof UploadedFile && in_array($file->getError(), [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true)
+                ? 'The video must not be larger than '.self::MAX_VIDEO_MEGABYTES.' MB.'
+                : 'Choose a video to upload.']);
+        }
+
+        $format = BlogVideo::sniff($file->getRealPath());
+
+        if (! $format) {
+            throw ValidationException::withMessages(['file' => 'The video must be an MP4 or WebM file.']);
+        }
+
+        if ($file->getSize() > self::MAX_VIDEO_MEGABYTES * 1024 * 1024) {
+            throw ValidationException::withMessages(['file' => 'The video must not be larger than '.self::MAX_VIDEO_MEGABYTES.' MB.']);
+        }
+
+        $path = $file->storeAs('uploads/'.now()->format('Y/m'), Str::random(40).'.'.$format['extension'], 'public');
+
+        $media = Media::query()->create([
+            'disk' => 'public',
+            'path' => $path,
+            'original_name' => mb_substr($file->getClientOriginalName(), 0, 255),
+            'mime_type' => $format['mime'],
+            'size' => $file->getSize(),
+            'uploaded_by' => $request->user()->id,
+        ]);
+
+        return (new MediaResource($media))->response()->setStatusCode(201);
     }
 
     public function destroy(Media $medium): JsonResponse

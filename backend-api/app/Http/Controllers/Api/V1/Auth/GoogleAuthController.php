@@ -8,10 +8,12 @@ use App\Models\User;
 use App\Services\SettingsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\ValidationException;
 use Laravel\Socialite\Contracts\User as SocialiteUser;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\GoogleProvider;
+use RuntimeException;
 use Throwable;
 
 class GoogleAuthController extends Controller
@@ -50,9 +52,12 @@ class GoogleAuthController extends Controller
         $this->ensureBrowserSession($request);
 
         try {
-            $googleUser = $request->filled('access_token')
-                ? $this->driver()->userFromToken($request->string('access_token'))
-                : $this->driver()->stateless()->user();
+            if ($request->filled('access_token')) {
+                $this->assertIssuedToUs((string) $request->string('access_token'));
+                $googleUser = $this->driver()->userFromToken((string) $request->string('access_token'));
+            } else {
+                $googleUser = $this->driver()->stateless()->user();
+            }
         } catch (Throwable $e) {
             report($e);
 
@@ -72,7 +77,9 @@ class GoogleAuthController extends Controller
     {
         $email = strtolower((string) $googleUser->getEmail());
 
-        if ($email === '' || (($googleUser->user['email_verified'] ?? true) === false)) {
+        $verified = $googleUser->user['email_verified'] ?? null;
+
+        if ($email === '' || ($verified !== true && $verified !== 'true')) {
             throw ValidationException::withMessages(['google' => 'Your Google account email is not verified.']);
         }
 
@@ -96,6 +103,25 @@ class GoogleAuthController extends Controller
         ]))->save();
 
         return $user;
+    }
+
+    /**
+     * An access token minted for any other Google app would also unlock /userinfo, so a site the
+     * user signed in to could replay it here and log in as them. Only tokens issued to our client are accepted.
+     */
+    protected function assertIssuedToUs(string $accessToken): void
+    {
+        $clientId = (string) $this->settings->get('google_client_id');
+
+        $response = Http::acceptJson()->timeout(15)->get('https://oauth2.googleapis.com/tokeninfo', ['access_token' => $accessToken]);
+
+        if (! $response->successful()) {
+            throw new RuntimeException('Google tokeninfo responded with HTTP '.$response->status());
+        }
+
+        if ($clientId === '' || ($response->json('aud') !== $clientId && $response->json('azp') !== $clientId)) {
+            throw new RuntimeException('Google access token was issued to a different client');
+        }
     }
 
     protected function ensureConfigured(bool $requireRedirect = false): void

@@ -8,9 +8,13 @@ use App\Notifications\TestMail;
 use App\Rules\PhoneNumber;
 use App\Services\SettingsService;
 use App\Services\SmsService;
+use App\Settings\SettingRegistry;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class SettingController extends Controller
@@ -30,6 +34,29 @@ class SettingController extends Controller
             'message' => 'Settings saved.',
             'data' => $this->settings->forAdmin(),
         ]);
+    }
+
+    /**
+     * Body: { "key": "google_client_secret", "password": "<the admin's own password>" }
+     */
+    public function reveal(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'key' => ['required', Rule::in(SettingRegistry::secretKeys())],
+            'password' => ['required', 'string', 'max:128'],
+        ]);
+
+        $admin = $request->user();
+
+        if (! $admin->password) {
+            throw ValidationException::withMessages(['password' => 'Set a password on your account first to view saved secrets.']);
+        }
+
+        if (! Hash::check($data['password'], $admin->password)) {
+            throw ValidationException::withMessages(['password' => 'The password is incorrect.']);
+        }
+
+        return response()->json(['data' => ['key' => $data['key'], 'value' => $this->settings->reveal($data['key'])]]);
     }
 
     public function testMail(Request $request): JsonResponse

@@ -29,7 +29,7 @@ class BannerController extends Controller
 
     public function store(BannerRequest $request): JsonResponse
     {
-        return (new BannerResource(Banner::query()->create($request->validated())))
+        return (new BannerResource(Banner::query()->create($request->validated())->refresh()))
             ->response()
             ->setStatusCode(201);
     }

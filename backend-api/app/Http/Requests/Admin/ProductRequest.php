@@ -33,6 +33,7 @@ class ProductRequest extends FormRequest
             'slug' => ['nullable', 'string', 'max:255', 'alpha_dash:ascii', Rule::unique('products', 'slug')->ignore($product)],
             'unit' => ['nullable', 'string', 'max:50', new SafeText],
             'size' => ['nullable', 'string', 'max:100', new SafeText],
+            'shipping_cost' => ['nullable', 'numeric', 'decimal:0,2', 'min:0', 'max:100000'],
             'currency' => ['sometimes', 'string', 'size:3', 'alpha:ascii'],
             'short_description' => ['nullable', 'string', 'max:500', new SafeText],
             'description' => ['nullable', 'string', 'max:20000', new SafeHtml],

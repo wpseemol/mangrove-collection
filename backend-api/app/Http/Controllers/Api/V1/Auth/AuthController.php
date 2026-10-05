@@ -9,6 +9,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Services\SettingsService;
 use App\Support\UserSessions;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -17,6 +18,10 @@ use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
 {
     use StartsAuthSession;
+
+    public const PASSWORD_LOGIN_OFF = 'Email and password sign-in is turned off. Please use another sign-in option.';
+
+    public function __construct(protected SettingsService $settings) {}
 
     public function register(RegisterRequest $request): JsonResponse
     {
@@ -34,7 +39,14 @@ class AuthController extends Controller
     {
         $this->ensureBrowserSession($request);
 
-        return $this->startSession($request, $request->authenticate(), $request->boolean('remember'));
+        $user = $request->authenticate();
+
+        // Turns off email/password sign-in for customers only; staff keep it so the dashboard stays reachable.
+        if (! $user->isStaff() && ! $this->settings->get('password_login_enabled')) {
+            throw ValidationException::withMessages(['login' => self::PASSWORD_LOGIN_OFF]);
+        }
+
+        return $this->startSession($request, $user, $request->boolean('remember'));
     }
 
     /**

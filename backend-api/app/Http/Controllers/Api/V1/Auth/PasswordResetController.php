@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\SettingsService;
 use App\Support\UserSessions;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\JsonResponse;
@@ -15,12 +16,19 @@ use Throwable;
 
 class PasswordResetController extends Controller
 {
+    public function __construct(protected SettingsService $settings) {}
+
     public function forgot(Request $request): JsonResponse
     {
         $request->validate(['email' => ['required', 'email', 'max:255']]);
 
         try {
-            Password::sendResetLink($request->only('email'));
+            // With customer password sign-in turned off, only staff can still get a reset link.
+            $user = User::query()->where('email', $request->input('email'))->first();
+
+            if ($user && ($user->isStaff() || $this->settings->get('password_login_enabled'))) {
+                Password::sendResetLink($request->only('email'));
+            }
         } catch (Throwable $e) {
             report($e);
         }
@@ -38,6 +46,21 @@ class PasswordResetController extends Controller
             'email' => ['required', 'email', 'max:255'],
             'password' => ['required', 'string', 'max:128', 'confirmed', PasswordRule::min(8)],
         ]);
+
+        $broker = Password::broker();
+        $user = $broker->getUser($request->only('email'));
+
+        if (! $user) {
+            throw ValidationException::withMessages(['email' => __(Password::INVALID_USER)]);
+        }
+
+        if (! $broker->tokenExists($user, (string) $request->input('token'))) {
+            throw ValidationException::withMessages(['email' => __(Password::INVALID_TOKEN)]);
+        }
+
+        if (! $user->isStaff() && ! $this->settings->get('password_login_enabled')) {
+            throw ValidationException::withMessages(['email' => AuthController::PASSWORD_LOGIN_OFF]);
+        }
 
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),

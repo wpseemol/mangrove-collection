@@ -10,13 +10,21 @@ trait HasUniqueSlug
     {
         static::saving(function (self $model) {
             if (blank($model->slug)) {
-                $model->slug = $model->name;
+                $model->slug = $model->slugSource();
             }
 
             if ($model->isDirty('slug')) {
                 $model->slug = static::uniqueSlug($model->slug, $model->getKey());
             }
         });
+    }
+
+    /**
+     * The value a blank slug falls back to.
+     */
+    protected function slugSource(): ?string
+    {
+        return $this->name;
     }
 
     public static function uniqueSlug(string $value, int|string|null $ignoreId = null): string

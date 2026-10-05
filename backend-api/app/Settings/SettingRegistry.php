@@ -2,6 +2,7 @@
 
 namespace App\Settings;
 
+use App\Rules\MessengerPage;
 use App\Rules\PhoneNumber;
 use App\Rules\SafeText;
 use App\Rules\SafeUrl;
@@ -59,6 +60,8 @@ final class SettingRegistry
                 ],
                 'whatsapp_button_enabled' => ['type' => 'boolean', 'public' => true, 'default' => true],
                 'whatsapp_button_position' => ['type' => 'string', 'public' => true, 'default' => 'right', 'options' => ['right', 'left']],
+                'messenger_page' => ['type' => 'string', 'public' => true, 'default' => null, 'rules' => ['max:50', new MessengerPage]],
+                'messenger_button_enabled' => ['type' => 'boolean', 'public' => true, 'default' => false],
             ],
 
             'commerce' => [
@@ -69,6 +72,11 @@ final class SettingRegistry
                 'free_shipping_threshold' => ['type' => 'float', 'public' => true, 'default' => null, 'rules' => ['min:0', 'max:10000000']],
                 'low_stock_threshold' => ['type' => 'integer', 'public' => false, 'default' => 5, 'rules' => ['min:0', 'max:100000']],
                 'order_notification_email' => ['type' => 'email', 'public' => false, 'default' => null],
+            ],
+
+            // Customer sign-in methods. Staff can always use email and password, so the dashboard never locks itself out.
+            'login' => [
+                'password_login_enabled' => ['type' => 'boolean', 'public' => true, 'default' => true],
             ],
 
             'google' => [
@@ -157,6 +165,14 @@ final class SettingRegistry
     public static function has(string $key): bool
     {
         return array_key_exists($key, self::all());
+    }
+
+    /**
+     * @return list<string>
+     */
+    public static function secretKeys(): array
+    {
+        return array_keys(array_filter(self::all(), fn (array $definition) => $definition['encrypted']));
     }
 
     /**
