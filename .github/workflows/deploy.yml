@@ -25,10 +25,10 @@ jobs:
       run:
         working-directory: backend-api
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: '8.4'
           extensions: pdo_sqlite, sqlite3, mbstring, gd, fileinfo, zip
           coverage: none
       - run: composer install --no-interaction --prefer-dist
@@ -39,10 +39,10 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: '8.4'
           extensions: mbstring, gd, fileinfo, zip
           coverage: none
       - run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
@@ -100,7 +100,7 @@ jobs:
     needs: api
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
@@ -132,7 +132,7 @@ jobs:
     needs: api
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
