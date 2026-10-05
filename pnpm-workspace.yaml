@@ -1,0 +1,7 @@
+packages:
+  - frontend
+  - dashboard
+
+ignoredBuiltDependencies:
+  - sharp
+  - unrs-resolver

@@ -1,0 +1,14 @@
+{
+  "name": "mangrove-collection",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm run \"/^dev:(api|frontend|dashboard)$/\"",
+    "dev:frontend": "pnpm --filter frontend dev",
+    "dev:dashboard": "pnpm --filter dashboard dev",
+    "dev:api": "php backend-api/artisan serve --port=8080",
+    "api": "php backend-api/artisan serve --port=8080",
+    "build": "pnpm --filter frontend --filter dashboard build",
+    "lint": "pnpm --filter frontend --filter dashboard lint"
+  },
+  "packageManager": "pnpm@10.28.0"
+}
