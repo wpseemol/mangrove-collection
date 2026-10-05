@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
 
-#[Fillable(['disk', 'path', 'original_name', 'mime_type', 'size', 'uploaded_by'])]
 class Media extends Model
 {
+    protected $fillable = ['disk', 'path', 'original_name', 'mime_type', 'size', 'uploaded_by'];
+
     protected $table = 'media';
 
     protected function casts(): array

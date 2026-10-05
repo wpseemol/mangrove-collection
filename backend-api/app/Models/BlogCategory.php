@@ -3,14 +3,14 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasUniqueSlug;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['name', 'slug', 'icon', 'description', 'is_active', 'sort_order'])]
 class BlogCategory extends Model
 {
     use HasUniqueSlug;
+
+    protected $fillable = ['name', 'slug', 'icon', 'description', 'is_active', 'sort_order'];
 
     protected function casts(): array
     {

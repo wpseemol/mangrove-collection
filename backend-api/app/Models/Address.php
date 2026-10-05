@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['user_id', 'label', 'name', 'email', 'phone', 'region', 'city', 'zone', 'landmark', 'full_address', 'is_default'])]
 class Address extends Model
 {
+    protected $fillable = ['user_id', 'label', 'name', 'email', 'phone', 'region', 'city', 'zone', 'landmark', 'full_address', 'is_default'];
+
     protected function casts(): array
     {
         return [

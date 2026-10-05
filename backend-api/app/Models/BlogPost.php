@@ -3,20 +3,20 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasUniqueSlug;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable([
-    'blog_category_id', 'author_id', 'title', 'slug', 'excerpt', 'content', 'cover_image', 'tags',
-    'status', 'is_featured', 'published_at', 'views', 'meta_title', 'meta_description',
-])]
 class BlogPost extends Model
 {
     use HasUniqueSlug;
+
+    protected $fillable = [
+        'blog_category_id', 'author_id', 'title', 'slug', 'excerpt', 'content', 'cover_image', 'tags',
+        'status', 'is_featured', 'published_at', 'views', 'meta_title', 'meta_description',
+    ];
 
     public const STATUSES = ['draft', 'published'];
 

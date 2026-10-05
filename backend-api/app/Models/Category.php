@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\Concerns\HasUniqueSlug;
 use Database\Factories\CategoryFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,11 +11,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['name', 'slug', 'image', 'icon', 'description', 'is_active', 'sort_order', 'created_by'])]
 class Category extends Model
 {
     /** @use HasFactory<CategoryFactory> */
     use HasFactory, HasUniqueSlug;
+
+    protected $fillable = ['name', 'slug', 'image', 'icon', 'description', 'is_active', 'sort_order', 'created_by'];
 
     protected function casts(): array
     {

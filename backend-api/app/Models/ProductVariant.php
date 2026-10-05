@@ -3,16 +3,16 @@
 namespace App\Models;
 
 use Database\Factories\ProductVariantFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['product_id', 'title', 'type', 'sku', 'price', 'compare_price', 'stock', 'is_default', 'sort_order'])]
 class ProductVariant extends Model
 {
     /** @use HasFactory<ProductVariantFactory> */
     use HasFactory;
+
+    protected $fillable = ['product_id', 'title', 'type', 'sku', 'price', 'compare_price', 'stock', 'is_default', 'sort_order'];
 
     protected function casts(): array
     {

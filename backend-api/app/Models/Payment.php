@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Enums\PaymentAccountType;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentReviewStatus;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -13,12 +12,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * A wallet transaction ID submitted by a customer. Account details are
  * snapshotted so the record stays accurate if the account is later edited.
  */
-#[Fillable([
-    'order_id', 'payment_account_id', 'method', 'account_type', 'account_number', 'amount', 'currency',
-    'sender_number', 'transaction_id', 'status', 'rejection_reason', 'reviewed_by', 'reviewed_at',
-])]
 class Payment extends Model
 {
+    protected $fillable = [
+        'order_id', 'payment_account_id', 'method', 'account_type', 'account_number', 'amount', 'currency',
+        'sender_number', 'transaction_id', 'status', 'rejection_reason', 'reviewed_by', 'reviewed_at',
+    ];
+
     protected function casts(): array
     {
         return [

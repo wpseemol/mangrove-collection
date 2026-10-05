@@ -5,18 +5,18 @@ namespace App\Models;
 use App\Enums\PaymentAccountType;
 use App\Enums\PaymentMethod;
 use Database\Factories\PaymentAccountFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['method', 'account_type', 'account_number', 'account_name', 'instructions', 'is_active', 'sort_order', 'created_by'])]
 class PaymentAccount extends Model
 {
     /** @use HasFactory<PaymentAccountFactory> */
     use HasFactory;
+
+    protected $fillable = ['method', 'account_type', 'account_number', 'account_name', 'instructions', 'is_active', 'sort_order', 'created_by'];
 
     protected function casts(): array
     {

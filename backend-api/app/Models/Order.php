@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,15 +12,16 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 
-#[Fillable([
-    'order_number', 'user_id', 'customer_name', 'customer_email', 'customer_phone', 'shipping_address',
-    'shipping_method_id', 'shipping_method_title', 'currency', 'subtotal', 'shipping_cost', 'discount', 'total',
-    'payment_method', 'payment_status', 'status',
-    'customer_note', 'admin_note', 'cancelled_at', 'delivered_at',
-])]
 class Order extends Model
 {
     use Notifiable;
+
+    protected $fillable = [
+        'order_number', 'user_id', 'customer_name', 'customer_email', 'customer_phone', 'shipping_address',
+        'shipping_method_id', 'shipping_method_title', 'currency', 'subtotal', 'shipping_cost', 'discount', 'total',
+        'payment_method', 'payment_status', 'status',
+        'customer_note', 'admin_note', 'cancelled_at', 'delivered_at',
+    ];
 
     protected function casts(): array
     {

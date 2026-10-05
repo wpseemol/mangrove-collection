@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['blog_post_id', 'user_id', 'body', 'is_hidden'])]
 class BlogComment extends Model
 {
+    protected $fillable = ['blog_post_id', 'user_id', 'body', 'is_hidden'];
+
     protected function casts(): array
     {
         return [
