@@ -6,7 +6,7 @@ set -euo pipefail
 trim() { local v=$1; v=${v//$'\r'/}; v=${v//$'\n'/}; v=${v#"${v%%[![:space:]]*}"}; printf '%s' "${v%"${v##*[![:space:]]}"}"; }
 FTP_HOST=$(trim "$FTP_HOST"); FTP_HOST=${FTP_HOST#ftp://}; FTP_HOST=${FTP_HOST%/}
 FTP_USERNAME=$(trim "$FTP_USERNAME")
-LFTP_PASSWORD=$(trim "$LFTP_PASSWORD"); export LFTP_PASSWORD
+FTP_PASSWORD=$(trim "$FTP_PASSWORD"); export FTP_PASSWORD
 
 target=$1
 zip=$2
