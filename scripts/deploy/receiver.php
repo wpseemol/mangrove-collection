@@ -166,9 +166,9 @@ if ($target === 'api') {
         ['zip', 'pdo_mysql', 'mbstring', 'openssl', 'tokenizer', 'xml', 'dom', 'ctype', 'fileinfo', 'curl', 'gd'],
         static fn (string $ext): bool => !extension_loaded($ext)
     ));
-    if (version_compare(PHP_VERSION, '8.4.1', '<') || $missing !== []) {
+    if (version_compare(PHP_VERSION, '8.2.0', '<') || $missing !== []) {
         fail('PHP '.PHP_VERSION.' on the API domain. Enable these extensions in cPanel > Select PHP Version: '
-            .($missing ? implode(', ', $missing) : '(none missing, but PHP 8.4.1+ is required)').'. Nothing was changed.');
+            .($missing ? implode(', ', $missing) : '(none missing, but PHP 8.2+ is required)').'. Nothing was changed.');
     }
 }
 

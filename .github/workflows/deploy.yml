@@ -43,7 +43,7 @@ jobs:
             - uses: actions/checkout@v5
             - uses: shivammathur/setup-php@v2
               with:
-                  php-version: "8.4"
+                  php-version: "8.2"
                   extensions: pdo_mysql, mbstring, gd, fileinfo, zip
                   coverage: none
             - run: composer install --no-interaction --prefer-dist
@@ -57,7 +57,7 @@ jobs:
             - uses: actions/checkout@v5
             - uses: shivammathur/setup-php@v2
               with:
-                  php-version: "8.4"
+                  php-version: "8.2"
                   extensions: mbstring, gd, fileinfo, zip
                   coverage: none
             - run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
