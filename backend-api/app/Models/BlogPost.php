@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Casts\MediaHtml;
+use App\Casts\MediaUrl;
 use App\Models\Concerns\HasUniqueSlug;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
@@ -24,6 +26,8 @@ class BlogPost extends Model
     {
         return [
             'tags' => 'array',
+            'content' => MediaHtml::class,
+            'cover_image' => MediaUrl::class,
             'is_featured' => 'boolean',
             'published_at' => 'datetime',
             'views' => 'integer',

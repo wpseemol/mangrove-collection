@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\MediaUrl;
 use App\Enums\BannerType;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,6 +14,7 @@ class Banner extends Model
     {
         return [
             'type' => BannerType::class,
+            'image' => MediaUrl::class,
             'link_enabled' => 'boolean',
             'is_active' => 'boolean',
             'sort_order' => 'integer',
