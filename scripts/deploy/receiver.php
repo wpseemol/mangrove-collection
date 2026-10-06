@@ -371,6 +371,8 @@ switch ($target) {
     case 'storefront':
         clearDir($dir, [...$keep, 'tmp', '.htaccess', 'stderr.log', 'node_modules']);
         moveInto($staging, $dir);
+        // Until cPanel's Node.js app adds its Passenger block here, Apache would list the app's files.
+        is_file("{$dir}/.htaccess") || file_put_contents("{$dir}/.htaccess", "Options -Indexes\n");
         is_dir("{$dir}/tmp") || mkdir("{$dir}/tmp", 0755, true);
         touch("{$dir}/tmp/restart.txt");
         break;
