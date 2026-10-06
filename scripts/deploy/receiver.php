@@ -324,19 +324,16 @@ foreach (explode(',', (string) ($_POST['protect'] ?? '')) as $other) {
 echo "Replacing the old files in {$dirRel}/\n";
 switch ($target) {
     case 'api':
-        // Some hosts point the API subdomain at the app folder instead of public/.
-        $docRootIsApp = is_dir($dir) && realpath(__DIR__) === realpath($dir);
         $handler = cpanelHandler("{$dir}/public/.htaccess") ?: cpanelHandler("{$dir}/.htaccess");
         clearDir($dir, [...$keep, 'storage', 'public']);
         clearDir("{$dir}/public", [...$keep, 'uploads', 'storage']);
         moveInto($staging, $dir);
         restoreCpanelHandler("{$dir}/public/.htaccess", $handler);
-        if ($docRootIsApp) {
-            // Route every request into public/ so .env, vendor/ and the source are never served.
-            file_put_contents("{$dir}/.htaccess", "RewriteEngine On\nRewriteRule ^(.*)$ public/$1 [L]\n");
-            restoreCpanelHandler("{$dir}/.htaccess", $handler);
-            echo "WARNING: the API document root is the app folder; set it to {$dir}/public in cPanel > Domains.\n";
-        }
+        // Always written: when the API subdomain's document root is the app folder instead of public/,
+        // this routes every request into public/ so the source, logs and .env are never served.
+        // The receiver can't detect that case because this same rule makes it look like it runs from public/.
+        file_put_contents("{$dir}/.htaccess", "Options -Indexes\nRewriteEngine On\nRewriteRule ^(.*)$ public/$1 [L]\n");
+        restoreCpanelHandler("{$dir}/.htaccess", $handler);
 
         foreach (['storage/app/public', 'storage/app/private', 'storage/framework/cache/data', 'storage/framework/sessions',
             'storage/framework/views', 'storage/logs', 'bootstrap/cache', 'public/uploads'] as $path) {
