@@ -1,7 +1,7 @@
 import { ArrowRight, ChevronLeft, ChevronRight, Flame, Newspaper, Search, Sparkles, X } from "lucide-react";
 import Link from "next/link";
 
-import { FeaturedPostCard, PostCard } from "@/components/blog/post-card";
+import { FeaturedPostCard, PostCard, PostCardSkeleton } from "@/components/blog/post-card";
 import { Container } from "@/components/shared/container";
 import { IconGlyph } from "@/components/shared/icon-glyph";
 import { PageBreadcrumb } from "@/components/shared/page-breadcrumb";
@@ -76,6 +76,7 @@ export function BlogListing({
   posts,
   featured,
   filters,
+  loading = false,
 }: {
   title: string;
   description: string;
@@ -86,6 +87,7 @@ export function BlogListing({
   posts: Paginated<BlogPost> | null;
   featured?: BlogPost;
   filters: ListingFilters;
+  loading?: boolean;
 }) {
   const filtered = Boolean(filters.q || filters.tag || filters.sort !== "latest");
   const items = (posts?.data ?? []).filter((post) => post.id !== featured?.id);
@@ -191,7 +193,13 @@ export function BlogListing({
           </div>
         )}
 
-        {items.length > 0 ? (
+        {loading ? (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }, (_, index) => (
+              <PostCardSkeleton key={index} />
+            ))}
+          </div>
+        ) : items.length > 0 ? (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((post) => (
               <PostCard key={post.id} post={post} />

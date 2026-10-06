@@ -2,14 +2,23 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 
-import { BlogListing } from "@/components/blog/blog-listing";
+import { BlogListingPage } from "@/components/blog/blog-listing-page";
 import { blogCategoryHref } from "@/lib/blog";
 import { jsonLd, pageMetadata } from "@/lib/seo";
-import { getBlogCategories, getBlogPosts, settle } from "@/lib/server-api";
+import { getBlogCategories, getBlogPosts, requireParams, settle } from "@/lib/server-api";
 
-import { canonicalPath, isThinListing, listingFilters, listingJsonLd, type SearchParams } from "../../listing-params";
+import { listingJsonLd } from "../../listing-params";
 
 type Params = Promise<{ slug: string }>;
+
+export const dynamicParams = false;
+
+export async function generateStaticParams() {
+  return requireParams(
+    (await getBlogCategories()).map((category) => ({ slug: category.slug })),
+    "blog categories",
+  );
+}
 
 const findCategory = cache(async (slug: string) => {
   const categories = await settle(getBlogCategories(), []);
@@ -19,26 +28,22 @@ const findCategory = cache(async (slug: string) => {
 const describe = (name: string, description: string | null) =>
   description || `${name}: articles, tips and guides from the Mangrove Collection team about Sundarbans honey, fish and seafood.`;
 
-export async function generateMetadata({ params, searchParams }: { params: Params; searchParams: SearchParams }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { category } = await findCategory((await params).slug);
   if (!category) return pageMetadata({ title: "Category not found", description: "This blog category doesn't exist.", noindex: true });
-  const filters = listingFilters(await searchParams);
-  const base = blogCategoryHref(category.slug);
   return pageMetadata({
-    title: filters.page > 1 ? `${category.name} — Blog (page ${filters.page})` : `${category.name} — Blog`,
+    title: `${category.name} — Blog`,
     description: describe(category.name, category.description),
-    path: canonicalPath(base, filters),
-    noindex: isThinListing(filters),
+    path: blogCategoryHref(category.slug),
   });
 }
 
-export default async function BlogCategoryPage({ params, searchParams }: { params: Params; searchParams: SearchParams }) {
+export default async function BlogCategoryPage({ params }: { params: Params }) {
   const { categories, category } = await findCategory((await params).slug);
   if (!category) notFound();
 
-  const filters = listingFilters(await searchParams);
   const base = blogCategoryHref(category.slug);
-  const posts = await settle(getBlogPosts({ category: category.slug, q: filters.q, tag: filters.tag, sort: filters.sort, page: filters.page, per_page: 12 }), null);
+  const posts = await settle(getBlogPosts({ category: category.slug, page: 1, per_page: 12 }), null);
   const description = describe(category.name, category.description);
 
   const data = listingJsonLd({
@@ -55,7 +60,7 @@ export default async function BlogCategoryPage({ params, searchParams }: { param
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(data) }} />
-      <BlogListing
+      <BlogListingPage
         title={category.name}
         description={description}
         basePath={base}
@@ -63,7 +68,6 @@ export default async function BlogCategoryPage({ params, searchParams }: { param
         categories={categories}
         activeCategory={category}
         posts={posts}
-        filters={filters}
       />
     </>
   );
