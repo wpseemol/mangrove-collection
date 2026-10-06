@@ -12,6 +12,7 @@ use App\Support\Search;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\DB;
 use Throwable;
 
 class CategoryController extends Controller
@@ -84,13 +85,16 @@ class CategoryController extends Controller
 
     public function destroy(Category $category): JsonResponse
     {
-        if ($category->products()->withTrashed()->exists()) {
+        if ($category->products()->exists()) {
             return response()->json([
                 'message' => 'This category still has products. Move or delete them first.',
             ], 409);
         }
 
-        $category->delete();
+        DB::transaction(function () use ($category) {
+            $category->products()->onlyTrashed()->update(['category_id' => null]);
+            $category->delete();
+        });
         $this->images->delete($category->image);
 
         return response()->json(null, 204);
