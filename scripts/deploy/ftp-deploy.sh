@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Usage: ftp-deploy.sh <api|storefront|dashboard> <local build dir> <remote dir>
-# Uploads the build file by file over FTP (nothing is zipped or extracted on the server)
-# and deletes server files that are no longer in the build, except the ones matched by `keep`.
+# Uploads the build file by file over FTP (nothing is zipped or extracted on the server).
+# Nothing on the server is ever deleted; files matched by `keep` are not overwritten either.
 # Env: FTP_HOST, FTP_USERNAME, FTP_PASSWORD, FTP_API_DIR, API_URL, FTP_PARALLEL (default 8)
 set -euo pipefail
 
@@ -27,7 +27,7 @@ ftp() {
     bye"
 }
 
-# Server files a deploy never overwrites or deletes: extended regexes on paths relative
+# Server files a deploy never overwrites: extended regexes on paths relative
 # to the remote dir. Use [.] rather than \. because lftp would eat the backslash.
 keep=('(^|/)[.]ftpquota$' '(^|/)[.]well-known(/|$)' '(^|/)cgi-bin(/|$)' '(^|/)[.]user[.]ini$' '(^|/)php[.]ini$' '(^|/)error_log$')
 case $target in
@@ -39,7 +39,7 @@ esac
 
 # ::error:: lines become run annotations, which are readable without signing in to GitHub.
 upload() { # <local dir> <remote dir>
-  local args="--reverse --delete --dereference --no-perms --parallel=${FTP_PARALLEL:-8} --verbose=1"
+  local args="--reverse --dereference --no-perms --parallel=${FTP_PARALLEL:-8} --verbose=1"
   for rx in "${keep[@]}"; do args+=" --exclude '$rx'"; done
   echo "Uploading $1 ($(find "$1" -type f | wc -l) files, $(du -sh "$1" | cut -f1)) to $2/"
   if ! ftp "mirror $args '$1' '$2';" 2>&1 | tee /tmp/mirror.log; then
