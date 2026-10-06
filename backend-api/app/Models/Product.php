@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Casts\MediaHtml;
+use App\Casts\MediaUrl;
 use App\Enums\ProductStatus;
 use App\Models\Concerns\HasUniqueSlug;
 use Database\Factories\ProductFactory;
@@ -28,6 +30,8 @@ class Product extends Model
     {
         return [
             'tags' => 'array',
+            'thumbnail' => MediaUrl::class,
+            'description' => MediaHtml::class,
             'status' => ProductStatus::class,
             'is_featured' => 'boolean',
             'popularity' => 'integer',

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\MediaUrl;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -14,6 +15,7 @@ class BlogPostMedia extends Model
     protected function casts(): array
     {
         return [
+            'url' => MediaUrl::class,
             'sort_order' => 'integer',
         ];
     }

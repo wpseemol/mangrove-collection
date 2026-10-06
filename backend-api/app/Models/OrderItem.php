@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\MediaUrl;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -15,6 +16,7 @@ class OrderItem extends Model
     protected function casts(): array
     {
         return [
+            'image' => MediaUrl::class,
             'unit_price' => 'decimal:2',
             'line_total' => 'decimal:2',
             'quantity' => 'integer',
