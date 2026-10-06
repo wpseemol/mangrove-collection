@@ -33,7 +33,8 @@ return [
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),
-            'serve' => true,
+            // Must stay off: it claims /storage/{path}, shadowing the public disk's fallback route.
+            'serve' => false,
             'throw' => false,
             'report' => false,
         ],
