@@ -346,6 +346,9 @@ switch ($target) {
         $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
 
         $commands = [['migrate', ['--force' => true]], ['db:seed', ['--force' => true]]];
+        if (is_link("{$dir}/public/storage") && !file_exists("{$dir}/public/storage")) {
+            unlink("{$dir}/public/storage");
+        }
         if (!file_exists("{$dir}/public/storage")) {
             $commands[] = ['storage:link', []];
         }
