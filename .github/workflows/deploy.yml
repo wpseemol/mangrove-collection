@@ -107,10 +107,11 @@ jobs:
                   for key in APP_KEY DB_DATABASE DB_USERNAME DB_PASSWORD; do
                     grep -Eq "^$key=.+" .env || { echo "::error title=Missing secret::$key is empty: add it as a GitHub repository secret"; exit 1; }
                   done
-                  # storage/ and public/uploads/ are never touched on the server, so drop them here too.
-                  rm -rf tests node_modules .git* .agents .claude .windsurf .cursor storage \
-                         public/uploads public/storage phpunit.xml .env.example
-            - run: bash scripts/deploy/ftp-deploy.sh api backend-api "$FTP_API_DIR"
+                  zip -qr ../api.zip . \
+                    -x 'tests/*' 'node_modules/*' '.git*' '.agents/*' '.claude/*' '.windsurf/*' '.cursor/*' \
+                       'storage/app/public/*' 'storage/logs/*' 'storage/framework/*/*' \
+                       'public/uploads/*' 'public/storage' 'phpunit.xml' '.env.example'
+            - run: bash scripts/deploy/ftp-deploy.sh api api.zip "$FTP_API_DIR"
 
     storefront:
         needs: api
@@ -123,7 +124,7 @@ jobs:
                   node-version: 22
                   cache: pnpm
             - run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
-            # Hoisted node_modules: pnpm's symlinks can't be uploaded over FTP.
+            # Hoisted node_modules: the server-side unzip can't restore pnpm's symlinks.
             - run: pnpm install --frozen-lockfile --config.node-linker=hoisted
             - name: Build
               env:
@@ -141,7 +142,8 @@ jobs:
                   cp -a frontend/.next/static "bundle/app/$app_dir/.next/static"
                   cp -a frontend/public "bundle/app/$app_dir/public"
                   echo "require(\"./app/$app_dir/server.js\");" > bundle/server.js
-            - run: bash scripts/deploy/ftp-deploy.sh storefront bundle "$FTP_STOREFRONT_DIR"
+                  (cd bundle && zip -qr ../storefront.zip .)
+            - run: bash scripts/deploy/ftp-deploy.sh storefront storefront.zip "$FTP_STOREFRONT_DIR"
 
     dashboard:
         needs: api
@@ -159,5 +161,7 @@ jobs:
               env:
                   VITE_API_URL: ${{ env.API_URL }}/v1
                   VITE_STOREFRONT_URL: ${{ vars.SITE_URL || 'https://mangrove-collection.com' }}
-              run: pnpm --filter dashboard build
-            - run: bash scripts/deploy/ftp-deploy.sh dashboard dashboard/dist "$FTP_DASHBOARD_DIR"
+              run: |
+                  pnpm --filter dashboard build
+                  (cd dashboard/dist && zip -qr ../../dashboard.zip .)
+            - run: bash scripts/deploy/ftp-deploy.sh dashboard dashboard.zip "$FTP_DASHBOARD_DIR"
