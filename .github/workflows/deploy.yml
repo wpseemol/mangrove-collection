@@ -12,7 +12,7 @@ concurrency:
 env:
     FTP_HOST: ${{ secrets.FTP_HOST }}
     FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
-    FTP_PASSWORD: ${{ secrets.FTP_PASSWORD || secrets.LFTP_PASSWORD }}
+    FTP_PASSWORD: ${{ secrets.FTP_PASSWORD || secrets.FTP_PASSWORD }}
     FTP_API_DIR: ${{ vars.FTP_API_DIR || 'api.mangrove-collection.com' }}
     FTP_STOREFRONT_DIR: ${{ vars.FTP_STOREFRONT_DIR || 'public_html' }}
     FTP_DASHBOARD_DIR: ${{ vars.FTP_DASHBOARD_DIR || 'dashboard.mangrove-collection.com' }}
@@ -142,8 +142,7 @@ jobs:
                   cp -a frontend/.next/static "bundle/app/$app_dir/.next/static"
                   cp -a frontend/public "bundle/app/$app_dir/public"
                   echo "require(\"./app/$app_dir/server.js\");" > bundle/server.js
-                  (cd bundle && zip -qr ../storefront.zip .)
-            - run: bash scripts/deploy/ftp-deploy.sh storefront storefront.zip "$FTP_STOREFRONT_DIR"
+            - run: bash scripts/deploy/ftp-deploy.sh storefront bundle "$FTP_STOREFRONT_DIR"
 
     dashboard:
         needs: api
@@ -161,7 +160,5 @@ jobs:
               env:
                   VITE_API_URL: ${{ env.API_URL }}/v1
                   VITE_STOREFRONT_URL: ${{ vars.SITE_URL || 'https://mangrove-collection.com' }}
-              run: |
-                  pnpm --filter dashboard build
-                  (cd dashboard/dist && zip -qr ../../dashboard.zip .)
-            - run: bash scripts/deploy/ftp-deploy.sh dashboard dashboard.zip "$FTP_DASHBOARD_DIR"
+              run: pnpm --filter dashboard build
+            - run: bash scripts/deploy/ftp-deploy.sh dashboard dashboard/dist "$FTP_DASHBOARD_DIR"
