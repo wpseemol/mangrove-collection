@@ -96,9 +96,18 @@ class ProductController extends Controller
         return response()->json(null, 204);
     }
 
-    public function restore(int $product): ProductResource
+    public function restore(Request $request, int $product): ProductResource
     {
         $model = Product::onlyTrashed()->findOrFail($product);
+
+        // Products whose category was deleted while they were in trash need a new one.
+        $data = $request->validate([
+            'category_id' => [Rule::requiredIf($model->category_id === null), 'nullable', 'integer', 'exists:categories,id'],
+        ], ['category_id.required' => 'Its category was deleted. Choose a new category to restore this product.']);
+
+        if (isset($data['category_id'])) {
+            $model->category_id = $data['category_id'];
+        }
         $model->restore();
 
         return new ProductResource($model->load(['category', 'variants', 'images']));

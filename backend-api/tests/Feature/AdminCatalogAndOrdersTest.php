@@ -94,6 +94,25 @@ class AdminCatalogAndOrdersTest extends TestCase
         $this->deleteJson("/v1/admin/categories/{$product->category_id}")->assertStatus(409);
     }
 
+    public function test_category_with_only_trashed_products_can_be_deleted_and_they_restore_into_a_new_one(): void
+    {
+        $product = Product::factory()->withVariant()->create();
+        $product->delete();
+        $oldCategory = $product->category;
+
+        $this->deleteJson("/v1/admin/categories/{$oldCategory->id}")->assertNoContent();
+        $this->assertModelMissing($oldCategory);
+        $this->assertNull($product->fresh()->category_id);
+
+        $this->postJson("/v1/admin/products/{$product->id}/restore")->assertUnprocessable()->assertJsonValidationErrors('category_id');
+
+        $category = Category::factory()->create();
+        $this->postJson("/v1/admin/products/{$product->id}/restore", ['category_id' => $category->id])
+            ->assertOk()
+            ->assertJsonPath('data.category.id', $category->id);
+        $this->assertNotSoftDeleted($product);
+    }
+
     public function test_cancelling_an_order_restocks_and_delivering_cod_marks_paid(): void
     {
         $variant = Product::factory()->withVariant(100, 5)->create()->variants->first();

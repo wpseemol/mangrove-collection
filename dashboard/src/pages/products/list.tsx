@@ -23,6 +23,14 @@ import { StatusBadge } from '@/components/status-badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -81,6 +89,8 @@ export function ProductsPage() {
 
   const [search, setSearch] = useState(q)
   const [toDelete, setToDelete] = useState<Product | null>(null)
+  const [needsCategory, setNeedsCategory] = useState<Product | null>(null)
+  const [restoreCategory, setRestoreCategory] = useState('')
 
   const updateParams = (changes: Record<string, string | null>) => {
     const next = new URLSearchParams(params)
@@ -134,13 +144,27 @@ export function ProductsPage() {
   })
 
   const restoreProduct = useMutation({
-    mutationFn: (product: Product) => api(`/admin/products/${product.id}/restore`, { method: 'POST' }),
-    onSuccess: (_, product) => {
+    mutationFn: ({ product, categoryId }: { product: Product; categoryId?: string }) =>
+      api(`/admin/products/${product.id}/restore`, {
+        method: 'POST',
+        body: categoryId ? { category_id: Number(categoryId) } : undefined,
+      }),
+    onSuccess: (_, { product }) => {
       toast.success(`"${product.name}" restored.`)
+      setNeedsCategory(null)
       invalidate()
     },
     onError: (error) => toast.error(errorMessage(error)),
   })
+
+  const startRestore = (product: Product) => {
+    if (product.category) {
+      restoreProduct.mutate({ product })
+      return
+    }
+    setRestoreCategory('')
+    setNeedsCategory(product)
+  }
 
   const products = data?.data ?? []
   const meta = data?.meta
@@ -281,7 +305,7 @@ export function ProductsPage() {
                         variant="outline"
                         size="sm"
                         disabled={restoreProduct.isPending}
-                        onClick={() => restoreProduct.mutate(product)}
+                        onClick={() => startRestore(product)}
                       >
                         <RotateCcw /> Restore
                       </Button>
@@ -392,6 +416,43 @@ export function ProductsPage() {
         pending={deleteProduct.isPending}
         onConfirm={() => toDelete && deleteProduct.mutate(toDelete)}
       />
+
+      <Dialog open={needsCategory !== null} onOpenChange={(open) => !open && setNeedsCategory(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Choose a category</DialogTitle>
+            <DialogDescription>
+              The category of <span className="font-medium text-foreground">{needsCategory?.name}</span> was deleted.
+              Pick a new one to restore it.
+            </DialogDescription>
+          </DialogHeader>
+          <Select value={restoreCategory} onValueChange={setRestoreCategory}>
+            <SelectTrigger className="w-full" aria-label="Category">
+              <SelectValue placeholder="Select a category" />
+            </SelectTrigger>
+            <SelectContent>
+              {categories?.map((c) => (
+                <SelectItem key={c.id} value={String(c.id)}>
+                  {c.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setNeedsCategory(null)}>
+              Cancel
+            </Button>
+            <Button
+              disabled={!restoreCategory || restoreProduct.isPending}
+              onClick={() =>
+                needsCategory && restoreProduct.mutate({ product: needsCategory, categoryId: restoreCategory })
+              }
+            >
+              <RotateCcw /> Restore
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }
