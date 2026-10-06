@@ -12,7 +12,7 @@ concurrency:
 env:
     FTP_HOST: ${{ secrets.FTP_HOST }}
     FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
-    FTP_PASSWORD: ${{ secrets.FTP_PASSWORD || secrets.FTP_PASSWORD }}
+    FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
     FTP_API_DIR: ${{ vars.FTP_API_DIR || 'api.mangrove-collection.com' }}
     FTP_STOREFRONT_DIR: ${{ vars.FTP_STOREFRONT_DIR || 'public_html' }}
     FTP_DASHBOARD_DIR: ${{ vars.FTP_DASHBOARD_DIR || 'dashboard.mangrove-collection.com' }}
