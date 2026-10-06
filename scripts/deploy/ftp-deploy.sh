@@ -75,6 +75,14 @@ for candidate in "${candidates[@]}"; do
     echo "::error title=Server step failed ($target)::$(echo "$body" | tail -n 4 | tr '\n' ' ' | cut -c1-500)"
     false
   fi
+  if [ "$target" = api ]; then
+    health=$(curl -sS --max-time 30 -w '\nHTTP %{http_code}' "$API_URL/api-health" 2>&1) || true
+    echo "$health"
+    if ! grep -q '^HTTP 200$' <<<"$health"; then
+      echo "::error title=API health check failed::$(tr '\n' ' ' <<<"$health" | cut -c1-500)"
+      exit 1
+    fi
+  fi
   exit 0
 done
 
