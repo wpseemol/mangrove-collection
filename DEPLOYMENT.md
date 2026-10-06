@@ -4,13 +4,13 @@ Three apps, one registrable domain:
 
 | App | Built with | Output | Served at |
 | --- | --- | --- | --- |
-| Storefront (`frontend/`) | Next.js server (`next start`) | `frontend/.next/` (Node.js app) | `https://mangrove-collection.com` |
+| Storefront (`frontend/`) | Next.js (static export) | `frontend/out/` | `https://mangrove-collection.com` |
 | Dashboard (`dashboard/`) | Vite + React | `dashboard/dist/` | `https://dashboard.mangrove-collection.com` |
 | API (`backend-api/`) | Laravel 13 (PHP 8.3+, MySQL) | `backend-api/` (PHP, document root `public/`) | `https://api.mangrove-collection.com` |
 
-The dashboard is plain HTML/CSS/JS. The API is a normal PHP site (no Node.js needed). The storefront runs as a
-Node.js 22+ app: it renders blog pages on the server so search engines get the full article, title, description
-and structured data.
+The dashboard and the storefront are plain HTML/CSS/JS and the API is a normal PHP site, so no Node.js is
+needed on the server. The storefront's blog pages are rendered at build time, so search engines get the full
+article, title, description and structured data.
 
 > **Same domain is required.** Sign-in uses an HttpOnly session cookie scoped to
 > `.mangrove-collection.com`. If you host the frontends on a different domain
@@ -250,34 +250,28 @@ pnpm install
 pnpm build      # -> frontend/.next/ and dashboard/dist/
 ```
 
-### 4.1 Storefront (Node.js app)
+### 4.1 Storefront (static files)
 
-Upload to `~/mangrove-storefront/`: `.next/` (without `.next/cache` and `.next/dev`),
-`public/`, `package.json`, `next.config.ts` and `.env.production.local`. Then create
-the app in cPanel > Setup Node.js App:
+The storefront is a static export: `pnpm build` writes plain HTML/CSS/JS to
+`frontend/out/`. Upload the **contents** of `frontend/out/` (including
+`.htaccess`) into `public_html/`. No Node.js app is needed; if you created one
+in cPanel > Setup Node.js App, delete it.
 
-- Node.js version: **22** or newer, Application mode: **Production**
-- Application root: `mangrove-storefront`
-- Application URL: `mangrove-collection.com`
-- Application startup file: `node_modules/next/dist/bin/next` with the argument
-  `start` (or a one-line `server.js` containing `require("next/dist/bin/next")`
-  if your cPanel has no arguments field)
+Blog articles, blog categories and the sitemap are rendered from the live API
+**during the build**, so search engines get the full article. A newly
+published post appears after the next deploy (push to `main` or run the Deploy
+workflow by hand). Blog search, tags, sorting and later pages load in the
+browser.
 
-In the app's virtual environment run `npm install --omit=dev`, then click
-**Restart**. Turn on **Force HTTPS Redirect** for the domain and redirect `www.`
-to the apex in cPanel > Domains (the old `.htaccess` did this).
-
-`next.config.ts` sends `nosniff`, `X-Frame-Options: SAMEORIGIN`,
-`Referrer-Policy`, `Permissions-Policy`, COOP (`same-origin-allow-popups`, so
-Google sign-in works), HSTS and a CSP of `frame-ancestors`, `base-uri`,
-`object-src 'none'`, `form-action` and `upgrade-insecure-requests`. Script
-sources are deliberately not restricted because admins can inject
-analytics/pixel scripts from the dashboard.
-
-Blog pages and the sitemap are cached on the server for 5 minutes and 1 hour,
-so a newly published post appears within a few minutes without a redeploy. Old
-`/blog/post/?slug=...` and `/blog/?category=...` links redirect permanently to
-`/blog/<slug>/` and `/blog/category/<slug>/`.
+`frontend/public/.htaccess` (copied into `out/`) forces HTTPS, redirects
+`www.` to the apex, serves `404.html` for missing pages, permanently redirects
+old `/blog/post/?slug=...` and `/blog/?category=...` links, and sends
+`nosniff`, `X-Frame-Options: SAMEORIGIN`, `Referrer-Policy`,
+`Permissions-Policy`, COOP (`same-origin-allow-popups`, so Google sign-in
+works), HSTS and a CSP of `frame-ancestors`, `base-uri`, `object-src 'none'`,
+`form-action` and `upgrade-insecure-requests`. Script sources are deliberately
+not restricted because admins can inject analytics/pixel scripts from the
+dashboard.
 
 ### 4.2 Dashboard upload
 
@@ -296,7 +290,7 @@ Upload the **contents** of `dashboard/dist/` (including `.htaccess`) into
 
 ### 4.3 Redeploys
 
-Upload the new build over the old files and restart the storefront app. Hashed
+Upload the new build over the old files. Hashed
 assets make stale caches harmless. For the API, upload the new code (keeping the server's `.env`,
 `public/uploads/` and `storage/app/public/`), then:
 

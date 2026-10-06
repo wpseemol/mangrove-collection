@@ -3,8 +3,6 @@ import { postHref } from "@/lib/blog";
 import { absoluteUrl, SITE_NAME } from "@/lib/seo";
 import type { BlogPost } from "@/lib/types";
 
-export type SearchParams = Promise<Record<string, string | string[] | undefined>>;
-
 const first = (value: string | string[] | undefined) => (Array.isArray(value) ? value[0] : value)?.trim() || undefined;
 
 export function listingFilters(params: Record<string, string | string[] | undefined>): ListingFilters {
@@ -17,10 +15,7 @@ export function listingFilters(params: Record<string, string | string[] | undefi
   };
 }
 
-/** Search and tag results are thin duplicates of the listing: crawlers follow their links but don't index them. */
 export const isThinListing = (filters: ListingFilters) => Boolean(filters.q || filters.tag || filters.sort !== "latest");
-
-export const canonicalPath = (basePath: string, filters: ListingFilters) => (filters.page > 1 ? `${basePath}?page=${filters.page}` : basePath);
 
 export function listingJsonLd({ name, description, path, posts, crumbs }: { name: string; description: string; path: string; posts: BlogPost[]; crumbs: { name: string; path: string }[] }) {
   const url = absoluteUrl(path);

@@ -124,25 +124,17 @@ jobs:
                   node-version: 22
                   cache: pnpm
             - run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
-            # Hoisted node_modules: the server-side unzip can't restore pnpm's symlinks.
-            - run: pnpm install --frozen-lockfile --config.node-linker=hoisted
+            - run: pnpm install --frozen-lockfile
+            # Static export: plain HTML/CSS/JS in frontend/out/, served by Apache from public_html.
+            # Blog pages are rendered from the live API here, so new posts appear after the next deploy.
             - name: Build
               env:
-                  NEXT_OUTPUT: standalone
                   NEXT_PUBLIC_API_URL: ${{ env.API_URL }}/v1
                   NEXT_PUBLIC_SITE_URL: ${{ vars.SITE_URL || 'https://mangrove-collection.com' }}
                   NEXT_PUBLIC_DASHBOARD_URL: ${{ vars.DASHBOARD_URL || 'https://dashboard.mangrove-collection.com' }}
               run: |
                   pnpm --filter frontend build
-                  server=$(find frontend/.next/standalone -name server.js -not -path '*/node_modules/*' | head -n1)
-                  app_dir=${server#frontend/.next/standalone/}
-                  app_dir=$(dirname "$app_dir")
-                  mkdir -p bundle/app
-                  cp -a frontend/.next/standalone/. bundle/app/
-                  cp -a frontend/.next/static "bundle/app/$app_dir/.next/static"
-                  cp -a frontend/public "bundle/app/$app_dir/public"
-                  echo "require(\"./app/$app_dir/server.js\");" > bundle/server.js
-                  (cd bundle && zip -qr ../storefront.zip .)
+                  (cd frontend/out && zip -qr ../../storefront.zip .)
             - run: bash scripts/deploy/ftp-deploy.sh storefront storefront.zip "$FTP_STOREFRONT_DIR"
 
     dashboard:

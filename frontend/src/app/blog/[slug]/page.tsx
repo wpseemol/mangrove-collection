@@ -1,7 +1,7 @@
 import { ArrowLeft, ArrowRight, CalendarDays, Clock, Eye, ListTree } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound, permanentRedirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { cache } from "react";
 
 import { BlogContent } from "@/components/blog/blog-content";
@@ -16,11 +16,19 @@ import { Button } from "@/components/ui/button";
 import { blogCategoryHref, blogTagHref, formatPostDate, plainText, postHref, withHeadingIds } from "@/lib/blog";
 import { clip, toAbsolute } from "@/lib/head";
 import { absoluteUrl, jsonLd, OG_IMAGE, pageMetadata, SITE_NAME } from "@/lib/seo";
-import { getBlogPost, NotFoundError } from "@/lib/server-api";
+import { getAllBlogPosts, getBlogPost, NotFoundError, requireParams } from "@/lib/server-api";
 import type { BlogPost } from "@/lib/types";
 
 type Params = Promise<{ slug: string }>;
-type SearchParams = Promise<Record<string, string | string[] | undefined>>;
+
+export const dynamicParams = false;
+
+export async function generateStaticParams() {
+  return requireParams(
+    (await getAllBlogPosts()).map((post) => ({ slug: post.slug })),
+    "blog posts",
+  );
+}
 
 const loadPost = cache(async (slug: string) => {
   try {
@@ -89,13 +97,8 @@ function postJsonLd(post: BlogPost) {
   };
 }
 
-export default async function BlogPostPage({ params, searchParams }: { params: Params; searchParams: SearchParams }) {
+export default async function BlogPostPage({ params }: { params: Params }) {
   const { slug } = await params;
-  if (slug === "post") {
-    const legacy = (await searchParams).slug;
-    if (typeof legacy === "string" && legacy) permanentRedirect(postHref(legacy));
-  }
-
   const result = await loadPost(slug);
   if (!result) notFound();
   const { data: post, related } = result;

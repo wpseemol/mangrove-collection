@@ -4,8 +4,8 @@ import { blogCategoryHref, postHref } from "@/lib/blog";
 import { API_URL } from "@/lib/config";
 import { absoluteUrl } from "@/lib/seo";
 
-/** Rebuilt hourly so new products and blog posts appear without a redeploy. */
-export const revalidate = 3600;
+/** Written once per build; new products and blog posts appear after the next deploy. */
+export const dynamic = "force-static";
 
 type Entry = MetadataRoute.Sitemap[number];
 

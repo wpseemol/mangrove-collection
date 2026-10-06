@@ -6,6 +6,7 @@ import { api } from "@/lib/api";
 import type {
   Address,
   Banner,
+  BlogPost,
   Category,
   CmsPage,
   Order,
@@ -99,6 +100,18 @@ export function useBanners() {
     queryKey: ["banners"],
     queryFn: () => api<{ data: Banner[] }>("/banners").then((r) => r.data),
     staleTime: FIVE_MINUTES,
+  });
+}
+
+export type BlogPostFilters = { q?: string; category?: string; tag?: string; sort?: "latest" | "popular"; page?: number; per_page?: number };
+
+export function useBlogPosts(filters: BlogPostFilters, enabled = true) {
+  return useQuery({
+    queryKey: ["blog-posts", filters],
+    queryFn: () => api<Paginated<BlogPost>>("/blog/posts", { query: filters }),
+    enabled,
+    staleTime: FIVE_MINUTES,
+    placeholderData: (previous) => previous,
   });
 }
 
