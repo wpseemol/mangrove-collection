@@ -103,7 +103,7 @@ composer install --no-dev --optimize-autoloader     # -> vendor/
 ```
 
 Upload the whole `backend-api/` folder to `~/mangrove-api/` **including `vendor/`**
-(zip it, upload with File Manager and extract, or use Git Version Control + composer). Do not
+(upload the files over FTP, or use Git Version Control + composer). Do not
 upload `.env`, `tests/` or `node_modules/`. When redeploying, keep the server's `.env`,
 `public/uploads/` and `storage/app/public/`.
 
