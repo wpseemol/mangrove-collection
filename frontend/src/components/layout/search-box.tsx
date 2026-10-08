@@ -173,7 +173,7 @@ function ResultCard({
           {saving > 0 && (
             <span className="mt-1 flex flex-wrap items-center gap-1.5">
               <span className="text-xs text-muted-foreground line-through">{formatPrice(product.compare_price)}</span>
-              <span className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold text-primary dark:text-brand">{formatPrice(saving)} OFF</span>
+              <span className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold text-primary">{formatPrice(saving)} OFF</span>
             </span>
           )}
         </span>

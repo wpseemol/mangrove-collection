@@ -19,7 +19,6 @@ import { cartCount, cartSubtotal, useCartStore } from "@/stores/cart";
 
 import { NAV_LINKS } from "./main-nav";
 import { SearchBox } from "./search-box";
-import { ThemeToggle } from "./theme-toggle";
 
 function HeaderAction({
   href,
@@ -38,7 +37,7 @@ function HeaderAction({
 }) {
   return (
     <Link href={href} className={cn("group flex items-center gap-2.5 rounded-lg px-2 py-1.5 transition-colors hover:bg-muted", className)}>
-      <span className="relative flex size-10 items-center justify-center rounded-full bg-secondary text-primary transition-colors group-hover:bg-primary group-hover:text-white dark:text-brand dark:group-hover:text-white">
+      <span className="relative flex size-10 items-center justify-center rounded-full bg-secondary text-primary transition-colors group-hover:bg-primary group-hover:text-white">
         <Icon className="size-5" strokeWidth={1.8} />
         {badge ? (
           <span className="absolute -top-1 -right-1 flex min-w-5 items-center justify-center rounded-full bg-gold px-1 text-[10px] leading-5 font-semibold text-white ring-2 ring-background">
@@ -140,7 +139,6 @@ export function SiteHeader() {
           <SearchBox className="mx-auto hidden w-full max-w-xl flex-1 md:block" />
 
           <nav className="ml-auto flex items-center gap-1 md:ml-0" aria-label="Shortcuts">
-            <ThemeToggle className="md:mr-1" />
             {staff ? (
               <HeaderAction
                 href={DASHBOARD_URL}

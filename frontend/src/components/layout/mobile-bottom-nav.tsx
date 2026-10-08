@@ -49,7 +49,7 @@ export function MobileBottomNav() {
               aria-current={active ? "page" : undefined}
               className={cn(
                 "flex h-full flex-col items-center justify-center gap-1 text-[11px] font-medium transition-colors",
-                active ? "text-primary dark:text-brand" : "text-muted-foreground active:text-foreground",
+                active ? "text-primary" : "text-muted-foreground active:text-foreground",
               )}
             >
               <span className="relative">

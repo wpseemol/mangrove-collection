@@ -100,46 +100,6 @@
   --sidebar-ring: #2f855a;
 }
 
-.dark {
-  --brand: #4cc07a;
-  --brand-foreground: #ffffff;
-  --forest: #0f2e22;
-  --gold: #d8ad48;
-  --ink: #050a08;
-  --surface: #0f1914;
-
-  --background: #0a120e;
-  --foreground: #e6ece8;
-  --card: #111c17;
-  --card-foreground: #e6ece8;
-  --popover: #13201a;
-  --popover-foreground: #e6ece8;
-  --primary: #2e9d5f;
-  --primary-foreground: #ffffff;
-  --secondary: #16271f;
-  --secondary-foreground: #9fdcb8;
-  --muted: #15211b;
-  --muted-foreground: #95a59c;
-  --accent: #1a2c23;
-  --accent-foreground: #e6ece8;
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: #22332b;
-  --input: #2c3f35;
-  --ring: #3fae6a;
-  --chart-1: #3fae6a;
-  --chart-2: #8fd0a6;
-  --chart-3: #d8ad48;
-  --chart-4: #238a52;
-  --chart-5: #e6ece8;
-  --sidebar: #0d1712;
-  --sidebar-foreground: #e6ece8;
-  --sidebar-primary: #3fae6a;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #1a2c23;
-  --sidebar-accent-foreground: #e6ece8;
-  --sidebar-border: #22332b;
-  --sidebar-ring: #3fae6a;
-}
 
 @layer base {
   * {
@@ -155,9 +115,6 @@
   html {
     @apply font-sans;
     color-scheme: light;
-  }
-  html.dark {
-    color-scheme: dark;
   }
 }
 
