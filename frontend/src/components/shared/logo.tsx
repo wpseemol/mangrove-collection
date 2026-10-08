@@ -20,7 +20,7 @@ export function Logo({ className, tone = "dark" }: { className?: string; tone?: 
         priority
       />
       <span className="flex flex-col leading-none">
-        <span className={cn("font-heading text-xl font-semibold tracking-tight", tone === "dark" ? "text-primary dark:text-brand" : "text-white")}>Mangrove</span>
+        <span className={cn("font-heading text-xl font-semibold tracking-tight", tone === "dark" ? "text-primary" : "text-white")}>Mangrove</span>
         <span className={cn("mt-1 text-[10px] font-medium tracking-[0.32em] uppercase", tone === "dark" ? "text-gold" : "text-white/70")}>
           Collection
         </span>

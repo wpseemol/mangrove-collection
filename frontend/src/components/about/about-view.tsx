@@ -47,7 +47,7 @@ function LinkButtons({
           variant="outline"
           className={cn(
             "rounded-full",
-            tone === "dark" && "border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white dark:border-white/30 dark:bg-transparent dark:hover:bg-white/10",
+            tone === "dark" && "border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white",
           )}
         >
           <Link href={secondaryUrl}>{secondaryLabel}</Link>
@@ -128,7 +128,7 @@ function Stats({ stats }: { stats: AboutContent["stats"] }) {
         {items.map((stat, index) => (
           <div key={index} className={cn("flex flex-col-reverse bg-card px-5 py-6 text-center md:py-8", items.length % 2 === 1 && index === items.length - 1 && "max-md:col-span-2")}>
             <dt className="mt-1 text-xs text-muted-foreground md:text-sm">{stat.label}</dt>
-            <dd className="font-heading text-2xl font-semibold text-primary md:text-4xl dark:text-brand">{stat.value}</dd>
+            <dd className="font-heading text-2xl font-semibold text-primary md:text-4xl">{stat.value}</dd>
           </div>
         ))}
       </dl>
@@ -164,7 +164,7 @@ function Story({ story }: { story: AboutContent["story"] }) {
               text={story.body}
               className="mt-6 space-y-4 text-[15px] leading-7 text-pretty text-muted-foreground md:text-base md:leading-8"
               strongClassName="font-semibold text-foreground"
-              linkClassName="font-medium text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary dark:text-brand"
+              linkClassName="font-medium text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary"
             />
           )}
         </div>
@@ -212,7 +212,7 @@ function Process({ process }: { process: AboutContent["process"] }) {
         <span aria-hidden className="absolute top-8 right-[12%] left-[12%] hidden border-t-2 border-dashed border-primary/25 lg:block" />
         {steps.map((step, index) => (
           <li key={index} className="relative flex flex-col items-center text-center">
-            <span className="relative flex size-16 items-center justify-center rounded-full bg-card text-primary shadow-lg ring-1 ring-border dark:text-brand">
+            <span className="relative flex size-16 items-center justify-center rounded-full bg-card text-primary shadow-lg ring-1 ring-border">
               <HomeIcon name={step.icon} className="size-7" />
               <span className="absolute -top-1 -right-1 flex size-6 items-center justify-center rounded-full bg-gold text-[11px] font-bold text-white ring-4 ring-background">
                 {index + 1}
@@ -241,7 +241,7 @@ function Milestones({ milestones }: { milestones: AboutContent["milestones"] }) 
             <span
               aria-hidden
               className={cn(
-                "absolute top-1 left-2.5 flex size-4 items-center justify-center rounded-full bg-primary ring-4 ring-primary/15 dark:bg-brand",
+                "absolute top-1 left-2.5 flex size-4 items-center justify-center rounded-full bg-primary ring-4 ring-primary/15",
                 index % 2 === 0 ? "md:right-[-0.5rem] md:left-auto" : "md:left-[-0.5rem]",
               )}
             />
@@ -283,7 +283,7 @@ function Team({ team }: { team: AboutContent["team"] }) {
             </div>
             <div className="p-4 sm:p-5">
               <h3 className="font-semibold text-foreground">{member.name}</h3>
-              {member.role && <p className="text-xs font-medium tracking-wide text-primary uppercase dark:text-brand">{member.role}</p>}
+              {member.role && <p className="text-xs font-medium tracking-wide text-primary uppercase">{member.role}</p>}
               {member.bio && <p className="mt-2 line-clamp-4 text-sm leading-relaxed text-muted-foreground">{member.bio}</p>}
             </div>
           </article>

@@ -70,8 +70,8 @@ function StatusNote({ tone, icon: Icon, children }: { tone: "info" | "success" |
     <p
       className={cn(
         "flex items-start gap-2 rounded-lg px-3 py-2 text-xs",
-        tone === "info" && "bg-sky-50 text-sky-800 dark:bg-sky-500/10 dark:text-sky-300",
-        tone === "success" && "bg-green-50 text-green-800 dark:bg-green-500/10 dark:text-green-300",
+        tone === "info" && "bg-sky-50 text-sky-800",
+        tone === "success" && "bg-green-50 text-green-800",
         tone === "error" && "bg-destructive/10 text-destructive",
       )}
     >

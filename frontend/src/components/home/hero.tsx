@@ -148,7 +148,7 @@ function StaticHero({ hero }: { hero: HeroBlock }) {
                             asChild
                             size="lg"
                             variant="outline"
-                            className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white dark:border-white/30 dark:bg-transparent dark:hover:bg-white/10"
+                            className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white"
                         >
                             <Link href={hero.secondary_url}>
                                 {hero.secondary_label}
@@ -246,12 +246,12 @@ const PROMO_STYLES = [
     {
         icon: Sparkles,
         className:
-            "from-[#f3ead3] to-[#e9dcb5] text-[#5b4410] dark:from-[#2b2414] dark:to-[#3a301a] dark:text-[#ecd38f]",
+            "from-[#f3ead3] to-[#e9dcb5] text-[#5b4410]",
     },
     {
         icon: Tag,
         className:
-            "from-[#eaf3ee] to-[#d3e8dc] text-[#0d4a36] dark:from-[#123326] dark:to-[#0c241b] dark:text-[#9fdcb8]",
+            "from-[#eaf3ee] to-[#d3e8dc] text-[#0d4a36]",
     },
 ];
 

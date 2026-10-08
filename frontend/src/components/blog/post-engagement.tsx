@@ -78,7 +78,7 @@ function LikeButton({ slug, size = "default" }: { slug: string; size?: "default"
       <span className="sr-only">{liked ? "Unlike this article" : "Like this article"}</span>
     </>
   );
-  const className = cn("rounded-full", liked && "border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100 hover:text-rose-700 dark:border-rose-500/30 dark:bg-rose-500/10", size === "lg" && "h-11 px-5");
+  const className = cn("rounded-full", liked && "border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100 hover:text-rose-700", size === "lg" && "h-11 px-5");
 
   if (!signedIn) {
     return (

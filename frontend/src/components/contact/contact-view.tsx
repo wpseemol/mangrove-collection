@@ -123,7 +123,7 @@ function Channels({ channels, settings }: { channels: ContactContent["channels"]
                 <span className="text-xs font-semibold tracking-[0.15em] text-muted-foreground uppercase">{label}</span>
                 <span className="mt-1 font-semibold break-words text-foreground">{value}</span>
                 {note && <span className="mt-1 text-sm text-muted-foreground">{note}</span>}
-                <span className="mt-auto inline-flex items-center gap-1 pt-3 text-sm font-medium text-primary sm:pt-4 dark:text-brand">
+                <span className="mt-auto inline-flex items-center gap-1 pt-3 text-sm font-medium text-primary sm:pt-4">
                   {action} <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </span>
               </span>
@@ -266,7 +266,7 @@ function MessageForm({ form, settings }: { form: ContactContent["form"]; setting
           </div>
           {form.note && (
             <p className="flex items-center gap-1.5 text-xs text-muted-foreground sm:col-span-2">
-              <ShieldCheck className="size-3.5 text-primary dark:text-brand" /> {form.note}
+              <ShieldCheck className="size-3.5 text-primary" /> {form.note}
             </p>
           )}
         </form>
@@ -291,7 +291,7 @@ function SideCard({ icon: Icon, title, children }: { icon: IconType; title: stri
   return (
     <section className="rounded-3xl border bg-card p-6 sm:p-7">
       <h2 className="font-heading flex items-center gap-2.5 text-lg font-semibold text-foreground">
-        <span className="flex size-9 items-center justify-center rounded-xl bg-secondary text-primary dark:text-brand">
+        <span className="flex size-9 items-center justify-center rounded-xl bg-secondary text-primary">
           <Icon className="size-4.5" />
         </span>
         {title}
@@ -408,7 +408,7 @@ function Faqs({ faq }: { faq: ContactContent["faq"] }) {
                   text={item.answer}
                   className="text-[15px] leading-relaxed text-muted-foreground"
                   strongClassName="font-semibold text-foreground"
-                  linkClassName="font-medium text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary dark:text-brand"
+                  linkClassName="font-medium text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary"
                 />
               </AccordionContent>
             </AccordionItem>

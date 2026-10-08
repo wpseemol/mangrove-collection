@@ -45,7 +45,7 @@ export function FloatingSocial() {
           <span
             aria-hidden="true"
             className={cn(
-              "pointer-events-none absolute top-1/2 hidden -translate-y-1/2 rounded-full bg-white px-3 py-1.5 text-sm font-medium whitespace-nowrap text-foreground opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 md:block dark:bg-card",
+              "pointer-events-none absolute top-1/2 hidden -translate-y-1/2 rounded-full bg-white px-3 py-1.5 text-sm font-medium whitespace-nowrap text-foreground opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 md:block",
               left ? "left-full ml-3" : "right-full mr-3",
             )}
           >
@@ -67,7 +67,7 @@ export function FloatingSocial() {
           <span
             aria-hidden="true"
             className={cn(
-              "pointer-events-none absolute top-1/2 hidden -translate-y-1/2 rounded-full bg-white px-3 py-1.5 text-sm font-medium whitespace-nowrap text-foreground opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 md:block dark:bg-card",
+              "pointer-events-none absolute top-1/2 hidden -translate-y-1/2 rounded-full bg-white px-3 py-1.5 text-sm font-medium whitespace-nowrap text-foreground opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 md:block",
               left ? "left-full ml-3" : "right-full mr-3",
             )}
           >
