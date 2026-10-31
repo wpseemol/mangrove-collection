@@ -1,0 +1,10 @@
+# Linux CI (GitHub Actions) runs bash/YAML. Windows editors often save CRLF,
+# which breaks `set -o pipefail` as `pipefail\r` ("invalid option name").
+*.sh text eol=lf
+*.bash text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+scripts/deploy/receiver.php text eol=lf
+
+# PowerShell is Windows-native; CRLF is correct there.
+*.ps1 text eol=crlf
