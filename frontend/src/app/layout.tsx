@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Hind_Siliguri, Roboto } from "next/font/google";
+import NextTopLoader from "nextjs-toploader";
 
 import { FloatingSocial } from "@/components/layout/floating-social";
 import { MainNav } from "@/components/layout/main-nav";
@@ -63,6 +64,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${roboto.variable} ${hind.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col bg-background pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0">
+        <NextTopLoader color="#3fae6a" height={3} showSpinner={false} shadow="0 0 10px #3fae6a,0 0 5px #3fae6a" />
         <SiteJsonLd />
         <Providers>
           <SiteHeader />
