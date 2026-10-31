@@ -33,7 +33,12 @@ function useLoginHref() {
 }
 
 function useEngagement(slug: string) {
-  return useQuery({ queryKey: engagementKey(slug), queryFn: () => api<BlogEngagement>(`${path(slug)}/engagement`), staleTime: 60_000 });
+  return useQuery({
+    queryKey: engagementKey(slug),
+    // API wraps payloads as `{ data: ... }` — same pattern as the rest of the storefront client.
+    queryFn: () => api<{ data: BlogEngagement }>(`${path(slug)}/engagement`).then((r) => r.data),
+    staleTime: 60_000,
+  });
 }
 
 /** Counts the visit once per browser session; the server-rendered page is cached and can't. */
@@ -58,7 +63,8 @@ function LikeButton({ slug, size = "default" }: { slug: string; size?: "default"
   const liked = Boolean(data?.liked);
 
   const toggle = useMutation({
-    mutationFn: () => api<{ liked: boolean; likes_count: number }>(`${path(slug)}/like`, { method: liked ? "DELETE" : "POST" }),
+    mutationFn: () =>
+      api<{ data: { liked: boolean; likes_count: number } }>(`${path(slug)}/like`, { method: liked ? "DELETE" : "POST" }).then((r) => r.data),
     onMutate: () => {
       queryClient.setQueryData<BlogEngagement>(engagementKey(slug), (current) =>
         current ? { ...current, liked: !liked, likes_count: Math.max(0, current.likes_count + (liked ? -1 : 1)) } : current,
@@ -198,7 +204,7 @@ function CommentForm({ slug }: { slug: string }) {
       queryClient.invalidateQueries({ queryKey: commentsKey(slug) });
       queryClient.invalidateQueries({ queryKey: engagementKey(slug) });
     },
-    onError: (e) => setError(e instanceof ApiError ? (e.field("body") ?? e.message) : errorMessage(e)),
+    onError: (e) => setError(e instanceof ApiError ? (e.field("body") ?? e.field("comment") ?? e.message) : errorMessage(e)),
   });
 
   return (

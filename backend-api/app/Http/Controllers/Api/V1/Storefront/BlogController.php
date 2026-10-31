@@ -117,13 +117,16 @@ class BlogController extends Controller
     {
         $post = $this->findPublished($slug);
 
-        BlogPostLike::query()->insertOrIgnore([
+        // firstOrCreate (not raw insertOrIgnore) so created_at is set the Eloquent way on PHP 8.2 / MySQL.
+        BlogPostLike::query()->firstOrCreate([
             'blog_post_id' => $post->id,
             'user_id' => $request->user()->id,
-            'created_at' => now(),
         ]);
 
-        return response()->json(['data' => ['liked' => true, 'likes_count' => BlogPostLike::query()->where('blog_post_id', $post->id)->count()]]);
+        return response()->json(['data' => [
+            'liked' => true,
+            'likes_count' => BlogPostLike::query()->where('blog_post_id', $post->id)->count(),
+        ]]);
     }
 
     public function unlike(Request $request, string $slug): JsonResponse
@@ -132,7 +135,10 @@ class BlogController extends Controller
 
         BlogPostLike::query()->where('blog_post_id', $post->id)->where('user_id', $request->user()->id)->delete();
 
-        return response()->json(['data' => ['liked' => false, 'likes_count' => BlogPostLike::query()->where('blog_post_id', $post->id)->count()]]);
+        return response()->json(['data' => [
+            'liked' => false,
+            'likes_count' => BlogPostLike::query()->where('blog_post_id', $post->id)->count(),
+        ]]);
     }
 
     public function comments(Request $request, string $slug): AnonymousResourceCollection
@@ -148,15 +154,25 @@ class BlogController extends Controller
             ->orderByDesc('created_at')
             ->orderByDesc('id')
             ->paginate((int) $request->query('per_page', 20))
-            ->withQueryString()
-            ->through(fn (BlogComment $comment) => (new BlogCommentResource($comment))->viewer($viewerId));
+            ->withQueryString();
 
-        return BlogCommentResource::collection($comments);
+        return tap(
+            BlogCommentResource::collection($comments),
+            fn (AnonymousResourceCollection $collection) => $collection->collection->each(
+                fn (BlogCommentResource $resource) => $resource->viewer($viewerId),
+            ),
+        );
     }
 
     public function comment(Request $request, string $slug): JsonResponse
     {
         $post = $this->findPublished($slug);
+
+        if (is_string($request->input('body'))) {
+            $request->merge([
+                'body' => trim(preg_replace("/\n{3,}/", "\n\n", str_replace("\r\n", "\n", $request->input('body'))) ?? ''),
+            ]);
+        }
 
         $data = $request->validate([
             'body' => ['required', 'string', 'max:2000', new SafeText, 'min:2'],

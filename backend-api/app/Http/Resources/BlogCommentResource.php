@@ -32,11 +32,19 @@ class BlogCommentResource extends JsonResource
 
     public function toArray(Request $request): array
     {
+        // Controllers used to map with ->through(fn => new self(...)) and then wrap again with
+        // ::collection(), which nests a resource inside a resource and drops viewer/staff flags.
+        if ($this->resource instanceof self) {
+            return $this->resource->toArray($request);
+        }
+
+        $viewerId = $this->viewerId ?? $request->user('sanctum')?->id;
+
         return [
             'id' => $this->id,
             'body' => $this->body,
             'author' => $this->user ? ['id' => $this->user->id, 'name' => $this->user->name, 'avatar' => $this->user->avatar] : null,
-            'is_mine' => $this->viewerId !== null && (int) $this->user_id === $this->viewerId,
+            'is_mine' => $viewerId !== null && (int) $this->user_id === (int) $viewerId,
             $this->mergeWhen($this->staff, fn () => [
                 'is_hidden' => $this->is_hidden,
                 'post' => $this->whenLoaded('post', fn () => $this->post

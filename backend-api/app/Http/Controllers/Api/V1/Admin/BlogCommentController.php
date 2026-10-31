@@ -38,15 +38,21 @@ class BlogCommentController extends Controller
             ->orderByDesc('created_at')
             ->orderByDesc('id')
             ->paginate((int) $request->query('per_page', 20))
-            ->withQueryString()
-            ->through(fn (BlogComment $comment) => (new BlogCommentResource($comment))->forStaff());
+            ->withQueryString();
 
-        return BlogCommentResource::collection($comments)->additional([
-            'counts' => [
-                'visible' => $this->scoped($request)->where('is_hidden', false)->count(),
-                'hidden' => $this->scoped($request)->where('is_hidden', true)->count(),
-            ],
-        ]);
+        // Mark each resource forStaff after ::collection() — chaining ->through(new Resource) then
+        // ::collection() again nested resources and dropped is_hidden / post on PHP 8.2.
+        return tap(
+            BlogCommentResource::collection($comments)->additional([
+                'counts' => [
+                    'visible' => $this->scoped($request)->where('is_hidden', false)->count(),
+                    'hidden' => $this->scoped($request)->where('is_hidden', true)->count(),
+                ],
+            ]),
+            fn (AnonymousResourceCollection $collection) => $collection->collection->each(
+                fn (BlogCommentResource $resource) => $resource->forStaff(),
+            ),
+        );
     }
 
     public function update(Request $request, BlogComment $comment): BlogCommentResource
