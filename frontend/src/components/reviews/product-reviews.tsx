@@ -38,18 +38,28 @@ function takeStoredContact(): string | undefined {
 export function ProductReviews({ product, autoOpen = false }: { product: Product; autoOpen?: boolean }) {
   const [filters, setFilters] = useState<ReviewFilters>({ sort: "newest", page: 1 });
   const { data, isLoading } = useProductReviews(product.slug, filters);
-  const [session, setSession] = useState<ReviewSession | null>(() => (typeof window === "undefined" ? null : loadReviewSession(product.slug)));
-  const [dialog, setDialog] = useState(() => ({
-    open: autoOpen,
+  const [session, setSession] = useState<ReviewSession | null>(null);
+  const [dialog, setDialog] = useState({
+    open: false,
     editing: false,
     nonce: 0,
-    contact: autoOpen && typeof window !== "undefined" ? takeStoredContact() : undefined,
-  }));
+    contact: undefined as string | undefined,
+  });
   const [lightbox, setLightbox] = useState<{ images: ReviewImage[]; index: number } | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    if (autoOpen) sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setSession(loadReviewSession(product.slug));
+  }, [product.slug]);
+
+  useEffect(() => {
+    if (!autoOpen) return;
+    setDialog((current) => ({
+      ...current,
+      open: true,
+      contact: takeStoredContact(),
+    }));
+    sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [autoOpen]);
 
   const updateSession = (next: ReviewSession | null) => {

@@ -17,15 +17,23 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { ApiError, api, errorMessage } from '@/lib/api'
 import { STOREFRONT_URL } from '@/lib/config'
+import { cn } from '@/lib/utils'
 import { slugify } from '@/lib/format'
 import { useCategories } from '@/lib/queries'
 import type { Product, ProductStatus } from '@/lib/types'
+
+const PRODUCT_UNITS = [
+  { value: 'kg', label: 'kg', hint: 'Sold by weight' },
+  { value: 'pc', label: 'pc', hint: 'Sold per piece' },
+] as const
 
 type Draft = {
   name: string
@@ -454,7 +462,32 @@ function ProductForm({ product, initial }: { product?: Product; initial: Draft }
                 error={error?.field('unit')}
                 description="Shown after the price."
               >
-                <Input id="unit" value={draft.unit} onChange={(e) => set('unit', e.target.value)} placeholder="kg" />
+                <RadioGroup
+                  value={draft.unit || undefined}
+                  onValueChange={(unit) => set('unit', unit)}
+                  className="grid grid-cols-2 gap-2"
+                  aria-invalid={Boolean(error?.field('unit'))}
+                >
+                  {PRODUCT_UNITS.map((unit) => {
+                    const selected = draft.unit === unit.value
+                    return (
+                      <Label
+                        key={unit.value}
+                        htmlFor={`unit-${unit.value}`}
+                        className={cn(
+                          'flex cursor-pointer flex-col gap-0.5 rounded-lg border px-3 py-2.5 font-normal transition-colors hover:bg-muted/40',
+                          selected && 'border-primary bg-primary/5 ring-1 ring-primary',
+                        )}
+                      >
+                        <span className="flex items-center gap-2 text-sm font-medium">
+                          <RadioGroupItem id={`unit-${unit.value}`} value={unit.value} />
+                          {unit.label}
+                        </span>
+                        <span className="pl-6 text-[11px] leading-snug text-muted-foreground">{unit.hint}</span>
+                      </Label>
+                    )
+                  })}
+                </RadioGroup>
               </FormField>
               <FormField id="size" label="Size" hint={<Optional />} error={error?.field('size')}>
                 <Input id="size" value={draft.size} onChange={(e) => set('size', e.target.value)} placeholder="500 g" />

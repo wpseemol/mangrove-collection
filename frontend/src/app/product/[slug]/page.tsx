@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { cache, Suspense } from "react";
+import { cache } from "react";
 
 import { productDescription, productHref, productImages, productJsonLd } from "@/lib/product";
 import { jsonLd, pageMetadata, SITE_KEYWORDS } from "@/lib/seo";
@@ -61,9 +61,7 @@ export default async function ProductPage({ params }: { params: Params }) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(productJsonLd(product)) }} />
-      <Suspense>
-        <ProductDetail initialProduct={product} initialRelated={related} />
-      </Suspense>
+      <ProductDetail initialProduct={product} initialRelated={related} />
     </>
   );
 }
