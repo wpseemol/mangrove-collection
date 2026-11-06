@@ -8,6 +8,7 @@ import { CategoryDialog } from '@/components/categories/category-dialog'
 import { FormField, Optional } from '@/components/form-field'
 import { GalleryUpload, type GalleryImage } from '@/components/image-upload'
 import { PageHeader } from '@/components/layout/page-header'
+import { ProductDescriptionEditor } from '@/components/products/description-editor'
 import { TagInput } from '@/components/products/tag-input'
 import { emptyVariant, type VariantDraft } from '@/components/products/variant-draft'
 import { VariantsEditor } from '@/components/products/variants-editor'
@@ -311,13 +312,12 @@ function ProductForm({ product, initial }: { product?: Product; initial: Draft }
               label="Full description"
               hint={<Optional />}
               error={error?.field('description')}
-              description="Shown in the product details section. Basic HTML like <p>, <strong> and <ul> is supported."
+              description="Shown in the product details section. Formatting is limited to safe HTML the storefront can display."
             >
-              <Textarea
-                id="description"
+              <ProductDescriptionEditor
                 value={draft.description}
-                onChange={(e) => set('description', e.target.value)}
-                rows={8}
+                onChange={(html) => set('description', html)}
+                invalid={Boolean(error?.field('description'))}
               />
             </FormField>
           </Section>
