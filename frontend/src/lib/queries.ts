@@ -67,13 +67,19 @@ export function useProducts(filters: ProductFilters, enabled = true) {
   });
 }
 
+/**
+ * Build-time product HTML is a fast first paint only. Always refetch from the API so dashboard
+ * edits (title, images, price…) show without waiting for the next static deploy.
+ */
 export function useProduct(slug: string | null, initialData?: Product) {
   return useQuery({
     queryKey: ["product", slug],
     queryFn: () => api<{ data: Product }>(`/products/${slug}`).then((r) => r.data),
     enabled: Boolean(slug),
-    initialData,
-    staleTime: FIVE_MINUTES,
+    placeholderData: initialData,
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
   });
 }
 
@@ -82,8 +88,10 @@ export function useRelatedProducts(slug: string | null, initialData?: Product[])
     queryKey: ["product", slug, "related"],
     queryFn: () => api<{ data: Product[] }>(`/products/${slug}/related`).then((r) => r.data),
     enabled: Boolean(slug),
-    initialData,
-    staleTime: FIVE_MINUTES,
+    placeholderData: initialData,
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
   });
 }
 
