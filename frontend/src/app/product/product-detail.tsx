@@ -10,7 +10,6 @@ import {
     Zap,
 } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 
 import { ProductGrid } from "@/components/product/product-grid";
@@ -107,8 +106,6 @@ export function ProductDetail({
     initialProduct: Product;
     initialRelated?: Product[];
 }) {
-    const searchParams = useSearchParams();
-    const reviewRequested = searchParams.get("review") === "1";
     const { data: product, isError } = useProduct(initialProduct.slug, initialProduct);
     const { data: related } = useRelatedProducts(initialProduct.slug, initialRelated);
     const { addToCart, buyNow } = useCartActions();
@@ -116,6 +113,12 @@ export function ProductDetail({
     const [variantId, setVariantId] = useState<number | null>(null);
     const [imageIndex, setImageIndex] = useState(0);
     const [quantity, setQuantity] = useState(1);
+    // Read after mount so SSR HTML matches the first client render (no useSearchParams bailout).
+    const [reviewRequested, setReviewRequested] = useState(false);
+
+    useEffect(() => {
+        setReviewRequested(new URLSearchParams(window.location.search).get("review") === "1");
+    }, []);
 
     if (isError || !product) {
         return (
