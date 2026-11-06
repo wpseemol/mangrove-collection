@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button";
 import { defaultVariant, useCartActions } from "@/hooks/use-cart-actions";
 import { formatPrice } from "@/lib/format";
 import { useProduct, useRelatedProducts } from "@/lib/queries";
+import { SITE_NAME } from "@/lib/seo";
 import type { Product } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -119,6 +120,11 @@ export function ProductDetail({
         () => new URLSearchParams(window.location.search).get("review") === "1",
         () => false,
     );
+
+    useEffect(() => {
+        if (!product) return;
+        document.title = `${product.meta_title || product.name} | ${SITE_NAME}`;
+    }, [product]);
 
     if (isError || !product) {
         return (
