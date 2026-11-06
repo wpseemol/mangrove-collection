@@ -17,8 +17,6 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Switch } from '@/components/ui/switch'
@@ -31,8 +29,8 @@ import { useCategories } from '@/lib/queries'
 import type { Product, ProductStatus } from '@/lib/types'
 
 const PRODUCT_UNITS = [
-  { value: 'kg', label: 'kg', hint: 'Sold by weight' },
-  { value: 'pc', label: 'pc', hint: 'Sold per piece' },
+  { value: 'kg', label: 'KG' },
+  { value: 'pc', label: 'PC' },
 ] as const
 
 type Draft = {
@@ -460,34 +458,35 @@ function ProductForm({ product, initial }: { product?: Product; initial: Draft }
                 label="Unit"
                 hint={<Optional />}
                 error={error?.field('unit')}
-                description="Shown after the price."
+                description="Shown after the price as / KG or / PC."
               >
-                <RadioGroup
-                  value={draft.unit || undefined}
-                  onValueChange={(unit) => set('unit', unit)}
-                  className="grid grid-cols-2 gap-2"
-                  aria-invalid={Boolean(error?.field('unit'))}
+                <div
+                  role="radiogroup"
+                  aria-label="Unit"
+                  aria-invalid={Boolean(error?.field('unit')) || undefined}
+                  className="grid h-9 grid-cols-2 gap-1 rounded-lg border bg-muted/30 p-1"
                 >
                   {PRODUCT_UNITS.map((unit) => {
                     const selected = draft.unit === unit.value
                     return (
-                      <Label
+                      <button
                         key={unit.value}
-                        htmlFor={`unit-${unit.value}`}
+                        type="button"
+                        role="radio"
+                        aria-checked={selected}
+                        onClick={() => set('unit', unit.value)}
                         className={cn(
-                          'flex cursor-pointer flex-col gap-0.5 rounded-lg border px-3 py-2.5 font-normal transition-colors hover:bg-muted/40',
-                          selected && 'border-primary bg-primary/5 ring-1 ring-primary',
+                          'inline-flex h-full w-full items-center justify-center rounded-md text-center text-sm font-semibold tracking-wide text-muted-foreground transition-colors outline-none focus-visible:ring-3 focus-visible:ring-ring/50',
+                          selected
+                            ? 'bg-background text-foreground shadow-sm ring-1 ring-border'
+                            : 'hover:text-foreground',
                         )}
                       >
-                        <span className="flex items-center gap-2 text-sm font-medium">
-                          <RadioGroupItem id={`unit-${unit.value}`} value={unit.value} />
-                          {unit.label}
-                        </span>
-                        <span className="pl-6 text-[11px] leading-snug text-muted-foreground">{unit.hint}</span>
-                      </Label>
+                        {unit.label}
+                      </button>
                     )
                   })}
-                </RadioGroup>
+                </div>
               </FormField>
               <FormField id="size" label="Size" hint={<Optional />} error={error?.field('size')}>
                 <Input id="size" value={draft.size} onChange={(e) => set('size', e.target.value)} placeholder="500 g" />
