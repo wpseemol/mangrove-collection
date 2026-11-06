@@ -26,6 +26,13 @@ ErrorDocument 404 /404.html
     RewriteRule ^blog/post/?$ /blog/%2/? [L,R=301]
     RewriteCond %{QUERY_STRING} (^|&)category=([^&]+)
     RewriteRule ^blog/?$ /blog/category/%2/? [L,R=301]
+
+    # Old product links: /product/?slug=x[&review=1] -> /product/x/[?review=1]
+    RewriteCond %{QUERY_STRING} (^|&)slug=([^&]+)
+    RewriteCond %{QUERY_STRING} (^|&)review=1(&|$)
+    RewriteRule ^product/?$ /product/%2/?review=1 [L,R=301]
+    RewriteCond %{QUERY_STRING} (^|&)slug=([^&]+)
+    RewriteRule ^product/?$ /product/%2/? [L,R=301]
 </IfModule>
 
 <IfModule mod_headers.c>

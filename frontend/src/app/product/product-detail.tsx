@@ -10,13 +10,12 @@ import {
     Zap,
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 
 import { ProductGrid } from "@/components/product/product-grid";
 import { ProductReviews } from "@/components/reviews/product-reviews";
 import { Stars } from "@/components/reviews/stars";
-import { ProductSeo } from "@/components/seo/product-seo";
 import { Container } from "@/components/shared/container";
 import { EmptyState } from "@/components/shared/empty-state";
 import { PageBreadcrumb } from "@/components/shared/page-breadcrumb";
@@ -24,27 +23,13 @@ import { QuantityInput } from "@/components/shared/quantity-input";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { defaultVariant, useCartActions } from "@/hooks/use-cart-actions";
 import { formatPrice } from "@/lib/format";
 import { useProduct, useRelatedProducts } from "@/lib/queries";
+import type { Product } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 import { ProductGallery } from "./product-gallery";
-
-function DetailSkeleton() {
-    return (
-        <div className="grid gap-8 py-6 md:grid-cols-2">
-            <Skeleton className="aspect-square w-full" />
-            <div className="space-y-4">
-                <Skeleton className="h-8 w-3/4" />
-                <Skeleton className="h-6 w-1/4" />
-                <Skeleton className="h-24 w-full" />
-                <Skeleton className="h-10 w-1/2" />
-            </div>
-        </div>
-    );
-}
 
 const DESCRIPTION_COLLAPSE_HEIGHT = 220;
 
@@ -115,32 +100,24 @@ function ProductDescription({ html }: { html: string }) {
     );
 }
 
-export function ProductDetail() {
-    const router = useRouter();
+export function ProductDetail({
+    initialProduct,
+    initialRelated = [],
+}: {
+    initialProduct: Product;
+    initialRelated?: Product[];
+}) {
     const searchParams = useSearchParams();
-    const slug = searchParams.get("slug");
     const reviewRequested = searchParams.get("review") === "1";
-    const { data: product, isLoading, isError } = useProduct(slug);
-    const { data: related } = useRelatedProducts(slug);
+    const { data: product, isError } = useProduct(initialProduct.slug, initialProduct);
+    const { data: related } = useRelatedProducts(initialProduct.slug, initialRelated);
     const { addToCart, buyNow } = useCartActions();
 
     const [variantId, setVariantId] = useState<number | null>(null);
     const [imageIndex, setImageIndex] = useState(0);
     const [quantity, setQuantity] = useState(1);
 
-    useEffect(() => {
-        if (!slug) router.replace("/shop");
-    }, [slug, router]);
-
-    if (!slug) {
-        return (
-            <Container>
-                <DetailSkeleton />
-            </Container>
-        );
-    }
-
-    if (isError) {
+    if (isError || !product) {
         return (
             <Container className="py-16">
                 <EmptyState
@@ -153,14 +130,6 @@ export function ProductDetail() {
                         </Button>
                     }
                 />
-            </Container>
-        );
-    }
-
-    if (isLoading || !product) {
-        return (
-            <Container>
-                <DetailSkeleton />
             </Container>
         );
     }
@@ -178,7 +147,6 @@ export function ProductDetail() {
 
     return (
         <Container className="pb-20 md:pb-0">
-            <ProductSeo product={product} images={gallery} />
             <PageBreadcrumb
                 items={[
                     { label: "Products", href: "/shop" },

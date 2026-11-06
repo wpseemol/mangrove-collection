@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 
 import { blogCategoryHref, postHref } from "@/lib/blog";
 import { API_URL } from "@/lib/config";
+import { productHref } from "@/lib/product";
 import { absoluteUrl } from "@/lib/seo";
 
 /** Written once per build; new products and blog posts appear after the next deploy. */
@@ -64,7 +65,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     })),
     ...products.map((product) => ({
-      url: absoluteUrl(`/product/?slug=${encodeURIComponent(product.slug)}`),
+      url: absoluteUrl(productHref(product.slug)),
       lastModified: lastModified(product.updated_at),
       changeFrequency: "weekly" as const,
       priority: 0.8,

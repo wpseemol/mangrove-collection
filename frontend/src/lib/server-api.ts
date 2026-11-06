@@ -1,7 +1,7 @@
 import { API_URL } from "@/lib/config";
-import type { BlogCategory, BlogPost, Paginated, PublicSettings } from "@/lib/types";
+import type { BlogCategory, BlogPost, Paginated, Product, PublicSettings } from "@/lib/types";
 
-/** Build-time API client for the statically exported blog pages. */
+/** Build-time API client for statically exported product and blog pages. */
 
 type Query = Record<string, string | number | boolean | undefined>;
 
@@ -41,6 +41,22 @@ export async function getAllBlogPosts(): Promise<BlogPost[]> {
     if (page >= body.meta.last_page) break;
   }
   return posts;
+}
+
+export const getProduct = (slug: string) =>
+  serverGet<{ data: Product }>(`/products/${encodeURIComponent(slug)}`).then((r) => r.data);
+
+export const getRelatedProducts = (slug: string) =>
+  serverGet<{ data: Product[] }>(`/products/${encodeURIComponent(slug)}/related`).then((r) => r.data);
+
+export async function getAllProducts(): Promise<Product[]> {
+  const products: Product[] = [];
+  for (let page = 1; page <= 100; page++) {
+    const body = await serverGet<Paginated<Product>>("/products", { page, per_page: 60 });
+    products.push(...body.data);
+    if (page >= body.meta.last_page) break;
+  }
+  return products;
 }
 
 /**
