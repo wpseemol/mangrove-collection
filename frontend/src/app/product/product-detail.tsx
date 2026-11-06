@@ -22,6 +22,7 @@ import { QuantityInput } from "@/components/shared/quantity-input";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { defaultVariant, useCartActions } from "@/hooks/use-cart-actions";
 import { formatPrice } from "@/lib/format";
 import { useProduct, useRelatedProducts } from "@/lib/queries";
@@ -103,12 +104,17 @@ function ProductDescription({ html }: { html: string }) {
 export function ProductDetail({
     initialProduct,
     initialRelated = [],
+    slug: slugProp,
 }: {
-    initialProduct: Product;
+    /** Build-time product for statically exported `/product/[slug]/` pages. */
+    initialProduct?: Product;
     initialRelated?: Product[];
+    /** When set (e.g. `/product/?slug=`), load from the API without waiting for a redeploy. */
+    slug?: string;
 }) {
-    const { data: product, isError } = useProduct(initialProduct.slug, initialProduct);
-    const { data: related } = useRelatedProducts(initialProduct.slug, initialRelated);
+    const slug = slugProp ?? initialProduct?.slug ?? null;
+    const { data: product, isError, isPending } = useProduct(slug, initialProduct);
+    const { data: related } = useRelatedProducts(slug, initialRelated);
     const { addToCart, buyNow } = useCartActions();
 
     const [variantId, setVariantId] = useState<number | null>(null);
@@ -125,6 +131,21 @@ export function ProductDetail({
         if (!product) return;
         document.title = `${product.meta_title || product.name} | ${SITE_NAME}`;
     }, [product]);
+
+    if (isPending && !product) {
+        return (
+            <Container>
+                <div className="grid gap-8 py-6 md:grid-cols-2">
+                    <Skeleton className="aspect-square w-full" />
+                    <div className="space-y-4">
+                        <Skeleton className="h-8 w-3/4" />
+                        <Skeleton className="h-6 w-1/4" />
+                        <Skeleton className="h-24 w-full" />
+                    </div>
+                </div>
+            </Container>
+        );
+    }
 
     if (isError || !product) {
         return (
