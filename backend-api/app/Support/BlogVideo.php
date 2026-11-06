@@ -5,11 +5,12 @@ namespace App\Support;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * Video links in blog posts: YouTube, Vimeo, or an MP4/WebM uploaded to our own public disk.
+ * Video links in blog posts and product pages: YouTube (incl. Shorts), Facebook
+ * Reels/Watch, Vimeo, or an MP4/WebM uploaded to our own public disk.
  */
 class BlogVideo
 {
-    public const PROVIDERS = ['upload', 'youtube', 'vimeo'];
+    public const PROVIDERS = ['upload', 'youtube', 'vimeo', 'facebook'];
 
     /**
      * The 11-character video id from youtube.com/watch, youtu.be, /embed, /shorts and /live links.
@@ -36,6 +37,37 @@ class BlogVideo
         }
 
         return $candidate !== null && preg_match('/^[A-Za-z0-9_-]{11}$/', $candidate) === 1 ? $candidate : null;
+    }
+
+    /**
+     * Public Facebook Watch / Reel / share / fb.watch links. Embeds go through Facebook's
+     * official video plugin so we never trust a third-party iframe host.
+     */
+    public static function isFacebookUrl(string $url): bool
+    {
+        if (! ($parts = self::httpUrl($url))) {
+            return false;
+        }
+
+        $host = preg_replace('/^(?:www\.|m\.|web\.)/', '', $parts['host']);
+        $path = $parts['path'] ?? '/';
+
+        if ($host === 'fb.watch') {
+            return preg_match('#^/[A-Za-z0-9_-]{4,}/?$#', $path) === 1;
+        }
+
+        if ($host !== 'facebook.com') {
+            return false;
+        }
+
+        if ($path === '/watch' || str_starts_with($path, '/watch/')) {
+            parse_str($parts['query'] ?? '', $query);
+
+            return isset($query['v']) && preg_match('/^\d{5,20}$/', (string) $query['v']) === 1;
+        }
+
+        return preg_match('#^/(?:reel|share/(?:v|r))/[A-Za-z0-9_-]+/?$#', $path) === 1
+            || preg_match('#^/[A-Za-z0-9.]+/videos/\d{5,20}/?$#', $path) === 1;
     }
 
     /**
@@ -76,6 +108,7 @@ class BlogVideo
         return match ($provider) {
             'youtube' => self::youtubeId($url) !== null,
             'vimeo' => self::vimeoId($url) !== null,
+            'facebook' => self::isFacebookUrl($url),
             'upload' => self::isUploaded($url),
             default => false,
         };
@@ -89,6 +122,7 @@ class BlogVideo
         return match (true) {
             self::youtubeId($url) !== null => 'youtube',
             self::vimeoId($url) !== null => 'vimeo',
+            self::isFacebookUrl($url) => 'facebook',
             self::isUploaded($url) => 'upload',
             default => null,
         };
@@ -102,6 +136,10 @@ class BlogVideo
 
         if ($provider === 'vimeo' && ($id = self::vimeoId($url))) {
             return "https://player.vimeo.com/video/{$id}";
+        }
+
+        if ($provider === 'facebook' && self::isFacebookUrl($url)) {
+            return 'https://www.facebook.com/plugins/video.php?href='.rawurlencode($url).'&show_text=false';
         }
 
         return null;

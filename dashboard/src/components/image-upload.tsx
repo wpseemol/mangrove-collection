@@ -7,7 +7,7 @@ import { ACCEPTED_IMAGES, uploadImages } from '@/lib/media'
 import { cn } from '@/lib/utils'
 
 function useUploader(onUploaded: (urls: string[]) => void) {
-  const [uploading, setUploading] = useState(false)
+  const [progress, setProgress] = useState<number | null>(null)
 
   const upload = async (files: File[]) => {
     const images = files.filter((file) => ACCEPTED_IMAGES.split(',').includes(file.type))
@@ -15,29 +15,43 @@ function useUploader(onUploaded: (urls: string[]) => void) {
       if (files.length) toast.error('Please choose JPG, PNG, WEBP or GIF images.')
       return
     }
-    setUploading(true)
+    setProgress(0)
     try {
-      const media = await uploadImages(images)
+      const media = await uploadImages(images, setProgress)
       onUploaded(media.map((m) => m.url))
     } catch (error) {
       toast.error(errorMessage(error))
     } finally {
-      setUploading(false)
+      setProgress(null)
     }
   }
 
-  return { uploading, upload }
+  return { uploading: progress !== null, progress, upload }
+}
+
+function UploadProgress({ progress, label }: { progress: number; label?: string }) {
+  const percent = Math.round(progress * 100)
+  return (
+    <div className="flex w-full flex-col items-center gap-2 px-3">
+      <div className="h-2 w-full max-w-48 overflow-hidden rounded-full bg-muted">
+        <div className="h-full rounded-full bg-primary transition-[width] duration-150" style={{ width: `${percent}%` }} />
+      </div>
+      <span className="font-medium text-foreground tabular-nums">{label ?? 'Uploading…'} {percent}%</span>
+    </div>
+  )
 }
 
 function DropZone({
   multiple,
   uploading,
+  progress,
   onFiles,
   className,
   label,
 }: {
   multiple?: boolean
   uploading: boolean
+  progress: number | null
   onFiles: (files: File[]) => void
   className?: string
   label: string
@@ -68,9 +82,18 @@ function DropZone({
         className,
       )}
     >
-      {uploading ? <Loader2 className="size-5 animate-spin text-primary" /> : <ImagePlus className="size-5 text-primary" />}
-      <span className="font-medium text-foreground">{uploading ? 'Uploading…' : label}</span>
-      {!uploading && <span>JPG, PNG, WEBP or GIF · up to 5 MB</span>}
+      {uploading ? (
+        <>
+          <Loader2 className="size-5 animate-spin text-primary" />
+          <UploadProgress progress={progress ?? 0} />
+        </>
+      ) : (
+        <>
+          <ImagePlus className="size-5 text-primary" />
+          <span className="font-medium text-foreground">{label}</span>
+          <span>JPG, PNG, WEBP or GIF · up to 5 MB</span>
+        </>
+      )}
       <input
         ref={inputRef}
         type="file"
@@ -100,7 +123,7 @@ export function SingleImageUpload({
   aspect?: string
   label?: string
 }) {
-  const { uploading, upload } = useUploader((urls) => onChange(urls[0] ?? ''))
+  const { uploading, progress, upload } = useUploader((urls) => onChange(urls[0] ?? ''))
 
   if (value) {
     return (
@@ -121,6 +144,7 @@ export function SingleImageUpload({
   return (
     <DropZone
       uploading={uploading}
+      progress={progress}
       onFiles={(files) => upload(files.slice(0, 1))}
       label={label}
       className={cn('w-full', aspect, className)}
@@ -141,7 +165,7 @@ export function GalleryUpload({
   cover: string
   onCoverChange: (url: string) => void
 }) {
-  const { uploading, upload } = useUploader((urls) => {
+  const { uploading, progress, upload } = useUploader((urls) => {
     const next = [...images, ...urls.map((url) => ({ url, alt: null }))]
     onChange(next)
     if (!cover && next[0]) onCoverChange(next[0].url)
@@ -193,6 +217,7 @@ export function GalleryUpload({
       <DropZone
         multiple
         uploading={uploading}
+        progress={progress}
         onFiles={upload}
         label={images.length ? 'Add more' : 'Upload images'}
         className={cn('aspect-square', !images.length && 'col-span-3 aspect-auto py-10 sm:col-span-4 lg:col-span-5')}

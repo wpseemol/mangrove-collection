@@ -92,6 +92,7 @@ export type ProductVariant = {
 }
 
 export type ProductStatus = 'draft' | 'published'
+export type VideoProvider = 'upload' | 'youtube' | 'vimeo' | 'facebook'
 
 export type Product = {
   id: number
@@ -107,6 +108,9 @@ export type Product = {
   short_description: string | null
   description: string | null
   thumbnail: string | null
+  video_url: string | null
+  video_provider?: VideoProvider | null
+  video_embed_url?: string | null
   images: { id: number; url: string; alt: string | null }[]
   variants: ProductVariant[]
   tags: string[] | null
@@ -336,7 +340,6 @@ export type BlogCategory = {
 }
 
 export type BlogMediaType = 'image' | 'video'
-export type VideoProvider = 'upload' | 'youtube' | 'vimeo'
 
 export type BlogMedia = {
   id: number
