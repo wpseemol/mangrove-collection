@@ -67,19 +67,23 @@ export function useProducts(filters: ProductFilters, enabled = true) {
   });
 }
 
-export function useProduct(slug: string | null) {
+export function useProduct(slug: string | null, initialData?: Product) {
   return useQuery({
     queryKey: ["product", slug],
     queryFn: () => api<{ data: Product }>(`/products/${slug}`).then((r) => r.data),
     enabled: Boolean(slug),
+    initialData,
+    staleTime: FIVE_MINUTES,
   });
 }
 
-export function useRelatedProducts(slug: string | null) {
+export function useRelatedProducts(slug: string | null, initialData?: Product[]) {
   return useQuery({
     queryKey: ["product", slug, "related"],
     queryFn: () => api<{ data: Product[] }>(`/products/${slug}/related`).then((r) => r.data),
     enabled: Boolean(slug),
+    initialData,
+    staleTime: FIVE_MINUTES,
   });
 }
 
