@@ -13,6 +13,7 @@ import { ContactPageEditorPage } from '@/pages/contact-page'
 import { ForgotPasswordPage } from '@/pages/forgot-password'
 import { HomePageEditorPage } from '@/pages/home-page'
 import { LoginPage } from '@/pages/login'
+import { MediaLibraryPage } from '@/pages/media'
 import { OrderCreatePage } from '@/pages/orders/create'
 import { OrderDetailPage } from '@/pages/orders/detail'
 import { OrdersPage } from '@/pages/orders/list'
@@ -42,6 +43,7 @@ export default function App() {
           <Route path="products/new" element={<ProductCreatePage />} />
           <Route path="products/:id/edit" element={<ProductEditPage />} />
           <Route path="categories" element={<CategoriesPage />} />
+          <Route path="media" element={<MediaLibraryPage />} />
           <Route path="orders" element={<OrdersPage />} />
           <Route path="orders/new" element={<OrderCreatePage />} />
           <Route path="orders/:id" element={<OrderDetailPage />} />

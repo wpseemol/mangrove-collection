@@ -55,6 +55,21 @@ export function vimeoId(url: string): string | null {
   }
 }
 
+/** Facebook Watch, Reels, share links and fb.watch short links. */
+export function isFacebookUrl(url: string): boolean {
+  try {
+    const { hostname, pathname, searchParams, protocol } = new URL(url);
+    if (!/^https?:$/.test(protocol)) return false;
+    const host = hostname.replace(/^(?:www\.|m\.|web\.)/, "");
+    if (host === "fb.watch") return /^\/[A-Za-z0-9_-]{4,}\/?$/.test(pathname);
+    if (host !== "facebook.com") return false;
+    if (pathname === "/watch" || pathname.startsWith("/watch/")) return /^\d{5,20}$/.test(searchParams.get("v") ?? "");
+    return /^\/(?:reel|share\/(?:v|r))\/[A-Za-z0-9_-]+\/?$/.test(pathname) || /^\/[A-Za-z0-9.]+\/videos\/\d{5,20}\/?$/.test(pathname);
+  } catch {
+    return false;
+  }
+}
+
 const STORAGE_PREFIX = `${new URL(API_URL).origin}/storage/uploads/`;
 
 /** Only files the API stored itself are played with `<video>`. */
@@ -67,6 +82,13 @@ export function videoSource(url: string): VideoSource | null {
   if (youtube) return { kind: "iframe", src: `https://www.youtube-nocookie.com/embed/${youtube}`, title: "YouTube video" };
   const vimeo = vimeoId(url);
   if (vimeo) return { kind: "iframe", src: `https://player.vimeo.com/video/${vimeo}`, title: "Vimeo video" };
+  if (isFacebookUrl(url)) {
+    return {
+      kind: "iframe",
+      src: `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false`,
+      title: "Facebook video",
+    };
+  }
   return isUploadedVideo(url) ? { kind: "file", src: url } : null;
 }
 

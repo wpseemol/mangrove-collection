@@ -23,7 +23,7 @@ class Product extends Model
 
     protected $fillable = [
         'category_id', 'name', 'slug', 'unit', 'size', 'shipping_cost', 'currency', 'short_description', 'description',
-        'thumbnail', 'tags', 'status', 'is_featured', 'popularity', 'meta_title', 'meta_description', 'created_by',
+        'thumbnail', 'video_url', 'tags', 'status', 'is_featured', 'popularity', 'meta_title', 'meta_description', 'created_by',
     ];
 
     protected function casts(): array
@@ -31,6 +31,7 @@ class Product extends Model
         return [
             'tags' => 'array',
             'thumbnail' => MediaUrl::class,
+            'video_url' => MediaUrl::class,
             'description' => MediaHtml::class,
             'status' => ProductStatus::class,
             'is_featured' => 'boolean',

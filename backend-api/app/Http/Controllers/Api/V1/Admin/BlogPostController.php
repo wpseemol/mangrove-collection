@@ -186,7 +186,7 @@ class BlogPostController extends Controller
         ])->after(function (Validator $validator) use ($request) {
             foreach ((array) $request->input('media', []) as $index => $item) {
                 if (is_array($item) && ($item['type'] ?? null) === 'video' && is_string($item['url'] ?? null) && ! BlogVideo::detectProvider($item['url'])) {
-                    $validator->errors()->add("media.{$index}.url", 'Use a YouTube or Vimeo link, or upload an MP4/WebM video.');
+                    $validator->errors()->add("media.{$index}.url", 'Use a YouTube, Facebook or Vimeo link, or upload an MP4/WebM video.');
                 }
             }
         })->validate();

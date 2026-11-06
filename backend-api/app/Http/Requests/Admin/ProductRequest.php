@@ -8,6 +8,7 @@ use App\Models\ProductVariant;
 use App\Rules\SafeHtml;
 use App\Rules\SafeText;
 use App\Rules\SafeUrl;
+use App\Support\BlogVideo;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
@@ -38,6 +39,7 @@ class ProductRequest extends FormRequest
             'short_description' => ['nullable', 'string', 'max:500', new SafeText],
             'description' => ['nullable', 'string', 'max:20000', new SafeHtml],
             'thumbnail' => ['nullable', 'string', 'max:2048', new SafeUrl],
+            'video_url' => ['nullable', 'string', 'max:2048', new SafeUrl],
             'tags' => ['nullable', 'array', 'max:30'],
             'tags.*' => ['string', 'max:50', new SafeText],
             'status' => ['sometimes', Rule::enum(ProductStatus::class)],
@@ -80,6 +82,14 @@ class ProductRequest extends FormRequest
                     if ($taken) {
                         $validator->errors()->add("variants.{$index}.sku", 'This SKU is already used by another product.');
                     }
+                }
+
+                $video = $this->input('video_url');
+                if (filled($video) && is_string($video) && ! BlogVideo::detectProvider($video)) {
+                    $validator->errors()->add(
+                        'video_url',
+                        'Use a YouTube Shorts, Facebook Reel/Watch or Vimeo link, or upload an MP4/WebM video.',
+                    );
                 }
             },
         ];

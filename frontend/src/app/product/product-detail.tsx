@@ -12,6 +12,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { VideoEmbed } from "@/components/blog/video-embed";
 import { ProductGrid } from "@/components/product/product-grid";
 import { ProductReviews } from "@/components/reviews/product-reviews";
 import { Stars } from "@/components/reviews/stars";
@@ -125,13 +126,20 @@ export function ProductDetail() {
             />
 
             <div className="grid gap-6 py-2 md:grid-cols-2 md:gap-8 lg:gap-14">
-                <div className="md:sticky md:top-28 md:self-start">
+                <div className="space-y-4 md:sticky md:top-28 md:self-start">
                     <ProductGallery
                         images={gallery}
                         alt={product.name}
                         activeIndex={imageIndex}
                         onIndexChange={setImageIndex}
                     />
+                    {product.video_url && (
+                        <VideoEmbed
+                            url={product.video_url}
+                            title={`${product.name} video`}
+                            className="rounded-2xl border md:rounded-3xl"
+                        />
+                    )}
                 </div>
 
                 <div className="space-y-5 md:space-y-6">

@@ -58,7 +58,7 @@ class SafeBlogHtml implements ValidationRule
             ],
             'img' => ['src' => fn (string $v) => SafeUrl::isSafe($v), 'alt' => $plain, 'title' => $plain, 'width' => $digits, 'height' => $digits],
             'figure' => [
-                'data-video' => fn (string $v) => in_array($v, ['youtube', 'vimeo', 'upload'], true),
+                'data-video' => fn (string $v) => in_array($v, ['youtube', 'vimeo', 'facebook', 'upload'], true),
                 'data-src' => fn (string $v) => SafeUrl::isSafe($v),
             ],
         ];

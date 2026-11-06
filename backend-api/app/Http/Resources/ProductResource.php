@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Product;
+use App\Support\BlogVideo;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -36,6 +37,19 @@ class ProductResource extends JsonResource
             'short_description' => $this->short_description,
             'description' => $this->description,
             'thumbnail' => $this->thumbnail,
+            'video_url' => $this->video_url,
+            'video_provider' => $this->when(
+                filled($this->video_url),
+                fn () => BlogVideo::detectProvider((string) $this->video_url),
+            ),
+            'video_embed_url' => $this->when(
+                filled($this->video_url),
+                function () {
+                    $provider = BlogVideo::detectProvider((string) $this->video_url);
+
+                    return $provider ? BlogVideo::embedUrl($provider, (string) $this->video_url) : null;
+                },
+            ),
             'images' => $this->whenLoaded('images', fn () => $this->images->map(fn ($image) => [
                 'id' => $image->id,
                 'url' => $image->url,

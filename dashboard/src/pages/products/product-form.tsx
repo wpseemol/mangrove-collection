@@ -9,6 +9,7 @@ import { FormField, Optional } from '@/components/form-field'
 import { GalleryUpload, type GalleryImage } from '@/components/image-upload'
 import { PageHeader } from '@/components/layout/page-header'
 import { ProductDescriptionEditor } from '@/components/products/description-editor'
+import { ProductVideoField } from '@/components/products/product-video-field'
 import { TagInput } from '@/components/products/tag-input'
 import { emptyVariant, type VariantDraft } from '@/components/products/variant-draft'
 import { VariantsEditor } from '@/components/products/variants-editor'
@@ -35,6 +36,7 @@ type Draft = {
   short_description: string
   description: string
   thumbnail: string
+  video_url: string
   images: GalleryImage[]
   tags: string[]
   status: ProductStatus
@@ -55,6 +57,7 @@ const newDraft = (): Draft => ({
   short_description: '',
   description: '',
   thumbnail: '',
+  video_url: '',
   images: [],
   tags: [],
   status: 'published',
@@ -89,6 +92,7 @@ const toDraft = (product: Product): Draft => {
     short_description: product.short_description ?? '',
     description: product.description ?? '',
     thumbnail: product.thumbnail ?? '',
+    video_url: product.video_url ?? '',
     images: product.images.map(({ url, alt }) => ({ url, alt })),
     tags: product.tags ?? [],
     status: product.status,
@@ -114,6 +118,7 @@ function toPayload(draft: Draft) {
     short_description: orNull(draft.short_description),
     description: orNull(draft.description),
     thumbnail: draft.thumbnail || draft.images[0]?.url || null,
+    video_url: orNull(draft.video_url),
     images: draft.images,
     tags: draft.tags,
     status: draft.status,
@@ -332,6 +337,13 @@ function ProductForm({ product, initial }: { product?: Product; initial: Draft }
             {(error?.field('thumbnail') || error?.field('images')) && (
               <p className="text-xs text-destructive">{error?.field('thumbnail') ?? error?.field('images')}</p>
             )}
+          </Section>
+
+          <Section
+            title="Product video"
+            description="Optional short video for the product page. YouTube Shorts, Facebook Reels/Watch, Vimeo, or a secure MP4/WebM upload."
+          >
+            <ProductVideoField value={draft.video_url} onChange={(url) => set('video_url', url)} error={error?.field('video_url')} />
           </Section>
 
           <Section title="Pricing & variants" description="Set the price and stock, or add variants with their own prices.">

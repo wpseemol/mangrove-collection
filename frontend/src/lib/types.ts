@@ -100,6 +100,9 @@ export type Product = {
   short_description: string | null;
   description: string | null;
   thumbnail: string | null;
+  video_url?: string | null;
+  video_provider?: "upload" | "youtube" | "vimeo" | "facebook" | null;
+  video_embed_url?: string | null;
   images?: { id: number; url: string; alt: string | null }[];
   variants?: ProductVariant[];
   tags: string[];

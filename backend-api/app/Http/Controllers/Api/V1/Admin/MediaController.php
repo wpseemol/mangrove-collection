@@ -25,11 +25,14 @@ class MediaController extends Controller
     {
         $request->validate([
             'q' => ['nullable', 'string', 'max:100', new SafeText],
+            'type' => ['nullable', 'string', 'in:image,video'],
             'per_page' => ['nullable', 'integer', 'min:1', 'max:100'],
         ]);
 
         $media = Media::query()
             ->when($request->query('q'), fn ($q, $term) => $q->where('original_name', 'like', Search::like($term)))
+            ->when($request->query('type') === 'image', fn ($q) => $q->where('mime_type', 'like', 'image/%'))
+            ->when($request->query('type') === 'video', fn ($q) => $q->where('mime_type', 'like', 'video/%'))
             ->latest()
             ->paginate((int) $request->query('per_page', 40))
             ->withQueryString();

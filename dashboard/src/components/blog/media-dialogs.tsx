@@ -205,7 +205,9 @@ function VideoForm({ onSubmit }: { onSubmit: (video: VideoChoice) => void }) {
     event.preventDefault()
     const value = link.trim()
     const detected = detectProvider(value)
-    if (!detected || detected === 'upload') return setError('Paste a YouTube or Vimeo link, e.g. https://youtu.be/…')
+    if (!detected || detected === 'upload') {
+      return setError('Paste a YouTube Shorts, Facebook Reel/Watch or Vimeo link.')
+    }
     onSubmit({ provider: detected, url: value })
   }
 
@@ -213,13 +215,13 @@ function VideoForm({ onSubmit }: { onSubmit: (video: VideoChoice) => void }) {
     <div className="space-y-4">
       <DialogHeader>
         <DialogTitle>Add video</DialogTitle>
-        <DialogDescription>Upload a video file or paste a YouTube or Vimeo link.</DialogDescription>
+        <DialogDescription>Upload an MP4/WebM file, or paste a YouTube Shorts, Facebook Reel or Vimeo link.</DialogDescription>
       </DialogHeader>
 
       <Tabs defaultValue="link">
         <TabsList className="w-full">
           <TabsTrigger value="link" className="flex-1">
-            <Link2 /> YouTube / Vimeo
+            <Link2 /> Short / link
           </TabsTrigger>
           <TabsTrigger value="upload" className="flex-1">
             <Upload /> Upload file
@@ -228,8 +230,24 @@ function VideoForm({ onSubmit }: { onSubmit: (video: VideoChoice) => void }) {
 
         <TabsContent value="link">
           <form onSubmit={submitLink} noValidate className="space-y-4 pt-2">
-            <FormField id="video-link" label="Video link" error={error} description={provider && provider !== 'upload' ? `${PROVIDER_LABELS[provider]} video found.` : 'Works with youtube.com, youtu.be, Shorts and vimeo.com links.'}>
-              <Input id="video-link" value={link} onChange={(e) => (setLink(e.target.value), setError(''))} placeholder="https://www.youtube.com/watch?v=…" maxLength={2048} autoFocus />
+            <FormField
+              id="video-link"
+              label="Video link"
+              error={error}
+              description={
+                provider && provider !== 'upload'
+                  ? `${PROVIDER_LABELS[provider]} video found.`
+                  : 'YouTube Shorts, facebook.com/reel, fb.watch, Watch links and Vimeo are accepted.'
+              }
+            >
+              <Input
+                id="video-link"
+                value={link}
+                onChange={(e) => (setLink(e.target.value), setError(''))}
+                placeholder="https://www.youtube.com/shorts/… or https://fb.watch/…"
+                maxLength={2048}
+                autoFocus
+              />
             </FormField>
             {thumbnail && <img src={thumbnail} alt="" className="aspect-video w-full rounded-lg border object-cover" />}
             <DialogFooter>
