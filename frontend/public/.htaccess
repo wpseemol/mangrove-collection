@@ -27,12 +27,12 @@ ErrorDocument 404 /404.html
     RewriteCond %{QUERY_STRING} (^|&)category=([^&]+)
     RewriteRule ^blog/?$ /blog/category/%2/? [L,R=301]
 
-    # Old product links: /product/?slug=x[&review=1] -> /product/x/[?review=1]
-    RewriteCond %{QUERY_STRING} (?:^|&)review=1(?:&|$)
-    RewriteCond %{QUERY_STRING} (?:^|&)slug=([^&]+)
-    RewriteRule ^product/?$ /product/%1/?review=1 [L,R=301]
-    RewriteCond %{QUERY_STRING} (?:^|&)slug=([^&]+)
-    RewriteRule ^product/?$ /product/%1/? [L,R=301]
+    # Product pretty URLs are only written at build time. If /product/slug/ was
+    # never exported (new product or renamed slug), fall back to the client
+    # page that loads the product from the API via ?slug=.
+    # Do NOT 301 /product/?slug= → /product/slug/ — that caused 404s until redeploy.
+    RewriteCond %{DOCUMENT_ROOT}/product/$1/index.html !-f
+    RewriteRule ^product/([^/]+)/?$ /product/?slug=$1 [L,QSA,R=302]
 </IfModule>
 
 <IfModule mod_headers.c>

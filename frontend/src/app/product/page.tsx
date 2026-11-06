@@ -3,7 +3,7 @@ import { Suspense } from "react";
 
 import { pageMetadata } from "@/lib/seo";
 
-import { LegacyProductRedirect } from "./legacy-redirect";
+import { ProductBySlug } from "./product-by-slug";
 
 export const metadata: Metadata = pageMetadata({
   title: "Product",
@@ -12,13 +12,14 @@ export const metadata: Metadata = pageMetadata({
 });
 
 /**
- * Legacy `/product/?slug=…` entry. Real product pages live at `/product/[slug]/`
- * with build-time metadata and JSON-LD. Apache 301s production traffic in `.htaccess`.
+ * `/product/?slug=…` loads the product from the live API.
+ * Prefers this over `/product/[slug]/` when a product was added or renamed
+ * after the last static export (those pretty URLs 404 until the next deploy).
  */
-export default function ProductRedirectPage() {
+export default function ProductBySlugPage() {
   return (
     <Suspense>
-      <LegacyProductRedirect />
+      <ProductBySlug />
     </Suspense>
   );
 }
