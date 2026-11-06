@@ -1,6 +1,7 @@
 "use client";
 
 import {
+    ChevronDown,
     Leaf,
     PackageX,
     ShieldCheck,
@@ -10,9 +11,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
-import { VideoEmbed } from "@/components/blog/video-embed";
 import { ProductGrid } from "@/components/product/product-grid";
 import { ProductReviews } from "@/components/reviews/product-reviews";
 import { Stars } from "@/components/reviews/stars";
@@ -43,6 +43,75 @@ function DetailSkeleton() {
                 <Skeleton className="h-10 w-1/2" />
             </div>
         </div>
+    );
+}
+
+const DESCRIPTION_COLLAPSE_HEIGHT = 220;
+
+function ProductDescription({ html }: { html: string }) {
+    const contentId = useId();
+    const contentRef = useRef<HTMLDivElement>(null);
+    const [expanded, setExpanded] = useState(false);
+    const [needsToggle, setNeedsToggle] = useState(false);
+
+    useEffect(() => {
+        const node = contentRef.current;
+        if (!node) return;
+
+        const measure = () => {
+            setNeedsToggle(node.scrollHeight > DESCRIPTION_COLLAPSE_HEIGHT + 8);
+        };
+
+        measure();
+        const observer = new ResizeObserver(measure);
+        observer.observe(node);
+        return () => observer.disconnect();
+    }, [html]);
+
+    return (
+        <section className="mt-16 rounded-3xl border bg-card p-6 md:p-10">
+            <h2 className="font-heading mb-6 text-2xl font-semibold text-foreground">
+                Product details
+            </h2>
+            <div className="relative max-w-3xl">
+                <div
+                    id={contentId}
+                    ref={contentRef}
+                    className={cn(
+                        "prose-content overflow-hidden transition-[max-height] duration-300 ease-out",
+                        !expanded && needsToggle && "max-h-[220px]",
+                    )}
+                    dangerouslySetInnerHTML={{ __html: html }}
+                />
+                {!expanded && needsToggle && (
+                    <div
+                        aria-hidden
+                        className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-card to-transparent"
+                    />
+                )}
+            </div>
+            {needsToggle && (
+                <div className="mt-4">
+                    <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="rounded-full"
+                        aria-expanded={expanded}
+                        aria-controls={contentId}
+                        onClick={() => setExpanded((open) => !open)}
+                    >
+                        {expanded ? "Show less" : "See full description"}
+                        <ChevronDown
+                            className={cn(
+                                "transition-transform duration-300",
+                                expanded && "rotate-180",
+                            )}
+                        />
+                    </Button>
+                </div>
+            )}
+        </section>
     );
 }
 
@@ -129,17 +198,11 @@ export function ProductDetail() {
                 <div className="space-y-4 md:sticky md:top-28 md:self-start">
                     <ProductGallery
                         images={gallery}
+                        videoUrl={product.video_url}
                         alt={product.name}
                         activeIndex={imageIndex}
                         onIndexChange={setImageIndex}
                     />
-                    {product.video_url && (
-                        <VideoEmbed
-                            url={product.video_url}
-                            title={`${product.name} video`}
-                            className="rounded-2xl border md:rounded-3xl"
-                        />
-                    )}
                 </div>
 
                 <div className="space-y-5 md:space-y-6">
@@ -300,17 +363,7 @@ export function ProductDetail() {
             </div>
 
             {product.description && (
-                <section className="mt-16 rounded-3xl border bg-card p-6 md:p-10">
-                    <h2 className="font-heading mb-6 text-2xl font-semibold text-foreground">
-                        Product details
-                    </h2>
-                    <div
-                        className="prose-content max-w-3xl"
-                        dangerouslySetInnerHTML={{
-                            __html: product.description,
-                        }}
-                    />
-                </section>
+                <ProductDescription html={product.description} />
             )}
 
             <ProductReviews
