@@ -10,7 +10,7 @@ import {
     Zap,
 } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 
 import { ProductGrid } from "@/components/product/product-grid";
 import { ProductReviews } from "@/components/reviews/product-reviews";
@@ -113,12 +113,12 @@ export function ProductDetail({
     const [variantId, setVariantId] = useState<number | null>(null);
     const [imageIndex, setImageIndex] = useState(0);
     const [quantity, setQuantity] = useState(1);
-    // Read after mount so SSR HTML matches the first client render (no useSearchParams bailout).
-    const [reviewRequested, setReviewRequested] = useState(false);
-
-    useEffect(() => {
-        setReviewRequested(new URLSearchParams(window.location.search).get("review") === "1");
-    }, []);
+    // Client-only query flag — server snapshot is always false to keep SSR HTML stable.
+    const reviewRequested = useSyncExternalStore(
+        () => () => {},
+        () => new URLSearchParams(window.location.search).get("review") === "1",
+        () => false,
+    );
 
     if (isError || !product) {
         return (

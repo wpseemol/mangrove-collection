@@ -1,7 +1,7 @@
 "use client";
 
 import { BadgeCheck, Camera, ChevronLeft, ChevronRight, MessageSquareText, Pencil, Star, Trash2 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 import { RemoteImage } from "@/components/shared/remote-image";
 import { SimplePagination } from "@/components/shared/simple-pagination";
@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useHydrated } from "@/hooks/use-hydrated";
 import { formatDate } from "@/lib/format";
 import { type ReviewFilters, useProductReviews } from "@/lib/queries";
 import { clearReviewSession, loadReviewSession, REVIEW_CONTACT_KEY, type ReviewSession, saveReviewSession } from "@/lib/reviews";
@@ -24,51 +25,61 @@ const SORTS = [
   { value: "lowest", label: "Lowest rated" },
 ] as const;
 
-function takeStoredContact(): string | undefined {
-  try {
-    const contact = sessionStorage.getItem(REVIEW_CONTACT_KEY) ?? undefined;
-    sessionStorage.removeItem(REVIEW_CONTACT_KEY);
-    return contact;
-  } catch {
-    return undefined;
-  }
-}
+const subscribe = () => () => {};
 
 /** Verified-buyer reviews for one product. `autoOpen` starts the review flow (links from delivered orders). */
 export function ProductReviews({ product, autoOpen = false }: { product: Product; autoOpen?: boolean }) {
+  const hydrated = useHydrated();
   const [filters, setFilters] = useState<ReviewFilters>({ sort: "newest", page: 1 });
   const { data, isLoading } = useProductReviews(product.slug, filters);
-  const [session, setSession] = useState<ReviewSession | null>(null);
+  const storedSession = useSyncExternalStore(
+    subscribe,
+    () => loadReviewSession(product.slug),
+    () => null,
+  );
+  const [sessionOverride, setSessionOverride] = useState<ReviewSession | null | undefined>(undefined);
+  const session = sessionOverride !== undefined ? sessionOverride : storedSession;
+  const storedContact = useSyncExternalStore(
+    subscribe,
+    () => (autoOpen ? sessionStorage.getItem(REVIEW_CONTACT_KEY) : null),
+    () => null,
+  );
   const [dialog, setDialog] = useState({
     open: false,
     editing: false,
     nonce: 0,
     contact: undefined as string | undefined,
+    suppressed: false,
   });
   const [lightbox, setLightbox] = useState<{ images: ReviewImage[]; index: number } | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
+  const dialogOpen = dialog.suppressed ? dialog.open : dialog.open || (autoOpen && hydrated);
+  const dialogContact = dialog.contact ?? (autoOpen && hydrated ? (storedContact ?? undefined) : undefined);
 
   useEffect(() => {
-    setSession(loadReviewSession(product.slug));
-  }, [product.slug]);
-
-  useEffect(() => {
-    if (!autoOpen) return;
-    setDialog((current) => ({
-      ...current,
-      open: true,
-      contact: takeStoredContact(),
-    }));
+    if (!(autoOpen && hydrated)) return;
     sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, [autoOpen]);
+    try {
+      sessionStorage.removeItem(REVIEW_CONTACT_KEY);
+    } catch {
+      // ignore
+    }
+  }, [autoOpen, hydrated]);
 
   const updateSession = (next: ReviewSession | null) => {
-    setSession(next);
+    setSessionOverride(next);
     if (next) saveReviewSession(product.slug, next);
     else clearReviewSession(product.slug);
   };
 
-  const openDialog = (editing = false) => setDialog((current) => ({ open: true, editing, nonce: current.nonce + 1, contact: undefined }));
+  const openDialog = (editing = false) =>
+    setDialog((current) => ({
+      open: true,
+      editing,
+      nonce: current.nonce + 1,
+      contact: undefined,
+      suppressed: true,
+    }));
 
   const ownReview = session?.check.status === "already_reviewed" ? session.check.review : null;
   const summary = data?.summary;
@@ -163,11 +174,18 @@ export function ProductReviews({ product, autoOpen = false }: { product: Product
       <ReviewDialog
         key={dialog.nonce}
         product={product}
-        open={dialog.open}
-        onOpenChange={(open) => setDialog((current) => ({ ...current, open }))}
+        open={dialogOpen}
+        onOpenChange={(open) =>
+          setDialog((current) => ({
+            ...current,
+            open,
+            suppressed: true,
+            contact: open ? current.contact : undefined,
+          }))
+        }
         session={session}
         onSessionChange={updateSession}
-        initialContact={dialog.contact}
+        initialContact={dialogContact}
         startEditing={dialog.editing}
       />
 
