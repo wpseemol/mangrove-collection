@@ -8,6 +8,7 @@ import { RemoteImage } from "@/components/shared/remote-image";
 import { Button } from "@/components/ui/button";
 import { useCartActions } from "@/hooks/use-cart-actions";
 import { formatPrice } from "@/lib/format";
+import { productHref } from "@/lib/product";
 import type { Product } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -79,7 +80,7 @@ function Price({ product, className }: { product: Product; className?: string })
 }
 
 export function ProductCard({ product, layout = "grid" }: { product: Product; layout?: "grid" | "list" }) {
-  const href = `/product?slug=${product.slug}`;
+  const href = productHref(product.slug);
 
   if (layout === "list") {
     return (

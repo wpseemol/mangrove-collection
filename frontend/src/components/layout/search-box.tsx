@@ -12,6 +12,7 @@ import { useCartActions } from "@/hooks/use-cart-actions";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { useRecentSearches } from "@/hooks/use-recent-searches";
 import { formatPrice } from "@/lib/format";
+import { productHref } from "@/lib/product";
 import { useCategories, useProducts } from "@/lib/queries";
 import type { Category, Product } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -147,7 +148,7 @@ function ResultCard({
           </span>
         )}
         <Link
-          href={`/product?slug=${product.slug}`}
+          href={productHref(product.slug)}
           onClick={onOpen}
           tabIndex={-1}
           title={product.name}
@@ -223,7 +224,7 @@ export function SearchBox({ className, onSubmitted }: { className?: string; onSu
 
   const options: Option[] = [
     ...categories.map((c) => ({ id: `${listId}-c${c.id}`, href: `/shop?category=${c.slug}` })),
-    ...products.map((p) => ({ id: `${listId}-p${p.id}`, href: `/product?slug=${p.slug}` })),
+    ...products.map((p) => ({ id: `${listId}-p${p.id}`, href: productHref(p.slug) })),
     { id: `${listId}-all`, href: footerHref },
   ];
   const footerIndex = options.length - 1;

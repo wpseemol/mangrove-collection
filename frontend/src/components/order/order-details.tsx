@@ -5,6 +5,7 @@ import { OrderPaymentSummary, PaymentResubmitPanel } from "@/components/payment/
 import { RemoteImage } from "@/components/shared/remote-image";
 import { Separator } from "@/components/ui/separator";
 import { formatDate, formatPrice, ORDER_STATUS_LABEL } from "@/lib/format";
+import { productHref, productReviewHref } from "@/lib/product";
 import { REVIEW_CONTACT_KEY } from "@/lib/reviews";
 import type { Order, OrderStatus } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -97,7 +98,7 @@ export function OrderDetails({
                 <RemoteImage src={item.image} alt={item.product_name} sizes="64px" />
               </div>
               <div className="min-w-0 flex-1">
-                <Link href={`/product?slug=${item.product_slug}`} className="font-bangla line-clamp-2 text-sm text-foreground hover:text-primary">
+                <Link href={productHref(item.product_slug)} className="font-bangla line-clamp-2 text-sm text-foreground hover:text-primary">
                   {item.product_name}
                 </Link>
                 {item.variant_title && <p className="text-xs text-muted-foreground">{item.variant_title}</p>}
@@ -106,7 +107,7 @@ export function OrderDetails({
                 </p>
                 {order.status === "delivered" && item.product_id && (
                   <Link
-                    href={`/product?slug=${encodeURIComponent(item.product_slug)}&review=1`}
+                    href={productReviewHref(item.product_slug)}
                     onClick={() => rememberReviewContact(guestPhone ?? order.customer.phone)}
                     className="mt-1.5 inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
                   >
