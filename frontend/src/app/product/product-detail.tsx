@@ -2,8 +2,8 @@
 
 import { Leaf, PackageX, ShieldCheck, ShoppingBag, Truck, Zap } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import { ProductGrid } from "@/components/product/product-grid";
 import { ProductReviews } from "@/components/reviews/product-reviews";
@@ -13,7 +13,6 @@ import { Container } from "@/components/shared/container";
 import { EmptyState } from "@/components/shared/empty-state";
 import { PageBreadcrumb } from "@/components/shared/page-breadcrumb";
 import { QuantityInput } from "@/components/shared/quantity-input";
-import { RemoteImage } from "@/components/shared/remote-image";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -22,6 +21,8 @@ import { defaultVariant, useCartActions } from "@/hooks/use-cart-actions";
 import { formatPrice } from "@/lib/format";
 import { useProduct, useRelatedProducts } from "@/lib/queries";
 import { cn } from "@/lib/utils";
+
+import { ProductGallery } from "./product-gallery";
 
 function DetailSkeleton() {
   return (
@@ -38,6 +39,7 @@ function DetailSkeleton() {
 }
 
 export function ProductDetail() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const slug = searchParams.get("slug");
   const reviewRequested = searchParams.get("review") === "1";
@@ -49,7 +51,19 @@ export function ProductDetail() {
   const [imageIndex, setImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
-  if (!slug || isError) {
+  useEffect(() => {
+    if (!slug) router.replace("/shop");
+  }, [slug, router]);
+
+  if (!slug) {
+    return (
+      <Container>
+        <DetailSkeleton />
+      </Container>
+    );
+  }
+
+  if (isError) {
     return (
       <Container className="py-16">
         <EmptyState
@@ -77,7 +91,6 @@ export function ProductDetail() {
   const variants = product.variants ?? [];
   const variant = variants.find((v) => v.id === variantId) ?? defaultVariant(product);
   const gallery = [...new Set([product.thumbnail, ...(product.images ?? []).map((image) => image.url)])].filter(Boolean) as string[];
-  const activeImage = gallery[imageIndex] ?? product.thumbnail;
   const inStock = variant?.in_stock ?? false;
 
   return (
@@ -92,28 +105,8 @@ export function ProductDetail() {
       />
 
       <div className="grid gap-6 py-2 md:grid-cols-2 md:gap-8 lg:gap-14">
-        <div className="space-y-3 md:sticky md:top-28 md:self-start">
-          <div className="relative aspect-square overflow-hidden rounded-2xl border bg-muted md:rounded-3xl">
-            <RemoteImage src={activeImage} alt={product.name} sizes="(max-width: 768px) 100vw, 50vw" priority />
-          </div>
-          {gallery.length > 1 && (
-            <div className="grid grid-cols-5 gap-2 md:gap-3">
-              {gallery.map((src, index) => (
-                <button
-                  key={`${src}-${index}`}
-                  type="button"
-                  onClick={() => setImageIndex(index)}
-                  aria-label={`Show image ${index + 1}`}
-                  className={cn(
-                    "relative aspect-square overflow-hidden rounded-xl border-2 bg-muted transition-all",
-                    index === imageIndex ? "border-primary" : "border-transparent opacity-70 hover:opacity-100",
-                  )}
-                >
-                  <RemoteImage src={src} alt="" sizes="100px" />
-                </button>
-              ))}
-            </div>
-          )}
+        <div className="md:sticky md:top-28 md:self-start">
+          <ProductGallery images={gallery} alt={product.name} activeIndex={imageIndex} onIndexChange={setImageIndex} />
         </div>
 
         <div className="space-y-5 md:space-y-6">

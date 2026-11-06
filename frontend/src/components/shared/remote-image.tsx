@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 
 import { NO_IMAGE } from "@/lib/config";
 import { cn } from "@/lib/utils";
@@ -12,10 +12,11 @@ type RemoteImageProps = {
   className?: string;
   sizes?: string;
   priority?: boolean;
+  style?: CSSProperties;
 };
 
 /** Fills its (relatively positioned) parent and falls back to a placeholder on error. */
-export function RemoteImage({ src, alt, className, sizes = "(max-width: 768px) 50vw, 20vw", priority }: RemoteImageProps) {
+export function RemoteImage({ src, alt, className, sizes = "(max-width: 768px) 50vw, 20vw", priority, style }: RemoteImageProps) {
   const [failed, setFailed] = useState(false);
 
   return (
@@ -25,6 +26,7 @@ export function RemoteImage({ src, alt, className, sizes = "(max-width: 768px) 5
       fill
       sizes={sizes}
       priority={priority}
+      style={style}
       className={cn("object-cover", className)}
       onError={() => setFailed(true)}
     />
