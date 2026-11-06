@@ -1,4 +1,4 @@
-import { ApiError, api } from '@/lib/api'
+import { ApiError } from '@/lib/api'
 import { API_URL } from '@/lib/config'
 import type { Media } from '@/lib/types'
 

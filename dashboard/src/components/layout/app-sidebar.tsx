@@ -13,8 +13,6 @@ import {
   MessagesSquare,
   Newspaper,
   Package,
-  PackagePlus,
-  PenLine,
   ReceiptText,
   Settings,
   ShoppingCart,
@@ -48,6 +46,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  SidebarSeparator,
   useSidebar,
 } from '@/components/ui/sidebar'
 import { STOREFRONT_URL } from '@/lib/config'
@@ -74,48 +73,44 @@ const NAV: { label: string; items: NavItem[] }[] = [
     items: [
       { title: 'Orders', to: '/orders', icon: ShoppingCart, exact: false, badge: 'orders' },
       { title: 'Payments', to: '/payments', icon: ReceiptText, exact: true, badge: 'payments' },
+      { title: 'Payment accounts', to: '/payment-accounts', icon: Wallet, exact: true, adminOnly: true },
     ],
   },
   {
     label: 'Catalog',
     items: [
-      { title: 'Products', to: '/products', icon: Package, exact: true },
-      { title: 'Add product', to: '/products/new', icon: PackagePlus, exact: true },
+      { title: 'Products', to: '/products', icon: Package, exact: false },
       { title: 'Categories', to: '/categories', icon: FolderTree, exact: false },
-      { title: 'Media library', to: '/media', icon: Images, exact: true },
       { title: 'Reviews', to: '/reviews', icon: MessageSquareText, exact: true },
     ],
   },
   {
-    label: 'Website',
+    label: 'Content',
     items: [
       { title: 'Home page', to: '/home-page', icon: LayoutTemplate, exact: true },
       { title: 'About page', to: '/about-page', icon: BookOpenText, exact: true },
       { title: 'Contact page', to: '/contact-page', icon: Contact, exact: true },
+      { title: 'Media library', to: '/media', icon: Images, exact: true },
     ],
   },
   {
     label: 'Blog',
     items: [
       { title: 'Posts', to: '/blog', icon: Newspaper, exact: true },
-      { title: 'Write a post', to: '/blog/new', icon: PenLine, exact: true },
       { title: 'Comments', to: '/blog/comments', icon: MessagesSquare, exact: true },
-      { title: 'Blog categories', to: '/blog/categories', icon: Tags, exact: true, adminOnly: true },
+      { title: 'Categories', to: '/blog/categories', icon: Tags, exact: true, adminOnly: true },
     ],
   },
   {
-    label: 'People',
+    label: 'Customers',
     items: [
       { title: 'Users', to: '/users', icon: Users, exact: true, adminOnly: true },
       { title: 'Subscribers', to: '/subscribers', icon: Mail, exact: true },
     ],
   },
   {
-    label: 'Administration',
-    items: [
-      { title: 'Payment accounts', to: '/payment-accounts', icon: Wallet, exact: true, adminOnly: true },
-      { title: 'Settings', to: '/settings', icon: Settings, exact: false, adminOnly: true },
-    ],
+    label: 'System',
+    items: [{ title: 'Settings', to: '/settings', icon: Settings, exact: false, adminOnly: true }],
   },
 ]
 
@@ -130,10 +125,16 @@ export function AppSidebar() {
     (group) => group.items.length > 0,
   )
 
-  const isActive = (to: string, exact: boolean) =>
-    exact
-      ? pathname === to || (to === '/products' && /^\/products\/\d+/.test(pathname)) || (to === '/blog' && /^\/blog\/\d+/.test(pathname))
-      : pathname.startsWith(to)
+  const isActive = (to: string, exact: boolean) => {
+    if (to === '/blog') {
+      return pathname === '/blog' || pathname === '/blog/new' || /^\/blog\/\d+/.test(pathname)
+    }
+    if (to === '/products') {
+      return pathname === '/products' || pathname.startsWith('/products/')
+    }
+    if (exact) return pathname === to
+    return pathname === to || pathname.startsWith(`${to}/`)
+  }
 
   return (
     <Sidebar collapsible="icon">
@@ -160,9 +161,12 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
-        {nav.map((group) => (
-          <SidebarGroup key={group.label}>
-            <SidebarGroupLabel className="text-sidebar-foreground/50">{group.label}</SidebarGroupLabel>
+        {nav.map((group, index) => (
+          <SidebarGroup key={group.label} className={index === 0 ? undefined : 'pt-0'}>
+            {index > 0 && <SidebarSeparator className="mx-2 mb-2 bg-sidebar-border/60" />}
+            <SidebarGroupLabel className="text-[11px] font-semibold tracking-[0.14em] text-sidebar-foreground/45 uppercase">
+              {group.label}
+            </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {group.items.map((item) => (
@@ -186,6 +190,7 @@ export function AppSidebar() {
         ))}
 
         <SidebarGroup className="mt-auto">
+          <SidebarSeparator className="mx-2 mb-2 bg-sidebar-border/60" />
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
