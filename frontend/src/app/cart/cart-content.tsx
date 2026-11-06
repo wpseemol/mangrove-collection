@@ -13,6 +13,7 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useHydrated } from "@/hooks/use-hydrated";
 import { formatPrice } from "@/lib/format";
+import { productHref } from "@/lib/product";
 import { useSettings } from "@/lib/queries";
 import { cartCount, cartSubtotal, useCartStore } from "@/stores/cart";
 
@@ -65,12 +66,12 @@ export function CartContent() {
               <ul className="divide-y">
                 {items.map((item) => (
                   <li key={item.variantId} className="flex gap-4 p-5">
-                    <Link href={`/product?slug=${item.slug}`} className="relative size-20 shrink-0 overflow-hidden rounded-xl border bg-muted sm:size-24">
+                    <Link href={productHref(item.slug)} className="relative size-20 shrink-0 overflow-hidden rounded-xl border bg-muted sm:size-24">
                       <RemoteImage src={item.image} alt={item.name} sizes="96px" />
                     </Link>
                     <div className="flex min-w-0 flex-1 flex-col gap-3 sm:flex-row sm:items-center">
                       <div className="min-w-0 flex-1">
-                        <Link href={`/product?slug=${item.slug}`} className="font-bangla line-clamp-2 text-[15px] text-foreground hover:text-primary">
+                        <Link href={productHref(item.slug)} className="font-bangla line-clamp-2 text-[15px] text-foreground hover:text-primary">
                           {item.name}
                         </Link>
                         {item.variantTitle && <p className="mt-0.5 text-xs text-muted-foreground">{item.variantTitle}</p>}

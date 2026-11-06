@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
+import { productHref } from "@/lib/product";
 import type { Product, ProductVariant } from "@/lib/types";
 import { useCartStore } from "@/stores/cart";
 
@@ -18,7 +19,7 @@ export function useCartActions() {
     const chosen = variant ?? defaultVariant(product);
 
     if (!chosen) {
-      router.push(`/product?slug=${product.slug}`);
+      router.push(productHref(product.slug));
       return null;
     }
 
