@@ -41,11 +41,11 @@ Live site: [mangrove-collection.com](https://mangrove-collection.com)
 
 ## Tech stack
 
-| Part | Folder | Built with |
-| --- | --- | --- |
-| Storefront | `frontend/` | Next.js 16 (static export), React 19, Tailwind CSS 4, TanStack Query, Zustand |
-| Dashboard | `dashboard/` | Vite, React 19, React Router, Tailwind CSS 4, TanStack Query, Recharts |
-| API | `backend-api/` | Laravel 12, PHP 8.2+, Laravel Sanctum, MySQL 8 |
+| Part       | Folder         | Built with                                                                    |
+| ---------- | -------------- | ----------------------------------------------------------------------------- |
+| Storefront | `frontend/`    | Next.js 16 (static export), React 19, Tailwind CSS 4, TanStack Query, Zustand |
+| Dashboard  | `dashboard/`   | Vite, React 19, React Router, Tailwind CSS 4, TanStack Query, Recharts        |
+| API        | `backend-api/` | Laravel 12, PHP 8.2+, Laravel Sanctum, MySQL 8                                |
 
 The project is a pnpm workspace. Deployment runs from GitHub Actions to cPanel hosting over FTP
 (see [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)).
@@ -68,69 +68,69 @@ Requirements: **Node.js 22+**, **pnpm 10**, **PHP 8.2+**, **Composer** and **MyS
 
 1. Install dependencies
 
-   ```bash
-   pnpm install
-   cd backend-api && composer install && cd ..
-   ```
+    ```bash
+    pnpm install
+    cd backend-api && composer install && cd ..
+    ```
 
 2. Configure the API
 
-   ```bash
-   cd backend-api
-   cp .env.example .env
-   php artisan key:generate
-   ```
+    ```bash
+    cd backend-api
+    cp .env.example .env
+    php artisan key:generate
+    ```
 
-   Edit `backend-api/.env` for local use:
+    Edit `backend-api/.env` for local use:
 
-   ```dotenv
-   APP_URL=http://localhost:8080
-   DB_DATABASE=mangrove_db
-   DB_USERNAME=root
-   DB_PASSWORD=
-   SESSION_DOMAIN=null
-   SESSION_SECURE_COOKIE=false
-   SANCTUM_STATEFUL_DOMAINS=localhost:3000,localhost:5173
-   CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
-   ```
+    ```dotenv
+    APP_URL=http://localhost:8080
+    DB_DATABASE=mangrove_db
+    DB_USERNAME=root
+    DB_PASSWORD=
+    SESSION_DOMAIN=null
+    SESSION_SECURE_COOKIE=false
+    SANCTUM_STATEFUL_DOMAINS=localhost:3000,localhost:5173
+    CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
+    ```
 
 3. Create the tables and seed data
 
-   ```bash
-   php artisan migrate
-   php artisan db:seed                              # settings, shipping, pages, first admin
-   php artisan db:seed --class=CatalogSeeder       # optional demo products
-   php artisan db:seed --class=BlogSeeder          # optional demo blog posts
-   php artisan storage:link
-   cd ..
-   ```
+    ```bash
+    php artisan migrate
+    php artisan db:seed                              # settings, shipping, pages, first admin
+    php artisan db:seed --class=CatalogSeeder       # optional demo products
+    php artisan db:seed --class=BlogSeeder          # optional demo blog posts
+    php artisan storage:link
+    cd ..
+    ```
 
 4. Run everything
 
-   ```bash
-   pnpm dev
-   ```
+    ```bash
+    pnpm dev
+    ```
 
-   | App | URL |
-   | --- | --- |
-   | Storefront | http://localhost:3000 |
-   | Dashboard | http://localhost:5173 |
-   | API | http://localhost:8080 |
+    | App        | URL                   |
+    | ---------- | --------------------- |
+    | Storefront | http://localhost:3000 |
+    | Dashboard  | http://localhost:5173 |
+    | API        | http://localhost:8080 |
 
 > Use `localhost` everywhere, not `127.0.0.1`. Cookies are per host, so mixing the two looks like being
 > signed out.
 
 ### Useful scripts
 
-| Command | What it does |
-| --- | --- |
-| `pnpm dev` | Runs the API, storefront and dashboard together |
-| `pnpm dev:frontend` | Storefront only |
-| `pnpm dev:dashboard` | Dashboard only |
-| `pnpm api` | Laravel API only (port 8080) |
-| `pnpm build` | Production build of the storefront and dashboard |
-| `pnpm lint` | Lint the storefront and dashboard |
-| `cd backend-api && php artisan test` | API test suite |
+| Command                              | What it does                                     |
+| ------------------------------------ | ------------------------------------------------ |
+| `pnpm dev`                           | Runs the API, storefront and dashboard together  |
+| `pnpm dev:frontend`                  | Storefront only                                  |
+| `pnpm dev:dashboard`                 | Dashboard only                                   |
+| `pnpm api`                           | Laravel API only (port 8080)                     |
+| `pnpm build`                         | Production build of the storefront and dashboard |
+| `pnpm lint`                          | Lint the storefront and dashboard                |
+| `cd backend-api && php artisan test` | API test suite                                   |
 
 ## Deployment
 
@@ -148,12 +148,12 @@ The full step-by-step server setup, environment variables, security notes and tr
 The code is safe on GitHub, and the storefront and dashboard can always be rebuilt from it. What is
 **not** in Git, and must be backed up, is the live data on the server:
 
-| What | Where (on the server) | Why it matters |
-| --- | --- | --- |
-| **MySQL database** | the database named in `DB_DATABASE` | Products, orders, customers, payments, blog posts, reviews, settings (including SMTP, SMS and Google keys) |
-| **Uploaded images** | `~/mangrove-api/public/uploads/` | Category images, review photos |
-| **Media library** | `~/mangrove-api/storage/app/public/` | Product photos, avatars, blog images and videos |
-| **Environment file** | `~/mangrove-api/.env` | Database password and `APP_KEY` |
+| What                 | Where (on the server)                | Why it matters                                                                                             |
+| -------------------- | ------------------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| **MySQL database**   | the database named in `DB_DATABASE`  | Products, orders, customers, payments, blog posts, reviews, settings (including SMTP, SMS and Google keys) |
+| **Uploaded images**  | `~/mangrove-api/public/uploads/`     | Category images, review photos                                                                             |
+| **Media library**    | `~/mangrove-api/storage/app/public/` | Product photos, avatars, blog images and videos                                                            |
+| **Environment file** | `~/mangrove-api/.env`                | Database password and `APP_KEY`                                                                            |
 
 > **Keep `APP_KEY` safe.** Secret settings in the database (SMTP, SMS, Google sign-in) are encrypted
 > with `APP_KEY`. A database backup restored with a different key cannot read those secrets, and all
@@ -195,36 +195,36 @@ Then download the `~/backups/` folder with the cPanel File Manager or an FTP cli
 1. Create `~/.my.cnf` so the backup can run without typing the password, and lock it down with
    `chmod 600 ~/.my.cnf`:
 
-   ```ini
-   [client]
-   user=DB_USERNAME
-   password=DB_PASSWORD
-   ```
+    ```ini
+    [client]
+    user=DB_USERNAME
+    password=DB_PASSWORD
+    ```
 
 2. Create `~/backup-mangrove.sh`:
 
-   ```bash
-   #!/bin/bash
-   set -e
-   DATE=$(date +%F)
-   DIR=~/backups
-   mkdir -p "$DIR"
+    ```bash
+    #!/bin/bash
+    set -e
+    DATE=$(date +%F)
+    DIR=~/backups
+    mkdir -p "$DIR"
 
-   mysqldump --single-transaction --routines --no-tablespaces DB_DATABASE | gzip > "$DIR/db-$DATE.sql.gz"
-   tar -czf "$DIR/files-$DATE.tar.gz" -C ~ \
-     mangrove-api/.env mangrove-api/public/uploads mangrove-api/storage/app/public
+    mysqldump --single-transaction --routines --no-tablespaces DB_DATABASE | gzip > "$DIR/db-$DATE.sql.gz"
+    tar -czf "$DIR/files-$DATE.tar.gz" -C ~ \
+      mangrove-api/.env mangrove-api/public/uploads mangrove-api/storage/app/public
 
-   # Keep the last 14 days only
-   find "$DIR" -type f -mtime +14 -delete
-   ```
+    # Keep the last 14 days only
+    find "$DIR" -type f -mtime +14 -delete
+    ```
 
-   Make it executable: `chmod 700 ~/backup-mangrove.sh`.
+    Make it executable: `chmod 700 ~/backup-mangrove.sh`.
 
 3. In cPanel open **Advanced > Cron Jobs** and add a daily job (for example at 3:00 AM):
 
-   ```text
-   0 3 * * * /bin/bash ~/backup-mangrove.sh > /dev/null 2>&1
-   ```
+    ```text
+    0 3 * * * /bin/bash ~/backup-mangrove.sh > /dev/null 2>&1
+    ```
 
 > Backups stored only on the same server are lost if the hosting account is lost. Download a copy at
 > least once a week, or sync `~/backups/` to cloud storage (for example with `rclone` to Google Drive).
@@ -234,25 +234,25 @@ Then download the `~/backups/` folder with the cPanel File Manager or an FTP cli
 1. **Database:** in cPanel open **phpMyAdmin**, select the database, open **Import** and upload the
    `.sql.gz` file. From the terminal:
 
-   ```bash
-   gunzip < ~/backups/db-YYYY-MM-DD.sql.gz | mysql -u DB_USERNAME -p DB_DATABASE
-   ```
+    ```bash
+    gunzip < ~/backups/db-YYYY-MM-DD.sql.gz | mysql -u DB_USERNAME -p DB_DATABASE
+    ```
 
 2. **Files:** extract the archive back into your home folder:
 
-   ```bash
-   tar -xzf ~/backups/files-YYYY-MM-DD.tar.gz -C ~
-   ```
+    ```bash
+    tar -xzf ~/backups/files-YYYY-MM-DD.tar.gz -C ~
+    ```
 
 3. **Finish up:**
 
-   ```bash
-   cd ~/mangrove-api
-   php artisan storage:link
-   php artisan migrate --force
-   php artisan optimize
-   chmod -R 775 storage bootstrap/cache public/uploads
-   ```
+    ```bash
+    cd ~/mangrove-api
+    php artisan storage:link
+    php artisan migrate --force
+    php artisan optimize
+    chmod -R 775 storage bootstrap/cache public/uploads
+    ```
 
 4. Open the site and the dashboard and check that products, images and orders are all there.
 
@@ -269,3 +269,5 @@ Then download the `~/backups/` folder with the cPanel File Manager or an FTP cli
 ## License
 
 Private project. All rights reserved © Mangrove Collection.
+
+cursor contrubution off
